@@ -1,0 +1,19 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+	"runArgs": [],
+	"forwardPorts": [],
+	"mounts": [],
+	"postCreateCommand": "npm install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"GitHub.copilot",
+				"esbenp.prettier-vscode"	
+			]
+		}
+	}
+}
