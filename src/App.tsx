@@ -1,27 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { BrowserMultiFormatReader } from "@zxing/browser";
-
-async function fetchBookData(isbn: string) {
-  const url = `https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="${isbn}"&recordSchema=MARC21-xml&maximumRecords=1`;
-  try {
-    const response = await fetch(url);
-    const xmlText = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-    const title =
-      xmlDoc.querySelector('datafield[tag="245"] > subfield[code="a"]')
-        ?.textContent || "Unknown Title";
-    const author =
-      xmlDoc.querySelector('datafield[tag="100"] > subfield[code="a"]')
-        ?.textContent || "Unknown Author";
-    return { title, author };
-  } catch (e) {
-    return { title: "Error fetching data", author: "" };
-  }
-}
+import { useState } from "react";
+import Scanner from "./components/Scanner";
+import ISBNInput from "./components/ISBNInput";
+import BookDisplay from "./components/BookDisplay";
+import { fetchBookData } from "./services/fetchBookData";
 
 function App() {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isbn, setIsbn] = useState<string>("");
   const [inputIsbn, setInputIsbn] = useState<string>("");
   const [book, setBook] = useState<{ title: string; author: string } | null>(
@@ -29,57 +12,14 @@ function App() {
   );
   const [scanning, setScanning] = useState(true);
 
-  // Handle barcode scanning
-  useEffect(() => {
-    if (!scanning) return;
-    const codeReader = new BrowserMultiFormatReader();
+  // Callback when Scanner finds a result
+  const handleScanResult = async (scannedIsbn: string) => {
+    setIsbn(scannedIsbn);
+    setScanning(false);
+    const bookData = await fetchBookData(scannedIsbn);
+    setBook(bookData);
+  };
 
-    if (!videoRef.current) {
-      console.error("Video element not found");
-      return;
-    }
-
-    let controls: any = null; // I have no idea why this is needed, but it seems to fix a bug where rescanning immediately returns the previous result
-
-    codeReader
-      .decodeFromVideoDevice(
-        undefined,
-        videoRef.current,
-        async (result, err) => {
-          if (result) {
-            const scannedIsbn = result.getText();
-            // Stop scanning to prevent multiple callbacks
-            if (controls) {
-              controls.stop();
-            }
-            setIsbn(scannedIsbn);
-            // Don't set the input field to avoid auto-filling it
-            // setInputIsbn(scannedIsbn);  <-- Remove this line
-            setScanning(false);
-            const bookData = await fetchBookData(scannedIsbn);
-            setBook(bookData);
-          } else if (err) {
-            // Optionally handle scan errors
-          }
-        }
-      )
-      .then((c) => {
-        controls = c;
-      })
-      .catch((err) => {
-        console.error("Failed to setup scanner:", err);
-      });
-
-    // Clean up function that properly releases resources
-    return () => {
-      if (controls) {
-        controls.stop();
-      }
-      //codeReader.reset();
-    };
-  }, [scanning]);
-
-  // Handle manual ISBN input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputIsbn(e.target.value);
   };
@@ -102,40 +42,16 @@ function App() {
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>
       <h1>Scan ISBN Barcode</h1>
-      {scanning && (
-        <video
-          ref={videoRef}
-          width="400"
-          height="300"
-          style={{ border: "2px solid black" }}
-        />
-      )}
-      <form onSubmit={handleInputSubmit} style={{ margin: "1rem 0" }}>
-        <input
-          type="text"
-          placeholder="Enter ISBN manually"
-          value={inputIsbn}
-          onChange={handleInputChange}
-          style={{ fontSize: "1rem", padding: "0.5rem" }}
-        />
-        <button type="submit" style={{ marginLeft: "0.5rem" }}>
-          Lookup
-        </button>
-      </form>
-      {isbn && (
-        <p>
-          ISBN: <strong>{isbn}</strong>
-        </p>
-      )}
-      {book && (
-        <div>
-          <h2>{book.title}</h2>
-          <p>by {book.author}</p>
-          <button onClick={handleRescan} style={{ marginTop: "1rem" }}>
-            Scan Another
-          </button>
-        </div>
-      )}
+
+      {scanning && <Scanner onResult={handleScanResult} active={scanning} />}
+
+      <ISBNInput
+        value={inputIsbn}
+        onChange={handleInputChange}
+        onSubmit={handleInputSubmit}
+      />
+
+      {book && <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />}
     </div>
   );
 }
