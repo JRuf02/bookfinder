@@ -53,12 +53,11 @@ function App() {
         } else if (err) {
           // Optionally handle scan errors
         }
+        codeReader.reset();
       }
     );
 
-    return () => {
-      // codeReader.reset();
-    };
+    return () => {};
   }, [scanning]);
 
   // Handle manual ISBN input
