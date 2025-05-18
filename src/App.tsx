@@ -39,25 +39,44 @@ function App() {
       return;
     }
 
-    codeReader.decodeFromVideoDevice(
-      undefined,
-      videoRef.current,
-      async (result, err) => {
-        if (result) {
-          const scannedIsbn = result.getText();
-          setIsbn(scannedIsbn);
-          setInputIsbn(scannedIsbn);
-          setScanning(false);
-          const bookData = await fetchBookData(scannedIsbn);
-          setBook(bookData);
-        } else if (err) {
-          // Optionally handle scan errors
-        }
-        codeReader.reset();
-      }
-    );
+    let controls: any = null; // I have no idea why this is needed, but it seems to fix a bug where rescanning immediately returns the previous result
 
-    return () => {};
+    codeReader
+      .decodeFromVideoDevice(
+        undefined,
+        videoRef.current,
+        async (result, err) => {
+          if (result) {
+            const scannedIsbn = result.getText();
+            // Stop scanning to prevent multiple callbacks
+            if (controls) {
+              controls.stop();
+            }
+            setIsbn(scannedIsbn);
+            // Don't set the input field to avoid auto-filling it
+            // setInputIsbn(scannedIsbn);  <-- Remove this line
+            setScanning(false);
+            const bookData = await fetchBookData(scannedIsbn);
+            setBook(bookData);
+          } else if (err) {
+            // Optionally handle scan errors
+          }
+        }
+      )
+      .then((c) => {
+        controls = c;
+      })
+      .catch((err) => {
+        console.error("Failed to setup scanner:", err);
+      });
+
+    // Clean up function that properly releases resources
+    return () => {
+      if (controls) {
+        controls.stop();
+      }
+      //codeReader.reset();
+    };
   }, [scanning]);
 
   // Handle manual ISBN input
