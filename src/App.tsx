@@ -7,9 +7,12 @@ import { fetchBookData } from "./services/fetchBookData";
 function App() {
   const [isbn, setIsbn] = useState<string>("");
   const [inputIsbn, setInputIsbn] = useState<string>("");
-  const [book, setBook] = useState<{ title: string; author: string } | null>(
-    null
-  );
+  const [book, setBook] = useState<{
+    title: string;
+    author: string;
+    dnbISBN: string;
+    dnbId: string;
+  } | null>(null);
   const [scanning, setScanning] = useState(true);
 
   // Callback when Scanner finds a result

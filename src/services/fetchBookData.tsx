@@ -5,14 +5,27 @@ export async function fetchBookData(isbn: string) {
     const xmlText = await response.text();
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+    // Extract title and author
     const title =
       xmlDoc.querySelector('datafield[tag="245"] > subfield[code="a"]')
         ?.textContent || "Unknown Title";
     const author =
       xmlDoc.querySelector('datafield[tag="100"] > subfield[code="a"]')
         ?.textContent || "Unknown Author";
-    return { title, author };
+
+    // Extract the book's ISBN as it appears in the DNB (may differ in format)
+    const dnbISBN =
+      xmlDoc.querySelector('datafield[tag="020"] > subfield[code="9"]')
+        ?.textContent || isbn;
+
+    // Extract the DNB identifier
+    const dnbId =
+      xmlDoc.querySelector('controlfield[tag="001"]')?.textContent || "";
+
+    return { title, author, dnbISBN, dnbId };
   } catch (e) {
-    return { title: "Error fetching data", author: "" };
+    console.error("Error fetching book data:", e);
+    return { title: "Error fetching data", author: "", dnbISBN: "", dnbId: "" };
   }
 }

@@ -15,22 +15,32 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - Click on the popup by VS code to open the website in the browser after starting the server
 
+### TODO
+
+- use material ui (mui) for react buttons and other ui components
+- implement server with cache/db for book data and cover images
+- move communications with dnb to the server side, web client should only fetch data from my server
+
 ### isbn to book data via dnb
 
 #### infos
 
 https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/SRU/sru_node.html#doc58294bodyText5
 
-#### html
+#### html book data (catalog page)
 
 https://portal.dnb.de/opac/simpleSearch?query=%223551551677%22
 
 #### jpg (cover image)
 
 https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m
-https://portal.dnb.de/opac/mvb/cover?isbn=3-551-55167-2&size=m
 
-#### xml
+#### xml book data
+
+##### marc-21-xml formatted
 
 https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="3551551677"&recordSchema=MARC21-xml&maximumRecords=1
+
+##### rdf-xml formatted
+
 https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=%223551551677%22&maximumRecords=1
