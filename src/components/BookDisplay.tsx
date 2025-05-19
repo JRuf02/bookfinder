@@ -21,7 +21,7 @@ export default function BookDisplay({
       `https://portal.dnb.de/opac/mvb/cover?isbn=${book.dnbISBN}&size=l`
     );
     setImageError(false);
-  }, [isbn]);
+  }, [book.dnbISBN]);
 
   const handleImageError = () => {
     setImageError(true);
@@ -31,6 +31,9 @@ export default function BookDisplay({
     <div>
       <p>
         ISBN: <strong>{isbn}</strong>
+      </p>
+      <p>
+        ISBN (DNB format): <strong>{book.dnbISBN}</strong>
       </p>
       <h2>{book.title}</h2>
       <p>by {book.author}</p>
