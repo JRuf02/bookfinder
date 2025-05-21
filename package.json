@@ -1,13 +1,15 @@
 {
   "name": "isbn-scanner",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "cd server && python app.py",
+    "start": "./start-all.sh"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -1,19 +1,25 @@
 {
-	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
-	},
-	"runArgs": [],
-	"forwardPorts": [],
-	"mounts": [],
-	"postCreateCommand": "npm install",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-azuretools.vscode-docker",
-				"GitHub.copilot",
-				"esbenp.prettier-vscode"	
-			]
-		}
-	}
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "runArgs": [],
+  "forwardPorts": [5173, 5000],
+  "mounts": [],
+  "postCreateCommand": "npm install && chmod +x /workspaces/isbn-scanner/start-all.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint", // can be run with 'npm run lint'
+        "ms-azuretools.vscode-docker",
+        "GitHub.copilot",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/isbn-scanner/.venv/bin/python"
+      }
+    }
+  }
 }

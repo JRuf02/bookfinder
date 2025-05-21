@@ -1,3 +1,6 @@
 /zxing
 node_modules/
 *Zone.Identifier
+
+# Ignore Python virtual environments
+.venv/

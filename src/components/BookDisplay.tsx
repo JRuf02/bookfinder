@@ -16,10 +16,8 @@ export default function BookDisplay({
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    // Construct cover URL using the formatted ISBN
-    setCoverUrl(
-      `https://portal.dnb.de/opac/mvb/cover?isbn=${book.dnbISBN}&size=l`
-    );
+    // Use my server endpoint instead of DNB directly
+    setCoverUrl(`http://localhost:5000/api/covers?isbn=${book.dnbISBN}&size=l`);
     setImageError(false);
   }, [book.dnbISBN]);
 

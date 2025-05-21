@@ -9,17 +9,21 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### Run server
 
-- Run `npm run dev` in base directory `\workspaces\isbn-scanner` inside the Devcontainer
+- Run `npm run dev` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start vite (react dev server)
+- Run `npm run server` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start the book data api server (flask)
+- Alternatively run only `npm run start` in base directory `\workspaces\isbn-scanner` to start both servers.
 
 ### Show the website
 
 - Click on the popup by VS code to open the website in the browser after starting the server
+- Or go to http://127.0.0.1:5173/
 
 ### TODO
 
-- use material ui (mui) for react buttons and other ui components
-- implement server with cache/db for book data and cover images
-- move communications with dnb to the server side, web client should only fetch data from my server
+[ ] use material ui (mui) for react buttons and other ui components
+[x] implement server...
+[ ] ...with cache/db for book data and cover images
+[x] move communications with dnb to the server side, web client should only fetch data from my server
 
 ### isbn to book data via dnb
 
