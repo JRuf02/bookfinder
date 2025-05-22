@@ -5,7 +5,7 @@ cd /workspaces/isbn-scanner/server
 pip install -r requirements.txt
 
 # Start Python server in background
-python app.py &
+python server.py &
 SERVER_PID=$!
 
 # Start React app

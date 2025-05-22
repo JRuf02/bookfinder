@@ -10,8 +10,13 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ### Run server
 
 - Run `npm run dev` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start vite (react dev server)
-- Run `npm run server` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start the book data api server (flask)
+- Run `npm run server` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
 - Alternatively run only `npm run start` in base directory `\workspaces\isbn-scanner` to start both servers.
+
+#### Alternatively
+
+- make install && make run (starts api server)
+- npm run dev (starts frontend react server)
 
 ### Show the website
 
@@ -20,10 +25,21 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
-[ ] use material ui (mui) for react buttons and other ui components
-[x] implement server...
-[ ] ...with cache/db for book data and cover images
-[x] move communications with dnb to the server side, web client should only fetch data from my server
+- [ ] implement and test Makefiles!
+- [ ] also for react?!
+- [ ] clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh
+- [ ] make project docker-compatible as wished here: https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make
+- [ ] implement tests ?
+- [ ] adhere to coding standards
+- [x] implement server...
+- [x] ...with book data api that proxies dnb data
+- [ ] ...with cache/db for book data and cover images (sqlite3)
+- [ ] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
+- [ ] ...and db for online catalog (sqlite3)
+- [ ] backend for catalog search by location/author/title/isbn
+- [ ] use material ui (mui) for react buttons and other ui components
+- [ ] frontend
+- [ ] support multiple languages?
 
 ### isbn to book data via dnb
 
