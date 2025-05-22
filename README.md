@@ -15,7 +15,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 #### Alternatively
 
-- make install && make run (starts api server)
+- (make install &&) make run (starts api server)
 - npm run dev (starts frontend react server)
 
 ### Show the website
@@ -25,9 +25,11 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
+- [ ] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. (currently duplicate directories!) -> try moving to frontend!
 - [ ] implement and test Makefiles!
 - [ ] also for react?!
 - [ ] clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh
+- [ ] move venv to the python / server directory if possible
 - [ ] make project docker-compatible as wished here: https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make
 - [ ] implement tests ?
 - [ ] adhere to coding standards
