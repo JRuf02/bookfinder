@@ -9,7 +9,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### Run server
 
-- Run `npm run dev` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start vite (react dev server)
+- /workspaces/isbn-scanner/frontend # npm install
+- Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the Devcontainer to start vite (react dev server)
 - Run `npm run server` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
 - Alternatively run only `npm run start` in base directory `\workspaces\isbn-scanner` to start both servers.
 
@@ -25,7 +26,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
-- [ ] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. (currently duplicate directories!) -> try moving to frontend!
+- [ ] server.py ctb contributor adden + error handling
+- [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
 - [ ] implement and test Makefiles!
 - [ ] also for react?!
 - [ ] clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh

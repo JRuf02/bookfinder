@@ -46,7 +46,7 @@ def fetch_book_data(isbn):
             main_author_field = record_element.find('.//{http://www.loc.gov/MARC21/slim}datafield[@tag="100"]')
             role = main_author_field.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="4"]')  # Should be 'aut' for author
             name = main_author_field.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="a"]')
-            if role is not None and 'aut' in role.text.lower() and name is not None:
+            if role is not None and 'aut' in role.text.lower() and name is not None:  # TODO ctb contributor adden + error handling
                 authors.append(name.text)
 
             # More authors (sometimes authors are only in field 700)

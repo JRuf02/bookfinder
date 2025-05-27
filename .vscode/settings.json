@@ -7,5 +7,6 @@
   "files.watcherExclude": {
     "**/.venv/**": true,
     "**/node_modules/**": true
-  }
+  },
+  "eslint.workingDirectories": ["frontend"]
 }

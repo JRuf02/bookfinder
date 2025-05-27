@@ -9,7 +9,7 @@ python server.py &
 SERVER_PID=$!
 
 # Start React app
-cd /workspaces/isbn-scanner
+cd /workspaces/isbn-scanner/frontend
 npm run dev &
 REACT_PID=$!
 
