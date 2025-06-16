@@ -26,7 +26,9 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
-- [ ] server.py ctb contributor adden + error handling
+- [ ] backend reachable from mobile on same network
+- [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
+- [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
 - [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
 - [ ] implement and test Makefiles!
 - [ ] also for react?!
@@ -41,6 +43,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
 - [ ] ...and db for online catalog (sqlite3)
 - [ ] backend for catalog search by location/author/title/isbn
+- [ ] map view
 - [ ] use material ui (mui) for react buttons and other ui components
 - [ ] frontend
 - [ ] support multiple languages?

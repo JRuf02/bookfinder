@@ -1,10 +1,18 @@
 {
   "build": {
-    "dockerfile": "Dockerfile",
+    "dockerfile": "../Dockerfile",
     "context": ".."
   },
-  "runArgs": [],
+  "runArgs": ["-p", "5173:5173", "-p", "5000:5000"],
   "forwardPorts": [5173, 5000],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server"
+    },
+    "5000": {
+      "label": "Flask API Server"
+    }
+  },
   "mounts": [],
   "postCreateCommand": "npm install && chmod +x /workspaces/isbn-scanner/start-all.sh && cd /workspaces/isbn-scanner/frontend && npm install",
   "customizations": {
