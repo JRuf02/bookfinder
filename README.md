@@ -11,25 +11,28 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - /workspaces/isbn-scanner/frontend # npm install
 - Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the Devcontainer to start vite (react dev server)
-- Run `npm run server` in base directory `\workspaces\isbn-scanner` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
-- Alternatively run only `npm run start` in base directory `\workspaces\isbn-scanner` to start both servers.
-
-#### Alternatively
-
-- (make install &&) make run (starts api server)
-- npm run dev (starts frontend react server)
+- Run `make run` in directory `\workspaces\isbn-scanner\server` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
 
 ### Show the website
 
 - Click on the popup by VS code to open the website in the browser after starting the server
 - Or go to https://127.0.0.1:5173/
 
+### Show the website on another device
+
+- Start vite and flask servers in the container
+- Connect host and the device to the same network (no eduroam!)
+- Run ipconfig on the host (outside the docker container) to find its IPv4 address
+- Open https://host-ip:5173/ on your device's browser
+- Accept self-signed certificate
+- Accept camera permission
+
 ### TODO
 
 1. bookdata cache
    1.1. mit openstreetmap bookcase id
    -> was ist sinnvoller: group by bookcase oder by isbn?
-2. buch entnehmen/einstellen funktion
+2. buch entnehmen/einstellen funktion -> mobile first web design!
 3. online katalog
 4. map view
 
@@ -42,7 +45,7 @@ osm-id name (location)
 table current-catalog:
 entry-id osm-id isbn time-of-entry
 
-- [ ] backend reachable from mobile on same network
+- [x] backend reachable from mobile on same network
 - [x] camera feed working on mobile
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden

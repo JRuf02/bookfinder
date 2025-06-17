@@ -1,9 +1,8 @@
 export async function fetchBookData(isbn: string) {
-  // Get current host ip
-  const host = window.location.hostname;
-  const url = `http://${host}:5000/api/books?isbn=${isbn}`;
-
   try {
+    // Use relative URL to ensure protocol matching (HTTP or HTTPS)
+    const url = `/api/books?isbn=${isbn}`; // vite needs to proxy the call to the api
+
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Server returned ${response.status}`);
