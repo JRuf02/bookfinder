@@ -26,7 +26,24 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
+1. bookdata cache
+   1.1. mit openstreetmap bookcase id
+   -> was ist sinnvoller: group by bookcase oder by isbn?
+2. buch entnehmen/einstellen funktion
+3. online katalog
+4. map view
+
+table books:
+isbn dnb-isbn title author (link-to)-cover-image ...
+
+table bookshelves:
+osm-id name (location)
+
+table current-catalog:
+entry-id osm-id isbn time-of-entry
+
 - [ ] backend reachable from mobile on same network
+- [ ] camera feed working on mobile
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
 - [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!

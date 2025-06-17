@@ -7,10 +7,12 @@
   "forwardPorts": [5173, 5000],
   "portsAttributes": {
     "5173": {
-      "label": "Vite Dev Server"
+      "label": "Vite Dev Server",
+      "onAutoForward": "notify"
     },
     "5000": {
-      "label": "Flask API Server"
+      "label": "Flask API Server",
+      "onAutoForward": "notify"
     }
   },
   "mounts": [],
