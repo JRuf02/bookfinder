@@ -17,7 +17,8 @@ export default function BookDisplay({
 
   useEffect(() => {
     // Use my server endpoint instead of DNB directly
-    setCoverUrl(`http://localhost:5000/api/covers?isbn=${book.dnbISBN}&size=l`);
+    const host = window.location.hostname;
+    setCoverUrl(`http://${host}:5000/api/covers?isbn=${book.dnbISBN}&size=l`);
     setImageError(false);
   }, [book.dnbISBN]);
 

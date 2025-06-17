@@ -1,6 +1,8 @@
 export async function fetchBookData(isbn: string) {
-  // Do not call DNB directly
-  const url = `http://localhost:5000/api/books?isbn=${isbn}`;
+  // Get current host ip
+  const host = window.location.hostname;
+  const url = `http://${host}:5000/api/books?isbn=${isbn}`;
+
   try {
     const response = await fetch(url);
     if (!response.ok) {

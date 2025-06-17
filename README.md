@@ -22,7 +22,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ### Show the website
 
 - Click on the popup by VS code to open the website in the browser after starting the server
-- Or go to http://127.0.0.1:5173/
+- Or go to https://127.0.0.1:5173/
 
 ### TODO
 
@@ -43,7 +43,7 @@ table current-catalog:
 entry-id osm-id isbn time-of-entry
 
 - [ ] backend reachable from mobile on same network
-- [ ] camera feed working on mobile
+- [x] camera feed working on mobile
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
 - [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
@@ -88,3 +88,20 @@ https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="3551
 ##### rdf-xml formatted
 
 https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=%223551551677%22&maximumRecords=1
+
+## show on mobile
+
+-connect to same network
+-find ipv4 address of host via iplookup
+-go to https://hostip:5173
+
+## easy open on mobile (experimental, doesnt work on windows host yet)
+
+-# Display the host IP address for QR code generation
+HOST_IP=$(hostname -i | awk '{print $1}')
+echo "Your application is running at: https://${HOST_IP}:5173"
+echo "Scan this QR code on your mobile device to access the app:"
+qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
+
+-# Or open in the host browser
+"$BROWSER" "https://${HOST_IP}:5173"
