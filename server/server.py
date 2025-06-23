@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 import requests
 import xml.etree.ElementTree as ET
+import sqlite3
+import os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -11,11 +13,43 @@ def get_book():
     isbn = request.args.get('isbn')
     if not isbn:
         return jsonify({"error": "ISBN parameter is required"}), 400
-    
+
+    # Normalize ISBN (remove spaces, dashes, and convert to uppercase)
+    isbn = isbn.replace(" ", "").replace("-", "").upper()
+    # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)  # TODO write test for this
+    isbn = ''.join(filter(lambda x: x.isdigit() or (x == 'X' and len(isbn) == 10 and isbn[-1] == 'X'), isbn))
+    print(f"Normalized ISBN: {isbn}")  # TODO: add logger
+
+    # 1. Try to get book from local DB
+    book = get_book_from_db(isbn)
+    if book:
+        print(f"Book found in DB: {book}")  # TODO: add logger
+        book_data = {
+            "title": book["title"],
+            "author": book["author"],
+            "dnbISBN": book["dnbISBN"],
+            "dnbId": book["dnbId"]
+        }
+        return jsonify(book_data)
+    print(f"Book not found in DB for ISBN: {isbn}")  # Todo: add logger
+
+    # 2. If not found, fetch from DNB and cache it
     book_data = fetch_book_data(isbn)
+    print(f"Fetched book data from dnb: {book_data}")  # TODO: add logger
+    if book_data["title"] != "Error fetching data":
+        cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={book_data['dnbISBN']}&size=l"
+        save_book_to_db(
+            isbn,
+            book_data["dnbISBN"],
+            book_data["dnbId"],
+            book_data["title"],
+            book_data["author"],
+            cover_url
+        )
+
     return jsonify(book_data)
 
-def fetch_book_data(isbn):
+def fetch_book_data(isbn):  # TODO add class for book data
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn}"&recordSchema=MARC21-xml&maximumRecords=1'
     
     try:
@@ -108,5 +142,55 @@ def get_cover():
         print(f"Error fetching cover: {e}")
         return jsonify({"error": "Failed to fetch cover image"}), 500
 
+def init_db():
+    db_path = os.path.join(os.path.dirname(__file__), "books.db")
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS books (
+            isbn TEXT PRIMARY KEY,
+            dnb_isbn TEXT,
+            dnb_id TEXT,
+            title TEXT,
+            author TEXT,
+            cover_url TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+def get_book_from_db(isbn):
+    db_path = os.path.join(os.path.dirname(__file__), "books.db")
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute("SELECT isbn, dnb_isbn, dnb_id, title, author, cover_url FROM books WHERE isbn = ?", (isbn,))
+    row = c.fetchone()
+    conn.close()
+    if row:
+        return {
+            "isbn": row[0],
+            "dnbISBN": row[1],
+            "dnbId": row[2],
+            "title": row[3],
+            "author": row[4],
+            "cover_url": row[5]
+        }
+    return None
+
+def save_book_to_db(isbn, dnb_isbn, dnb_id, title, author, cover_url):
+    db_path = os.path.join(os.path.dirname(__file__), "books.db")
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute("""
+        INSERT OR REPLACE INTO books (isbn, dnb_isbn, dnb_id, title, author, cover_url)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (isbn, dnb_isbn, dnb_id, title, author, cover_url))
+    conn.commit()
+    conn.close()
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    init_db()  # Initialize the database
+    # Start the server
+    app.run(host='0.0.0.0', port=5000,
+            debug=True)

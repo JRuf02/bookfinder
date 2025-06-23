@@ -59,7 +59,7 @@ entry-id osm-id isbn time-of-entry
 - [ ] adhere to coding standards
 - [x] implement server...
 - [x] ...with book data api that proxies dnb data
-- [ ] ...with cache/db for book data and cover images (sqlite3)
+- [x] ...with cache/db for book data and cover images (sqlite3)
 - [ ] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
 - [ ] ...and db for online catalog (sqlite3)
 - [ ] backend for catalog search by location/author/title/isbn
@@ -108,3 +108,15 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 
 -# Or open in the host browser
 "$BROWSER" "https://${HOST_IP}:5173"
+
+##### bugs
+
+Normalized ISBN: 123456789X
+Book not found in DB for ISBN: 123456789X
+Error fetching book data: 'NoneType' object has no attribute 'find'
+Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbISBN': '', 'dnbId': ''}
+127.0.0.1 - - [23/Jun/2025 13:29:16] "GET /api/books?isbn=123456789X HTTP/1.1" 200 -
+
+No image on mobile because https request to http flask server?
+172.17.0.1 - - [23/Jun/2025 13:32:03] code 400, message Bad request version ('n\x04\x05\x8bÓ\x95´Eë\x97\x92Ð|9Êã\x19\x06äåð\x91Ã\x88æõu\x1b\x13\x90Í\x88\x00"\x13\x01\x13\x03\x13\x02À+À/Ì©Ì¨À,À0À')
+172.17.0.1 - - [23/Jun/2025 13:32:03] "\x16\x03\x01\x02\x85\x01\x00\x02\x81\x03\x03\x14\x96\x01\x86HÂ\x1f\x91¦¬û>¬½\x91\x196íÞ\x01\x0b¡2Å^\x0f\x80¦ø}=» n\x04\x05\x8bÓ\x95´Eë\x97\x92Ð|9Êã\x19\x06äåð\x91Ã\x88æõu\x1b\x13\x90Í\x88\x00"\x13\x01\x13\x03\x13\x02À+À/Ì©Ì¨À,À0À" 400 -
