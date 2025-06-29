@@ -45,6 +45,7 @@ osm-id name (location)
 table current-catalog:
 entry-id osm-id isbn time-of-entry
 
+- [ ] save image to db
 - [x] backend reachable from mobile on same network
 - [x] camera feed working on mobile
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
@@ -67,6 +68,8 @@ entry-id osm-id isbn time-of-entry
 - [ ] use material ui (mui) for react buttons and other ui components
 - [ ] frontend
 - [ ] support multiple languages?
+- [ ] type annotations in python!
+- [ ] search code for TODOs
 
 ### isbn to book data via dnb
 

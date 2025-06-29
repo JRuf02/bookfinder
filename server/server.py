@@ -1,9 +1,12 @@
+from dataclasses import asdict
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 import requests
 import xml.etree.ElementTree as ET
 import sqlite3
 import os
+
+from book import Book
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -16,40 +19,27 @@ def get_book():
 
     # Normalize ISBN (remove spaces, dashes, and convert to uppercase)
     isbn = isbn.replace(" ", "").replace("-", "").upper()
-    # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)  # TODO write test for this
+    # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)  # TODO write test for this and move to util function
     isbn = ''.join(filter(lambda x: x.isdigit() or (x == 'X' and len(isbn) == 10 and isbn[-1] == 'X'), isbn))
     print(f"Normalized ISBN: {isbn}")  # TODO: add logger
 
     # 1. Try to get book from local DB
-    book = get_book_from_db(isbn)
+    book = get_book_from_database(isbn)
     if book:
         print(f"Book found in DB: {book}")  # TODO: add logger
-        book_data = {
-            "title": book["title"],
-            "author": book["author"],
-            "dnbISBN": book["dnbISBN"],
-            "dnbId": book["dnbId"]
-        }
-        return jsonify(book_data)
-    print(f"Book not found in DB for ISBN: {isbn}")  # Todo: add logger
+        return jsonify(asdict(book))
+    print(f"Book not found in DB for ISBN: {isbn}")  # TODO: add logger
 
     # 2. If not found, fetch from DNB and cache it
-    book_data = fetch_book_data(isbn)
-    print(f"Fetched book data from dnb: {book_data}")  # TODO: add logger
-    if book_data["title"] != "Error fetching data":
-        cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={book_data['dnbISBN']}&size=l"
-        save_book_to_db(
-            isbn,
-            book_data["dnbISBN"],
-            book_data["dnbId"],
-            book_data["title"],
-            book_data["author"],
-            cover_url
-        )
+    book = fetch_book_from_dnb(isbn)
+    print(f"Fetched book data from dnb: {book}")  # TODO: add logger
+    if book.title != "Error fetching data" and book.title != "Unknown Title":
+        save_book_to_db(book)
 
-    return jsonify(book_data)
+    return jsonify(asdict(book))
 
-def fetch_book_data(isbn):  # TODO add class for book data
+def fetch_book_from_dnb(isbn: str) -> Book:  # TODO move this to a separate file
+    """Fetch book data from DNB using the ISBN."""
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn}"&recordSchema=MARC21-xml&maximumRecords=1'
     
     try:
@@ -103,20 +93,24 @@ def fetch_book_data(isbn):  # TODO add class for book data
             if id_field is not None and id_field.text:
                 dnb_id = id_field.text
         
-        return {
-            "title": title,
-            "author": author,
-            "dnbISBN": dnb_isbn,
-            "dnbId": dnb_id
-        }
+        return Book(
+            isbn=isbn,
+            title=title,
+            author=author,
+            dnbISBN=dnb_isbn,
+            dnbId=dnb_id,
+            coverUrl=f"https://portal.dnb.de/opac/mvb/cover?isbn={dnb_isbn}&size=l"  # TODO? don't hardcode
+        )
     except Exception as e:
         print(f"Error fetching book data: {e}")
-        return {
-            "title": "Error fetching data",
-            "author": "",
-            "dnbISBN": "",
-            "dnbId": ""
-        }
+        return Book(
+            isbn=isbn,
+            title="Error fetching data",
+            author="",
+            dnbISBN="",
+            dnbId="",
+            coverUrl=None
+        )
 
 @app.route('/api/covers', methods=['GET'])
 def get_cover():
@@ -142,49 +136,60 @@ def get_cover():
         print(f"Error fetching cover: {e}")
         return jsonify({"error": "Failed to fetch cover image"}), 500
 
-def init_db():
+def init_db() -> None:  # TODO move this to a separate file
+    """Initialize the SQLite database."""
     db_path = os.path.join(os.path.dirname(__file__), "books.db")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS books (
             isbn TEXT PRIMARY KEY,
-            dnb_isbn TEXT,
-            dnb_id TEXT,
             title TEXT,
             author TEXT,
+            dnb_isbn TEXT,
+            dnb_id TEXT,
             cover_url TEXT
         )
     """)
     conn.commit()
     conn.close()
 
-def get_book_from_db(isbn):
+def get_book_from_database(isbn: str) -> Book | None:  # TODO move this to a separate file
+    """Fetch book data from the local SQLite database using the ISBN."""
+    if not isbn:
+        return None
+    
+    # Normalize ISBN (remove spaces, dashes, and convert to uppercase)  TODO: move to util function + test
+    isbn = isbn.replace(" ", "").replace("-", "").upper()
+    # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)
+    isbn = ''.join(filter(lambda x: x.isdigit() or (x == 'X' and len(isbn) == 10 and isbn[-1] == 'X'), isbn))
+
     db_path = os.path.join(os.path.dirname(__file__), "books.db")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
-    c.execute("SELECT isbn, dnb_isbn, dnb_id, title, author, cover_url FROM books WHERE isbn = ?", (isbn,))
+    c.execute("SELECT isbn, title, author, dnb_isbn, dnb_id, cover_url FROM books WHERE isbn = ?", (isbn,))
     row = c.fetchone()
     conn.close()
     if row:
-        return {
-            "isbn": row[0],
-            "dnbISBN": row[1],
-            "dnbId": row[2],
-            "title": row[3],
-            "author": row[4],
-            "cover_url": row[5]
-        }
+        return Book(
+            isbn=row[0],
+            title=row[1],
+            author=row[2],
+            dnbISBN=row[3],
+            dnbId=row[4],
+            coverUrl=row[5]
+        )
     return None
 
-def save_book_to_db(isbn, dnb_isbn, dnb_id, title, author, cover_url):
+def save_book_to_db(book: Book) -> None:  # TODO move this to a separate file
+    """Save book data to the local SQLite database."""
     db_path = os.path.join(os.path.dirname(__file__), "books.db")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute("""
-        INSERT OR REPLACE INTO books (isbn, dnb_isbn, dnb_id, title, author, cover_url)
+        INSERT OR REPLACE INTO books (isbn, title, author, dnb_isbn, dnb_id, cover_url)
         VALUES (?, ?, ?, ?, ?, ?)
-    """, (isbn, dnb_isbn, dnb_id, title, author, cover_url))
+    """, (book.isbn, book.title, book.author, book.dnbISBN, book.dnbId, book.coverUrl))  # TODO test what happens if coverUrl = None
     conn.commit()
     conn.close()
 
