@@ -2,7 +2,10 @@ from dataclasses import asdict
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 
-from database import init_db, get_book_from_database, save_book_to_db
+from database import (
+    init_db, get_book_from_database, save_book_to_db,
+    insert_book_to_shelf, remove_book_from_shelf
+)
 from dnb_api import fetch_book_from_dnb, fetch_cover_from_dnb
 
 app = Flask(__name__)
@@ -47,6 +50,30 @@ def get_cover() -> Response:
    
     # Proxy the cover image request to DNB
     return fetch_cover_from_dnb(isbn, size)
+
+
+@app.route('/api/shelf/insert', methods=['POST'])
+def insert_book_to_shelf_api():
+    data = request.json
+    osm_id = data.get('osm_id')
+    isbn = data.get('isbn')
+    if not osm_id or not isbn:
+        return jsonify({"error": "osm_id and isbn are required"}), 400
+    # TODO: check if shelf and book exist
+    insert_book_to_shelf(osm_id, isbn)
+    return jsonify({"status": "success", "message": f"Book {isbn} inserted to shelf {osm_id}."})
+
+
+@app.route('/api/shelf/remove', methods=['POST'])
+def remove_book_from_shelf_api():
+    data = request.json
+    osm_id = data.get('osm_id')
+    isbn = data.get('isbn')
+    if not osm_id or not isbn:
+        return jsonify({"error": "osm_id and isbn are required"}), 400
+    # TODO: check if shelf and book exist
+    remove_book_from_shelf(osm_id, isbn)
+    return jsonify({"status": "success", "message": f"Book {isbn} removed from shelf {osm_id}."})
 
 
 if __name__ == '__main__':
