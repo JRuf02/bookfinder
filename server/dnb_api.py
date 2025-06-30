@@ -4,7 +4,7 @@ from book import Book
 from flask import jsonify, Response
 
 
-def fetch_book_from_dnb(isbn: str) -> Book:  # TODO move this to a separate file
+def fetch_book_from_dnb(isbn: str) -> Book:
     """Fetch book data from DNB using the ISBN."""
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn}"&recordSchema=MARC21-xml&maximumRecords=1'
     

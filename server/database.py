@@ -3,7 +3,7 @@ import os
 from book import Book
 
 
-def init_db() -> None:  # TODO move this to a separate file
+def init_db() -> None:
     """Initialize the SQLite database."""
     db_path = os.path.join(os.path.dirname(__file__), "books.db")
     conn = sqlite3.connect(db_path)
@@ -21,7 +21,7 @@ def init_db() -> None:  # TODO move this to a separate file
     conn.commit()
     conn.close()
 
-def get_book_from_database(isbn: str) -> Book | None:  # TODO move this to a separate file
+def get_book_from_database(isbn: str) -> Book | None:
     """Fetch book data from the local SQLite database using the ISBN."""
     if not isbn:
         return None
@@ -48,7 +48,7 @@ def get_book_from_database(isbn: str) -> Book | None:  # TODO move this to a sep
         )
     return None
 
-def save_book_to_db(book: Book) -> None:  # TODO move this to a separate file
+def save_book_to_db(book: Book) -> None:
     """Save book data to the local SQLite database."""
     db_path = os.path.join(os.path.dirname(__file__), "books.db")
     conn = sqlite3.connect(db_path)
