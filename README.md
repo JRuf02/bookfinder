@@ -31,7 +31,11 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 1. bookdata cache
    1.1. mit openstreetmap bookcase id
-   -> was ist sinnvoller: group by bookcase oder by isbn?
+   -> book can be inserted like this:
+   curl -X POST http://localhost:5000/api/shelf/insert \
+   -H "Content-Type: application/json" \
+   -d '{"osm_id": "123456", "isbn": "9781234567890"}'
+
 2. buch entnehmen/einstellen funktion -> mobile first web design!
 3. online katalog
 4. map view
@@ -61,8 +65,9 @@ entry-id osm-id isbn time-of-entry
 - [x] implement server...
 - [x] ...with book data api that proxies dnb data
 - [x] ...with cache/db for book data and cover images (sqlite3)
-- [ ] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
-- [ ] ...and db for online catalog (sqlite3)
+- [x] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
+- [ ] Nginx / Apache (prod)
+- [x] ...and db for online catalog (sqlite3)
 - [ ] backend for catalog search by location/author/title/isbn
 - [ ] map view
 - [ ] use material ui (mui) for react buttons and other ui components
@@ -123,3 +128,17 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 No image on mobile because https request to http flask server?
 172.17.0.1 - - [23/Jun/2025 13:32:03] code 400, message Bad request version ('n\x04\x05\x8bÓ\x95´Eë\x97\x92Ð|9Êã\x19\x06äåð\x91Ã\x88æõu\x1b\x13\x90Í\x88\x00"\x13\x01\x13\x03\x13\x02À+À/Ì©Ì¨À,À0À')
 172.17.0.1 - - [23/Jun/2025 13:32:03] "\x16\x03\x01\x02\x85\x01\x00\x02\x81\x03\x03\x14\x96\x01\x86HÂ\x1f\x91¦¬û>¬½\x91\x196íÞ\x01\x0b¡2Å^\x0f\x80¦ø}=» n\x04\x05\x8bÓ\x95´Eë\x97\x92Ð|9Êã\x19\x06äåð\x91Ã\x88æõu\x1b\x13\x90Í\x88\x00"\x13\x01\x13\x03\x13\x02À+À/Ì©Ì¨À,À0À" 400 -
+
+##### testing insertion / removal of books
+
+Change the table:
+curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
+curl -X POST http://localhost:5000/api/shelf/remove -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
+
+Show the table:
+cd server
+apk update && apk add sqlite
+sqlite3 books.db
+.headers on
+.mode column
+SELECT \* FROM current_catalog;
