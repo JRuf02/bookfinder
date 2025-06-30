@@ -2,7 +2,10 @@ import { useState } from "react";
 import Scanner from "./components/Scanner";
 import ISBNInput from "./components/ISBNInput";
 import BookDisplay from "./components/BookDisplay";
+import ShelfActionDialog from "./components/ShelfActionDialog";
+import ActionResultDialog from "./components/ActionResultDialog";
 import { fetchBookData } from "./services/fetchBookData";
+import { shelfAction } from "./services/shelfActions";
 
 type ShelfAction = "insert" | "remove" | null;
 
@@ -16,88 +19,55 @@ function App() {
     dnbId: string;
   } | null>(null);
   const [scanning, setScanning] = useState(true);
-
-  // States for shelf actions
-  const [shelfAction, setShelfAction] = useState<ShelfAction>(null);
-  const [osmId, setOsmId] = useState<string>("");
+  const [shelfActionType, setShelfActionType] = useState<ShelfAction>(null);
   const [actionResult, setActionResult] = useState<string | null>(null);
 
   // Callback when Scanner finds a result
   const handleScanResult = async (scannedIsbn: string) => {
     setIsbn(scannedIsbn);
     setScanning(false);
-    const bookData = await fetchBookData(scannedIsbn);
-    setBook(bookData);
+    setBook(await fetchBookData(scannedIsbn));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputIsbn(e.target.value);
-  };
-
+  // Callback when ISBN input is submitted manually
   const handleInputSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // prevents page reload
     setIsbn(inputIsbn);
     setScanning(false);
-    const bookData = await fetchBookData(inputIsbn);
-    setBook(bookData);
+    setBook(await fetchBookData(inputIsbn));
   };
 
   const handleRescan = () => {
     setBook(null);
     setIsbn("");
     setInputIsbn("");
-    setOsmId("");
-    setShelfAction(null);
+    setShelfActionType(null);
     setActionResult(null);
     setScanning(true);
   };
 
-  // Handle shelf action (insert/remove)
-  const handleShelfAction = (action: ShelfAction) => {
-    setShelfAction(action);
-    setOsmId("");
-    setActionResult(null);
-  };
+  // Remove or insert book dialog
+  const handleShelfAction = (action: ShelfAction) => setShelfActionType(action);
 
-  // Send POST to /api/shelf/insert or /api/shelf/remove
-  const handleShelfSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!osmId || !isbn) return;
-    // TODO: Error handling for removing nonexisting entry!
-    const url =
-      shelfAction === "insert" ? "/api/shelf/insert" : "/api/shelf/remove";
-    try {
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ osm_id: osmId, isbn }),
-      });
-      const data = await resp.json();
-      if (resp.ok) {
-        setActionResult(`${data.message || "Action successful!"}`);
-      } else {
-        setActionResult(`${data.error || "Error performing action."}`);
-      }
-    } catch (err) {
-      setActionResult("Network or server error.");
-    }
-    // After a short delay, return to scanning
+  // Handle shelf insert/remove
+  const handleShelfSubmit = async (osmId: string) => {
+    if (!osmId || !isbn || !shelfActionType) return;
+    const result = await shelfAction(shelfActionType, osmId, isbn);
+    setActionResult(result.message);
+    setShelfActionType(null);
     setTimeout(handleRescan, 2000);
   };
 
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>
       <h1>Scan ISBN Barcode</h1>
-
       {scanning && <Scanner onResult={handleScanResult} active={scanning} />}
-
       <ISBNInput
         value={inputIsbn}
-        onChange={handleInputChange}
+        onChange={(e) => setInputIsbn(e.target.value)}
         onSubmit={handleInputSubmit}
       />
-
-      {book && !shelfAction && (
+      {book && !shelfActionType && !actionResult && (
         <div>
           <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />
           <div style={{ margin: "1rem 0" }}>
@@ -117,39 +87,14 @@ function App() {
           </div>
         </div>
       )}
-
-      {shelfAction && (
-        <form onSubmit={handleShelfSubmit} style={{ margin: "2rem 0" }}>
-          <h3>
-            {shelfAction === "insert"
-              ? "Insert book into bookshelf"
-              : "Remove book from bookshelf"}
-          </h3>
-          <input
-            type="text"
-            placeholder="Enter bookshelf OSM ID"
-            value={osmId}
-            onChange={(e) => setOsmId(e.target.value)}
-            required
-            style={{ fontSize: "1rem", padding: "0.5rem" }}
-          />
-          <button type="submit" style={{ marginLeft: "1rem" }}>
-            Confirm
-          </button>
-          <button
-            type="button"
-            style={{ marginLeft: "1rem" }}
-            onClick={() => setShelfAction(null)}
-          >
-            Cancel
-          </button>
-          {actionResult && (
-            <div style={{ marginTop: "1rem", fontWeight: "bold" }}>
-              {actionResult}
-            </div>
-          )}
-        </form>
+      {shelfActionType && (
+        <ShelfActionDialog
+          action={shelfActionType}
+          onSubmit={handleShelfSubmit}
+          onCancel={() => setShelfActionType(null)}
+        />
       )}
+      {actionResult && <ActionResultDialog message={actionResult} />}
     </div>
   );
 }
