@@ -81,6 +81,7 @@ def save_book_to_db(book: Book) -> None:
 
 def insert_book_to_shelf(osm_id: str, isbn: str) -> None:
     # TODO: Add tests for this and the other functions!
+    # TODO: Check if shelf exists, if not create it
     """Insert a book into a bookshelf (current_catalog)."""
     db_path = os.path.join(os.path.dirname(__file__), "books.db")
     conn = sqlite3.connect(db_path)
