@@ -8,5 +8,6 @@
     "**/.venv/**": true,
     "**/node_modules/**": true
   },
-  "eslint.workingDirectories": ["frontend"]
+  "eslint.workingDirectories": ["frontend"],
+  "python.analysis.extraPaths": ["./server"]
 }
