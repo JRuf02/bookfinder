@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from "../styles/BookDisplay.module.css";
 
 type Book = { title: string; author: string; dnbISBN: string; dnbId: string };
 type BookDisplayProps = {
@@ -42,19 +43,19 @@ export default function BookDisplay({
           <img
             src={coverUrl}
             alt={`Cover of ${book.title}`}
-            className="book-cover"
+            className={styles.bookCover}
             onError={handleImageError}
           />
         </div>
       )}
 
       {imageError && (
-        <div className="image-error">
+        <div className={styles.imageError}>
           <p>Cover image not available</p>
         </div>
       )}
 
-      <button onClick={onRescan} className="rescan-button">
+      <button onClick={onRescan} className={styles.rescanButton}>
         Scan Another
       </button>
     </div>

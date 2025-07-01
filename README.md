@@ -37,7 +37,9 @@ Use the provided Devcontainer to make the usage as easy as possible:
        -d '{"osm_id": "123456", "isbn": "9781234567890"}'
 
 - [x] buch entnehmen/einstellen funktion
+- [ ] move css to component-specific css modules
 - [ ] mobile first web design!
+- [ ] Fill bookshelves table wit public_bookcase from osm
 - [ ] disable isbn input once book will be inserted or removed!!!
 - [ ] online katalog
 - [ ] map view
