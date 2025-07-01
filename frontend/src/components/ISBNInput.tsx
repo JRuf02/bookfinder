@@ -1,3 +1,8 @@
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SendIcon from "@mui/icons-material/Send";
+import Stack from "@mui/material/Stack";
+
 type ISBNInputProps = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -10,17 +15,26 @@ export default function ISBNInput({
   onSubmit,
 }: ISBNInputProps) {
   return (
-    <form onSubmit={onSubmit} style={{ margin: "1rem 0" }}>
-      <input
-        type="text"
-        placeholder="Enter ISBN manually"
-        value={value}
-        onChange={onChange}
-        style={{ fontSize: "1rem", padding: "0.5rem" }}
-      />
-      <button type="submit" style={{ marginLeft: "0.5rem" }}>
-        Lookup
-      </button>
-    </form>
+    <div>
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          placeholder="Enter ISBN manually"
+          value={value}
+          onChange={onChange}
+        />
+        <button type="submit" className="lookup-button">
+          Lookup
+        </button>
+      </form>
+      <Stack direction="row" spacing={2}>
+        <Button variant="contained" startIcon={<DeleteIcon />}>
+          Delete
+        </Button>
+        <Button variant="outlined" endIcon={<SendIcon />}>
+          Lookup
+        </Button>
+      </Stack>
+    </div>
   );
 }

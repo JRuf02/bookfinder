@@ -38,30 +38,23 @@ export default function BookDisplay({
       <p>by {book.author}</p>
 
       {!imageError && coverUrl && (
-        <div style={{ margin: "1rem 0" }}>
+        <div>
           <img
             src={coverUrl}
             alt={`Cover of ${book.title}`}
-            style={{
-              maxWidth: "200px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              padding: "5px",
-            }}
+            className="book-cover"
             onError={handleImageError}
           />
         </div>
       )}
 
       {imageError && (
-        <div style={{ margin: "1rem 0" }}>
-          <p style={{ fontStyle: "italic", color: "#666" }}>
-            Cover image not available
-          </p>
+        <div className="image-error">
+          <p>Cover image not available</p>
         </div>
       )}
 
-      <button onClick={onRescan} style={{ marginTop: "1rem" }}>
+      <button onClick={onRescan} className="rescan-button">
         Scan Another
       </button>
     </div>

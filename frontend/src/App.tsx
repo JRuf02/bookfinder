@@ -6,6 +6,7 @@ import ShelfActionDialog from "./components/ShelfActionDialog";
 import ActionResultDialog from "./components/ActionResultDialog";
 import { fetchBookData } from "./services/fetchBookData";
 import { shelfAction } from "./services/shelfActions";
+import "./styles/global.css";
 
 type ShelfAction = "insert" | "remove" | null;
 
@@ -59,7 +60,7 @@ function App() {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "2rem" }}>
+    <div className="app-container">
       <h1>Scan ISBN Barcode</h1>
       {scanning && <Scanner onResult={handleScanResult} active={scanning} />}
       <ISBNInput
@@ -70,17 +71,11 @@ function App() {
       {book && !shelfActionType && !actionResult && (
         <div>
           <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />
-          <div style={{ margin: "1rem 0" }}>
-            <button
-              onClick={() => handleShelfAction("insert")}
-              style={{ marginRight: "1rem" }}
-            >
+          <div className="button-group">
+            <button onClick={() => handleShelfAction("insert")}>
               Insert into bookshelf
             </button>
-            <button
-              onClick={() => handleShelfAction("remove")}
-              style={{ marginRight: "1rem" }}
-            >
+            <button onClick={() => handleShelfAction("remove")}>
               Remove from bookshelf
             </button>
             <button onClick={handleRescan}>Rescan</button>

@@ -3,9 +3,5 @@ type Props = {
 };
 
 export default function ActionResultDialog({ message }: Props) {
-  return (
-    <div style={{ marginTop: "1rem", fontWeight: "bold" }}>
-      {message}
-    </div>
-  );
+  return <div className="action-result">{message}</div>;
 }
