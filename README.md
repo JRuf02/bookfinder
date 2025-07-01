@@ -38,10 +38,10 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - [x] buch entnehmen/einstellen funktion
 - [ ] move css to component-specific css modules
-- [ ] mobile first web design!
-- [ ] Fill bookshelves table wit public_bookcase from osm
-- [ ] disable isbn input once book will be inserted or removed!!!
-- [ ] online katalog
+- [x] mobile first web design!
+- [ ] online catalog
+- [ ] Fill bookshelves table with public_bookcases from osm
+- [ ] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background)
 - [ ] map view
 - [ ] user accounts
 
@@ -66,8 +66,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] ...and db for online catalog (sqlite3)
 - [ ] backend for catalog search by location/author/title/isbn
 - [ ] map view
-- [ ] use material ui (mui) for react buttons and other ui components
-- [ ] frontend
+- [ ] use material ui (mui) for react buttons, input fields and other ui components
+- [x] frontend
 - [ ] support multiple languages?
 - [ ] type annotations in python!
 - [ ] search code for TODOs
