@@ -45,6 +45,7 @@ img.book-cover {
 .lookup-button {
   margin-left: 0.5rem;
   cursor: pointer;
+  color: red;
 }
 
 form {

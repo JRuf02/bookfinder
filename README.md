@@ -38,6 +38,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - [x] buch entnehmen/einstellen funktion
 - [ ] mobile first web design!
+- [ ] disable isbn input once book will be inserted or removed!!!
 - [ ] online katalog
 - [ ] map view
 - [ ] user accounts
@@ -111,6 +112,9 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 "$BROWSER" "https://${HOST_IP}:5173"
 
 ##### bugs
+
+If isbn is added manually while on the input for osm id, the book isbn is overwritten with manual input.
+-> disable isbn input once book will be inserted or removed!!!
 
 Normalized ISBN: 123456789X
 Book not found in DB for ISBN: 123456789X

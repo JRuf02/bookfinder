@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
-import Stack from "@mui/material/Stack";
 
 type ISBNInputProps = {
   value: string;
@@ -15,26 +14,22 @@ export default function ISBNInput({
   onSubmit,
 }: ISBNInputProps) {
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Enter ISBN manually"
-          value={value}
-          onChange={onChange}
-        />
-        <button type="submit" className="lookup-button">
-          Lookup
-        </button>
-      </form>
-      <Stack direction="row" spacing={2}>
-        <Button variant="contained" startIcon={<DeleteIcon />}>
-          Delete
-        </Button>
-        <Button variant="outlined" endIcon={<SendIcon />}>
-          Lookup
-        </Button>
-      </Stack>
-    </div>
+    <form onSubmit={onSubmit}>
+      <input
+        type="text"
+        placeholder="Enter ISBN manually"
+        value={value}
+        onChange={onChange}
+      />
+      <Button
+        className="lookup-button" // custom css will currently still be overwritten by mui!
+        type="submit"
+        variant="outlined"
+        size="small"
+        endIcon={<SendIcon />}
+      >
+        Lookup
+      </Button>
+    </form>
   );
 }
