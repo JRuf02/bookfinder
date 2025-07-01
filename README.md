@@ -69,6 +69,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] support multiple languages?
 - [ ] type annotations in python!
 - [ ] search code for TODOs
+- [ ] clean up console.log and console.error usage
 
 ### isbn to book data via dnb
 

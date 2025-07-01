@@ -60,14 +60,21 @@ function App() {
   };
 
   return (
+    // TODO: move style to CSS
     <div className="app-container">
-      <h1>Scan ISBN Barcode</h1>
-      {scanning && <Scanner onResult={handleScanResult} active={scanning} />}
-      <ISBNInput
-        value={inputIsbn}
-        onChange={(e) => setInputIsbn(e.target.value)}
-        onSubmit={handleInputSubmit}
-      />
+      <h1 style={{ marginBottom: "1rem" }}>Scan ISBN Barcode</h1>
+      {scanning && (
+        <>
+          <Scanner onResult={handleScanResult} active={scanning} />
+          <div className="input-overlay">
+            <ISBNInput
+              value={inputIsbn}
+              onChange={(e) => setInputIsbn(e.target.value)}
+              onSubmit={handleInputSubmit}
+            />
+          </div>
+        </>
+      )}
       {book && !shelfActionType && !actionResult && (
         <div>
           <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />

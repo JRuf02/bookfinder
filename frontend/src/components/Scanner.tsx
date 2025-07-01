@@ -79,18 +79,14 @@ export default function Scanner({ onResult, active }: ScannerProps) {
   }, [active, onResult]);
 
   return (
-    <div>
+    <div className="scanner-container">
       <video
         ref={videoRef}
-        width="400"
-        height="300"
-        style={{
-          border: "2px solid black",
-          background: "#f0f0f0",
-          maxWidth: "100%",
-        }}
+        className="scanner-video"
+        playsInline
+        autoPlay
+        muted
       />
-
       {error && (
         <div style={{ color: "red", margin: "10px 0" }}>
           <p>{error}</p>
