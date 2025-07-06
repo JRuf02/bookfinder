@@ -14,6 +14,8 @@ export default function Scanner({ onResult, active }: ScannerProps) {
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const controlsRef = useRef<any>(null);
   const lastResultRef = useRef<string | null>(null);
+  const mountCountRef = useRef(0);
+  const decodingStartedRef = useRef(false); // Flag to prevent multiple decoder starts
 
   // Initialize reader once
   useEffect(() => {
@@ -30,34 +32,60 @@ export default function Scanner({ onResult, active }: ScannerProps) {
 
   // Handle active state changes
   useEffect(() => {
-    if (!active || !videoRef.current || !readerRef.current) {
+    // Track mount/remount count to help with debugging
+    mountCountRef.current++;
+    const currentMount = mountCountRef.current;
+    console.log(`Scanner mount #${currentMount}, active=${active}`);
+
+    if (!active) {
       return;
     }
 
-    // Reset state when component becomes active
-    setError(null);
-    lastResultRef.current = null;
+    // Reset the decoding flag when we start a new camera session
+    decodingStartedRef.current = false;
 
-    // Stop any existing controls
-    if (controlsRef.current) {
-      controlsRef.current.stop();
-      controlsRef.current = null;
-    }
+    // Longer delay before attempting to initialize after ShelfActionDialog
+    const initDelay = 500;
+    const initTimer = setTimeout(() => {
+      console.log(`Initializing camera (mount #${currentMount})`);
+      startCamera();
+    }, initDelay);
 
-    // Reset video element
-    const video = videoRef.current;
-    if (video.srcObject) {
-      const tracks = (video.srcObject as MediaStream).getTracks();
-      tracks.forEach((track) => track.stop());
-      video.srcObject = null;
+    function startCamera() {
+      if (!videoRef.current || !readerRef.current) {
+        console.log("No video ref or reader ref available");
+        return;
+      }
+
+      // Reset state when component becomes active
+      setError(null);
+      lastResultRef.current = null;
+
+      // Stop any existing controls
+      if (controlsRef.current) {
+        controlsRef.current.stop();
+        controlsRef.current = null;
+      }
+
+      // Reset video element
+      const video = videoRef.current;
+      if (video.srcObject) {
+        const tracks = (video.srcObject as MediaStream).getTracks();
+        tracks.forEach((track) => track.stop());
+        video.srcObject = null;
+      }
+
       // Small delay to ensure resources are released
       setTimeout(initCamera, 300);
-    } else {
-      initCamera();
     }
 
     function initCamera() {
-      if (!active || !videoRef.current || !readerRef.current) return;
+      if (!active || !videoRef.current || !readerRef.current) {
+        console.log("Abort initCamera - component inactive or refs missing");
+        return;
+      }
+
+      console.log(`Accessing camera (mount #${currentMount})`);
 
       // Prefer environment-facing camera (the back camera on mobile)
       const constraints = {
@@ -70,45 +98,48 @@ export default function Scanner({ onResult, active }: ScannerProps) {
       // Try to access camera
       navigator.mediaDevices
         .getUserMedia(constraints)
-        .then(() => {
-          if (!active || !videoRef.current || !readerRef.current) return;
+        .then((stream) => {
+          if (!active || !videoRef.current || !readerRef.current) {
+            console.log("Component deactivated during getUserMedia");
+            stream.getTracks().forEach((track) => track.stop());
+            return;
+          }
 
-          // If we can access the camera, try to decode
-          readerRef.current
-            .decodeFromVideoDevice(
-              undefined, // Let the library choose the appropriate device
-              videoRef.current,
-              async (result, err) => {
-                if (result) {
-                  const text = result.getText();
+          console.log(`Got media stream (mount #${currentMount})`);
 
-                  // Only process the result if it's different from the last one
-                  // or if there is no last result
-                  if (lastResultRef.current !== text) {
-                    lastResultRef.current = text;
+          // Manual stream attachment to prevent race conditions
+          videoRef.current.srcObject = stream;
 
-                    if (controlsRef.current) {
-                      controlsRef.current.stop();
-                      controlsRef.current = null;
-                    }
+          // Make sure we properly attach video before decoding
+          // Use one-time event listener to prevent multiple callbacks
+          const handleMetadata = () => {
+            if (!videoRef.current) return;
 
-                    onResult(text);
-                  }
+            // Remove the event listener to prevent duplicate calls
+            videoRef.current.removeEventListener(
+              "loadedmetadata",
+              handleMetadata
+            );
+
+            videoRef.current
+              .play()
+              .then(() => {
+                console.log(`Video playing (mount #${currentMount})`);
+                // Only start decoding if we haven't already
+                if (!decodingStartedRef.current) {
+                  startDecoding();
                 }
-              }
-            )
-            .then((controls) => {
-              if (!active) {
-                controls.stop();
-                return;
-              }
-              controlsRef.current = controls;
-              setError(null);
-            })
-            .catch((err) => {
-              console.error("Scanner init error:", err);
-              setError(`Could not start scanner: ${err.message}`);
-            });
+              })
+              .catch((err) => {
+                console.error("Video play error:", err);
+                setError(`Could not play video: ${err.message}`);
+              });
+          };
+
+          // Use addEventListener instead of onloadedmetadata to have more control
+          videoRef.current.addEventListener("loadedmetadata", handleMetadata, {
+            once: true,
+          });
         })
         .catch((err) => {
           console.error("Camera access error:", err);
@@ -116,8 +147,68 @@ export default function Scanner({ onResult, active }: ScannerProps) {
         });
     }
 
+    function startDecoding() {
+      if (!active || !videoRef.current || !readerRef.current) return;
+      if (decodingStartedRef.current) return; // Prevent multiple decoder starts
+
+      decodingStartedRef.current = true;
+      console.log(`Starting decoder (mount #${currentMount})`);
+
+      // If we can access the camera, try to decode
+      readerRef.current
+        .decodeFromVideoDevice(
+          undefined, // Let the library choose the appropriate device
+          videoRef.current,
+          async (result, err) => {
+            if (result) {
+              const text = result.getText();
+
+              // Only process the result if it's different from the last one
+              // or if there is no last result
+              if (lastResultRef.current !== text) {
+                console.log(`Got new result: ${text}`);
+                lastResultRef.current = text;
+
+                if (controlsRef.current) {
+                  controlsRef.current.stop();
+                  controlsRef.current = null;
+                  decodingStartedRef.current = false;
+                }
+
+                onResult(text);
+              }
+            }
+          }
+        )
+        .then((controls) => {
+          if (!active) {
+            console.log("Component deactivated after decoder start");
+            controls.stop();
+            decodingStartedRef.current = false;
+            return;
+          }
+
+          console.log(`Decoder running (mount #${currentMount})`);
+          controlsRef.current = controls;
+          setError(null);
+        })
+        .catch((err) => {
+          console.error("Scanner init error:", err);
+          decodingStartedRef.current = false;
+          setError(`Could not start scanner: ${err.message}`);
+        });
+    }
+
     return () => {
+      // Clear the initialization timer
+      clearTimeout(initTimer);
+
+      // Reset the decoding flag
+      decodingStartedRef.current = false;
+
       // Clean up when active changes
+      console.log(`Cleaning up scanner (mount #${currentMount})`);
+
       if (controlsRef.current) {
         controlsRef.current.stop();
         controlsRef.current = null;
@@ -138,7 +229,7 @@ export default function Scanner({ onResult, active }: ScannerProps) {
         ref={videoRef}
         className="scanner-video"
         playsInline
-        autoPlay
+        autoPlay={false} // Important: we'll manually call play()
         muted
       />
       {error && (
