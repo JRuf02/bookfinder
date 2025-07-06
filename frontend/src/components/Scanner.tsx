@@ -44,12 +44,9 @@ export default function Scanner({ onResult, active }: ScannerProps) {
     // Reset the decoding flag when we start a new camera session
     decodingStartedRef.current = false;
 
-    // Longer delay before attempting to initialize after ShelfActionDialog
-    const initDelay = 500;
-    const initTimer = setTimeout(() => {
-      console.log(`Initializing camera (mount #${currentMount})`);
-      startCamera();
-    }, initDelay);
+    // Delay before attempting to initialize (helpful after reload)
+    console.log(`Initializing camera (mount #${currentMount})`);
+    startCamera();
 
     function startCamera() {
       if (!videoRef.current || !readerRef.current) {
@@ -200,9 +197,6 @@ export default function Scanner({ onResult, active }: ScannerProps) {
     }
 
     return () => {
-      // Clear the initialization timer
-      clearTimeout(initTimer);
-
       // Reset the decoding flag
       decodingStartedRef.current = false;
 
