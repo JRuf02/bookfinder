@@ -1,5 +1,4 @@
-import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { TextField, Button, Box } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 type ISBNInputProps = {
@@ -14,22 +13,37 @@ export default function ISBNInput({
   onSubmit,
 }: ISBNInputProps) {
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        type="text"
+    <Box
+      component="form"
+      onSubmit={onSubmit}
+      sx={{
+        display: "flex",
+        width: "100%",
+        alignItems: "center",
+        gap: 1,
+      }}
+    >
+      <TextField
+        fullWidth
+        size="small"
         placeholder="Enter ISBN manually"
         value={value}
         onChange={onChange}
+        variant="outlined"
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            bgcolor: "rgba(255, 255, 255, 0.9)",
+          },
+        }}
       />
       <Button
-        className="lookup-button" // custom css will currently still be overwritten by mui!
         type="submit"
-        variant="outlined"
-        size="small"
+        variant="contained"
+        size="medium"
         endIcon={<SendIcon />}
       >
         Lookup
       </Button>
-    </form>
+    </Box>
   );
 }

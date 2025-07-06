@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Paper,
+} from "@mui/material";
 
 type Props = {
   action: "insert" | "remove";
@@ -6,33 +14,53 @@ type Props = {
   onCancel: () => void;
 };
 
-export default function ShelfActionDialog({ action, onSubmit, onCancel }: Props) {
+export default function ShelfActionDialog({
+  action,
+  onSubmit,
+  onCancel,
+}: Props) {
   const [osmId, setOsmId] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(osmId);
+  };
+
   return (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        onSubmit(osmId);
-      }}
-      style={{ margin: "2rem 0" }}
+    <Paper
+      component="form"
+      onSubmit={handleSubmit}
+      elevation={3}
+      sx={{ p: 3, maxWidth: 500, width: "100%", mt: 2 }}
     >
-      <h3>
-        {action === "insert" ? "Insert book into bookshelf" : "Remove book from bookshelf"}
-      </h3>
-      <input
-        type="text"
+      <Typography variant="h6" gutterBottom>
+        {action === "insert"
+          ? "Insert book into bookshelf"
+          : "Remove book from bookshelf"}
+      </Typography>
+
+      <TextField
+        fullWidth
+        label="Bookshelf OSM ID"
         placeholder="Enter bookshelf OSM ID"
         value={osmId}
-        onChange={e => setOsmId(e.target.value)}
+        onChange={(e) => setOsmId(e.target.value)}
         required
-        style={{ fontSize: "1rem", padding: "0.5rem" }}
+        margin="normal"
       />
-      <button type="submit" style={{ marginLeft: "1rem" }}>
-        Confirm
-      </button>
-      <button type="button" style={{ marginLeft: "1rem" }} onClick={onCancel}>
-        Cancel
-      </button>
-    </form>
+
+      <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+        <Button
+          variant="contained"
+          type="submit"
+          color={action === "insert" ? "primary" : "secondary"}
+        >
+          Confirm
+        </Button>
+        <Button variant="outlined" onClick={onCancel}>
+          Cancel
+        </Button>
+      </Stack>
+    </Paper>
   );
 }

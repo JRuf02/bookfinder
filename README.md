@@ -38,6 +38,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - [x] buch entnehmen/einstellen funktion
 - [ ] move css to component-specific css modules
+- [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?
 - [x] mobile first web design!
 - [ ] online catalog
 - [ ] Fill bookshelves table with public_bookcases from osm

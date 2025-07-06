@@ -43,23 +43,31 @@ input[type="text"] {
   padding: 0.5rem;
 }
 
-/* Desktop scanner styles */
-@media (min-width: 601px) {
-  .scanner-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-  .scanner-video {
-    width: 100%;
-    max-width: 600px;
-    aspect-ratio: 4 / 3;
-    background: #000;
-    object-fit: cover;
-    border: none;
-  }
+/* Base styles */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Scanner styles common to all devices */
+.scanner-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.scanner-video {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  object-fit: cover;
+  border: none;
 }
 
 /* Mobile full-screen scanner override */
@@ -79,12 +87,14 @@ input[type="text"] {
     z-index: 1;
     margin: 0;
   }
+
   .scanner-video {
     width: 100vw !important;
     height: 100vh !important;
     object-fit: cover;
     background: #000;
   }
+
   .input-overlay {
     position: fixed;
     left: 0;

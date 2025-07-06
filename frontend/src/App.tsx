@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Box, Typography, Button, Container, Stack } from "@mui/material";
 import Scanner from "./components/Scanner";
 import ISBNInput from "./components/ISBNInput";
 import BookDisplay from "./components/BookDisplay";
@@ -60,35 +61,56 @@ function App() {
   };
 
   return (
-    // TODO: move style to CSS
-    <div className="app-container">
-      <h1 style={{ marginBottom: "1rem" }}>Scan ISBN Barcode</h1>
+    <Container
+      className="app-container"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        Scan ISBN Barcode
+      </Typography>
+
       {scanning && (
-        <>
+        <Box sx={{ width: "100%" }}>
           <Scanner onResult={handleScanResult} active={scanning} />
-          <div className="input-overlay">
+          <Box className="input-overlay">
             <ISBNInput
               value={inputIsbn}
               onChange={(e) => setInputIsbn(e.target.value)}
               onSubmit={handleInputSubmit}
             />
-          </div>
-        </>
+          </Box>
+        </Box>
       )}
+
       {book && !shelfActionType && !actionResult && (
-        <div>
+        <Box>
           <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />
-          <div className="button-group">
-            <button onClick={() => handleShelfAction("insert")}>
+          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleShelfAction("insert")}
+            >
               Insert into bookshelf
-            </button>
-            <button onClick={() => handleShelfAction("remove")}>
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleShelfAction("remove")}
+            >
               Remove from bookshelf
-            </button>
-            <button onClick={handleRescan}>Rescan</button>
-          </div>
-        </div>
+            </Button>
+            <Button variant="outlined" onClick={handleRescan}>
+              Rescan
+            </Button>
+          </Stack>
+        </Box>
       )}
+
       {shelfActionType && (
         <ShelfActionDialog
           action={shelfActionType}
@@ -96,8 +118,9 @@ function App() {
           onCancel={() => setShelfActionType(null)}
         />
       )}
+
       {actionResult && <ActionResultDialog message={actionResult} />}
-    </div>
+    </Container>
   );
 }
 

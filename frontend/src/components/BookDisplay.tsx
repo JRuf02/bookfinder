@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import styles from "../styles/BookDisplay.module.css";
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
+} from "@mui/material";
 
 type Book = { title: string; author: string; dnbISBN: string; dnbId: string };
 type BookDisplayProps = {
@@ -17,9 +24,9 @@ export default function BookDisplay({
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    // Use my server endpoint instead of DNB directly
-    const host = window.location.hostname;
-    setCoverUrl(`http://${host}:5000/api/covers?isbn=${book.dnbISBN}&size=l`);
+    // Use own server endpoint instead of DNB API directly
+    // Use relative URL to ensure protocol matching (HTTP or HTTPS)
+    setCoverUrl(`/api/covers?isbn=${book.dnbISBN}&size=l`);
     setImageError(false);
   }, [book.dnbISBN]);
 
@@ -28,36 +35,57 @@ export default function BookDisplay({
   };
 
   return (
-    <div>
-      <p>
-        ISBN: <strong>{isbn}</strong>
-      </p>
-      <p>
-        ISBN (DNB format): <strong>{book.dnbISBN}</strong>
-      </p>
-      <h2>{book.title}</h2>
-      <p>by {book.author}</p>
+    <Card sx={{ maxWidth: 400, textAlign: "center", p: 2 }}>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          ISBN: <strong>{isbn}</strong>
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          ISBN (DNB format): <strong>{book.dnbISBN}</strong>
+        </Typography>
+        <Typography variant="h5" component="h2" gutterBottom>
+          {book.title}
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+          by {book.author}
+        </Typography>
 
-      {!imageError && coverUrl && (
-        <div>
-          <img
-            src={coverUrl}
+        {!imageError && coverUrl && (
+          <CardMedia
+            component="img"
+            image={coverUrl}
             alt={`Cover of ${book.title}`}
-            className={styles.bookCover}
+            sx={{
+              maxWidth: 200,
+              margin: "0 auto",
+              border: "1px solid #ddd",
+              borderRadius: 1,
+              p: 0.5,
+            }}
             onError={handleImageError}
           />
-        </div>
-      )}
+        )}
 
-      {imageError && (
-        <div className={styles.imageError}>
-          <p>Cover image not available</p>
-        </div>
-      )}
+        {imageError && (
+          <Box sx={{ my: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{ fontStyle: "italic", color: "#666" }}
+            >
+              Cover image not available
+            </Typography>
+          </Box>
+        )}
 
-      <button onClick={onRescan} className={styles.rescanButton}>
-        Scan Another
-      </button>
-    </div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onRescan}
+          sx={{ mt: 2 }}
+        >
+          Scan Another
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,9 +1,15 @@
-import styles from "../styles/ActionResultDialog.module.css";
+import { Alert, Box } from "@mui/material";
 
 type Props = {
   message: string;
 };
 
 export default function ActionResultDialog({ message }: Props) {
-  return <div className={styles.actionResult}>{message}</div>;
+  const isSuccess = message.includes("success") || message.startsWith("✔️");
+
+  return (
+    <Box sx={{ width: "100%", maxWidth: 500, mt: 2 }}>
+      <Alert severity={isSuccess ? "success" : "error"}>{message}</Alert>
+    </Box>
+  );
 }
