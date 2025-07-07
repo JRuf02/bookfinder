@@ -37,12 +37,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
        -d '{"osm_id": "123456", "isbn": "9781234567890"}'
 
 - [x] buch entnehmen/einstellen funktion
-- [ ] move css to component-specific css modules
+- [ ] old books without isbn / foreign isbn
 - [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?
 - [x] mobile first web design!
 - [ ] online catalog
 - [ ] Fill bookshelves table with public_bookcases from osm
-- [ ] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background)
+- [ ] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background) (done?)
 - [ ] map view
 - [ ] user accounts
 
