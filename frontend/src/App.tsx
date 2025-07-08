@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Box, Typography, Button, Container, Stack } from "@mui/material";
 import Scanner from "./components/Scanner";
 import ISBNInput from "./components/ISBNInput";
@@ -24,6 +24,11 @@ function App() {
   const [shelfActionType, setShelfActionType] = useState<ShelfAction>(null);
   const [actionResult, setActionResult] = useState<string | null>(null);
 
+  const scannerRef = useRef<{
+    stopCamera: () => void;
+    stopReading: () => void;
+  } | null>(null);
+
   // Callback when Scanner finds a result
   const handleScanResult = async (scannedIsbn: string) => {
     setIsbn(scannedIsbn);
@@ -34,8 +39,16 @@ function App() {
   // Callback when ISBN input is submitted manually
   const handleInputSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // prevents page reload
-    setIsbn(inputIsbn);
+
+    // Stop camera before changing state
+    if (scannerRef.current) {
+      scannerRef.current.stopReading();
+      scannerRef.current.stopCamera();
+    }
+
+    // Now update state
     setScanning(false);
+    setIsbn(inputIsbn);
     setBook(await fetchBookData(inputIsbn));
   };
 
@@ -60,6 +73,14 @@ function App() {
     setTimeout(handleRescan, 2000);
   };
 
+  // Add a function to get the scanner methods
+  const handleScannerReady = (methods: {
+    stopCamera: () => void;
+    stopReading: () => void;
+  }) => {
+    scannerRef.current = methods;
+  };
+
   return (
     <Container
       className="app-container"
@@ -75,7 +96,11 @@ function App() {
 
       {scanning && (
         <Box sx={{ width: "100%" }}>
-          <Scanner onResult={handleScanResult} active={scanning} />
+          <Scanner
+            onResult={handleScanResult}
+            active={scanning}
+            onReady={handleScannerReady}
+          />
           <Box className="input-overlay">
             <ISBNInput
               value={inputIsbn}
