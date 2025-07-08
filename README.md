@@ -37,8 +37,9 @@ Use the provided Devcontainer to make the usage as easy as possible:
        -d '{"osm_id": "123456", "isbn": "9781234567890"}'
 
 - [x] buch entnehmen/einstellen funktion
+- [ ] https://reactrouter.com/6.30.1/start/tutorial#active-link-styling (done?)
 - [ ] use memo for scanner to avoid rerender: https://www.w3schools.com/REACT/react_memo.asp
-- [ ] https://www.w3schools.com/REACT/react_router.asp
+- [x] https://www.w3schools.com/REACT/react_router.asp
 - [ ] old books without isbn / foreign isbn
 - [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
 - [ ] dont insert 'error fetching data' or 'unknown title' into catalog
