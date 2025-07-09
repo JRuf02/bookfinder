@@ -23,19 +23,15 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - Start vite and flask servers in the container
 - Connect host and the device to the same network (no eduroam!)
 - Run ipconfig on the host (outside the docker container) to find its IPv4 address
-- Open https://host-ip:5173/ on your device's browser
+- Open `https://host-ip:5173/` on your device's browser
 - Accept self-signed certificate
 - Accept camera permission
 
 ### TODO
 
-- [x] bookdata cache
-      [ ] mit openstreetmap bookcase id
-      -> book can be inserted like this:
-      curl -X POST http://localhost:5000/api/shelf/insert \
-       -H "Content-Type: application/json" \
-       -d '{"osm_id": "123456", "isbn": "9781234567890"}'
-
+- [x] bookdata cache -> book can be inserted like this:
+      `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
+- [ ] mit openstreetmap bookcase id
 - [x] buch entnehmen/einstellen funktion
 - [ ] https://reactrouter.com/6.30.1/start/tutorial#active-link-styling (done?)
 - [x] use memo for scanner to avoid rerender: https://www.w3schools.com/REACT/react_memo.asp
@@ -46,22 +42,20 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] mobile first web design!
 - [ ] online catalog
 - [ ] Fill bookshelves table with public_bookcases from osm
-- [ ] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background) (done?)
+- [x] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background) (done!)
 - [ ] map view
 - [ ] user accounts
-
-- [ ] save image to db
 - [x] backend reachable from mobile on same network
 - [x] camera feed working on mobile
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
 - [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
 - [ ] implement and test Makefiles!
+- [ ] implement tests
 - [ ] also for react?!
 - [ ] clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh
 - [ ] move venv to the python / server directory if possible
-- [ ] make project docker-compatible as wished here: https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make
-- [ ] implement tests ?
+- [ ] make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
 - [ ] adhere to coding standards
 - [x] implement server...
 - [x] ...with book data api that proxies dnb data
@@ -71,7 +65,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] ...and db for online catalog (sqlite3)
 - [ ] backend for catalog search by location/author/title/isbn
 - [ ] map view
-- [ ] use material ui (mui) for react buttons, input fields and other ui components
+- [x] use material ui (mui) for react buttons, input fields and other ui components
 - [x] frontend
 - [ ] support multiple languages?
 - [ ] type annotations in python!
@@ -82,61 +76,49 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### isbn to book data via dnb
 
-#### infos
+- [infos](https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/SRU/sru_node.html#doc58294bodyText5)
 
-https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/SRU/sru_node.html#doc58294bodyText5
+- [html book data (catalog page)](https://portal.dnb.de/opac/simpleSearch?query=%223551551677%22)
 
-#### html book data (catalog page)
+- [jpg (cover image)](https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m)
 
-https://portal.dnb.de/opac/simpleSearch?query=%223551551677%22
-
-#### jpg (cover image)
-
-https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m
-
-#### xml book data
-
-##### marc-21-xml formatted
-
-https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="3551551677"&recordSchema=MARC21-xml&maximumRecords=1
-
-##### rdf-xml formatted
-
-https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=%223551551677%22&maximumRecords=1
+- xml book data
+  - [marc-21-xml formatted](https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="3551551677"&recordSchema=MARC21-xml&maximumRecords=1)
+  - [rdf-xml formatted](https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=%223551551677%22&maximumRecords=1)
 
 ## show on mobile
 
--connect to same network
--find ipv4 address of host via iplookup
--go to https://hostip:5173
+- connect to same network
+- find ipv4 address of host via iplookup
+- go to `https://hostip:5173`
 
 ## easy open on mobile (experimental, doesnt work on windows host yet)
 
--# Display the host IP address for QR code generation
+```
+# Display the host IP address for QR code generation
 HOST_IP=$(hostname -i | awk '{print $1}')
 echo "Your application is running at: https://${HOST_IP}:5173"
 echo "Scan this QR code on your mobile device to access the app:"
 qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 
--# Or open in the host browser
+# Or open in the host browser
 "$BROWSER" "https://${HOST_IP}:5173"
+```
 
-##### bugs
+## bugs
 
 If isbn is added manually while on the input for osm id, the book isbn is overwritten with manual input.
 -> disable isbn input once book will be inserted or removed!!!
 
+```
 Normalized ISBN: 123456789X
 Book not found in DB for ISBN: 123456789X
 Error fetching book data: 'NoneType' object has no attribute 'find'
 Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbISBN': '', 'dnbId': ''}
 127.0.0.1 - - [23/Jun/2025 13:29:16] "GET /api/books?isbn=123456789X HTTP/1.1" 200 -
+```
 
-No image on mobile because https request to http flask server?
-172.17.0.1 - - [23/Jun/2025 13:32:03] code 400, message Bad request version ('n\x04\x05\x8bÓ\x95´Eë\x97\x92Ð|9Êã\x19\x06äåð\x91Ã\x88æõu\x1b\x13\x90Í\x88\x00"\x13\x01\x13\x03\x13\x02À+À/Ì©Ì¨À,À0À')
-172.17.0.1 - - [23/Jun/2025 13:32:03] "\x16\x03\x01\x02\x85\x01\x00\x02\x81\x03\x03\x14\x96\x01\x86HÂ\x1f\x91¦¬û>¬½\x91\x196íÞ\x01\x0b¡2Å^\x0f\x80¦ø}=» n\x04\x05\x8bÓ\x95´Eë\x97\x92Ð|9Êã\x19\x06äåð\x91Ã\x88æõu\x1b\x13\x90Í\x88\x00"\x13\x01\x13\x03\x13\x02À+À/Ì©Ì¨À,À0À" 400 -
-
-##### testing insertion / removal of books
+## testing insertion / removal of books
 
 SQLite tables:
 table books:
@@ -147,13 +129,22 @@ table current-catalog:
 entry-id osm-id isbn time-of-entry
 
 Change the table:
+
+```
 curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
+```
+
+```
 curl -X POST http://localhost:5000/api/shelf/remove -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
+```
 
 Show the table:
+
+```
 cd server
 apk update && apk add sqlite
 sqlite3 books.db
 .headers on
 .mode column
 SELECT \* FROM current_catalog;
+```
