@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 import "@zxing/library";
@@ -262,7 +262,7 @@ function useBarcodeReader(
   };
 }
 
-export default function Scanner({ onResult, active, onReady }: ScannerProps) {
+function Scanner({ onResult, active, onReady }: ScannerProps) {
   const mountCountRef = useRef(0);
   const { videoRef, error, startCamera, stopCamera, playVideo } = useCamera();
   const { isReading, startReading, stopReading, resetReader } =
@@ -445,3 +445,5 @@ export default function Scanner({ onResult, active, onReady }: ScannerProps) {
     </Box>
   );
 }
+
+export default memo(Scanner);

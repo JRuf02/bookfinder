@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Scanner from "../components/Scanner";
 import ISBNInput from "../components/ISBNInput";
 import BookDisplay from "../components/BookDisplay";
@@ -29,7 +29,7 @@ export default function ScanningScreen() {
   } | null>(null);
 
   // Callback when Scanner finds a result
-  const handleScanResult = async (scannedIsbn: string) => {
+  const handleScanResult = useCallback(async (scannedIsbn: string) => {
     // Stop camera explicitly
     if (scannerRef.current) {
       scannerRef.current.stopReading();
@@ -38,7 +38,7 @@ export default function ScanningScreen() {
     setIsbn(scannedIsbn);
     setScanning(false);
     setBook(await fetchBookData(scannedIsbn));
-  };
+  }, []);
 
   // Callback when ISBN input is submitted manually
   const handleInputSubmit = async (e: React.FormEvent) => {
@@ -77,12 +77,12 @@ export default function ScanningScreen() {
   };
 
   // Add a function to get the scanner methods
-  const handleScannerReady = (methods: {
-    stopCamera: () => void;
-    stopReading: () => void;
-  }) => {
-    scannerRef.current = methods;
-  };
+  const handleScannerReady = useCallback(
+    (methods: { stopCamera: () => void; stopReading: () => void }) => {
+      scannerRef.current = methods;
+    },
+    []
+  );
 
   // Cleanup camera when component unmounts
   useEffect(() => {
