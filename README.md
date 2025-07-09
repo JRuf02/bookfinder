@@ -29,27 +29,29 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
-- [x] bookdata cache -> book can be inserted like this:
-      `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
-- [ ] mit openstreetmap bookcase id
-- [x] buch entnehmen/einstellen funktion
-- [ ] https://reactrouter.com/6.30.1/start/tutorial#active-link-styling (done?)
-- [x] use memo for scanner to avoid rerender: https://www.w3schools.com/REACT/react_memo.asp
-- [x] https://www.w3schools.com/REACT/react_router.asp
+- [ ] online catalog - add missing pages!
+- [ ] Fill bookshelves table with public_bookcases from osm
+- [ ] backend for catalog search by location/author/title/isbn
+- [ ] map view
 - [ ] old books without isbn / foreign isbn
 - [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
 - [ ] dont insert 'error fetching data' or 'unknown title' into catalog
-- [x] mobile first web design!
-- [ ] online catalog
-- [ ] Fill bookshelves table with public_bookcases from osm
-- [x] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background) (done!)
-- [ ] map view
-- [ ] user accounts
-- [x] backend reachable from mobile on same network
-- [x] camera feed working on mobile
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
+- [ ] if cover in size=l not available, try different sizes!
+- [ ] save covers to db?
+- [ ] user accounts ?
+- [x] bookdata cache -> book can be inserted like this:
+      `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
+- [x] mobile first web design!
+- [x] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background)
+- [x] backend reachable from mobile on same network
+- [x] camera feed working on mobile
 - [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
+- [x] buch entnehmen/einstellen funktion
+- [ ] Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
+- [x] use [react memo](https://www.w3schools.com/REACT/react_memo.asp) for scanner to avoid rerender
+- [x] use [react-router](https://www.w3schools.com/REACT/react_router.asp) for multi-page design
 - [ ] implement and test Makefiles!
 - [ ] implement tests
 - [ ] also for react?!
@@ -63,16 +65,13 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
 - [ ] Nginx / Apache (prod)
 - [x] ...and db for online catalog (sqlite3)
-- [ ] backend for catalog search by location/author/title/isbn
-- [ ] map view
 - [x] use material ui (mui) for react buttons, input fields and other ui components
 - [x] frontend
 - [ ] support multiple languages?
 - [ ] type annotations in python!
 - [ ] search code for TODOs
+- [ ] search local desktop for todos
 - [ ] clean up console.log and console.error usage
-- [ ] if cover in size=l not available, try different sizes!
-- [ ] save covers to db?
 
 ### isbn to book data via dnb
 
