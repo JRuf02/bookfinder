@@ -125,7 +125,15 @@ export default function ScanningScreen() {
       )}
 
       {book && !shelfActionType && !actionResult && (
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            mt: 2,
+          }}
+        >
           <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
             <Button
