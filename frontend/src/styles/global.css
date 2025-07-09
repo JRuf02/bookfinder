@@ -74,7 +74,7 @@ body,
 @media (max-width: 600px) {
   .app-container {
     padding: 0;
-    height: calc(100vh - 56px); /* Adjust for nav bar height */
+    height: calc(100dvh - 56px); /* Adjust for nav bar height */
   }
   .scanner-container {
     position: fixed;
@@ -83,7 +83,7 @@ body,
     right: 0;
     bottom: 0;
     width: 100vw;
-    height: calc(100vh - 56px); /* Adjust for nav bar height */
+    height: calc(100dvh - 56px); /* Adjust for nav bar height */
     background: #000;
     z-index: 1;
     margin: 0;
@@ -96,7 +96,7 @@ body,
 
   .scanner-video {
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100dvh !important;
     object-fit: cover;
     background: #000;
     z-index: 1;
