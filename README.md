@@ -77,6 +77,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] type annotations in python!
 - [ ] search code for TODOs
 - [ ] clean up console.log and console.error usage
+- [ ] if cover in size=l not available, try different sizes!
+- [ ] save covers to db?
 
 ### isbn to book data via dnb
 
