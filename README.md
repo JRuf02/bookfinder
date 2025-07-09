@@ -29,7 +29,10 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
+- [ ] Implement Home screen
 - [ ] online catalog - add missing pages!
+- [ ] add info page
+- [ ] properly design NotFoundScreen
 - [ ] Fill bookshelves table with public_bookcases from osm
 - [ ] backend for catalog search by location/author/title/isbn
 - [ ] map view
@@ -72,6 +75,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] search code for TODOs
 - [ ] search local desktop for todos
 - [ ] clean up console.log and console.error usage
+- [ ] remove unused inputs (tsx and py)
 
 ### isbn to book data via dnb
 

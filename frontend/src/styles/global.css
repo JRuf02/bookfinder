@@ -75,6 +75,7 @@ body,
   .app-container {
     padding: 0;
     height: calc(100dvh - 56px); /* Adjust for nav bar height */
+    justify-content: center;
   }
   .scanner-container {
     position: fixed;
@@ -135,4 +136,4 @@ body,
   }
 }
 
-/* TODO: Landscape mode */
+/* TODO (?): Landscape mode */
