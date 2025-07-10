@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { Box, Typography, Button, Container, Stack } from "@mui/material";
-import logo from "../graphics/logo-long-no-bg.png";
+import { Box, Typography, Container } from "@mui/material";
+import logo from "../../graphics/logo-long-no-bg.png";
 
 export default function NotFoundScreen() {
   return (

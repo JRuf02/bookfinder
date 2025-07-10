@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { Box, Container, Button, Card } from "@mui/material";
+import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
-import logo from "../graphics/logo-long-no-bg.png";
+import logo from "../../graphics/logo-long-no-bg.png";
 
 export default function HomeScreen() {
   const [inputIsbn, setInputIsbn] = useState("");

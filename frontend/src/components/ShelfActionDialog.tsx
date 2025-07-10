@@ -45,6 +45,7 @@ export default function ShelfActionDialog({
         placeholder="Enter bookshelf OSM ID"
         value={osmId}
         onChange={(e) => setOsmId(e.target.value)}
+        autoFocus
         required
         margin="normal"
       />

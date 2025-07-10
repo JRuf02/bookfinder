@@ -33,6 +33,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] online catalog - add missing pages!
 - [ ] add info page
 - [x] properly design NotFoundScreen
+- [ ] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
 - [ ] use/extend theme.ts, e.g. dark mode
 - [ ] Fill bookshelves table with public_bookcases from osm
 - [ ] backend for catalog search by location/author/title/isbn
