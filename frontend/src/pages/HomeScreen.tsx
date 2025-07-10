@@ -58,11 +58,12 @@ export default function HomeScreen() {
           alignItems: "center",
           justifyContent: "space-evenly",
           px: 2,
+          mb: 2,
           pb: `${NAV_BAR_HEIGHT}px`, // leave space for nav bar
           boxSizing: "border-box",
         }}
       >
-        {/* Search Input */}
+        {/* Search Input (fixed height, no flex) */}
         <Box sx={{ width: "100%", maxWidth: 400 }}>
           <ISBNInput
             value={inputIsbn}
@@ -72,16 +73,19 @@ export default function HomeScreen() {
           />
         </Box>
 
-        {/* Map View Placeholder */}
+        {/* Map View Placeholder (flex-grow) */}
         <Card
           sx={{
+            flex: 1,
+            minHeight: 180,
             width: "100%",
             maxWidth: 400,
             height: 180,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            my: 2,
+            mt: 2,
+            mb: 1,
             borderRadius: 4,
             bgcolor: "#e3eafc",
             color: "#1976d2",
@@ -98,6 +102,9 @@ export default function HomeScreen() {
           variant="contained"
           color="primary"
           sx={{
+            flex: 1,
+            minHeight: 60,
+            maxHeight: 200,
             width: "100%",
             maxWidth: 400,
             height: 56,
@@ -114,6 +121,9 @@ export default function HomeScreen() {
           variant="contained"
           color="secondary"
           sx={{
+            flex: 1,
+            minHeight: 60,
+            maxHeight: 200,
             width: "100%",
             maxWidth: 400,
             height: 56,
