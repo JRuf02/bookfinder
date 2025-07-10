@@ -30,10 +30,13 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ### TODO
 
 - [ ] Implement Home screen
+- [ ] make ScanningScreen more maintainable by splitting into multiple pages!
+- [ ] use rem / % in global.css as well!!!
+- [ ] make sure nothing is hidden beneath bottom nav bar
 - [ ] online catalog - add missing pages!
 - [ ] add info page
 - [x] properly design NotFoundScreen
-- [ ] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
+- [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
 - [ ] use/extend theme.ts, e.g. dark mode
 - [ ] Fill bookshelves table with public_bookcases from osm
 - [ ] backend for catalog search by location/author/title/isbn

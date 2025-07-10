@@ -5,15 +5,10 @@ export default function NotFoundScreen() {
   return (
     <Container
       className="app-container"
-      maxWidth={false}
-      disableGutters
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         justifyContent: "center",
-        minHeight: "100dvh",
-        minWidth: "100vw",
       }}
     >
       <Box
@@ -37,7 +32,7 @@ export default function NotFoundScreen() {
         />
       </Box>
       <Typography variant="body1" sx={{ p: 2, textAlign: "center" }}>
-        404: This page does not exist
+        This page does not exist
       </Typography>
     </Container>
   );

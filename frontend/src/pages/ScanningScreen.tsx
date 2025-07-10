@@ -76,7 +76,7 @@ export default function ScanningScreen() {
     setTimeout(handleRescan, 2000);
   };
 
-  // Add a function to get the scanner methods
+  // Get the scanner methods
   const handleScannerReady = useCallback(
     (methods: { stopCamera: () => void; stopReading: () => void }) => {
       scannerRef.current = methods;
@@ -94,21 +94,20 @@ export default function ScanningScreen() {
     };
   }, []);
 
+  // Sizing constants in rem
+  const TITLE_MARGIN_BOTTOM = "1.5rem";
+  const CONTENT_MAX_WIDTH = "25rem";
+  const STACK_SPACING = 2; // MUI spacing unit, still works well with rem
+
+  // TODO: make this more maintainable by splitting into multiple pages!
   return (
-    <Container
-      className="app-container"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <Typography variant="h4" sx={{ mb: 2 }}>
+    <Container className="app-container">
+      <Typography variant="h4" sx={{ mb: TITLE_MARGIN_BOTTOM }}>
         Scan ISBN Barcode
       </Typography>
 
       {scanning && (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", maxWidth: CONTENT_MAX_WIDTH }}>
           <Scanner
             onResult={handleScanResult}
             active={scanning}
@@ -131,11 +130,13 @@ export default function ScanningScreen() {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            mt: 2,
+            maxWidth: CONTENT_MAX_WIDTH,
+            mt: "2rem",
+            gap: "1.5rem",
           }}
         >
           <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />
-          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+          <Stack direction="row" spacing={STACK_SPACING} sx={{ mt: "1.5rem" }}>
             <Button
               variant="contained"
               color="primary"
