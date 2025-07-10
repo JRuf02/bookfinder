@@ -2,12 +2,14 @@ import { TextField, Button, Box } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 type ISBNInputProps = {
+  placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
 };
 
 export default function ISBNInput({
+  placeholder = "Enter ISBN manually",
   value,
   onChange,
   onSubmit,
@@ -26,7 +28,7 @@ export default function ISBNInput({
       <TextField
         fullWidth
         size="small"
-        placeholder="Enter ISBN manually"
+        placeholder={placeholder}
         value={value}
         onChange={onChange}
         variant="outlined"

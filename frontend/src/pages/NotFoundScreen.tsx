@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Box, Typography, Button, Container, Stack } from "@mui/material";
+import logo from "../graphics/logo-long-no-bg.png";
 
 export default function NotFoundScreen() {
   return (
@@ -16,7 +17,27 @@ export default function NotFoundScreen() {
         minWidth: "100vw",
       }}
     >
-      <Typography variant="h4" sx={{ mb: 2 }}>
+      <Box
+        sx={{
+          mt: 2,
+          mb: 2,
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={logo}
+          alt="bookFinder logo"
+          style={{
+            maxWidth: "90%",
+            height: "auto",
+            maxHeight: 120,
+            objectFit: "contain",
+          }}
+        />
+      </Box>
+      <Typography variant="body1" sx={{ p: 2, textAlign: "center" }}>
         404: This page does not exist
       </Typography>
     </Container>
