@@ -1,14 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import Scanner from "../components/Scanner";
 import ISBNInput from "../components/ISBNInput";
-import BookDisplay from "../components/BookDisplay";
-import ShelfActionDialog from "../components/ShelfActionDialog";
-import ActionResultDialog from "../components/ActionResultDialog";
-import { fetchBookData } from "../services/fetchBookData";
-import { shelfAction } from "../services/shelfActions";
-import { Box, Typography, Button, Container, Stack } from "@mui/material";
-
-type ShelfAction = "insert" | "remove" | null;
+import ScanningResultsScreen from "./ScanningResultsScreen";
+import { Box, Container, Typography } from "@mui/material";
 
 export default function ScanningScreen() {
   const [isbn, setIsbn] = useState<string>("");
@@ -20,8 +14,6 @@ export default function ScanningScreen() {
     dnbId: string;
   } | null>(null);
   const [scanning, setScanning] = useState(true);
-  const [shelfActionType, setShelfActionType] = useState<ShelfAction>(null);
-  const [actionResult, setActionResult] = useState<string | null>(null);
 
   const scannerRef = useRef<{
     stopCamera: () => void;
@@ -37,7 +29,8 @@ export default function ScanningScreen() {
     }
     setIsbn(scannedIsbn);
     setScanning(false);
-    setBook(await fetchBookData(scannedIsbn));
+    // Fetch book data in ScanningResultsScreen
+    // setBook(await fetchBookData(scannedIsbn));
   }, []);
 
   // Callback when ISBN input is submitted manually
@@ -53,30 +46,10 @@ export default function ScanningScreen() {
     // Now update state
     setScanning(false);
     setIsbn(inputIsbn);
-    setBook(await fetchBookData(inputIsbn));
+    // Fetch book data in ScanningResultsScreen
+    // setBook(await fetchBookData(inputIsbn));
   };
 
-  const handleRescan = () => {
-    setBook(null);
-    setIsbn("");
-    setInputIsbn("");
-    setShelfActionType(null);
-    setActionResult(null);
-    setScanning(true);
-  };
-
-  const handleShelfAction = (action: ShelfAction) => setShelfActionType(action);
-
-  // Handle shelf insert/remove
-  const handleShelfSubmit = async (osmId: string) => {
-    if (!osmId || !isbn || !shelfActionType) return;
-    const result = await shelfAction(shelfActionType, osmId, isbn);
-    setActionResult(result.message);
-    setShelfActionType(null);
-    setTimeout(handleRescan, 2000);
-  };
-
-  // Get the scanner methods
   const handleScannerReady = useCallback(
     (methods: { stopCamera: () => void; stopReading: () => void }) => {
       scannerRef.current = methods;
@@ -84,95 +57,50 @@ export default function ScanningScreen() {
     []
   );
 
-  // Cleanup camera when component unmounts
-  useEffect(() => {
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stopReading();
-        scannerRef.current.stopCamera();
-      }
-    };
-  }, []);
+  // Reset for rescan
+  const handleRescan = () => {
+    setIsbn("");
+    setInputIsbn("");
+    setBook(null);
+    setScanning(true);
+  };
 
-  // Sizing constants in rem
-  const TITLE_MARGIN_BOTTOM = "0.5rem";
-  const CONTENT_MAX_WIDTH = "25rem";
-  const STACK_SPACING = 2; // MUI spacing unit, should work well with rem
+  // If not scanning, show results screen
+  if (!scanning) {
+    return (
+      <ScanningResultsScreen
+        isbn={isbn}
+        onRescan={handleRescan}
+        // Optionally pass setBook or book if you fetch here
+      />
+    );
+  }
 
-  // TODO: make this more maintainable by splitting into multiple pages!
   return (
     <Container className="app-container">
       {scanning && !book && (
         <Typography
           variant="h4"
           className="scan-screen-title"
-          sx={{ mb: TITLE_MARGIN_BOTTOM }}
+          sx={{ mb: "0.5rem" }}
         >
           Scan your book's barcode
         </Typography>
       )}
-
-      {scanning && (
-        <Box sx={{ width: "100%", maxWidth: "100%" }}>
-          <Scanner
-            onResult={handleScanResult}
-            active={scanning}
-            onReady={handleScannerReady}
-          />
-          <Box className="input-overlay">
-            <ISBNInput
-              value={inputIsbn}
-              onChange={(e) => setInputIsbn(e.target.value)}
-              onSubmit={handleInputSubmit}
-            />
-          </Box>
-        </Box>
-      )}
-
-      {book && !shelfActionType && !actionResult && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "100%",
-            maxWidth: CONTENT_MAX_WIDTH,
-            mt: "2rem",
-            gap: "1.5rem",
-          }}
-        >
-          <BookDisplay book={book} isbn={isbn} onRescan={handleRescan} />
-          <Stack direction="row" spacing={STACK_SPACING} sx={{ mt: "1.5rem" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleShelfAction("insert")}
-            >
-              Insert into bookshelf
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handleShelfAction("remove")}
-            >
-              Remove from bookshelf
-            </Button>
-            <Button variant="outlined" onClick={handleRescan}>
-              Rescan
-            </Button>
-          </Stack>
-        </Box>
-      )}
-
-      {shelfActionType && (
-        <ShelfActionDialog
-          action={shelfActionType}
-          onSubmit={handleShelfSubmit}
-          onCancel={() => setShelfActionType(null)}
+      <Box sx={{ width: "100%", maxWidth: "100%" }}>
+        <Scanner
+          onResult={handleScanResult}
+          active={scanning}
+          onReady={handleScannerReady}
         />
-      )}
-
-      {actionResult && <ActionResultDialog message={actionResult} />}
+      </Box>
+      <Box className="input-overlay">
+        <ISBNInput
+          value={inputIsbn}
+          onChange={(e) => setInputIsbn(e.target.value)}
+          onSubmit={handleInputSubmit}
+        />
+      </Box>
     </Container>
   );
 }

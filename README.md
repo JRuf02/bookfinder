@@ -30,7 +30,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ### TODO
 
 - [x] Implement Home screen (skeleton)
-- [ ] make ScanningScreen more maintainable by splitting into multiple pages!
+- [x] make ScanningScreen more maintainable by splitting into multiple pages!
 - [x] use rem / % in global.css as well!!!
 - [x] ensure theme.ts is used
 - [x] make sure nothing is hidden beneath bottom nav bar
