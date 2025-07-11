@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import ScanningScreen from "./pages/ScanningScreen";
 /*import ManualAddScreen from "./pages/ManualAddScreen";
-import InfoScreen from "./pages/InfoScreen";
-import CatalogHomeScreen from "./pages/CatalogHomeScreen";*/
+import InfoScreen from "./pages/InfoScreen";*/
+import CatalogHomeScreen from "./pages/CatalogHomeScreen";
 import NotFoundScreen from "./pages/NotFoundScreen";
 import BottomNavBar from "./components/BottomNavBar";
 
@@ -13,13 +13,13 @@ function App() {
   /*
         <Route path="/manual-add" element={<ManualAddScreen />} />
         <Route path="/info" element={<InfoScreen />} />
-        <Route path="/catalog" element={<CatalogHomeScreen />} />
   */
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeScreen />} />
+        <Route path="/catalog" element={<CatalogHomeScreen />} />
         <Route path="/scan" element={<ScanningScreen />} />
         {/* ...other routes */}
         <Route path="*" element={<NotFoundScreen />} />
