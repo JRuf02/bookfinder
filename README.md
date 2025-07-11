@@ -32,6 +32,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] Implement Home screen
 - [ ] make ScanningScreen more maintainable by splitting into multiple pages!
 - [ ] use rem / % in global.css as well!!!
+- [ ] find out where theme.ts is used
 - [ ] make sure nothing is hidden beneath bottom nav bar
 - [ ] online catalog - add missing pages!
 - [ ] add info page

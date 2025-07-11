@@ -95,16 +95,22 @@ export default function ScanningScreen() {
   }, []);
 
   // Sizing constants in rem
-  const TITLE_MARGIN_BOTTOM = "1.5rem";
+  const TITLE_MARGIN_BOTTOM = "0.5rem";
   const CONTENT_MAX_WIDTH = "25rem";
-  const STACK_SPACING = 2; // MUI spacing unit, still works well with rem
+  const STACK_SPACING = 2; // MUI spacing unit, should work well with rem
 
   // TODO: make this more maintainable by splitting into multiple pages!
   return (
     <Container className="app-container">
-      <Typography variant="h4" sx={{ mb: TITLE_MARGIN_BOTTOM }}>
-        Scan ISBN Barcode
-      </Typography>
+      {scanning && !book && (
+        <Typography
+          variant="h4"
+          className="scan-screen-title"
+          sx={{ mb: TITLE_MARGIN_BOTTOM }}
+        >
+          Scan your book's barcode
+        </Typography>
+      )}
 
       {scanning && (
         <Box sx={{ width: "100%", maxWidth: CONTENT_MAX_WIDTH }}>
