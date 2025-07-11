@@ -422,6 +422,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
         autoPlay={false}
         muted
       />
+      {/* Todo: Improve error message styling / Add error component */}
       {error && (
         <Paper
           elevation={3}
@@ -431,6 +432,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
             position: "absolute",
             top: "50%",
             left: "50%",
+            zIndex: 3,
             transform: "translate(-50%, -50%)",
             maxWidth: "80%",
             backgroundColor: "rgba(255, 255, 255, 0.9)",
