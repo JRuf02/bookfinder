@@ -29,19 +29,19 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### TODO
 
-- [ ] Implement Home screen
+- [x] Implement Home screen (skeleton)
 - [ ] make ScanningScreen more maintainable by splitting into multiple pages!
 - [x] use rem / % in global.css as well!!!
 - [x] ensure theme.ts is used
-- [ ] make sure nothing is hidden beneath bottom nav bar
+- [x] make sure nothing is hidden beneath bottom nav bar
 - [ ] online catalog - add missing pages!
 - [ ] add info page
 - [x] properly design NotFoundScreen
 - [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
-- [ ] use/extend theme.ts, e.g. dark mode
 - [ ] Fill bookshelves table with public_bookcases from osm
 - [ ] backend for catalog search by location/author/title/isbn
 - [ ] map view
+- [ ] check if the book exists in shelf before removing
 - [ ] old books without isbn / foreign isbn
 - [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
 - [ ] dont insert 'error fetching data' or 'unknown title' into catalog
@@ -61,6 +61,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
 - [x] use [react memo](https://www.w3schools.com/REACT/react_memo.asp) for scanner to avoid rerender
 - [x] use [react-router](https://www.w3schools.com/REACT/react_router.asp) for multi-page design
+- [ ] extend theme.ts, e.g. dark mode
 - [ ] implement and test Makefiles!
 - [ ] implement tests
 - [ ] also for react?!
