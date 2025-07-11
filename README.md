@@ -1,3 +1,5 @@
+# bookFinder
+
 ### Setup VS-Code Devcontainer
 
 Use the provided Devcontainer to make the usage as easy as possible:
@@ -9,7 +11,6 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ### Run server
 
-- /workspaces/isbn-scanner/frontend # npm install
 - Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the Devcontainer to start vite (react dev server)
 - Run `make run` in directory `\workspaces\isbn-scanner\server` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
 
@@ -23,9 +24,9 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - Start vite and flask servers in the container
 - Connect host and the device to the same network (no eduroam!)
 - Run ipconfig on the host (outside the docker container) to find its IPv4 address
-- Open `https://host-ip:5173/` on your device's browser
+- Open `https://[host-ip]:5173/` on your device's browser
 - Accept self-signed certificate
-- Accept camera permission
+- Accept camera permission popup
 
 ### TODO
 
