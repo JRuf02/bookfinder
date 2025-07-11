@@ -6,12 +6,13 @@ body,
   padding: 0;
 }
 
+/* Parent for each screen */
 .app-container {
   height: calc(100dvh - 56px);
   min-height: calc(100dvh - 56px);
   max-height: calc(100dvh - 56px);
   width: 100vw;
-  overflow: auto;
+  overflow: auto; /* Allow scrolling if content overflows */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,23 +48,15 @@ input[type="text"] {
   padding: 0.5rem;
 }
 
-/* Base styles */
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
 /* Scanner styles common to all devices */
 .scanner-container {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  max-height: calc(100dvh - 112px);
+  width: 100%; /* relative to the parent */
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .scanner-video {
@@ -81,6 +74,7 @@ body,
     padding: 0;
     height: calc(100dvh - 56px); /* Adjust for nav bar height */
     justify-content: center;
+    overflow: hidden;
   }
 
   .scan-screen-title {
@@ -92,9 +86,8 @@ body,
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 56px;
     width: 100vw;
-    height: calc(100dvh - 56px); /* Adjust for nav bar height */
     background: #000;
     z-index: 1;
     margin: 0;
@@ -107,8 +100,10 @@ body,
   }
 
   .scanner-video {
-    width: 100vw !important;
-    height: 100dvh !important;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: unset !important;
+    border: none;
     object-fit: cover;
     background: #000;
     z-index: 1;
@@ -119,8 +114,8 @@ body,
     left: 0;
     right: 0;
     bottom: 58px;
-    width: 100vw;
-    background: rgba(0, 0, 0, 0.25);
+    width: 100%;
+    background: rgba(0, 0, 0, 0);
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     display: flex;
     justify-content: center;

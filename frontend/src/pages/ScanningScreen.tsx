@@ -113,7 +113,7 @@ export default function ScanningScreen() {
       )}
 
       {scanning && (
-        <Box sx={{ width: "100%", maxWidth: CONTENT_MAX_WIDTH }}>
+        <Box sx={{ width: "100%", maxWidth: "100%" }}>
           <Scanner
             onResult={handleScanResult}
             active={scanning}
