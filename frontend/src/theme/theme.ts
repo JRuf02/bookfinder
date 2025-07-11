@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
+// Applies globally to all MUI components (see main.tsx)
 const theme = createTheme({
   palette: {
     primary: {
