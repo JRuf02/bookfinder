@@ -1,3 +1,7 @@
+// TODO !!!!
+// This component is not used any more! Delete or replace it with the new implementation from the new ShelfActionScreen component.
+
+/*
 import { useState } from "react";
 import {
   Box,
@@ -65,3 +69,4 @@ export default function ShelfActionDialog({
     </Paper>
   );
 }
+*/

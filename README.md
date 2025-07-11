@@ -41,10 +41,10 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] Fill bookshelves table with public_bookcases from osm
 - [ ] backend for catalog search by location/author/title/isbn
 - [ ] map view
-- [ ] check if the book exists in shelf before removing
+- [ ] check if the book exists in shelf before removing (front- and backend!)
 - [ ] old books without isbn / foreign isbn
 - [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
-- [ ] dont insert 'error fetching data' or 'unknown title' into catalog
+- [ ] dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
 - [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
 - [ ] if cover in size=l not available, try different sizes!

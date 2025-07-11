@@ -8,8 +8,10 @@ import {
   TextField,
   Stack,
   Container,
+  Alert,
 } from "@mui/material";
 import { shelfAction } from "../services/shelfActions";
+import ActionResultAlert from "../components/ActionResultAlert";
 
 export default function ShelfActionScreen({
   book,
@@ -24,13 +26,17 @@ export default function ShelfActionScreen({
 }) {
   const [osmId, setOsmId] = useState("");
   const [osmDialogOpen, setOsmDialogOpen] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   const handleShelfSubmit = async () => {
     const res = await shelfAction(action, osmId, book.dnbISBN);
-    setResult(res.message);
+    setResult(res);
   };
 
+  // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (
     <Container className="app-container">
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
@@ -60,7 +66,8 @@ export default function ShelfActionScreen({
             </Button>
           </Box>
         </Dialog>
-        {!result ? (
+        {result && <ActionResultAlert result={result} />}
+        {result === null || !result.success ? (
           <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
             <Button variant="outlined" onClick={onCancel}>
               Cancel
@@ -75,7 +82,6 @@ export default function ShelfActionScreen({
           </Stack>
         ) : (
           <Box sx={{ mt: "1.5rem" }}>
-            <Typography variant="body1">{result}</Typography>
             <Button variant="outlined" sx={{ mt: 2 }} onClick={onRescan}>
               Scan Another
             </Button>
