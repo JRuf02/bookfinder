@@ -35,6 +35,10 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] use rem / % in global.css as well!!!
 - [x] ensure theme.ts is used
 - [x] make sure nothing is hidden beneath bottom nav bar
+- [x] drop and recreate + fill table bookshelves
+- [ ] including reverse-geocoded addresses
+- [ ] clearly separate sqlite3 and flask files (e.g. no flask in \*\_db.py) for easy module testing
+- [ ] restructure server directory!
 - [ ] online catalog - add missing pages!
 - [ ] add info page
 - [x] properly design NotFoundScreen
@@ -85,6 +89,18 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] clean up console.log and console.error usage
 - [ ] remove unused inputs (tsx and py)
 - [ ] add svg icon
+
+### QLever bookshelf data
+
+Germany:
+https://qlever.cs.uni-freiburg.de/osm-planet/FG873S
+https://qlever.cs.uni-freiburg.de/osm-planet/ulH4tw
+
+Find all predicates:
+https://qlever.cs.uni-freiburg.de/osm-planet/3CtDN7
+
+Reverse geocoding (does not work):
+https://qlever.cs.uni-freiburg.de/osm-planet/zJ9akA
 
 ### isbn to book data via dnb
 
@@ -155,5 +171,11 @@ apk update && apk add sqlite
 sqlite3 books.db
 .headers on
 .mode column
-SELECT \* FROM current_catalog;
+SELECT * FROM current_catalog;
+```
+
+Show number of entries:
+
+```
+SELECT COUNT(*) FROM bookshelves;
 ```
