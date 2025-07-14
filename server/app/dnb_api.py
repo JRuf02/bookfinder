@@ -1,6 +1,6 @@
 import requests
 import xml.etree.ElementTree as ET
-from book import Book
+from app.models.book import Book
 from flask import jsonify, Response
 
 

@@ -1,11 +1,10 @@
 import sqlite3
 import os
-from book import Book
 
 
 def init_db() -> None:
     """Initialize the SQLite database."""
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
+    db_path = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute("""

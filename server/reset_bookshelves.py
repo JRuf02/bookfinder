@@ -1,3 +1,7 @@
+# Standalone script to reset the bookshelves table in the SQLite database.
+# Drops the existing bookshelves table and recreates it.
+# Fills the new table with data from a CSV file containing bookshelf information.
+
 import sqlite3
 import csv
 import os

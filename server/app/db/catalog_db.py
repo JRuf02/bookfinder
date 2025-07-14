@@ -1,13 +1,16 @@
 import sqlite3
-from flask import jsonify, request, Request, Response
+
+# TODO: Move all api logic to app/routes/catalog.py
+from flask import jsonify, Request, Response
 import os
-from geo_utils import haversine
+from app.utils.geo_utils import haversine
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "books.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
 
 
-def search_catalog(request: Request) -> Response:
+def search_in_catalog_db(request: Request) -> Response:
     """Search for books by title and return entries with shelf info and distance."""
+    # TODO: Normalize the title input
     title = request.args.get('title')
     lat = request.args.get('lat', type=float)
     lon = request.args.get('lon', type=float)

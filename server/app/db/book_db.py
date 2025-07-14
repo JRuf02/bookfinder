@@ -1,6 +1,8 @@
 import sqlite3
 import os
-from book import Book
+from app.models.book import Book
+
+DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
 
 
 def get_book_from_database(isbn: str) -> Book | None:
@@ -14,8 +16,7 @@ def get_book_from_database(isbn: str) -> Book | None:
     # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)
     isbn = ''.join(filter(lambda x: x.isdigit() or (x == 'X' and len(isbn) == 10 and isbn[-1] == 'X'), isbn))
 
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT isbn, title, author, dnb_isbn, dnb_id, cover_url FROM books WHERE isbn = ?", (isbn,))
     row = c.fetchone()
@@ -34,8 +35,7 @@ def get_book_from_database(isbn: str) -> Book | None:
 def save_book_to_db(book: Book) -> None:
     """Save book data to the local SQLite database."""
     # TODO? Use function from shelf_db.py to normalize ISBNS?
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
         INSERT OR REPLACE INTO books (isbn, title, author, dnb_isbn, dnb_id, cover_url)

@@ -1,27 +1,21 @@
 import sqlite3
-from flask import jsonify, request, Request, Response
+# TODO: Move all api logic to app/routes/shelf.py
+from flask import jsonify, Request, Response
 import os
+from app.utils.isbn_utils import normalize_isbn
+
+DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
 
 
-# TODO: Add tests for this function!
-def normalize_isbn(isbn: str) -> str:
-    """Normalize ISBN by removing non-numeric characters. Allow capital X at the end for ISBN-10"""
-    cleaned = ''.join(filter(str.isdigit, isbn))
-    if isbn.endswith('X') or isbn.endswith('x'):
-        return cleaned + 'X'
-    return cleaned
-
-
-def insert_book_to_shelf(osm_id: str, isbn: str) -> None:
+def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
     # TODO: Add tests for this and the other functions!
     # TODO: Check if shelf exists, if not create it
     # TODO: Check if book has a books table entry, if not create it
     """Insert a book into a bookshelf (current_catalog)."""
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
     isbn = normalize_isbn(isbn)
     if not isbn:
         pass # TODO: Handle invalid ISBN case
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
         INSERT INTO current_catalog (osm_id, isbn)
@@ -31,15 +25,14 @@ def insert_book_to_shelf(osm_id: str, isbn: str) -> None:
     conn.close()
 
 
-def remove_book_from_shelf(osm_id: str, isbn: str) -> None:
+def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
     """Remove the oldest instance of a book from a bookshelf (current_catalog)."""
     # TODO: Add tests for this function!
     # TODO: Check if shelf, book and isbn exist
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
     isbn = normalize_isbn(isbn)
     if not isbn:
         pass # TODO: Handle invalid ISBN case
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     # Find the entry_id of the oldest matching entry
     c.execute("""
@@ -56,13 +49,12 @@ def remove_book_from_shelf(osm_id: str, isbn: str) -> None:
     conn.close()
 
 
-def get_books_in_shelf(req: Request) -> Response:
+def get_books_in_shelf_from_db(req: Request) -> Response:
     """Fetch list of all books in the given shelf."""
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
     osm_id = req.args.get('osm_id')
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
         SELECT b.isbn, b.title, b.author, b.dnb_isbn, b.dnb_id, b.cover_url
@@ -87,13 +79,12 @@ def get_books_in_shelf(req: Request) -> Response:
     return jsonify(books)
 
 
-def get_shelf_metadata(req: Request) -> Response:
+def get_shelf_metadata_from_db(req: Request) -> Response:
     """Fetch metadata of the given shelf."""
-    db_path = os.path.join(os.path.dirname(__file__), "books.db")
     osm_id = req.args.get('osm_id')
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
         SELECT osm_id, name, latitude, longitude, address, type, operator, website, opening_hours, osm_check_date, osm_last_updated
