@@ -78,7 +78,7 @@ def _reset_bookshelves():
     print("bookshelves table reset and filled from CSV.")
 
 if __name__ == "__main__":
-    input("This will drop and recreate the bookshelves table. Are you sure? (yes/no): ")
-    if input().strip().lower() == "yes":
+    inp = input("This will drop and recreate the bookshelves table. Are you sure? (yes/no): ")
+    if inp.strip().lower() == "yes":
         print("Resetting bookshelves table...")
         _reset_bookshelves()

@@ -2,14 +2,22 @@ from dataclasses import asdict
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 
-from database import (
-    init_db, get_book_from_database, save_book_to_db,
-    insert_book_to_shelf, remove_book_from_shelf
-)
+from database import init_db
+from book_db import get_book_from_database, save_book_to_db
+from shelf_db import get_books_in_shelf, get_shelf_metadata, insert_book_to_shelf, remove_book_from_shelf
+from catalog_db import search_catalog
+from bookshelves_db import get_all_bookshelves, get_nearby_bookshelves
+
 from dnb_api import fetch_book_from_dnb, fetch_cover_from_dnb
+from geo_utils import haversine
+import sqlite3
+import os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# TODO: move to database.py
+DB_PATH = os.path.join(os.path.dirname(__file__), "books.db")
 
 @app.route('/api/books', methods=['GET'])
 def get_book() -> Response:
@@ -17,6 +25,7 @@ def get_book() -> Response:
     if not isbn:
         return jsonify({"error": "ISBN parameter is required"}), 400
 
+    # TODO: Use function from shelf_db.py to normalize ISBN
     # Normalize ISBN (remove spaces, dashes, and convert to uppercase)
     isbn = isbn.replace(" ", "").replace("-", "").upper()
     # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)  # TODO write test for this and move to util function
@@ -41,7 +50,7 @@ def get_book() -> Response:
 
 @app.route('/api/covers', methods=['GET'])
 def get_cover() -> Response:
-    '''Should be called with dnb isbn format.'''
+    """Should be called with dnb isbn format."""
     isbn = request.args.get('isbn')
     size = request.args.get('size', 'l')
     
@@ -52,8 +61,34 @@ def get_cover() -> Response:
     return fetch_cover_from_dnb(isbn, size)
 
 
+@app.route('/api/bookshelves', methods=['GET'])
+def get_all_bookshelves_api() -> Response:
+    return get_all_bookshelves()
+
+
+@app.route('/api/bookshelves/nearby', methods=['GET'])
+def get_nearby_bookshelves_api() -> Response:
+    return get_nearby_bookshelves(request)
+
+
+@app.route('/api/shelf/metadata', methods=['GET'])
+def get_shelf_metadata_api() -> Response:
+    return get_shelf_metadata(request)
+
+
+@app.route('/api/shelf/books', methods=['GET'])
+def get_books_in_shelf_api() -> Response:
+    return get_books_in_shelf(request)
+
+
+@app.route('/api/catalog/search', methods=['GET'])
+def search_catalog_api() -> Response:
+    return search_catalog(request)
+
+
 @app.route('/api/shelf/insert', methods=['POST'])
 def insert_book_to_shelf_api():
+    # TODO: Use function from shelf_db.py to normalize ISBN
     data = request.json
     osm_id = data.get('osm_id')
     isbn = data.get('isbn')
@@ -66,6 +101,7 @@ def insert_book_to_shelf_api():
 
 @app.route('/api/shelf/remove', methods=['POST'])
 def remove_book_from_shelf_api():
+    # TODO: Use function from shelf_db.py to normalize ISBN
     data = request.json
     osm_id = data.get('osm_id')
     isbn = data.get('isbn')

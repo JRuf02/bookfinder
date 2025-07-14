@@ -43,8 +43,9 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] add info page
 - [x] properly design NotFoundScreen
 - [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
-- [ ] Fill bookshelves table with public_bookcases from osm
-- [ ] backend for catalog search by location/author/title/isbn
+- [x] Fill bookshelves table with public_bookcases from osm
+- [x] backend for catalog search by title
+- [ ] backend for catalog search by location/author/isbn
 - [ ] map view
 - [ ] check if the book exists in shelf before removing (front- and backend!)
 - [ ] old books without isbn / foreign isbn
@@ -89,6 +90,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] clean up console.log and console.error usage
 - [ ] remove unused inputs (tsx and py)
 - [ ] add svg icon
+- [ ] add isbn checksum validation?
 
 ### QLever bookshelf data
 
@@ -178,4 +180,16 @@ Show number of entries:
 
 ```
 SELECT COUNT(*) FROM bookshelves;
+```
+
+## Other sample api requests
+
+```
+http://127.0.0.1:5000/api/shelf/metadata?osm_id=https://www.openstreetmap.org/node/6073946680
+
+http://127.0.0.1:5000/api/bookshelves/nearby?lat=48.0518572&lon=7.9032527
+
+http://127.0.0.1:5000/api/shelf/books?osm_id=https://www.openstreetmap.org/node/6073946680
+
+http://127.0.0.1:5000/api/catalog/search?lat=48.05&lon=7.90&title=Informatik
 ```
