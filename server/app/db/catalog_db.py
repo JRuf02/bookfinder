@@ -22,7 +22,7 @@ def search_in_catalog_db(request: Request) -> Response:
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        SELECT cc.osm_id, cc.isbn, b.title, b.author, bs.latitude, bs.longitude, bs.name, b.dnb_isbn
+        SELECT cc.osm_id, cc.isbn, b.title, b.author, bs.latitude, bs.longitude, bs.name, b.dnb_isbn, bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
         FROM current_catalog cc
         JOIN books b ON cc.isbn = b.isbn
         JOIN bookshelves bs ON cc.osm_id = bs.osm_id
@@ -45,6 +45,11 @@ def search_in_catalog_db(request: Request) -> Response:
             "author": row[3],
             "shelf_name": row[6],
             "dnb_isbn": row[7],
+            "type": row[8],
+            "address": row[9],
+            "opening_hours": row[10],
+            "operator": row[11],
+            "website": row[12],
             "latitude": shelf_lat,
             "longitude": shelf_lon,
             "distance_km": dist_km

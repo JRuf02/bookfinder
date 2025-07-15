@@ -1,16 +1,9 @@
-import {
-  Box,
-  Typography,
-  Container,
-  Card,
-  CardContent,
-  CardMedia,
-  CircularProgress,
-  Stack,
-} from "@mui/material";
+import { Box, Typography, Container, CircularProgress } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useState } from "react";
+import ResultsList from "../components/ResultsList";
+import { getUserLocation } from "../services/location";
 
 type CatalogResult = {
   osm_id: string;
@@ -21,6 +14,8 @@ type CatalogResult = {
   longitude: number;
   distance_km: number;
   dnb_isbn: string;
+  address?: string;
+  opening_hours?: string;
 };
 
 export default function CatalogHomeScreen() {
@@ -36,37 +31,25 @@ export default function CatalogHomeScreen() {
       setError(null);
       setResults([]);
 
-      // Get user location  TODO: MOVE TO SERVICES
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-
-          try {
-            const resp = await fetch(
-              `/api/catalog/search?title=${encodeURIComponent(
-                inputTitle
-              )}&lat=${lat}&lon=${lon}`
-            );
-            if (!resp.ok) throw new Error("Server error");
-            const data = await resp.json();
-            // Sort by distance
-            data.sort(
-              (a: CatalogResult, b: CatalogResult) =>
-                a.distance_km - b.distance_km
-            );
-            setResults(data);
-          } catch (err: any) {
-            setError("Could not fetch results.");
-          } finally {
-            setLoading(false);
-          }
-        },
-        () => {
-          setError("Could not get your location.");
-          setLoading(false);
-        }
-      );
+      try {
+        const { lat, lon } = await getUserLocation();
+        const resp = await fetch(
+          `/api/catalog/search?title=${encodeURIComponent(
+            inputTitle
+          )}&lat=${lat}&lon=${lon}`
+        );
+        if (!resp.ok) throw new Error("Server error");
+        const data = await resp.json();
+        // Sort results by distance
+        data.sort(
+          (a: CatalogResult, b: CatalogResult) => a.distance_km - b.distance_km
+        );
+        setResults(data);
+      } catch (err: any) {
+        setError(err.message || "Could not fetch results.");
+      } finally {
+        setLoading(false);
+      }
     },
     [inputTitle]
   );
@@ -127,49 +110,17 @@ export default function CatalogHomeScreen() {
           pb: 2,
         }}
       >
-        {results.map((result) => (
-          <Card key={result.osm_id + result.title} sx={{ mb: 2 }}>
-            <CardContent>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <CardMedia
-                  component="img"
-                  image={`/api/covers?isbn=${result.dnb_isbn}&size=m`}
-                  alt={`Cover of ${result.title}`}
-                  sx={{
-                    width: 80,
-                    height: 120,
-                    objectFit: "cover",
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                    mr: 2,
-                  }}
-                  onError={(e) => {
-                    // Fallback image if cover not available
-                    // TODO: Create a better image for missing covers
-                    (e.target as HTMLImageElement).src = logo;
-                  }}
-                />
-                <Box>
-                  <Typography variant="h6">{result.title}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    by {result.author}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Shelf: {result.shelf_name || "Unknown"}
-                  </Typography>
-                  <Typography variant="body2">
-                    Distance: {result.distance_km.toFixed(2)} km
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
-        {results.length === 0 && !loading && !error && (
-          <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
-            No results yet. Search for a book title!
-          </Typography>
-        )}
+        <ResultsList
+          results={results}
+          fields={[
+            "type",
+            "address",
+            "operator",
+            "opening_hours",
+            "website",
+            "osm_id",
+          ]}
+        />
       </Box>
     </Container>
   );
