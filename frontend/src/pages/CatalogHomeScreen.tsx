@@ -107,6 +107,7 @@ export default function CatalogHomeScreen() {
       <ISBNInput
         value={inputTitle}
         placeholder="Search books near you by title"
+        label="Search books near you by title"
         onChange={(e) => setInputTitle(e.target.value)}
         onSubmit={handleInputSubmit}
       />

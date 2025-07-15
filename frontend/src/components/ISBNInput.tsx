@@ -3,13 +3,16 @@ import SendIcon from "@mui/icons-material/Send";
 
 type ISBNInputProps = {
   placeholder?: string;
+  label?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
 };
 
+// More mui styling options for the input text field: https://mui.com/material-ui/react-text-field/
 export default function ISBNInput({
   placeholder = "Enter ISBN manually",
+  label = "Enter ISBN manually",
   value,
   onChange,
   onSubmit,
@@ -29,6 +32,7 @@ export default function ISBNInput({
         fullWidth
         size="small"
         placeholder={placeholder}
+        label={label}
         value={value}
         onChange={onChange}
         variant="outlined"

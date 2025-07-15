@@ -56,6 +56,7 @@ export default function HomeScreen() {
         <ISBNInput
           value={inputIsbn}
           placeholder="Search book by title, author, or ISBN"
+          label="Search book by title, author, or ISBN"
           onChange={(e) => setInputIsbn(e.target.value)}
           onSubmit={handleInputSubmit}
         />
