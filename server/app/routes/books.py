@@ -26,6 +26,7 @@ def get_book(request: Request) -> Response:
     book = fetch_book_from_dnb(isbn)
     print(f"Fetched book data from dnb: {book}")  # TODO: add logger
     if book.title != "Error fetching data" and book.title != "Unknown Title":
+        # TODO: Give the frontend a way to add title etc manually! (especially if unknown title, but cover image found!)
         save_book_to_db(book)
 
     return jsonify(asdict(book))
