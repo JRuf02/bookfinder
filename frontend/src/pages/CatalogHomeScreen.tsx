@@ -20,7 +20,7 @@ type CatalogResult = {
   latitude: number;
   longitude: number;
   distance_km: number;
-  dnb_isbn?: string; // Add if available from backend
+  dnb_isbn: string;
 };
 
 export default function CatalogHomeScreen() {
@@ -132,11 +132,7 @@ export default function CatalogHomeScreen() {
               <Stack direction="row" spacing={2} alignItems="center">
                 <CardMedia
                   component="img"
-                  image={
-                    result.dnb_isbn
-                      ? `/api/covers?isbn=${result.dnb_isbn}&size=m`
-                      : "/api/covers?isbn=0000000000&size=m" // TODO: delete line or create fallback cover in db
-                  }
+                  image={`/api/covers?isbn=${result.dnb_isbn}&size=m`}
                   alt={`Cover of ${result.title}`}
                   sx={{
                     width: 80,
