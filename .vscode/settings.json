@@ -6,8 +6,18 @@
   },
   "files.watcherExclude": {
     "**/.venv/**": true,
-    "**/node_modules/**": true
+    "**/node_modules/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true
   },
   "eslint.workingDirectories": ["frontend"],
-  "python.analysis.extraPaths": ["./server"]
+  "python.analysis.extraPaths": ["./server"],
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "typescript.tsserver.watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriorityPolling"
+  },
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
