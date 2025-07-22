@@ -7,7 +7,9 @@ import ScanningScreen from "./pages/ScanningScreen";
 import InfoScreen from "./pages/InfoScreen";*/
 import CatalogHomeScreen from "./pages/CatalogHomeScreen";
 import NotFoundScreen from "./pages/NotFoundScreen";
+import ShelfSelectScreen from "./pages/ShelfSelectScreen";
 import BottomNavBar from "./components/BottomNavBar";
+import { ShelfProvider } from "./context/ShelfContext";
 
 function App() {
   /*
@@ -16,16 +18,19 @@ function App() {
   */
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/catalog" element={<CatalogHomeScreen />} />
-        <Route path="/scan" element={<ScanningScreen />} />
-        {/* ...other routes */}
-        <Route path="*" element={<NotFoundScreen />} />
-      </Routes>
-      <BottomNavBar />
-    </BrowserRouter>
+    <ShelfProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/catalog" element={<CatalogHomeScreen />} />
+          <Route path="/scan" element={<ScanningScreen />} />
+          <Route path="/select-shelf" element={<ShelfSelectScreen />} />
+          {/* ...other routes */}
+          <Route path="*" element={<NotFoundScreen />} />
+        </Routes>
+        <BottomNavBar />
+      </BrowserRouter>
+    </ShelfProvider>
   );
 }
 

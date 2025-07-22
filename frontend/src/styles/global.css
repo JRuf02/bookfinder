@@ -143,3 +143,21 @@ input[type="text"] {
 }
 
 /* TODO (?): Landscape mode */
+
+/* Leaflet map styles */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.user-location-marker {
+  z-index: 1000;
+}
+
+.leaflet-popup-content {
+  min-width: 200px;
+}
+
+.leaflet-popup-content p {
+  margin: 0.3rem 0;
+}

@@ -138,6 +138,32 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 
 ## bugs
 
+On catalog search for Info:
+
+```
+chunk-KDCVS43I.js?v=470e57da:521 Warning: Encountered two children with the same key, `https://www.openstreetmap.org/node/3831600769Ideen der Informatik`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+    at ResultsList (https://127.0.0.1:5173/src/components/ResultsList.tsx:27:3)
+    at div
+    at https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:3365:45
+    at Box3 (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:6232:19)
+    at div
+    at https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:3365:45
+    at Container3 (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:7963:19)
+    at CatalogHomeScreen (https://127.0.0.1:5173/src/pages/CatalogHomeScreen.tsx:26:39)
+    at RenderedRoute (https://127.0.0.1:5173/node_modules/.vite/deps/react-router-dom.js?v=470e57da:4088:5)
+    at Routes (https://127.0.0.1:5173/node_modules/.vite/deps/react-router-dom.js?v=470e57da:4558:5)
+    at Router (https://127.0.0.1:5173/node_modules/.vite/deps/react-router-dom.js?v=470e57da:4501:15)
+    at BrowserRouter (https://127.0.0.1:5173/node_modules/.vite/deps/react-router-dom.js?v=470e57da:5247:5)
+    at ShelfProvider (https://127.0.0.1:5173/src/context/ShelfContext.tsx:20:33)
+    at App
+    at DefaultPropsProvider (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:6787:3)
+    at RtlProvider (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:6763:3)
+    at ThemeProvider2 (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:6719:5)
+    at ThemeProvider3 (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-TOS7JQWK.js?v=470e57da:6870:5)
+    at ThemeProviderNoVars (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-ZQVIVZ55.js?v=470e57da:275:10)
+    at ThemeProvider (https://127.0.0.1:5173/node_modules/.vite/deps/chunk-ZQVIVZ55.js?v=470e57da:357:3)
+```
+
 ```
 Normalized ISBN: 123456789X
 Book not found in DB for ISBN: 123456789X
