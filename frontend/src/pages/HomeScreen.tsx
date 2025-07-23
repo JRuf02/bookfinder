@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
+import ShelfSelectMap from "../components/ShelfSelectMap";
 
 export default function HomeScreen() {
   const [inputIsbn, setInputIsbn] = useState("");
@@ -48,7 +49,7 @@ export default function HomeScreen() {
           alignItems: "center",
           justifyContent: "space-evenly",
           px: "1rem",
-          gap: "1.5rem",
+          gap: "0.5rem",
           pb: "0.5rem",
         }}
       >
@@ -65,7 +66,7 @@ export default function HomeScreen() {
         <Card
           sx={{
             flex: 1,
-            minHeight: "7rem",
+            minHeight: "60%",
             width: "100%",
             display: "flex",
             alignItems: "center",
@@ -78,7 +79,7 @@ export default function HomeScreen() {
             letterSpacing: 1,
           }}
         >
-          Map View
+          <ShelfSelectMap />
         </Card>
 
         {/* Insert Book Button */}
@@ -87,7 +88,7 @@ export default function HomeScreen() {
           color="primary"
           sx={{
             flex: 1,
-            minHeight: "3.5rem",
+            minHeight: "1.75rem",
             width: "100%",
             fontSize: "1.25rem",
             borderRadius: 3,
@@ -102,7 +103,7 @@ export default function HomeScreen() {
           color="secondary"
           sx={{
             flex: 1,
-            minHeight: "3.5rem",
+            minHeight: "1.75rem",
             width: "100%",
             fontSize: "1.25rem",
             borderRadius: 3,
