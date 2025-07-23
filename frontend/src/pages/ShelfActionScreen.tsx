@@ -8,10 +8,10 @@ import {
   TextField,
   Stack,
   Container,
-  Alert,
 } from "@mui/material";
 import { shelfAction } from "../services/shelfActions";
 import ActionResultAlert from "../components/ActionResultAlert";
+import { useShelf } from "../context/ShelfContext";
 
 export default function ShelfActionScreen({
   book,
@@ -24,7 +24,7 @@ export default function ShelfActionScreen({
   onCancel: () => void;
   onRescan: () => void;
 }) {
-  const [osmId, setOsmId] = useState("");
+  const { shelfId, setShelfId } = useShelf(); // this is the shelf's osm id
   const [osmDialogOpen, setOsmDialogOpen] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -32,7 +32,11 @@ export default function ShelfActionScreen({
   } | null>(null);
 
   const handleShelfSubmit = async () => {
-    const res = await shelfAction(action, osmId, book.dnbISBN);
+    if (!shelfId) {
+      setResult({ success: false, message: "Shelf ID is required." });
+      return;
+    }
+    const res = await shelfAction(action, shelfId, book.dnbISBN);
     setResult(res);
   };
 
@@ -47,7 +51,7 @@ export default function ShelfActionScreen({
         </Card>
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="body2">
-            Bookshelf OSM ID: {osmId || "Not set"}
+            Bookshelf OSM ID: {shelfId || "Not set"}
           </Typography>
           <Button variant="outlined" onClick={() => setOsmDialogOpen(true)}>
             Change
@@ -57,8 +61,8 @@ export default function ShelfActionScreen({
           <Box sx={{ p: 2 }}>
             <Typography>Enter OSM ID:</Typography>
             <TextField
-              value={osmId}
-              onChange={(e) => setOsmId(e.target.value)}
+              value={shelfId || ""}
+              onChange={(e) => setShelfId(e.target.value)}
               sx={{ mt: 1, mb: 2 }}
             />
             <Button variant="contained" onClick={() => setOsmDialogOpen(false)}>

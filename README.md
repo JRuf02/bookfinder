@@ -42,6 +42,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] restructure server directory!
 - [ ] online catalog - add missing pages!
 - [ ] add info page
+- [ ] show how long book is in shelf already in result
 - [x] properly design NotFoundScreen
 - [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
 - [x] Fill bookshelves table with public_bookcases from osm
