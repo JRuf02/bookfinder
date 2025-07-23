@@ -1,3 +1,4 @@
+import "leaflet/dist/leaflet.css";
 import "./styles/global.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
