@@ -1,5 +1,8 @@
-// This allows us to import CSS modules in TypeScript files without type errors
+// import CSS modules in TypeScript files without type errors
 declare module "*.module.css" {
-  const classes: { [key: string]: string };
-  export default classes;
+  const content: { [className: string]: string };
+  export default content;
 }
+
+// import plain CSS in TypeScript files without type errors
+declare module "*.css";

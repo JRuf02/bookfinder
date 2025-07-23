@@ -13,6 +13,7 @@ export function getUserLocation(): Promise<{ lat: number; lon: number }> {
       },
       (err) => {
         reject(new Error("Could not get your location."));
+        console.log(err);
       }
     );
   });
