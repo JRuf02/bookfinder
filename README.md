@@ -37,8 +37,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] make sure nothing is hidden beneath bottom nav bar
 - [x] drop and recreate + fill table bookshelves
 - [ ] include reverse-geocoded addresses in bookshelf data
-- [ ] clearly separate sqlite3 and flask files (e.g. no flask in app/db) for...
-- [ ] ...easy module testing
+- [ ] clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy...
+- [ ] ...module testing
 - [x] restructure server directory!
 - [ ] online catalog - add missing pages!
 - [ ] add info page

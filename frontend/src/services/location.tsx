@@ -1,6 +1,7 @@
 export function getUserLocation(): Promise<{ lat: number; lon: number }> {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
+      // Geolocation not supported by browser/device.
       reject(new Error("Geolocation not supported"));
       return;
     }
@@ -12,8 +13,8 @@ export function getUserLocation(): Promise<{ lat: number; lon: number }> {
         });
       },
       (err) => {
-        reject(new Error("Could not get your location."));
         console.log(err);
+        reject(new Error("Could not get your location."));
       }
     );
   });
