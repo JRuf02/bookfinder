@@ -3,6 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { useShelf } from "../context/ShelfContext";
 import { getUserLocation } from "../services/location";
 import { fetchShelfMetadata } from "../services/shelfMetadata";
+import { fetchAllBookshelves, Bookshelf } from "../services/bookshelves";
 import LocateMeControl from "./LocateMeMapControl";
 import MapPopup from "./MapPopup";
 
@@ -51,6 +52,11 @@ export default function ShelfSelectMap() {
   const { shelfId } = useShelf();
   const [shelfCoords, setShelfCoords] = useState<[number, number] | null>(null);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const [bookshelves, setBookshelves] = useState<Bookshelf[]>([]);
+
+  useEffect(() => {
+    fetchAllBookshelves().then(setBookshelves);
+  }, []);
 
   // Handler for LocateMeControl
   const handleUserLocation = (coords: [number, number]) => {
@@ -73,6 +79,28 @@ export default function ShelfSelectMap() {
         onShelfCoords={setShelfCoords}
         onUserCoords={setUserCoords}
       />
+      {bookshelves.map((shelf) =>
+        shelf.latitude && shelf.longitude ? (
+          <Marker
+            key={shelf.osm_id}
+            position={[shelf.latitude, shelf.longitude]}
+          >
+            <Popup>
+              <MapPopup
+                shelf={shelf}
+                showInsert={true}
+                showRemove={true}
+                onInsert={() => {
+                  /* handle insert */
+                }}
+                onRemove={() => {
+                  /* handle remove */
+                }}
+              />
+            </Popup>
+          </Marker>
+        ) : null
+      )}
       {shelfCoords && (
         <Marker position={shelfCoords}>
           <Popup>
@@ -87,15 +115,6 @@ export default function ShelfSelectMap() {
           </Popup>
         </Marker>
       )}
-      <Marker position={[48.0126, 7.835]}>
-        <Popup>
-          <MapPopup
-            title="Custom map popup" /* TODO remove */
-            showInsert={false}
-            showRemove={false}
-          />
-        </Popup>
-      </Marker>
       <LocateMeControl onUserLocation={handleUserLocation} />
     </MapContainer>
   );

@@ -26,7 +26,7 @@ def get_cover_api() -> Response:
 
 @app.route('/api/bookshelves', methods=['GET'])
 def get_all_bookshelves_api() -> Response:
-    return get_all_bookshelves()
+    return get_all_bookshelves(request)
 
 
 @app.route('/api/bookshelves/nearby', methods=['GET'])

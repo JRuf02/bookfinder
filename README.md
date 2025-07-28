@@ -58,6 +58,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] if cover in size=l not available, try different sizes!
 - [ ] save covers to db?
 - [ ] user accounts ?
+- [ ] query location only after user input!
+- [ ] use react-leaflet-markercluster for rendering only necessary shelf markers
 - [x] bookdata cache -> book can be inserted like this:
       `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
 - [x] mobile first web design!
