@@ -5,7 +5,7 @@ import { IconButton, Paper, Tooltip } from "@mui/material";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import ReactDOM from "react-dom/client";
 
-export const LocateMeControl = ({ onClick }: { onClick: () => void }) => {
+export const LocateMeButton = ({ onClick }: { onClick: () => void }) => {
   const map = useMap();
 
   useEffect(() => {

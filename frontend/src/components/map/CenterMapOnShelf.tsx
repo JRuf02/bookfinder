@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { fetchShelfMetadata } from "../services/shelfMetadata";
+import { fetchShelfMetadata } from "../../services/shelfMetadata";
 
 export function CenterMapOnShelf({
   shelfId,

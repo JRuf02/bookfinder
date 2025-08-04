@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useShelf } from "../context/ShelfContext";
-import { getUserLocation } from "../services/location";
-import { fetchAllBookshelves, Bookshelf } from "../services/bookshelves";
+import { useShelf } from "../../context/ShelfContext";
+import { getUserLocation } from "../../services/location";
+import { fetchAllBookshelves, Bookshelf } from "../../services/bookshelves";
 import { CenterMapOnShelf } from "./CenterMapOnShelf";
 import { CenterMapOnUser } from "./CenterMapOnUser";
-import { LocateMeControl } from "./LocateMeMapControl";
+import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
 
 export default function ShelfSelectMap() {
@@ -101,7 +101,7 @@ export default function ShelfSelectMap() {
       )}
 
       {/* Locate Me button */}
-      <LocateMeControl onClick={handleLocateMeClick} />
+      <LocateMeButton onClick={handleLocateMeClick} />
     </MapContainer>
   );
 }

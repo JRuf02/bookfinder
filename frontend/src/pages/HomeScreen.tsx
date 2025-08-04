@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
-import ShelfSelectMap from "../components/ShelfSelectMap";
+import ShelfSelectMap from "../components/map/ShelfSelectMap";
 
 export default function HomeScreen() {
   const [inputIsbn, setInputIsbn] = useState("");

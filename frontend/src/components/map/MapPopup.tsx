@@ -1,5 +1,5 @@
 import { Button, Stack, Typography, Link } from "@mui/material";
-import { Bookshelf } from "../services/bookshelves";
+import { Bookshelf } from "../../services/bookshelves";
 
 type MapPopupProps = {
   shelf: Bookshelf;

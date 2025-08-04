@@ -8,7 +8,7 @@ import ScanningScreen from "./pages/ScanningScreen";
 import InfoScreen from "./pages/InfoScreen";*/
 import CatalogHomeScreen from "./pages/CatalogHomeScreen";
 import NotFoundScreen from "./pages/NotFoundScreen";
-import BottomNavBar from "./components/BottomNavBar";
+import BottomNavBar from "./components/layout/BottomNavBar";
 
 function App() {
   /*

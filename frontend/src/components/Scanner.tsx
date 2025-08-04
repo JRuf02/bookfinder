@@ -265,6 +265,7 @@ function useBarcodeReader(
 function Scanner({ onResult, active, onReady }: ScannerProps) {
   const mountCountRef = useRef(0);
   const { videoRef, error, startCamera, stopCamera, playVideo } = useCamera();
+  // TODO: Tackle warnings and problems in this file; split into subcomponents
   const { isReading, startReading, stopReading, resetReader } =
     useBarcodeReader(videoRef, onResult);
 
