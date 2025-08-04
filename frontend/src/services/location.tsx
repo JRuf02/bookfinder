@@ -14,7 +14,11 @@ export function getUserLocation(): Promise<{ lat: number; lon: number }> {
       },
       (err) => {
         console.log(err);
-        reject(new Error("Could not get your location."));
+        reject(
+          new Error(
+            "Could not get your location.\nPlease allow location access in your browser settings."
+          )
+        );
       }
     );
   });

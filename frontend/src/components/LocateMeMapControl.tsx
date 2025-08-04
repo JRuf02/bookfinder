@@ -4,13 +4,8 @@ import L from "leaflet";
 import { IconButton, Paper, Tooltip } from "@mui/material";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import ReactDOM from "react-dom/client";
-import { getUserLocation } from "../services/location";
 
-const LocateMeControl = ({
-  onUserLocation,
-}: {
-  onUserLocation: (coords: [number, number]) => void;
-}) => {
+export const LocateMeControl = ({ onClick }: { onClick: () => void }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -24,21 +19,7 @@ const LocateMeControl = ({
       root.render(
         <Paper elevation={3} sx={{ m: "0.2rem" }}>
           <Tooltip title="Locate Me">
-            <IconButton
-              size="small"
-              color="primary"
-              onClick={async () => {
-                try {
-                  const { lat, lon } = await getUserLocation();
-                  map.setView([lat, lon], 15);
-                  onUserLocation([lat, lon]);
-                } catch {
-                  // TODO: use sth like a MUI alert instead (cleaner design)
-                  //       and give more precise error msg + tipp for fixing
-                  alert("Could not get your location.");
-                }
-              }}
-            >
+            <IconButton size="small" color="primary" onClick={onClick}>
               <MyLocationIcon />
             </IconButton>
           </Tooltip>
@@ -52,9 +33,7 @@ const LocateMeControl = ({
     return () => {
       control.remove();
     };
-  }, [map, onUserLocation]);
+  }, [map, onClick]);
 
   return null;
 };
-
-export default LocateMeControl;

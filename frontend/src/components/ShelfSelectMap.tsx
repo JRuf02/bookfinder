@@ -1,57 +1,18 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useShelf } from "../context/ShelfContext";
 import { getUserLocation } from "../services/location";
-import { fetchShelfMetadata } from "../services/shelfMetadata";
 import { fetchAllBookshelves, Bookshelf } from "../services/bookshelves";
-import LocateMeControl from "./LocateMeMapControl";
+import { CenterMapOnShelf } from "./CenterMapOnShelf";
+import { CenterMapOnUser } from "./CenterMapOnUser";
+import { LocateMeControl } from "./LocateMeMapControl";
 import MapPopup from "./MapPopup";
-
-function CenterMapOnShelfOrUser({
-  shelfId,
-  onShelfCoords,
-  onUserCoords,
-}: {
-  shelfId: string | null;
-  onShelfCoords: (coords: [number, number] | null) => void;
-  onUserCoords: (coords: [number, number] | null) => void;
-}) {
-  const map = useMap();
-
-  useEffect(() => {
-    async function center() {
-      // Center on most recently used shelf
-      if (shelfId) {
-        const shelf = await fetchShelfMetadata(shelfId);
-        if (shelf && shelf.latitude && shelf.longitude) {
-          const coords: [number, number] = [shelf.latitude, shelf.longitude];
-          map.setView(coords, 15);
-          onShelfCoords(coords);
-          return;
-        }
-      }
-      // Fallback: Center on user location
-      try {
-        const { lat, lon } = await getUserLocation();
-        const userCoords: [number, number] = [lat, lon];
-        map.setView(userCoords, 15);
-        onUserCoords(userCoords);
-      } catch {
-        map.setView([48.0126, 7.835], 15); // Fallback: Default location
-        onUserCoords(null);
-      }
-    }
-    center();
-    // Only run on mount or shelfId change
-  }, [shelfId, map]);
-
-  return null;
-}
 
 export default function ShelfSelectMap() {
   const { shelfId } = useShelf();
   const [shelfCoords, setShelfCoords] = useState<[number, number] | null>(null);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const [shouldCenterOnUser, setShouldCenterOnUser] = useState(false);
   const [bookshelves, setBookshelves] = useState<Bookshelf[]>([]);
 
   useEffect(() => {
@@ -59,8 +20,15 @@ export default function ShelfSelectMap() {
   }, []);
 
   // Handler for LocateMeControl
-  const handleUserLocation = (coords: [number, number]) => {
-    setUserCoords(coords);
+  const handleLocateMeClick = async () => {
+    try {
+      const { lat, lon } = await getUserLocation();
+      setUserCoords([lat, lon]);
+      setShouldCenterOnUser(true);
+    } catch {
+      // TODO: show error to user / log
+      alert("Could not get your location.");
+    }
   };
 
   return (
@@ -74,11 +42,22 @@ export default function ShelfSelectMap() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <CenterMapOnShelfOrUser
+
+      {/* Center on selected shelf (or fallback) at map load */}
+      <CenterMapOnShelf
         shelfId={shelfId}
+        userCoords={userCoords}
         onShelfCoords={setShelfCoords}
-        onUserCoords={setUserCoords}
       />
+
+      {/* Recenter on user when LocateMe button is clicked */}
+      <CenterMapOnUser
+        userCoords={userCoords}
+        shouldCenter={shouldCenterOnUser}
+        onDone={() => setShouldCenterOnUser(false)}
+      />
+
+      {/* Render all bookshelf markers */}
       {bookshelves.map((shelf) =>
         shelf.latitude && shelf.longitude ? (
           <Marker
@@ -86,6 +65,7 @@ export default function ShelfSelectMap() {
             position={[shelf.latitude, shelf.longitude]}
           >
             <Popup>
+              {/* TODO: remove extra Popup around MapPopup? */}
               <MapPopup
                 shelf={shelf}
                 showInsert={true}
@@ -101,6 +81,8 @@ export default function ShelfSelectMap() {
           </Marker>
         ) : null
       )}
+
+      {/* Selected shelf marker */}
       {shelfCoords && (
         <Marker position={shelfCoords}>
           <Popup>
@@ -108,6 +90,8 @@ export default function ShelfSelectMap() {
           </Popup>
         </Marker>
       )}
+
+      {/* User location marker */}
       {userCoords && (
         <Marker position={userCoords}>
           <Popup>
@@ -115,7 +99,9 @@ export default function ShelfSelectMap() {
           </Popup>
         </Marker>
       )}
-      <LocateMeControl onUserLocation={handleUserLocation} />
+
+      {/* Locate Me button */}
+      <LocateMeControl onClick={handleLocateMeClick} />
     </MapContainer>
   );
 }

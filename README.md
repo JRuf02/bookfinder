@@ -36,6 +36,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] ensure theme.ts is used
 - [x] make sure nothing is hidden beneath bottom nav bar
 - [x] drop and recreate + fill table bookshelves
+- [x] query location only after user input!
+- [ ] visibly mark the selected shelf on ShelfSelectMap if one is selected
+- [ ] use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
+- [ ] make map scrolling/zooming more responsive... e.g. by:
+- [ ] fetch and render bookshelf/map data async, to keep site reactive while initializing the map
+- [ ] use react-leaflet-markercluster for rendering only necessary shelf markers
 - [ ] include reverse-geocoded addresses in bookshelf data
 - [ ] clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy...
 - [ ] ...module testing
@@ -58,8 +64,6 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] if cover in size=l not available, try different sizes!
 - [ ] save covers to db?
 - [ ] user accounts ?
-- [ ] query location only after user input!
-- [ ] use react-leaflet-markercluster for rendering only necessary shelf markers
 - [x] bookdata cache -> book can be inserted like this:
       `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
 - [x] mobile first web design!
@@ -89,6 +93,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] frontend
 - [ ] support multiple languages?
 - [ ] type annotations in python!
+- [ ] add doctstrings and documentation
 - [ ] search code for TODOs
 - [ ] search local desktop for todos
 - [ ] clean up console.log and console.error usage
