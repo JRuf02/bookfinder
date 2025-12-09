@@ -17,7 +17,7 @@ def search_in_catalog_db(request: Request) -> Response:
     if not title:
         return jsonify({"error": "title is required"}), 400
     if lat is None or lon is None:
-        return jsonify({"error": "lat and lon are required"}), 400
+        return jsonify({"error": "lat and lon are required"}), 400  # TODO: change to optional?
 
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -35,7 +35,7 @@ def search_in_catalog_db(request: Request) -> Response:
         shelf_lat = row[4]
         shelf_lon = row[5]
         if shelf_lat is None or shelf_lon is None:
-            # Don't include results without coordinates
+            # Don't include results without coordinates  # TODO: change this behaviour?
             continue
         dist_km = haversine(lon, lat, shelf_lon, shelf_lat)
         results.append({

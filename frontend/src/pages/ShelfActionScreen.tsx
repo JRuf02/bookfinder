@@ -12,6 +12,7 @@ import {
 import { shelfAction } from "../services/shelfActions";
 import ActionResultAlert from "../components/ActionResultAlert";
 import { useShelf } from "../context/ShelfContext";
+import ShelfSelectMap from "../components/map/ShelfSelectMap";
 
 export default function ShelfActionScreen({
   book,
@@ -25,7 +26,8 @@ export default function ShelfActionScreen({
   onRescan: () => void;
 }) {
   const { shelfId, setShelfId } = useShelf(); // this is the shelf's osm id
-  const [osmDialogOpen, setOsmDialogOpen] = useState(false);
+  const [osmDialogOpen, setOsmDialogOpen] = useState(false); // legacy osm id input dialog TODO: remove if not needed
+  const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
     message: string;
@@ -53,11 +55,37 @@ export default function ShelfActionScreen({
           <Typography variant="body2">
             Bookshelf OSM ID: {shelfId || "Not set"}
           </Typography>
-          <Button variant="outlined" onClick={() => setOsmDialogOpen(true)}>
+          <Button variant="outlined" onClick={() => setMapDialogOpen(true)}>
             Change
           </Button>
           {/* TODO: Use ShelfSelectMap component for selecting shelf and getting osm id */}
         </Card>
+
+        {/* Map Dialog for selecting shelf */}
+        <Dialog
+          open={mapDialogOpen}
+          onClose={() => setMapDialogOpen(false)}
+          maxWidth="md"
+          fullWidth
+        >
+          <Box sx={{ height: "70vh", width: "100%", position: "relative" }}>
+            <ShelfSelectMap />
+            <Button
+              variant="contained"
+              onClick={() => setMapDialogOpen(false)}
+              sx={{
+                position: "absolute",
+                bottom: 16,
+                right: 16,
+                zIndex: 1000,
+              }}
+            >
+              Done
+            </Button>
+          </Box>
+        </Dialog>
+
+        {/* Legacy OSM ID input dialog (optional - can be removed) */}
         <Dialog open={osmDialogOpen} onClose={() => setOsmDialogOpen(false)}>
           <Box sx={{ p: 2 }}>
             <Typography>Enter OSM ID:</Typography>
@@ -71,6 +99,7 @@ export default function ShelfActionScreen({
             </Button>
           </Box>
         </Dialog>
+
         {result && <ActionResultAlert result={result} />}
         {result === null || !result.success ? (
           <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>

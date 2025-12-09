@@ -28,7 +28,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - Accept self-signed certificate
 - Accept camera permission popup
 
-### TODO
+### TODOs and ideas
 
 - [x] Implement Home screen (skeleton)
 - [x] make ScanningScreen more maintainable by splitting into multiple pages!
@@ -100,6 +100,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] remove unused inputs (tsx and py)
 - [ ] add svg icon
 - [ ] add isbn checksum validation?
+- [ ] show search results even when no location given
 
 ### QLever bookshelf data
 

@@ -5,16 +5,20 @@ type MapPopupProps = {
   shelf: Bookshelf;
   showInsert?: boolean;
   showRemove?: boolean;
+  showSelect?: boolean;
   onInsert?: () => void;
   onRemove?: () => void;
+  onSelect?: () => void;
 };
 
 export default function MapPopup({
   shelf,
   showInsert,
   showRemove,
+  showSelect,
   onInsert,
   onRemove,
+  onSelect,
 }: MapPopupProps) {
   return (
     <Stack spacing={1} alignItems="flex-start" sx={{ minWidth: 200 }}>
@@ -70,6 +74,16 @@ export default function MapPopup({
             onClick={onRemove}
           >
             Remove
+          </Button>
+        )}
+        {showSelect && (
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={onSelect}
+          >
+            Select
           </Button>
         )}
       </Stack>
