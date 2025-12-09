@@ -114,6 +114,7 @@ export default function HomeScreen() {
             fontSize: "1.25rem",
             borderRadius: 3,
           }}
+          onClick={() => navigate("/scan/insert")}
         >
           Insert Book
         </Button>
@@ -129,6 +130,7 @@ export default function HomeScreen() {
             fontSize: "1.25rem",
             borderRadius: 3,
           }}
+          onClick={() => navigate("/scan/remove")}
         >
           Remove Book
         </Button>
