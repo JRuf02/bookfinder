@@ -26,7 +26,7 @@ export default function ShelfActionScreen({
   onRescan: () => void;
 }) {
   const { shelfId, setShelfId } = useShelf(); // this is the shelf's osm id
-  const [osmDialogOpen, setOsmDialogOpen] = useState(false); // legacy osm id input dialog TODO: remove if not needed
+  const [osmDialogOpen, setOsmDialogOpen] = useState(false); // legacy manual osm id input dialog TODO: remove if not needed
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;

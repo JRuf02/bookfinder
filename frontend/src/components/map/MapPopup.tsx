@@ -83,7 +83,7 @@ export default function MapPopup({
             color="primary"
             onClick={onSelect}
           >
-            Select
+            Select{/*Todo: Change to "Selected" if already selected*/}
           </Button>
         )}
       </Stack>

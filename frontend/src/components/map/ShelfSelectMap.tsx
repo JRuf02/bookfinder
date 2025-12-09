@@ -12,12 +12,16 @@ type ShelfSelectMapProps = {
   showSelect?: boolean;
   showInsert?: boolean;
   showRemove?: boolean;
+  onInsert?: (shelf: Bookshelf) => void;
+  onRemove?: (shelf: Bookshelf) => void;
 };
 
 export default function ShelfSelectMap({
   showSelect = true,
   showInsert = false,
   showRemove = false,
+  onInsert,
+  onRemove,
 }: ShelfSelectMapProps) {
   const { shelfId, setShelfId } = useShelf();
   const [shelfCoords, setShelfCoords] = useState<[number, number] | null>(null);
@@ -81,12 +85,20 @@ export default function ShelfSelectMap({
                 showInsert={showInsert}
                 showRemove={showRemove}
                 showSelect={showSelect}
-                onInsert={() => {
-                  /* handle insert */
-                }}
-                onRemove={() => {
-                  /* handle remove */
-                }}
+                onInsert={
+                  onInsert
+                    ? () => onInsert(shelf)
+                    : () => {
+                        console.log("Insert handler not provided");
+                      }
+                }
+                onRemove={
+                  onRemove
+                    ? () => onRemove(shelf)
+                    : () => {
+                        console.log("Remove handler not provided");
+                      }
+                }
                 onSelect={() => {
                   setShelfId(shelf.osm_id);
                 }}

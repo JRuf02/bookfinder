@@ -37,6 +37,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] make sure nothing is hidden beneath bottom nav bar
 - [x] drop and recreate + fill table bookshelves
 - [x] query location only after user input!
+- [ ] bug: after clicking insert on homescreen map popup, the locate me button does not work any more
 - [ ] visibly mark the selected shelf on ShelfSelectMap if one is selected
 - [ ] use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
 - [ ] make map scrolling/zooming more responsive... e.g. by:

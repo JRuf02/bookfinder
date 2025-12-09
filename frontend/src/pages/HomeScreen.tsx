@@ -1,15 +1,32 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import ShelfSelectMap from "../components/map/ShelfSelectMap";
+import { useShelf } from "../context/ShelfContext";
+import type { Bookshelf } from "../services/bookshelves";
 
 export default function HomeScreen() {
   const [inputIsbn, setInputIsbn] = useState("");
+  const { setShelfId } = useShelf();
+  const navigate = useNavigate();
 
   const handleInputSubmit = useCallback(() => {
     // todo: Handle the ISBN input submission
   }, [inputIsbn]);
+
+  const handleInsert = (shelf: Bookshelf): void => {
+    setShelfId(shelf.osm_id);
+    // TODO: Navigate to scanning screen (in insert mode)
+    navigate("/scan"); // maybe like navigate("/scan/insert");? -> add route in App.tsx
+  };
+
+  const handleRemove = (shelf: Bookshelf): void => {
+    setShelfId(shelf.osm_id);
+    // TODO: Navigate to scanning screen (in remove mode)
+    navigate("/scan"); // maybe like navigate("/scan/remove");?
+  };
 
   const LOGO_BAR_HEIGHT = "3.5rem";
   const CONTENT_MAX_WIDTH = "25rem";
@@ -83,6 +100,8 @@ export default function HomeScreen() {
             showSelect={true}
             showInsert={true}
             showRemove={true}
+            onInsert={handleInsert}
+            onRemove={handleRemove}
           />
         </Card>
 
