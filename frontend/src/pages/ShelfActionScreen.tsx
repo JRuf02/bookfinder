@@ -69,7 +69,11 @@ export default function ShelfActionScreen({
           fullWidth
         >
           <Box sx={{ height: "70vh", width: "100%", position: "relative" }}>
-            <ShelfSelectMap />
+            <ShelfSelectMap
+              showSelect={true}
+              showInsert={false}
+              showRemove={false}
+            />
             <Button
               variant="contained"
               onClick={() => setMapDialogOpen(false)}

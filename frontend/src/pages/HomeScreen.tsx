@@ -79,7 +79,11 @@ export default function HomeScreen() {
             letterSpacing: 1,
           }}
         >
-          <ShelfSelectMap />
+          <ShelfSelectMap
+            showSelect={true}
+            showInsert={true}
+            showRemove={true}
+          />
         </Card>
 
         {/* Insert Book Button */}

@@ -8,7 +8,17 @@ import { CenterMapOnUser } from "./CenterMapOnUser";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
 
-export default function ShelfSelectMap() {
+type ShelfSelectMapProps = {
+  showSelect?: boolean;
+  showInsert?: boolean;
+  showRemove?: boolean;
+};
+
+export default function ShelfSelectMap({
+  showSelect = true,
+  showInsert = false,
+  showRemove = false,
+}: ShelfSelectMapProps) {
   const { shelfId, setShelfId } = useShelf();
   const [shelfCoords, setShelfCoords] = useState<[number, number] | null>(null);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
@@ -68,9 +78,9 @@ export default function ShelfSelectMap() {
               {/* TODO: remove extra Popup around MapPopup? */}
               <MapPopup
                 shelf={shelf}
-                showInsert={true}
-                showRemove={true}
-                showSelect={true}
+                showInsert={showInsert}
+                showRemove={showRemove}
+                showSelect={showSelect}
                 onInsert={() => {
                   /* handle insert */
                 }}
