@@ -6,9 +6,11 @@ import ShelfActionScreen from "./ShelfActionScreen";
 
 export default function ScanningResultsScreen({
   isbn,
+  mode = "both",
   onRescan,
 }: {
   isbn: string;
+  mode?: "insert" | "remove" | "both";
   onRescan: () => void;
 }) {
   const [book, setBook] = useState<any>(null);
@@ -41,20 +43,24 @@ export default function ScanningResultsScreen({
           <>
             <BookDisplay book={book} isbn={isbn} onRescan={onRescan} />
             <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setShelfActionType("insert")}
-              >
-                Insert into bookshelf
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setShelfActionType("remove")}
-              >
-                Remove from bookshelf
-              </Button>
+              {(mode === "insert" || mode === "both") && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setShelfActionType("insert")}
+                >
+                  Insert into bookshelf
+                </Button>
+              )}
+              {(mode === "remove" || mode === "both") && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setShelfActionType("remove")}
+                >
+                  Remove from bookshelf
+                </Button>
+              )}
               <Button variant="outlined" onClick={onRescan}>
                 Rescan
               </Button>

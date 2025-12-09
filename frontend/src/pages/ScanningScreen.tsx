@@ -1,10 +1,16 @@
+import { useParams } from "react-router-dom";
 import { useState, useRef, useCallback } from "react";
 import Scanner from "../components/Scanner";
 import ISBNInput from "../components/ISBNInput";
 import ScanningResultsScreen from "./ScanningResultsScreen";
 import { Box, Container, Typography } from "@mui/material";
 
+type ScanMode = "insert" | "remove" | "both";
+
 export default function ScanningScreen() {
+  const { mode } = useParams<{ mode?: string }>();
+  const scanMode: ScanMode = (mode as ScanMode) || "both";
+
   const [isbn, setIsbn] = useState<string>("");
   const [inputIsbn, setInputIsbn] = useState<string>("");
   const [book, setBook] = useState<{
@@ -71,7 +77,7 @@ export default function ScanningScreen() {
       <ScanningResultsScreen
         isbn={isbn}
         onRescan={handleRescan}
-        // Optionally pass setBook or book if you fetch here
+        mode={scanMode}
       />
     );
   }

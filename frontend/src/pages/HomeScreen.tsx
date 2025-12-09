@@ -18,14 +18,12 @@ export default function HomeScreen() {
 
   const handleInsert = (shelf: Bookshelf): void => {
     setShelfId(shelf.osm_id);
-    // TODO: Navigate to scanning screen (in insert mode)
-    navigate("/scan"); // maybe like navigate("/scan/insert");? -> add route in App.tsx
+    navigate("/scan/insert");
   };
 
   const handleRemove = (shelf: Bookshelf): void => {
     setShelfId(shelf.osm_id);
-    // TODO: Navigate to scanning screen (in remove mode)
-    navigate("/scan"); // maybe like navigate("/scan/remove");?
+    navigate("/scan/remove");
   };
 
   const LOGO_BAR_HEIGHT = "3.5rem";
