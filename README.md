@@ -103,6 +103,10 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [ ] add isbn checksum validation?
 - [ ] show search results even when no location given
 
+### Nice to have
+
+### Finished
+
 ### QLever bookshelf data
 
 Germany:
