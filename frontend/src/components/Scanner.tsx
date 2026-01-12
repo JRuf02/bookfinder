@@ -441,7 +441,8 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
         >
           <Typography variant="body1">{error}</Typography>
           <Typography variant="body2">
-            Please allow camera access or try another device.
+            Please allow camera access. Close all other applications and tabs
+            using the camera and reload the page or try on another device.
           </Typography>
         </Paper>
       )}

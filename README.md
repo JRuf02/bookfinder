@@ -28,7 +28,73 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - Accept self-signed certificate
 - Accept camera permission popup
 
-### TODOs and ideas
+### TODO
+
+- clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
+- implement tests for python
+- also implement tests for react?!
+
+- implement and test Makefiles!
+- clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh
+
+- online catalogscreen + search - add missing pages!
+- add info page
+- show how long book is in shelf already in result
+- Admin mode: get notified when book in a shelf is untouched for a certain time
+
+- check if the book exists in shelf before removing (front- and backend!)
+- old books without isbn / foreign isbn
+- make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
+- dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
+- server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
+- if cover in size=l not available, try different sizes!
+
+- System diagram (draw.io->UML->callback)
+- Backend/api documentation -> 1-2 diagrams
+- (caching von) backend/.db verstehen + optimieren
+
+- add svg icon
+
+- Finalization:
+  - search code for TODOs
+  - search local desktop for todos
+  - adhere to coding standards
+    - type annotations in python!
+    - add doctstrings and documentation
+    - clean up console.log and console.error usage
+    - remove unused inputs (tsx and py)
+  - move venv to the python / server directory if possible
+  - make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+
+### Bugs
+
+- bug: after clicking insert on homescreen map popup, the locate me button does not work any more
+
+### Improvements
+
+- frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
+- show search results even when no location given
+- visibly mark the selected shelf on ShelfSelectMap if one is selected
+- smoothen permission handling for the camera
+- make map scrolling/zooming more responsive... e.g. by:
+  - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
+  - use react-leaflet-markercluster for rendering only necessary shelf markers
+
+### Nice to have
+
+- style infos moved to css file(s)
+- Nginx / Apache (create production setup)
+- support multiple languages?
+- add isbn checksum validation?
+- include reverse-geocoded addresses in bookshelf data (e.g. with nominatim: ca. 5h for 15k requests)
+- backend for catalog search by location/author/isbn
+- save covers to db?
+- user accounts ?
+- design
+  - [ ] Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
+  - [ ] extend theme.ts, e.g. dark mode
+
+### Finished
 
 - [x] Implement Home screen (skeleton)
 - [x] make ScanningScreen more maintainable by splitting into multiple pages!
@@ -37,34 +103,16 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] make sure nothing is hidden beneath bottom nav bar
 - [x] drop and recreate + fill table bookshelves
 - [x] query location only after user input!
-- [ ] bug: after clicking insert on homescreen map popup, the locate me button does not work any more
-- [ ] visibly mark the selected shelf on ShelfSelectMap if one is selected
-- [ ] use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
-- [ ] make map scrolling/zooming more responsive... e.g. by:
-- [ ] fetch and render bookshelf/map data async, to keep site reactive while initializing the map
-- [ ] use react-leaflet-markercluster for rendering only necessary shelf markers
-- [ ] include reverse-geocoded addresses in bookshelf data
-- [ ] clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy...
-- [ ] ...module testing
 - [x] restructure server directory!
-- [ ] online catalog - add missing pages!
-- [ ] add info page
-- [ ] show how long book is in shelf already in result
-- [x] properly design NotFoundScreen
-- [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
-- [x] Fill bookshelves table with public_bookcases from osm
-- [x] backend for catalog search by title
-- [ ] backend for catalog search by location/author/isbn
-- [ ] map view
-- [ ] check if the book exists in shelf before removing (front- and backend!)
-- [ ] old books without isbn / foreign isbn
-- [ ] make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
-- [ ] dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
-- [ ] frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
-- [ ] server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
-- [ ] if cover in size=l not available, try different sizes!
-- [ ] save covers to db?
-- [ ] user accounts ?
+- [x] use [react memo](https://www.w3schools.com/REACT/react_memo.asp) for scanner to avoid rerender
+- [x] use [react-router](https://www.w3schools.com/REACT/react_router.asp) for multi-page design
+- [x] implement server...
+- [x] ...with book data api that proxies dnb data
+- [x] ...with cache/db for book data and cover images (sqlite3)
+- [x] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
+- [x] ...and db for online catalog (sqlite3)
+- [x] use material ui (mui) for react buttons, input fields and other ui components
+- [x] frontend
 - [x] bookdata cache -> book can be inserted like this:
       `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
 - [x] mobile first web design!
@@ -73,39 +121,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - [x] camera feed working on mobile
 - [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
 - [x] buch entnehmen/einstellen funktion
-- [ ] Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
-- [x] use [react memo](https://www.w3schools.com/REACT/react_memo.asp) for scanner to avoid rerender
-- [x] use [react-router](https://www.w3schools.com/REACT/react_router.asp) for multi-page design
-- [ ] extend theme.ts, e.g. dark mode
-- [ ] implement and test Makefiles!
-- [ ] implement tests
-- [ ] also for react?!
-- [ ] clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh
-- [ ] move venv to the python / server directory if possible
-- [ ] make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
-- [ ] adhere to coding standards
-- [x] implement server...
-- [x] ...with book data api that proxies dnb data
-- [x] ...with cache/db for book data and cover images (sqlite3)
-- [x] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
-- [ ] Nginx / Apache (prod)
-- [x] ...and db for online catalog (sqlite3)
-- [x] use material ui (mui) for react buttons, input fields and other ui components
-- [x] frontend
-- [ ] support multiple languages?
-- [ ] type annotations in python!
-- [ ] add doctstrings and documentation
-- [ ] search code for TODOs
-- [ ] search local desktop for todos
-- [ ] clean up console.log and console.error usage
-- [ ] remove unused inputs (tsx and py)
-- [ ] add svg icon
-- [ ] add isbn checksum validation?
-- [ ] show search results even when no location given
-
-### Nice to have
-
-### Finished
+- [x] properly design NotFoundScreen
+- [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
+- [x] Fill bookshelves table with public_bookcases from osm
+- [x] backend for catalog search by title
+- use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
+- map view
 
 ### QLever bookshelf data
 
