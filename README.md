@@ -47,10 +47,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
   - Übersicht über catalog search screens und features erstellen <===================================
   - catalog screen for showing all books from one shelf
   - online catalogscreen + search - add missing pages!
+  - Buchsuche soll auch ohne standort gehen
 
 - CatalogResult
 
   - show how long book is in shelf already in result
+  - ausleihen-Button der direkt zum shelfActionScreen leitet
 
 - HomeScreen
 
@@ -60,7 +62,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - Scanning/InsertScreens
 
-  - select button switches to "selected" when clicked on insert page
+  - select button switches to "selected" when clicked on shelfActionScreen
+  - Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
 
 - InfoScreen
 
