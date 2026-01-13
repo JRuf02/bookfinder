@@ -42,17 +42,39 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - implement and test Makefiles!
 - clean up the spaghetti of npm run all, make, postcreatecommands, docker, .vscode/tasks.json and start-all.sh
 
-- catalog screen for showing all books from one shelf <===================================
-- select button on homescreen map redirects to the catalog
-- select button on home screen renamed to "show books"
-- select button switches to "selected" when clicked on insert page
-- online catalogscreen + search - add missing pages!
-- add info page
-- show how long book is in shelf already in result
+- CatalogScreen(s)
+
+  - Übersicht über catalog search screens und features erstellen <===================================
+  - catalog screen for showing all books from one shelf
+  - online catalogscreen + search - add missing pages!
+
+- CatalogResult
+
+  - show how long book is in shelf already in result
+
+- HomeScreen
+
+  - select button on homescreen map redirects to the catalog
+  - select button on home screen renamed to "show books"
+  - Search on home screen works
+
+- Scanning/InsertScreens
+
+  - select button switches to "selected" when clicked on insert page
+
+- InfoScreen
+
+  - add info page
+
+- scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) existiert
+
+  - old books without isbn / foreign isbn
+  - scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) kann über scanningscreen aufgerufen werden
+  - scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) wird bei error gezeigt
+
 - Admin mode: get notified when book in a shelf is untouched for a certain time
 
 - check if the book exists in shelf before removing (front- and backend!)
-- old books without isbn / foreign isbn
 - make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
 - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
 - server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
@@ -72,8 +94,14 @@ Use the provided Devcontainer to make the usage as easy as possible:
     - add doctstrings and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
+  - final readme
+  - final makefiles
   - move venv to the python / server directory if possible
   - make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+  - Testing
+    - tested on android
+    - tested on iPad
+    - tested on Desktop
 
 ### Bugs
 
@@ -88,10 +116,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - make map scrolling/zooming more responsive... e.g. by:
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
   - use react-leaflet-markercluster for rendering only necessary shelf markers
+- CatalogResult
+  - In catalog results: Clicking a result shows it on map
+  - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
 
 ### Nice to have
 
-- style infos moved to css file(s)
 - Nginx / Apache (create production setup)
 - support multiple languages?
 - add isbn checksum validation?
@@ -100,8 +130,15 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - save covers to db?
 - user accounts ?
 - design
-  - [ ] Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
-  - [ ] extend theme.ts, e.g. dark mode
+  - style infos moved to css file(s)
+  - Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
+  - extend theme.ts, e.g. dark mode
+- show catalog search results on a map
+- Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
+- Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
+- Full screen:
+  - Hide browser address bar
+  - Hide android bottom bar
 
 ### Finished
 
