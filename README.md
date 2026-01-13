@@ -9,6 +9,11 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - Open this repository
 - Press `F1` (or `CTRL + SHIFT + P`) and select `Dev Containers: Rebuild and Reopen Container`
 
+### Run all dev servers with one command in vscode
+
+- Press `ctrl + P`
+- Type `task Run All Servers`
+
 ### Run server
 
 - Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the Devcontainer to start vite (react dev server)
@@ -35,8 +40,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - also implement tests for react?!
 
 - implement and test Makefiles!
-- clean up the spaghetti of npm run all, make, postcreatecommands, docker and start-all.sh
+- clean up the spaghetti of npm run all, make, postcreatecommands, docker, .vscode/tasks.json and start-all.sh
 
+- catalog screen for showing all books from one shelf <===================================
+- select button on homescreen map redirects to the catalog
+- select button on home screen renamed to "show books"
+- select button switches to "selected" when clicked on insert page
 - online catalogscreen + search - add missing pages!
 - add info page
 - show how long book is in shelf already in result
