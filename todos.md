@@ -1,11 +1,10 @@
 # TODO
 
-- clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
-- implement tests for python
-- also implement tests for react?!
+- Code Quality:
 
-- implement and test Makefiles!
-- clean up the spaghetti of npm run all, make, postcreatecommands, docker, .vscode/tasks.json and start-all.sh
+  - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
+  - Unit tests for python (backend)
+  - Unit tests for react?! (frontend)
 
 - StaticMap component (or version of existing Map with other params)
 
@@ -22,6 +21,15 @@
     - Suchfunktion Backend ggf verbessern
     - Buchsuche soll auch ohne standort gehen
     - Schalter für near you vs Suche ohne Standort
+  - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
+    - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+    - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfSelectScreen geöffnet und dann die Results gezeigt
+  - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfSelectScreen
+  - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
+
+- CatalogSearchScreen
+
+  - Real-Time: Shows fuzzy-search results as soon as the first letter is typed in
 
 - CatalogResultsScreen
 
@@ -29,9 +37,7 @@
   - hat 2 Versionen (Version wird von parent Komponente festgelegt):
     - Books/Results near you
     - Books at shelf xy: showing all books from one shelf
-  - hat eine StaticMap
-    - Klick auf Karte auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
-    - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfSelectScreen geöffnet und dann die Results gezeigt
+  - Kann Bücher von auf Karte gewähltem Regal zeigen
 
 - CatalogResult Component (Used inside ResultsList component)
 
@@ -42,8 +48,8 @@
 - HomeScreen
 
   - select button on homescreen map redirects to the catalog
-  - select button on home screen renamed to "show books"
-  - Search on home screen works
+  - select button on shelfSelectMap on home screen renamed to "show books"
+  - Search on home screen works and leads to CatalogSearchScreen
 
 - Scanning/InsertScreens
 
@@ -61,34 +67,45 @@
   - ManualInsertScreen kann über button auf dem scanningscreen aufgerufen werden
   - scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) wird bei error gezeigt
 
-- check if the book exists in shelf before removing (front- and backend!)
-- make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
-- dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
-- server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
-- if cover in size=l not available, try different sizes!
+- Resilience & Edge Cases:
 
-- System diagram (draw.io->UML->callback)
-- Backend/api documentation -> 1-2 diagrams
-- (caching von) backend/.db verstehen + optimieren
-- Sequenzdiagramm für 'Buch einstellen' Aktion
+  - check if the book exists in shelf before removing (front- and backend!)
+  - make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
+  - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
+  - server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
+  - if cover in size=l not available, try different sizes!
 
-- add svg icon
+- Logic & Documentation:
+
+  - System diagram (draw.io->UML->callback)
+  - Backend/api documentation -> 1-2 diagrams
+  - (caching von) backend/.db verstehen + optimieren
+  - Sequenzdiagramm für 'Buch einstellen' Aktion
 
 - Finalization:
+  - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
+  - add svg icon
   - search code for TODOs
   - search local desktop for todos
+  - final readme
+    - Introduction
+    - System overview + diagram
+    - backend API documentation
+    - Docker setup how to
   - adhere to coding standards
     - type annotations in python!
     - add doctstrings and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
-  - final readme
-  - final makefiles
-  - move venv to the python / server directory if possible
-  - make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+    - move venv to the python / server directory if possible
+  - Automation
+    - clean up the spaghetti of npm run all, make, postcreatecommands, docker, .vscode/tasks.json and start-all.sh
+    - implement and test final makefiles
+    - makefile has 'help' target and documentation
+    - make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
   - Testing
-    - tested on android
-    - tested on iPad
+    - tested on android/mobile
+    - tested on iPad/iPhone
     - tested on Desktop
 
 ## Bugs
@@ -132,6 +149,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - style infos moved to css file(s)
   - Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
   - extend theme.ts, e.g. dark mode
+  - MUI icons for insert/remove buttons
 - show catalog search results on a map
 - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
 - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
