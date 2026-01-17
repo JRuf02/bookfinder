@@ -68,6 +68,8 @@ https://qlever.cs.uni-freiburg.de/osm-planet/zJ9akA
 
 - [infos](https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/SRU/sru_node.html#doc58294bodyText5)
 
+- [alternative (nicht verwendet)](https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/LDS/lds_node.html#doc58246bodyText7)
+
 - [html book data (catalog page)](https://portal.dnb.de/opac/simpleSearch?query=%223551551677%22)
 
 - [jpg (cover image)](https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m)

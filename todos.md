@@ -1,23 +1,19 @@
 # TODO
 
 - Code Quality:
-
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
   - Unit tests for python (backend)
-  - Unit tests for react?! (frontend)
+  - Unit tests for react?! (frontend) <===================================start in shelfActions.tsx
 
 - StaticMap component (or version of existing Map with other params)
-
   - zu Anzeigezwecken: Soll zentriert auf current shelf sein
   - statisch: kann nicht gescrollt/gezoomt etc werden
   - hat methode onClick, die vom parent definiert wird
     - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
 
 - CatalogHomeScreen
-
-  - Übersicht über catalog search screens und features erstellen <===================================
   - hat Suchleiste
-    - Suchfunktion Backend wieder verstehen: Sequenzdiagramm für 'Buch finden' Aktion
+    - Suchfunktion Backend wieder verstehen: Sequenzdiagramm für 'Buch finden' Aktion <===================================
     - Suchfunktion Backend ggf verbessern
     - Buchsuche soll auch ohne standort gehen
     - Schalter für near you vs Suche ohne Standort
@@ -28,11 +24,9 @@
   - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
 
 - CatalogSearchScreen
-
   - Real-Time: Shows fuzzy-search results as soon as the first letter is typed in
 
 - CatalogResultsScreen
-
   - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum
   - hat 2 Versionen (Version wird von parent Komponente festgelegt):
     - Books/Results near you
@@ -40,44 +34,38 @@
   - Kann Bücher von auf Karte gewähltem Regal zeigen
 
 - CatalogResult Component (Used inside ResultsList component)
-
   - is a separate component
   - show how long book is in shelf already in result
   - ausleihen-Button der direkt zum shelfActionScreen leitet
 
 - HomeScreen
-
   - select button on homescreen map redirects to the catalog
   - select button on shelfSelectMap on home screen renamed to "show books"
   - Search on home screen works and leads to CatalogSearchScreen
 
 - Scanning/InsertScreens
-
   - select button switches to "selected" when clicked on shelfActionScreen
   - Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
 
 - InfoScreen
-
   - add info page
 
 - ManualInsertScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) existiert
-
   - inserting old books / without isbn / foreign isbn possible
   - inserting incl. photo of cover possible
   - ManualInsertScreen kann über button auf dem scanningscreen aufgerufen werden
   - scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) wird bei error gezeigt
 
 - Resilience & Edge Cases:
-
   - check if the book exists in shelf before removing (front- and backend!)
   - make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
-  - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
+  - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!) e.g. in shelfActions.tsx
   - server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
   - if cover in size=l not available, try different sizes!
 
 - Logic & Documentation:
-
   - System diagram (draw.io->UML->callback)
+  - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
   - Backend/api documentation -> 1-2 diagrams
   - (caching von) backend/.db verstehen + optimieren
   - Sequenzdiagramm für 'Buch einstellen' Aktion
@@ -94,6 +82,7 @@
     - Docker setup how to
   - adhere to coding standards
     - type annotations in python!
+    - einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
     - add doctstrings and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
@@ -102,7 +91,11 @@
     - clean up the spaghetti of npm run all, make, postcreatecommands, docker, .vscode/tasks.json and start-all.sh
     - implement and test final makefiles
     - makefile has 'help' target and documentation
-    - make project docker-compatible as wished [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+    - make project docker-compatible as wished
+      - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+      - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
+      - and [here](https://docs.docker.com/build/building/best-practices/)
+      - and [here](https://docs.docker.com/build/building/multi-stage/)
   - Testing
     - tested on android/mobile
     - tested on iPad/iPhone
@@ -135,13 +128,16 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - CatalogSearch
   - Add advanced search screen for search by author, title, isbn, ... seperately
   - Add clever fuzzy search backend for advanced separate search by title, isbn etc separately
+- Taschenlampe beim Scannen anschalten
+- 'Add bookshelf' Funktion für fehlende Regale
+  - Z.B. mit [draggable Marker](https://react-leaflet.js.org/docs/example-draggable-marker/) auf map
 
 ## Nice to have
 
 - Nginx / Apache (create production setup)
 - support multiple languages?
 - add isbn checksum validation?
-- include reverse-geocoded addresses in bookshelf data (e.g. with nominatim: ca. 5h for 15k requests)
+- include reverse-geocoded addresses in bookshelf data (e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests)
 - backend for catalog search by location/author/isbn
 - save covers to db?
 - user accounts ?
@@ -154,10 +150,12 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
 - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
 - Full screen:
-  - Hide browser address bar
+  - Hide browser address bar ([tipps on stack overflow](https://stackoverflow.com/questions/57023990/how-to-hide-the-address-bar-on-mobile-in-a-react-app))
   - Hide android bottom bar
+  - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
 - AdminMode: custom Benachrichtigung wenn buch custom zeit in gewähltem Schrank
 - (Admin mode:) get notified when book in a shelf is untouched for a certain time
+- Buchempfehlungen / ähnliche Bücher vorschlagen [z.B. wie bibtip](https://www.bibtip.de/de)
 
 ## Done
 
@@ -192,3 +190,5 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - [x] backend for catalog search by title
 - use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
 - map view
+- CatalogHomeScreen
+  - Übersicht über catalog search screens und features erstellen

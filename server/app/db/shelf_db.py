@@ -14,7 +14,7 @@ def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
     """Insert a book into a bookshelf (current_catalog)."""
     isbn = normalize_isbn(isbn)
     if not isbn:
-        pass # TODO: Handle invalid ISBN case
+        pass # TODO: Handle invalid ISBN case -> return error/raise exception
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""

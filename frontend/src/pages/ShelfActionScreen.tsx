@@ -58,7 +58,6 @@ export default function ShelfActionScreen({
           <Button variant="outlined" onClick={() => setMapDialogOpen(true)}>
             Change
           </Button>
-          {/* TODO: Use ShelfSelectMap component for selecting shelf and getting osm id */}
         </Card>
 
         {/* Map Dialog for selecting shelf */}

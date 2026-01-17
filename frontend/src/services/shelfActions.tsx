@@ -7,7 +7,7 @@ function normalizeIsbn(isbn: string): string {
   return endsWithX ? cleaned + "X" : cleaned;
 }
 
-// TODO: Error handling for removing non-existing entries
+// TODO: Error handling for removing non-existing entries (better only in routes/shelf.py)
 
 // Send POST to insert or remove book from shelf
 export async function shelfAction(
