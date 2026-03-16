@@ -1,6 +1,7 @@
 # TODO
 
 - Code Quality:
+  - linting and stylechecker on save einstellen und einschalten
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
   - Unit tests for python (backend)
   - Unit tests for react?! (frontend) <===================================start in shelfActions.tsx
@@ -11,9 +12,20 @@
   - hat methode onClick, die vom parent definiert wird
     - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
 
+- Logic & Documentation:
+  - Database tables diagram / readme
+  - System diagram (draw.io->UML->callback)
+    - possible production setup ()
+    - dev setup ()
+  - Diagram Frontend-Backend-ExternalServers(e.g. leaflet)
+  - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
+  - Backend/api documentation -> 1-2 diagrams
+  - (caching von) backend/.db verstehen + optimieren
+  - Sequenzdiagramm für 'Buch einstellen' Aktion
+
 - CatalogHomeScreen
   - hat Suchleiste
-    - Suchfunktion Backend wieder verstehen: Sequenzdiagramm für 'Buch finden' Aktion <===================================
+    - Suchfunktion Backend wieder verstehen: Sequenzdiagramm für 'Buch finden' Aktion <=================================== schon gekritzelt, jetzt bitte noch digitalisieren! flowchart: draw.io -> UML -> Callback / app.diagrams.net
     - Suchfunktion Backend ggf verbessern
     - Buchsuche soll auch ohne standort gehen
     - Schalter für near you vs Suche ohne Standort
@@ -62,13 +74,6 @@
   - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!) e.g. in shelfActions.tsx
   - server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
   - if cover in size=l not available, try different sizes!
-
-- Logic & Documentation:
-  - System diagram (draw.io->UML->callback)
-  - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
-  - Backend/api documentation -> 1-2 diagrams
-  - (caching von) backend/.db verstehen + optimieren
-  - Sequenzdiagramm für 'Buch einstellen' Aktion
 
 - Finalization:
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
@@ -122,25 +127,32 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - make map scrolling/zooming more responsive... e.g. by:
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
   - use react-leaflet-markercluster for rendering only necessary shelf markers
+  - quadtree for tile / shelf loading
 - CatalogResult
   - In catalog results: Clicking a result shows it on map
   - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
 - CatalogSearch
   - Add advanced search screen for search by author, title, isbn, ... seperately
   - Add clever fuzzy search backend for advanced separate search by title, isbn etc separately
+  - Show fuzzy search results within given radius + complete matches even if outside the search radius
 - Taschenlampe beim Scannen anschalten
 - 'Add bookshelf' Funktion für fehlende Regale
   - Z.B. mit [draggable Marker](https://react-leaflet.js.org/docs/example-draggable-marker/) auf map
 
 ## Nice to have
 
-- Nginx / Apache (create production setup)
 - support multiple languages?
 - add isbn checksum validation?
 - include reverse-geocoded addresses in bookshelf data (e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests)
 - backend for catalog search by location/author/isbn
 - save covers to db?
+- api for non-dnb books
 - user accounts ?
+  - Buchempfehlungen / ähnliche Bücher vorschlagen [z.B. wie bibtip](https://www.bibtip.de/de)
+  - Ratingsystem (Sterne/Bewertung) für Shelfs & Books
+  - Bookmarks/Wishlist
+  - Mail/Push Notification when bookmarked book becomes available within set radius
+- Gamification - Punktesammeln für shelf checks a la "book still there?"
 - design
   - style infos moved to css file(s)
   - Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
@@ -155,7 +167,14 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
 - AdminMode: custom Benachrichtigung wenn buch custom zeit in gewähltem Schrank
 - (Admin mode:) get notified when book in a shelf is untouched for a certain time
-- Buchempfehlungen / ähnliche Bücher vorschlagen [z.B. wie bibtip](https://www.bibtip.de/de)
+- Tech stack changes
+  - 1 Docker-Compose (ggf. mit caddy für auto-restart nach crash) mit 2 Containern:
+    - frontend (vite server or pre-built files from frontend/dist/)
+    - backend (flask/gunicorn python server)
+    - dockercompose can be inside the devcontainer
+  - PostgreSQL statt sqlite3 (for production upscaling & advanced geocoordinates functionalities)
+  - fastAPI statt flask ([discussion](https://www.reddit.com/r/flask/comments/13pyxie/flask_vs_fastapi/))
+  - Nginx / Apache + Gunicorn (create production setup) (see /documentation)
 
 ## Done
 

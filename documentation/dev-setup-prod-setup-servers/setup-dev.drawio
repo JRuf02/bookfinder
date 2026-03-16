@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0" version="29.6.1">
+  <diagram name="Seite-1" id="1V8wp7dTk6F3Sek12UoL">
+    <mxGraphModel dx="786" dy="419" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1000" math="0" shadow="0" adaptiveColors="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HPABYToSQElcOi2I7UhA-1" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;b&gt;Client&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="120" x="320" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-2" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b&gt;Vite Server&lt;/b&gt;&lt;/div&gt;&lt;div&gt;builds &amp;amp; serves&lt;/div&gt;&lt;div&gt;React on demand&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="120" x="400" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-4" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b&gt;Flask Server&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Python&lt;/div&gt;&lt;div&gt;app.run()&lt;/div&gt;&lt;div&gt;Backend for book data and shelf data&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="120" x="240" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-5" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b&gt;DNB Server&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Book data&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="120" x="240" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-6" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-1" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;align=right;" target="HPABYToSQElcOi2I7UhA-4" value="&lt;div align=&quot;right&quot;&gt;localhost:5000/api&amp;nbsp;&lt;/div&gt;">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="60" />
+            </Array>
+            <mxPoint x="300" y="60" as="sourcePoint" />
+            <mxPoint x="220" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-7" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;align=left;" target="HPABYToSQElcOi2I7UhA-2" value="&lt;div align=&quot;left&quot;&gt;&amp;nbsp;localhost:5178&lt;/div&gt;">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="60" />
+            </Array>
+            <mxPoint x="390" y="250" as="sourcePoint" />
+            <mxPoint x="440" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-8" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-4" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HPABYToSQElcOi2I7UhA-5" value="If book data not in DB yet">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="250" as="sourcePoint" />
+            <mxPoint x="440" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-9" parent="1" style="shape=datastore;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;b&gt;books.db&lt;/b&gt;&lt;/div&gt;&lt;div&gt;squlite3&lt;/div&gt;&lt;div&gt;books &amp;amp; shelf data&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="110" x="90" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-10" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-4" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HPABYToSQElcOi2I7UhA-9" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="145" y="210" />
+            </Array>
+            <mxPoint x="390" y="250" as="sourcePoint" />
+            <mxPoint x="80" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-11" parent="1" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" value="&lt;div&gt;&lt;b&gt;React&lt;/b&gt;&lt;/div&gt;&lt;div&gt;frontend/src&lt;/div&gt;&lt;div&gt;tsx files&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="80" x="570" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="HPABYToSQElcOi2I7UhA-13" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="HPABYToSQElcOi2I7UhA-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="210" />
+            </Array>
+            <mxPoint x="305" y="210" as="sourcePoint" />
+            <mxPoint x="210" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
