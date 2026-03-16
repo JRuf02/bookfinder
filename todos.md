@@ -1,5 +1,7 @@
 # TODO
 
+## Main todos
+
 - Code Quality:
   - linting and stylechecker on save einstellen und einschalten
   - use typechecker for python (e.g. mypy)
@@ -82,6 +84,7 @@
 - Finalization:
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
   - add svg icon
+  - handle certs/key.pem safely (maybe not on github?)
   - search code for TODOs
   - search local desktop for todos
   - final readme
@@ -186,39 +189,3 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - fastAPI statt flask ([discussion](https://www.reddit.com/r/flask/comments/13pyxie/flask_vs_fastapi/))
   - Nginx / Apache + Gunicorn (create production setup) (see /documentation)
   - rent & use own domain/online server (e.g. from Hetzner)
-
-## Done
-
-- [x] Implement Home screen (skeleton)
-- [x] make ScanningScreen more maintainable by splitting into multiple pages!
-- [x] use rem / % in global.css as well!!!
-- [x] ensure theme.ts is used
-- [x] make sure nothing is hidden beneath bottom nav bar
-- [x] drop and recreate + fill table bookshelves
-- [x] query location only after user input!
-- [x] restructure server directory!
-- [x] use [react memo](https://www.w3schools.com/REACT/react_memo.asp) for scanner to avoid rerender
-- [x] use [react-router](https://www.w3schools.com/REACT/react_router.asp) for multi-page design
-- [x] implement server...
-- [x] ...with book data api that proxies dnb data
-- [x] ...with cache/db for book data and cover images (sqlite3)
-- [x] ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
-- [x] ...and db for online catalog (sqlite3)
-- [x] use material ui (mui) for react buttons, input fields and other ui components
-- [x] frontend
-- [x] bookdata cache -> book can be inserted like this:
-      `curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'`
-- [x] mobile first web design!
-- [x] disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background)
-- [x] backend reachable from mobile on same network
-- [x] camera feed working on mobile
-- [x] check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
-- [x] buch entnehmen/einstellen funktion
-- [x] properly design NotFoundScreen
-- [x] use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
-- [x] Fill bookshelves table with public_bookcases from osm
-- [x] backend for catalog search by title
-- use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
-- map view
-- CatalogHomeScreen
-  - Übersicht über catalog search screens und features erstellen

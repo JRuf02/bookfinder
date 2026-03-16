@@ -1,0 +1,35 @@
+# TADAAA (Todos, but done)
+
+- digitize hand-written todos
+- Implement Home screen (skeleton)
+- make ScanningScreen more maintainable by splitting into multiple pages!
+- use rem / % in global.css as well!!!
+- ensure theme.ts is used
+- make sure nothing is hidden beneath bottom nav bar
+- drop and recreate + fill table bookshelves
+- query location only after user input!
+- restructure server directory!
+- use [react memo](https://www.w3schools.com/REACT/react_memo.asp) for scanner to avoid rerender
+- use [react-router](https://www.w3schools.com/REACT/react_router.asp) for multi-page design
+- implement server...
+- ...with book data api that proxies dnb data
+- ...with cache/db for book data and cover images (sqlite3)
+- ...and backend for book extraction / addition (python & flask(dev)/Nginx(prod))
+- ...and db for online catalog (sqlite3)
+- use material ui (mui) for react buttons, input fields and other ui components
+- frontend
+- bookdata cache -> book can be inserted via `http://localhost:5000/api/shelf/insert`
+- mobile first web design!
+- disable isbn input once book will be inserted or removed!!! (might be fixed already, but make sure the camera cant find other codes while in background)
+- backend reachable from mobile on same network
+- camera feed working on mobile
+- check where node_modules are installed on container restart and where they are sourced from by App.tsx etc. -> try moving to frontend!
+- buch entnehmen/einstellen funktion
+- properly design NotFoundScreen
+- use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
+- Fill bookshelves table with public_bookcases from osm
+- backend for catalog search by title
+- use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
+- map view
+- CatalogHomeScreen
+  - Übersicht über catalog search screens und features erstellen
