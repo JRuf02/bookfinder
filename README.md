@@ -52,32 +52,6 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 "$BROWSER" "https://${HOST_IP}:5173"
 ```
 
-## QLever bookshelf data
-
-Germany:
-https://qlever.cs.uni-freiburg.de/osm-planet/FG873S
-https://qlever.cs.uni-freiburg.de/osm-planet/ulH4tw
-
-Find all predicates:
-https://qlever.cs.uni-freiburg.de/osm-planet/3CtDN7
-
-Reverse geocoding (does not work):
-https://qlever.cs.uni-freiburg.de/osm-planet/zJ9akA
-
-## isbn to book data via dnb
-
-- [infos](https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/SRU/sru_node.html#doc58294bodyText5)
-
-- [alternative (nicht verwendet)](https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/LDS/lds_node.html#doc58246bodyText7)
-
-- [html book data (catalog page)](https://portal.dnb.de/opac/simpleSearch?query=%223551551677%22)
-
-- [jpg (cover image)](https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m)
-
-- xml book data
-  - [marc-21-xml formatted](https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="3551551677"&recordSchema=MARC21-xml&maximumRecords=1)
-  - [rdf-xml formatted](https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=%223551551677%22&maximumRecords=1)
-
 ## Sqlite3 DB & Python API
 
 ### SQLite tables and their columns:

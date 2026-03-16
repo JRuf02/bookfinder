@@ -2,9 +2,13 @@
 
 - Code Quality:
   - linting and stylechecker on save einstellen und einschalten
+  - use typechecker for python (e.g. mypy)
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
-  - Unit tests for python (backend)
-  - Unit tests for react?! (frontend) <===================================start in shelfActions.tsx
+  - Unit tests
+    - Unit tests for python (backend)
+    - Unit tests for react?! (frontend) <===================================start in shelfActions.tsx
+      - API calls should be tested, user interface doesn't need to be tested
+      - Logic should be tested
 
 - StaticMap component (or version of existing Map with other params)
   - zu Anzeigezwecken: Soll zentriert auf current shelf sein
@@ -88,12 +92,12 @@
   - adhere to coding standards
     - type annotations in python!
     - einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
-    - add doctstrings and documentation
+    - add docstrings (incl. examples) and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
     - move venv to the python / server directory if possible
   - Automation
-    - clean up the spaghetti of npm run all, make, postcreatecommands, docker, .vscode/tasks.json and start-all.sh
+    - use make instead of / to bundle npm run all, postcreatecommands, docker commands, .vscode/tasks.json and start-all.sh
     - implement and test final makefiles
     - makefile has 'help' target and documentation
     - make project docker-compatible as wished
@@ -101,6 +105,7 @@
       - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
       - and [here](https://docs.docker.com/build/building/best-practices/)
       - and [here](https://docs.docker.com/build/building/multi-stage/)
+    - do not require vs-code & devcontainer, only docker!
   - Testing
     - tested on android/mobile
     - tested on iPad/iPhone
@@ -143,21 +148,25 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 - support multiple languages?
 - add isbn checksum validation?
-- include reverse-geocoded addresses in bookshelf data (e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests)
+- reverse-geocoded addresses in bookshelf data
+  - e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests
+  - or valhalla.openstreetmap.de -> Koords eingeben, checkmark drücken -> reverse-geocodes the address
+  - or project-osrm.org/docs -> nearest service -> 'name' -> outputs a street name
 - backend for catalog search by location/author/isbn
 - save covers to db?
-- api for non-dnb books
+- api for non-dnb books (e.g. via google books api/internet archive OpenLibrary api/wikipedia isbn-Suche)
 - user accounts ?
   - Buchempfehlungen / ähnliche Bücher vorschlagen [z.B. wie bibtip](https://www.bibtip.de/de)
   - Ratingsystem (Sterne/Bewertung) für Shelfs & Books
   - Bookmarks/Wishlist
   - Mail/Push Notification when bookmarked book becomes available within set radius
-- Gamification - Punktesammeln für shelf checks a la "book still there?"
+- Gamification - Punktesammeln für shelf checks a la "book still there?" & buch scan
 - design
   - style infos moved to css file(s)
   - Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
   - extend theme.ts, e.g. dark mode
   - MUI icons for insert/remove buttons
+  - map styling examples: maplibre.org, protomaps.com, transit.land
 - show catalog search results on a map
 - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
 - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
@@ -168,13 +177,15 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - AdminMode: custom Benachrichtigung wenn buch custom zeit in gewähltem Schrank
 - (Admin mode:) get notified when book in a shelf is untouched for a certain time
 - Tech stack changes
-  - 1 Docker-Compose (ggf. mit caddy für auto-restart nach crash) mit 2 Containern:
+  - 1 Docker-Compose (ggf. mit caddy reverse-proxy & auto-restart nach crash) mit 2 Containern:
     - frontend (vite server or pre-built files from frontend/dist/)
     - backend (flask/gunicorn python server)
     - dockercompose can be inside the devcontainer
   - PostgreSQL statt sqlite3 (for production upscaling & advanced geocoordinates functionalities)
+  - Advanced geospatial db with fast radius search and indexing: PostgreSQL with PostGIS
   - fastAPI statt flask ([discussion](https://www.reddit.com/r/flask/comments/13pyxie/flask_vs_fastapi/))
   - Nginx / Apache + Gunicorn (create production setup) (see /documentation)
+  - rent & use own domain/online server (e.g. from Hetzner)
 
 ## Done
 
