@@ -8,7 +8,9 @@ RUN npm install -g npm@11.1.0
 # setup python
 RUN mkdir -p /workspaces/isbn-scanner-venv
 WORKDIR /workspaces/isbn-scanner-venv
-RUN python3 -m venv .venv && source .venv/bin/activate && pip install mypy Flask==3.1.3 Flask_Cors==4.0.0 pysqlite3==0.6.0 requests==2.31.0
+RUN python3 -m venv .venv && \
+source .venv/bin/activate && \
+pip install mypy==1.19.1 Flask==3.1.3 Flask_Cors==4.0.0 types-Flask-Cors==6.0.0.20250809 pysqlite3==0.6.0 requests==2.31.0 types-requests==2.32.4.20260107
 
 
 WORKDIR /workspaces/isbn-scanner
@@ -21,3 +23,4 @@ WORKDIR /workspaces/isbn-scanner
 # CMD ["npm", "start"]
 
 # TODO add docker setup commands as comments here
+# with the correct port forwarding args (take them from devcontainer.json)

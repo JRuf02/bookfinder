@@ -19,16 +19,19 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "dbaeumer.vscode-eslint", // can be run with 'npm run lint'
+        // General
         "ms-azuretools.vscode-docker",
         "GitHub.copilot",
+        // React / TypeScript
+        "dbaeumer.vscode-eslint", // can be run with 'npm run lint'
         "esbenp.prettier-vscode",
-        "ms-python.python"
-        // "ms-python.vscode-pylance"
-      ],
-      "settings": {
-        "python.defaultInterpreterPath": "/workspaces/isbn-scanner/.venv/bin/python"
-      }
+        // Python
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.vscode-pylance",
+        "ms-python.mypy-type-checker"
+      ]
     }
   }
 }

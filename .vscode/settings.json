@@ -15,6 +15,12 @@
   },
   "eslint.workingDirectories": ["frontend"],
   "python.analysis.extraPaths": ["./backend"],
+  "python.defaultInterpreterPath": "/workspaces/isbn-scanner-venv/.venv/bin/python",
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+  "mypy-type-checker.interpreter": [
+    "/workspaces/isbn-scanner-venv/.venv/bin/python"
+  ],
+  "mypy-type-checker.reportingScope": "workspace",
   "typescript.tsserver.maxTsServerMemory": 4096,
   "typescript.tsserver.watchOptions": {
     "watchFile": "useFsEvents",
