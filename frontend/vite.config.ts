@@ -15,8 +15,8 @@ export default defineConfig({
     host: true, // Allow access from other devices on the network
     port: 5173,
     https: {
-      key: fs.readFileSync(path.resolve(__dirname, "../certs/key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "../certs/cert.pem")),
+      key: fs.readFileSync(path.resolve(__dirname, "./certs/key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, "./certs/cert.pem")),
     },
     watch: {
       ignored: ["**/node_modules/**", "**/.venv/**", "../backend/**"],
