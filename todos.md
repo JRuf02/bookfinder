@@ -3,8 +3,7 @@
 ## Main todos
 
 - Code Quality:
-  - linting and stylechecker on save einstellen und einschalten
-  - use typechecker for python (e.g. mypy)
+  - make test: Starts servers and check if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered)
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
   - Unit tests
     - Unit tests for python (backend)
@@ -78,7 +77,7 @@
   - check if the book exists in shelf before removing (front- and backend!)
   - make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
   - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!) e.g. in shelfActions.tsx
-  - server.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
+  - server.py / dnb_api.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
   - if cover in size=l not available, try different sizes!
 
 - Finalization:
@@ -99,9 +98,8 @@
     - add docstrings (incl. examples) and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
-    - move venv to the python / server directory if possible
   - Automation
-    - use make instead of / to bundle npm run all, postcreatecommands, docker commands, .vscode/tasks.json and start-all.sh
+    - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
     - implement and test final makefiles
     - makefile has 'help' target and documentation
     - make project docker-compatible as wished

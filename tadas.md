@@ -32,4 +32,9 @@
 - use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
 - map view
 - CatalogHomeScreen
-  - Übersicht über catalog search screens und features erstellen
+- Übersicht über catalog search screens und features erstellen
+- Code Quality:
+  - linting and stylechecker on save einstellen und einschalten
+  - use typechecker for python (e.g. mypy)
+  - start-all.sh and postcreatecommands removed, all bundled in dockerfile
+- move venv to the python / server directory if possible

@@ -48,10 +48,17 @@ def fetch_book_from_dnb(isbn: str) -> Book:
                 name = main_author_field.find(
                     './/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
                 )
+
+                role_text = role.text if role is not None else None
+                name_text = name.text if name is not None else None
+
                 if (
-                    role is not None and "aut" in role.text.lower() and name is not None
-                ):  # TODO ctb contributor adden + error handling
-                    authors.append(name.text)
+                    role_text is not None
+                    and name_text is not None
+                    and "aut" in role_text.lower()
+                ):
+                    # TODO: also check ctb (contributor) + error handling when no author found at all
+                    authors.append(name_text)
 
             # More authors (sometimes authors are only in field 700)
             for df in record_element.findall(
@@ -59,8 +66,16 @@ def fetch_book_from_dnb(isbn: str) -> Book:
             ):
                 role = df.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="4"]')
                 name = df.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="a"]')
-                if role is not None and "aut" in role.text.lower() and name is not None:
-                    authors.append(name.text)
+
+                role_text = role.text if role is not None else None
+                name_text = name.text if name is not None else None
+
+                if (
+                    role_text is not None
+                    and name_text is not None
+                    and "aut" in role_text.lower()
+                ):
+                    authors.append(name_text)
 
             # author = ', '.join(authors) if authors else "Unknown Author"
             author = authors[0] if authors else "Unknown Author"
