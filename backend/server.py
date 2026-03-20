@@ -9,7 +9,8 @@ from app.routes.shelf import (
     insert_book_to_shelf,
     remove_book_from_shelf,
 )
-from flask import Flask, Response, request
+from flask import Flask, request
+from flask.typing import ResponseReturnValue
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -17,47 +18,47 @@ CORS(app)  # Enable CORS for all routes
 
 
 @app.route("/api/books", methods=["GET"])
-def get_book_api() -> Response:
+def get_book_api() -> ResponseReturnValue:
     return get_book(request)
 
 
 @app.route("/api/covers", methods=["GET"])
-def get_cover_api() -> Response:
+def get_cover_api() -> ResponseReturnValue:
     return get_cover(request)
 
 
 @app.route("/api/bookshelves", methods=["GET"])
-def get_all_bookshelves_api() -> Response:
+def get_all_bookshelves_api() -> ResponseReturnValue:
     return get_all_bookshelves(request)
 
 
 @app.route("/api/bookshelves/nearby", methods=["GET"])
-def get_nearby_bookshelves_api() -> Response:
+def get_nearby_bookshelves_api() -> ResponseReturnValue:
     return get_nearby_bookshelves(request)
 
 
 @app.route("/api/shelf/metadata", methods=["GET"])
-def get_shelf_metadata_api() -> Response:
+def get_shelf_metadata_api() -> ResponseReturnValue:
     return get_shelf_metadata(request)
 
 
 @app.route("/api/shelf/books", methods=["GET"])
-def get_books_in_shelf_api() -> Response:
+def get_books_in_shelf_api() -> ResponseReturnValue:
     return get_books_in_shelf(request)
 
 
 @app.route("/api/catalog/search", methods=["GET"])
-def search_in_catalog_api() -> Response:
+def search_in_catalog_api() -> ResponseReturnValue:
     return search_in_catalog(request)
 
 
 @app.route("/api/shelf/insert", methods=["POST"])
-def insert_book_to_shelf_api() -> Response:
+def insert_book_to_shelf_api() -> ResponseReturnValue:
     return insert_book_to_shelf(request)
 
 
 @app.route("/api/shelf/remove", methods=["POST"])
-def remove_book_from_shelf_api() -> Response:
+def remove_book_from_shelf_api() -> ResponseReturnValue:
     return remove_book_from_shelf(request)
 
 

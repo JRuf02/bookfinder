@@ -129,7 +129,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Improvements
 
-- ssl certificates so dass sie als sicher erkannt werden
+- ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - show search results even when no location given
 - visibly mark the selected shelf on ShelfSelectMap if one is selected

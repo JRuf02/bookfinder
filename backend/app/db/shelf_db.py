@@ -4,7 +4,8 @@ import sqlite3
 from app.utils.isbn_utils import normalize_isbn
 
 # TODO: Move all api logic to app/routes/shelf.py
-from flask import Request, Response, jsonify
+from flask import Request, jsonify
+from flask.typing import ResponseReturnValue
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
 
@@ -57,7 +58,7 @@ def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
     conn.close()
 
 
-def get_books_in_shelf_from_db(req: Request) -> Response:
+def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     """Fetch list of all books in the given shelf."""
     osm_id = req.args.get("osm_id")
     if not osm_id:
@@ -90,7 +91,7 @@ def get_books_in_shelf_from_db(req: Request) -> Response:
     return jsonify(books)
 
 
-def get_shelf_metadata_from_db(req: Request) -> Response:
+def get_shelf_metadata_from_db(req: Request) -> ResponseReturnValue:
     """Fetch metadata of the given shelf."""
     osm_id = req.args.get("osm_id")
     if not osm_id:

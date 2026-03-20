@@ -4,12 +4,13 @@ import sqlite3
 from app.utils.geo_utils import haversine
 
 # TODO: Move all api logic to app/routes/bookshelves.py
-from flask import Request, Response, jsonify
+from flask import Request, jsonify
+from flask.typing import ResponseReturnValue
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
 
 
-def get_all_bookshelves_from_db() -> Response:
+def get_all_bookshelves_from_db() -> ResponseReturnValue:
     """Fetch all bookshelves from the database."""
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -38,11 +39,11 @@ def get_all_bookshelves_from_db() -> Response:
     return jsonify(shelves)
 
 
-def get_nearby_bookshelves_from_db(req: Request) -> Response:
+def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
     """Fetch bookshelves in a given radius from the database."""
     lat = req.args.get("lat", type=float)
     lon = req.args.get("lon", type=float)
-    radius = req.args.get("radius", default=5000, type=float)  # meters
+    radius = req.args.get("radius", default=5000.0, type=float)  # meters
 
     print("lat:", lat, "lon:", lon, "radius:", radius)  # TODO: Remove/use debugger
     print(type(lat), type(lon), type(radius))

@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 
 import requests
 from flask import Response, jsonify
+from flask.typing import ResponseReturnValue
 
 from app.models.book import Book
 
@@ -40,16 +41,17 @@ def fetch_book_from_dnb(isbn: str) -> Book:
             main_author_field = record_element.find(
                 './/{http://www.loc.gov/MARC21/slim}datafield[@tag="100"]'
             )
-            role = main_author_field.find(
-                './/{http://www.loc.gov/MARC21/slim}subfield[@code="4"]'
-            )  # Should be 'aut' for author
-            name = main_author_field.find(
-                './/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
-            )
-            if (
-                role is not None and "aut" in role.text.lower() and name is not None
-            ):  # TODO ctb contributor adden + error handling
-                authors.append(name.text)
+            if main_author_field is not None:
+                role = main_author_field.find(
+                    './/{http://www.loc.gov/MARC21/slim}subfield[@code="4"]'
+                )  # Should be 'aut' for author
+                name = main_author_field.find(
+                    './/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
+                )
+                if (
+                    role is not None and "aut" in role.text.lower() and name is not None
+                ):  # TODO ctb contributor adden + error handling
+                    authors.append(name.text)
 
             # More authors (sometimes authors are only in field 700)
             for df in record_element.findall(
@@ -97,7 +99,7 @@ def fetch_book_from_dnb(isbn: str) -> Book:
         )
 
 
-def fetch_cover_from_dnb(isbn: str, size: str = "l") -> Response:
+def fetch_cover_from_dnb(isbn: str, size: str = "l") -> ResponseReturnValue:
     """Fetch cover image from DNB using the ISBN."""
 
     # Validate size parameter (should be 's', 'm', or 'l')

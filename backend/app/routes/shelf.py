@@ -4,22 +4,23 @@ from app.db.shelf_db import (
     insert_book_to_shelf_in_db,
     remove_book_from_shelf_in_db,
 )
-from flask import Request, Response, jsonify
+from flask import Request, jsonify
+from flask.typing import ResponseReturnValue
 
 
-def get_shelf_metadata(request: Request) -> Response:
+def get_shelf_metadata(request: Request) -> ResponseReturnValue:
     """Fetch metadata of the given shelf."""
     # TODO: Move api logic from db/shelf_db.py to here
     return get_shelf_metadata_from_db(request)
 
 
-def get_books_in_shelf(request: Request) -> Response:
+def get_books_in_shelf(request: Request) -> ResponseReturnValue:
     """Fetch all books from the given shelf."""
     # TODO: Move api logic from db/shelf_db.py to here
     return get_books_in_shelf_from_db(request)
 
 
-def insert_book_to_shelf(request: Request) -> Response:
+def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     """Insert a book into the given shelf."""
     # TODO: Use function from utils to normalize ISBN / check if the db function uses it already
     data = request.json
@@ -37,7 +38,7 @@ def insert_book_to_shelf(request: Request) -> Response:
     )
 
 
-def remove_book_from_shelf(request: Request) -> Response:
+def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     """Remove a book from the given shelf."""
     # TODO: Use function from utils to normalize ISBN / check if the db function uses it already
     data = request.json

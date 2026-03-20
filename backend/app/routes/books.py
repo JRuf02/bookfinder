@@ -3,10 +3,11 @@ from dataclasses import asdict
 from app.db.book_db import get_book_from_database, save_book_to_db
 from app.dnb_api import fetch_book_from_dnb
 from app.utils.isbn_utils import normalize_isbn
-from flask import Request, Response, jsonify
+from flask import Request, jsonify
+from flask.typing import ResponseReturnValue
 
 
-def get_book(request: Request) -> Response:
+def get_book(request: Request) -> ResponseReturnValue:
     """Fetch book data by ISBN, first from local DB, then from DNB if not found."""
     isbn = request.args.get("isbn")
     if not isbn:
