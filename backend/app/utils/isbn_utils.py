@@ -3,7 +3,7 @@
 def normalize_isbn(isbn: str) -> str:
     """Normalize ISBN by removing non-numeric characters. Allow capital X at the end for ISBN-10"""
     isbn = isbn.strip()
-    cleaned = ''.join(filter(str.isdigit, isbn))
-    if isbn.endswith('X') or isbn.endswith('x'):
-        return cleaned + 'X'
-    return cleaned  
+    cleaned = "".join(filter(str.isdigit, isbn))
+    if isbn.endswith("X") or isbn.endswith("x"):
+        return cleaned + "X"
+    return cleaned

@@ -1,11 +1,13 @@
+import os
 import sqlite3
 
-# TODO: Move all api logic to app/routes/bookshelves.py
-from flask import jsonify, Request, Response
 from app.utils.geo_utils import haversine
-import os
+
+# TODO: Move all api logic to app/routes/bookshelves.py
+from flask import Request, Response, jsonify
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
+
 
 def get_all_bookshelves_from_db() -> Response:
     """Fetch all bookshelves from the database."""
@@ -29,24 +31,25 @@ def get_all_bookshelves_from_db() -> Response:
             "website": row[7],
             "opening_hours": row[8],
             "osm_check_date": row[9],
-            "osm_last_updated": row[10]
+            "osm_last_updated": row[10],
         }
         for row in rows
     ]
     return jsonify(shelves)
 
+
 def get_nearby_bookshelves_from_db(req: Request) -> Response:
     """Fetch bookshelves in a given radius from the database."""
-    lat = req.args.get('lat', type=float)
-    lon = req.args.get('lon', type=float)
-    radius = req.args.get('radius', default=5000, type=float)  # meters
+    lat = req.args.get("lat", type=float)
+    lon = req.args.get("lon", type=float)
+    radius = req.args.get("radius", default=5000, type=float)  # meters
 
     print("lat:", lat, "lon:", lon, "radius:", radius)  # TODO: Remove/use debugger
     print(type(lat), type(lon), type(radius))
 
     if lat is None or lon is None:
         return jsonify({"error": "lat and lon are required"}), 400
-    
+
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
@@ -76,8 +79,10 @@ def get_nearby_bookshelves_from_db(req: Request) -> Response:
                 "opening_hours": row[8],
                 "osm_check_date": row[9],
                 "osm_last_updated": row[10],
-                "distance_m": dist_m
+                "distance_m": dist_m,
             }
             nearby.append(shelf)
-    print(f"Found {len(nearby)} nearby bookshelves within {radius} meters.") # TODO: Remove/use debugger
+    print(
+        f"Found {len(nearby)} nearby bookshelves within {radius} meters."
+    )  # TODO: Remove/use debugger
     return jsonify(nearby)

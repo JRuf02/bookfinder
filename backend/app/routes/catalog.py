@@ -1,5 +1,5 @@
-from flask import jsonify, Request, Response
 from app.db.catalog_db import search_in_catalog_db
+from flask import Request, Response
 
 
 def search_in_catalog(request: Request) -> Response:

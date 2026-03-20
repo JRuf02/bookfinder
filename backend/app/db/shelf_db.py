@@ -1,8 +1,10 @@
-import sqlite3
-# TODO: Move all api logic to app/routes/shelf.py
-from flask import jsonify, Request, Response
 import os
+import sqlite3
+
 from app.utils.isbn_utils import normalize_isbn
+
+# TODO: Move all api logic to app/routes/shelf.py
+from flask import Request, Response, jsonify
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
 
@@ -14,13 +16,16 @@ def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
     """Insert a book into a bookshelf (current_catalog)."""
     isbn = normalize_isbn(isbn)
     if not isbn:
-        pass # TODO: Handle invalid ISBN case -> return error/raise exception
+        pass  # TODO: Handle invalid ISBN case -> return error/raise exception
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("""
+    c.execute(
+        """
         INSERT INTO current_catalog (osm_id, isbn)
         VALUES (?, ?)
-    """, (osm_id, isbn))
+    """,
+        (osm_id, isbn),
+    )
     conn.commit()
     conn.close()
 
@@ -31,16 +36,19 @@ def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
     # TODO: Check if shelf, book and isbn exist
     isbn = normalize_isbn(isbn)
     if not isbn:
-        pass # TODO: Handle invalid ISBN case
+        pass  # TODO: Handle invalid ISBN case
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     # Find the entry_id of the oldest matching entry
-    c.execute("""
+    c.execute(
+        """
         SELECT entry_id FROM current_catalog
         WHERE osm_id = ? AND isbn = ?
         ORDER BY time_of_entry ASC, entry_id ASC
         LIMIT 1
-    """, (osm_id, isbn))
+    """,
+        (osm_id, isbn),
+    )
     row = c.fetchone()
     if row:
         entry_id = row[0]
@@ -51,18 +59,21 @@ def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
 
 def get_books_in_shelf_from_db(req: Request) -> Response:
     """Fetch list of all books in the given shelf."""
-    osm_id = req.args.get('osm_id')
+    osm_id = req.args.get("osm_id")
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("""
+    c.execute(
+        """
         SELECT b.isbn, b.title, b.author, b.dnb_isbn, b.dnb_id, b.cover_url
         FROM current_catalog cc
         JOIN books b ON cc.isbn = b.isbn
         WHERE cc.osm_id = ?
         ORDER BY cc.time_of_entry DESC
-    """, (osm_id,))
+    """,
+        (osm_id,),
+    )
     rows = c.fetchall()
     conn.close()
     books = [
@@ -72,7 +83,7 @@ def get_books_in_shelf_from_db(req: Request) -> Response:
             "author": row[2],
             "dnb_isbn": row[3],
             "dnb_id": row[4],
-            "cover_url": row[5]
+            "cover_url": row[5],
         }
         for row in rows
     ]
@@ -81,15 +92,18 @@ def get_books_in_shelf_from_db(req: Request) -> Response:
 
 def get_shelf_metadata_from_db(req: Request) -> Response:
     """Fetch metadata of the given shelf."""
-    osm_id = req.args.get('osm_id')
+    osm_id = req.args.get("osm_id")
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("""
+    c.execute(
+        """
         SELECT osm_id, name, latitude, longitude, address, type, operator, website, opening_hours, osm_check_date, osm_last_updated
         FROM bookshelves WHERE osm_id = ?
-    """, (osm_id,))
+    """,
+        (osm_id,),
+    )
     row = c.fetchone()
     conn.close()
     if not row:
@@ -105,6 +119,6 @@ def get_shelf_metadata_from_db(req: Request) -> Response:
         "website": row[7],
         "opening_hours": row[8],
         "osm_check_date": row[9],
-        "osm_last_updated": row[10]
+        "osm_last_updated": row[10],
     }
     return jsonify(shelf)
