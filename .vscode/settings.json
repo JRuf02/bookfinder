@@ -2,7 +2,10 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "files.exclude": {
-    "**/*Zone.Identifier": true
+    "**/*Zone.Identifier": true,
+    "**/__pycache__/**": true,
+    "**/.mypy_cache/**": true,
+    "**/node_modules/**": true
   },
   "files.watcherExclude": {
     "**/.venv/**": true,

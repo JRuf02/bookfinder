@@ -94,7 +94,7 @@
     - Docker setup how to
   - adhere to coding standards
     - type annotations in python!
-    - einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
+    - PEP8 style einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
     - add docstrings (incl. examples) and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)

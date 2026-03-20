@@ -16,7 +16,7 @@
     }
   },
   "mounts": [],
-  "postCreateCommand": "npm install && chmod +x /workspaces/isbn-scanner/start-all.sh && cd /workspaces/isbn-scanner/frontend && npm install",
+  // "postCreateCommand": "npm install && chmod +x /workspaces/isbn-scanner/start-all.sh && cd /workspaces/isbn-scanner/frontend && npm install",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,8 +24,8 @@
         "ms-azuretools.vscode-docker",
         "GitHub.copilot",
         "esbenp.prettier-vscode",
-        "ms-python.python",
-        "ms-python.vscode-pylance"
+        "ms-python.python"
+        // "ms-python.vscode-pylance"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/workspaces/isbn-scanner/.venv/bin/python"

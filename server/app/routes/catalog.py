@@ -1,6 +1,7 @@
 from flask import jsonify, Request, Response
 from app.db.catalog_db import search_in_catalog_db
 
+
 def search_in_catalog(request: Request) -> Response:
     """Search for books in the catalog (by title) and compute distance from given coordinates."""
     # TODO: Move api logic from db/catalog_db.py here

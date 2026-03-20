@@ -4,27 +4,25 @@ CHECKSTYLE_CMD = flake8
 help:
 	@echo "Not implemented yet"
 
-install:
-	python3 -m venv /workspaces/isbn-scanner/.venv && \
-	. /workspaces/isbn-scanner/.venv/bin/activate && \
-	pip install -r requirements.txt
-
 all: compile test checkstyle run
 
 run:
-	. /workspaces/isbn-scanner/.venv/bin/activate && \
-	python server.py
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	python server.py && \
+	deactivate
 
 compile:
 	@echo "Nothing to compile for Python"
 
 test:
-	. /workspaces/isbn-scanner/.venv/bin/activate && \
-	$(TEST_CMD) *.py
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	$(TEST_CMD) *.py && \
+	deactivate
 
 checkstyle:
-	. /workspaces/isbn-scanner/.venv/bin/activate && \
-	$(CHECKSTYLE_CMD) *.py
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	$(CHECKSTYLE_CMD) *.py && \
+	deactivate
 
 clean:
 	rm -f *.pyc
