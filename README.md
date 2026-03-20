@@ -17,7 +17,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ### Run servers manually
 
 - Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the Devcontainer to start vite (react dev server)
-- Run `make run` in directory `\workspaces\isbn-scanner\server` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
+- Run `make run` in directory `\workspaces\isbn-scanner\backend` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
 
 ### Show the website
 
@@ -78,7 +78,7 @@ curl -X POST http://localhost:5000/api/shelf/remove -H "Content-Type: applicatio
 Show the table:
 
 ```
-cd server
+cd backend
 apk update && apk add sqlite
 sqlite3 books.db
 .headers on

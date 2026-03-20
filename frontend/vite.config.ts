@@ -19,12 +19,7 @@ export default defineConfig({
       cert: fs.readFileSync(path.resolve(__dirname, "../certs/cert.pem")),
     },
     watch: {
-      ignored: [
-        "**/node_modules/**",
-        "**/.venv/**",
-        "../server/**",
-        "../.venv/**",
-      ],
+      ignored: ["**/node_modules/**", "**/.venv/**", "../backend/**"],
       usePolling: true, // Needed for hot module reload on alpine linux
       interval: 100, // Optional: check every 100ms
     },

@@ -82,6 +82,7 @@
   - if cover in size=l not available, try different sizes!
 
 - Finalization:
+  - .vscode/tasks.json tasks löschen wenn makefile fertig
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
   - add svg icon
   - handle certs/key.pem safely (maybe not on github?)

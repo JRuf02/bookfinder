@@ -16,7 +16,6 @@
     }
   },
   "mounts": [],
-  // "postCreateCommand": "npm install && chmod +x /workspaces/isbn-scanner/start-all.sh && cd /workspaces/isbn-scanner/frontend && npm install",
   "customizations": {
     "vscode": {
       "extensions": [
