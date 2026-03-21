@@ -31,5 +31,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff"
-  }
+  },
+  "ruff.lint.ignore": ["D211", "D213"],
+  "ruff.lint.select": ["ALL"]
 }

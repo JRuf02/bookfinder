@@ -1,5 +1,5 @@
 TEST_CMD = pytest -q --doctest-modules --verbose
-CHECKSTYLE_CMD = flake8
+CHECKSTYLE_CMD = ruff check --select ALL --ignore D213,D211 --no-fix
 
 help:
 	@echo "Not implemented yet"
@@ -21,7 +21,7 @@ test:
 
 checkstyle:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
-	$(CHECKSTYLE_CMD) *.py && \
+	$(CHECKSTYLE_CMD) /workspaces/isbn-scanner/backend && \
 	deactivate
 
 clean:
