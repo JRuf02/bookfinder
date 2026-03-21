@@ -9,7 +9,7 @@ import sqlite3
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "books.db")
 CSV_PATH = os.path.join(
-    os.path.dirname(__file__), "data", "osm-bookcases-ger-qlever-2025-07-13.csv"
+    os.path.dirname(__file__), "osm-bookcases-ger-qlever-2025-07-13.csv"
 )
 
 

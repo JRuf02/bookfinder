@@ -1,4 +1,4 @@
-TEST_CMD = python3 -m doctest
+TEST_CMD = pytest -q --doctest-modules --verbose
 CHECKSTYLE_CMD = flake8
 
 help:
@@ -16,7 +16,7 @@ compile:
 
 test:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
-	$(TEST_CMD) *.py && \
+	$(TEST_CMD) /workspaces/isbn-scanner/backend && \
 	deactivate
 
 checkstyle:

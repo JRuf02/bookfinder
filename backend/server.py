@@ -9,12 +9,18 @@ from app.routes.shelf import (
     insert_book_to_shelf,
     remove_book_from_shelf,
 )
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask.typing import ResponseReturnValue
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+
+@app.route("/api/health", methods=["GET"])
+def health_check() -> ResponseReturnValue:
+    """Simple health check endpoint."""
+    return jsonify({"status": "ok"}, 200)
 
 
 @app.route("/api/books", methods=["GET"])
