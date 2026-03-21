@@ -3,7 +3,7 @@
 ## Main todos
 
 - Code Quality:
-  - make test: Starts servers and check if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered)
+  - make test: Starts servers and check if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered) <=========== TODO
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
   - Unit tests
     - Unit tests for python (backend)
@@ -16,6 +16,9 @@
   - statisch: kann nicht gescrollt/gezoomt etc werden
   - hat methode onClick, die vom parent definiert wird
     - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+
+- Python Backend
+  - Move all api logic from app/db/bookshelves_db.py to app/routes/bookshelves.py
 
 - Logic & Documentation:
   - Database tables diagram / readme
