@@ -3,7 +3,11 @@
 ## Main todos
 
 - Code Quality:
-  - make test: Starts servers and check if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered) <=========== TODO
+  - Use combined ruff.toml in settings.json AND in Makefile (combined ruff config for docker ruff and devcontainer ruff) <========
+  - top level make file
+    - make test
+      - Runs make test from frontend and backend makefiles
+      - Starts servers and checks if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered / api/health) <=========== TODO
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
   - Unit tests
     - Unit tests for python (backend)
