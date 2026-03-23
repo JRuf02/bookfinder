@@ -1,0 +1,2 @@
+lint.select = ["ALL"] # Use very strict style checking
+lint.ignore = ["D211", "D213"] # Ignore conflicting rules

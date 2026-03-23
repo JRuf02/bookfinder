@@ -1,5 +1,5 @@
 TEST_CMD = pytest -q --doctest-modules --verbose
-CHECKSTYLE_CMD = ruff check --select ALL --ignore D213,D211 --no-fix
+CHECKSTYLE_CMD = ruff check --no-fix --config /workspaces/isbn-scanner/.ruff.toml
 
 help:
 	@echo "Not implemented yet"

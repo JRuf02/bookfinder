@@ -32,6 +32,5 @@
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff"
   },
-  "ruff.lint.ignore": ["D211", "D213"],
-  "ruff.lint.select": ["ALL"]
+  "ruff.configuration": "${workspaceFolder}/.ruff.toml"
 }
