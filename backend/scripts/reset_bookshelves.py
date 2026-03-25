@@ -85,7 +85,7 @@ def _reset_bookshelves():
             )
     conn.commit()
     conn.close()
-    print("bookshelves table reset and filled from CSV.")
+    print("bookshelves table reset and filled from CSV.")  # noqa: T201
 
 
 if __name__ == "__main__":
@@ -93,5 +93,5 @@ if __name__ == "__main__":
         "This will drop and recreate the bookshelves table. Are you sure? (yes/no): "
     )
     if inp.strip().lower() == "yes":
-        print("Resetting bookshelves table...")
+        print("Resetting bookshelves table...")  # noqa: T201
         _reset_bookshelves()

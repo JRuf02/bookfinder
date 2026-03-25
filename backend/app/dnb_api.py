@@ -1,3 +1,4 @@
+import logging
 import xml.etree.ElementTree as ET
 
 import requests
@@ -5,6 +6,8 @@ from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
 
 from app.models.book import Book
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_book_from_dnb(isbn: str) -> Book:
@@ -100,10 +103,12 @@ def fetch_book_from_dnb(isbn: str) -> Book:
             author=author,
             dnbISBN=dnb_isbn,
             dnbId=dnb_id,
-            coverUrl=f"https://portal.dnb.de/opac/mvb/cover?isbn={dnb_isbn}&size=l",  # TODO? don't hardcode
+            # TODO? don't hardcode coverUrl
+            coverUrl=f"https://portal.dnb.de/opac/mvb/cover?isbn={dnb_isbn}&size=l",
         )
     except Exception as e:
-        print(f"Error fetching book data: {e}")
+        logger.error(f"Error fetching book data: {e}")
+        # TODO: Handle errors consistently (vgl. fetch_cover_from_dnb)
         return Book(
             isbn=isbn,
             title="Error fetching data",
@@ -133,5 +138,5 @@ def fetch_cover_from_dnb(isbn: str, size: str = "l") -> ResponseReturnValue:
             content_type=response.headers.get("Content-Type", "image/jpeg"),
         )
     except Exception as e:
-        print(f"Error fetching cover: {e}")
+        logger.error(f"Error fetching cover: {e}")
         return jsonify({"error": "Failed to fetch cover image"}), 500

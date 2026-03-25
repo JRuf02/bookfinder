@@ -1,13 +1,15 @@
-import os
+import logging
 import sqlite3
-
-from app.utils.geo_utils import haversine
+from pathlib import Path
 
 # TODO: Move all api logic to app/routes/bookshelves.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
+from app.utils.geo_utils import haversine
+
+logger = logging.getLogger(__name__)
+DB_PATH = Path(__file__).parent.parent.parent / "books.db"
 
 
 def get_all_bookshelves_from_db() -> ResponseReturnValue:
@@ -45,8 +47,13 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
     lon = req.args.get("lon", type=float)
     radius = req.args.get("radius", default=5000.0, type=float)  # meters
 
-    print("lat:", lat, "lon:", lon, "radius:", radius)  # TODO: Remove/use debugger
-    print(type(lat), type(lon), type(radius))
+    logger.info("lat: %s, lon: %s, radius: %s", lat, lon, radius)
+    logger.debug(
+        "lat type: %s, lon type: %s, radius type: %s",
+        type(lat),
+        type(lon),
+        type(radius),
+    )
 
     if lat is None or lon is None:
         return jsonify({"error": "lat and lon are required"}), 400
@@ -83,7 +90,5 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
                 "distance_m": dist_m,
             }
             nearby.append(shelf)
-    print(
-        f"Found {len(nearby)} nearby bookshelves within {radius} meters."
-    )  # TODO: Remove/use debugger
+    logger.info("Found %s nearby bookshelves within %s meters.", len(nearby), radius)
     return jsonify(nearby)

@@ -1,3 +1,5 @@
+import logging
+
 from app.db.database import init_db
 from app.routes.books import get_book
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
@@ -69,6 +71,12 @@ def remove_book_from_shelf_api() -> ResponseReturnValue:
 
 
 if __name__ == "__main__":
+    # Set up root logger
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
+        datefmt="%H:%M:%S",  # remove to also log date and ms
+    )
     # Initialize the database
     init_db()
     # Start the server
