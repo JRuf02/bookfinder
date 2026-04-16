@@ -78,6 +78,7 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     )
     rows = c.fetchall()
     conn.close()
+    # TODO: Single function to convert db rows to list of Book objects
     books = [
         {
             "isbn": row[0],
@@ -89,7 +90,7 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
         }
         for row in rows
     ]
-    return jsonify(books)
+    return jsonify(books)  # TODO: Use Book class before jsonify
 
 
 def get_shelf_metadata_from_db(req: Request) -> ResponseReturnValue:

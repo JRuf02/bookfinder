@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@mui/material";
 
-type Book = { title: string; author: string; dnbISBN: string; dnbId: string };
+type Book = { title: string; author: string; dnbIsbn: string; dnbId: string };
 type BookDisplayProps = {
   book: Book;
   isbn: string;
@@ -26,9 +26,10 @@ export default function BookDisplay({
   useEffect(() => {
     // Use own server endpoint instead of DNB API directly
     // Use relative URL to ensure protocol matching (HTTP or HTTPS)
-    setCoverUrl(`/api/covers?isbn=${book.dnbISBN}&size=l`);
+    // TODO: Consider caching cover images on backend or using book.coverUrl
+    setCoverUrl(`/api/covers?isbn=${book.dnbIsbn}&size=l`);
     setImageError(false);
-  }, [book.dnbISBN]);
+  }, [book.dnbIsbn]);
 
   const handleImageError = () => {
     setImageError(true);
@@ -41,7 +42,7 @@ export default function BookDisplay({
           ISBN: <strong>{isbn}</strong>
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          ISBN (DNB format): <strong>{book.dnbISBN}</strong>
+          ISBN (DNB format): <strong>{book.dnbIsbn}</strong>
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
           {book.title}

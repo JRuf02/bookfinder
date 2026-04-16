@@ -16,7 +16,7 @@ export default function ScanningScreen() {
   const [book, setBook] = useState<{
     title: string;
     author: string;
-    dnbISBN: string;
+    dnbIsbn: string;
     dnbId: string;
   } | null>(null);
   const [scanning, setScanning] = useState(true);
@@ -60,7 +60,7 @@ export default function ScanningScreen() {
     (methods: { stopCamera: () => void; stopReading: () => void }) => {
       scannerRef.current = methods;
     },
-    []
+    [],
   );
 
   // Reset for rescan

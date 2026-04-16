@@ -130,7 +130,7 @@
 Normalized ISBN: 123456789X
 Book not found in DB for ISBN: 123456789X
 Error fetching book data: 'NoneType' object has no attribute 'find'
-Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbISBN': '', 'dnbId': ''}
+Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbIsbn': '', 'dnbId': ''}
 127.0.0.1 - - [23/Jun/2025 13:29:16] "GET /api/books?isbn=123456789X HTTP/1.1" 200 -
 ```
 

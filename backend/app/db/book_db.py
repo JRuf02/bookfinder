@@ -42,9 +42,9 @@ def get_book_from_database(isbn: str) -> Book | None:
             isbn=row[0],
             title=row[1],
             author=row[2],
-            dnbISBN=row[3],
-            dnbId=row[4],
-            coverUrl=row[5],
+            dnb_isbn=row[3],
+            dnb_id=row[4],
+            cover_url=row[5],
         )
     return None
 
@@ -59,7 +59,14 @@ def save_book_to_db(book: Book) -> None:
         INSERT OR REPLACE INTO books (isbn, title, author, dnb_isbn, dnb_id, cover_url)
         VALUES (?, ?, ?, ?, ?, ?)
     """,
-        (book.isbn, book.title, book.author, book.dnbISBN, book.dnbId, book.coverUrl),
+        (
+            book.isbn,
+            book.title,
+            book.author,
+            book.dnb_isbn,
+            book.dnb_id,
+            book.cover_url,
+        ),
     )  # TODO test what happens if coverUrl = None
     conn.commit()
     conn.close()

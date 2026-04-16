@@ -5,10 +5,9 @@ from dataclasses import dataclass
 class Book:
     """Data class to represent book information fetched from DNB."""
 
-    # CamelCase for frontend compatibility
     isbn: str
     title: str
     author: str
-    dnbISBN: str
-    dnbId: str
-    coverUrl: str | None = None
+    dnb_isbn: str
+    dnb_id: str
+    cover_url: str | None = None

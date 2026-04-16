@@ -1,9 +1,9 @@
 import logging
-from dataclasses import asdict
 
 from app.db.book_db import get_book_from_database, save_book_to_db
 from app.dnb_api import fetch_book_from_dnb
 from app.utils.isbn_utils import normalize_isbn
+from app.utils.naming import as_json_dict
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
@@ -24,7 +24,7 @@ def get_book(request: Request) -> ResponseReturnValue:
     book = get_book_from_database(isbn)
     if book:
         logger.debug("Book found in DB: %s", book)
-        return jsonify(asdict(book))
+        return jsonify(as_json_dict(book))
     logger.debug("Book not found in DB for ISBN: %s", isbn)
 
     # 2. If not found, fetch from DNB and cache it
@@ -35,4 +35,4 @@ def get_book(request: Request) -> ResponseReturnValue:
         #       (especially if unknown title, but cover image found!)
         save_book_to_db(book)
 
-    return jsonify(asdict(book))
+    return jsonify(as_json_dict(book))

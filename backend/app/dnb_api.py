@@ -103,10 +103,10 @@ def fetch_book_from_dnb(isbn: str) -> Book:
             isbn=isbn,
             title=title,
             author=author,
-            dnbISBN=dnb_isbn,
-            dnbId=dnb_id,
+            dnb_isbn=dnb_isbn,
+            dnb_id=dnb_id,
             # TODO? don't hardcode coverUrl
-            coverUrl=f"https://portal.dnb.de/opac/mvb/cover?isbn={dnb_isbn}&size=l",
+            cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={dnb_isbn}&size=l",
         )
     except Exception as e:
         logger.error(f"Error fetching book data: {e}")
@@ -117,9 +117,9 @@ def fetch_book_from_dnb(isbn: str) -> Book:
             isbn=isbn,
             title="Error fetching data",
             author="",
-            dnbISBN="",
-            dnbId="",
-            coverUrl=None,
+            dnb_isbn="",
+            dnb_id="",
+            cover_url=None,
         )
 
 
