@@ -1,10 +1,9 @@
 TEST_CMD = pytest -q --doctest-modules --verbose
-CHECKSTYLE_CMD = ruff check --no-fix --config /workspaces/isbn-scanner/.ruff.toml
 
 help:
 	@echo "Not implemented yet"
 
-all: compile test checkstyle run
+all: compile test checkstyle-flake8 run
 
 run:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
@@ -21,7 +20,17 @@ test:
 
 checkstyle:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
-	$(CHECKSTYLE_CMD) /workspaces/isbn-scanner/backend && \
+	ruff check --no-fix --config /workspaces/isbn-scanner/.ruff.toml /workspaces/isbn-scanner/backend && \
+	deactivate
+
+checkstyle-flake8:
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	ruff check --no-fix --select E4,E7,E9,F,W,C901 /workspaces/isbn-scanner/backend && \
+	deactivate
+
+checkstyle-strict:
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	ruff check --no-fix --select ALL --ignore D211,D213,TD,COM /workspaces/isbn-scanner/backend && \
 	deactivate
 
 clean:

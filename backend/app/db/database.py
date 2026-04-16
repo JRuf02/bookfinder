@@ -1,11 +1,12 @@
-import os
 import sqlite3
+from pathlib import Path
+
+DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
 
 
 def init_db() -> None:
     """Initialize the SQLite database."""
-    db_path = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS books (

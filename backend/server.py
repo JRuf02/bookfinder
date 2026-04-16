@@ -1,3 +1,5 @@
+"""Flask backend for the book sharing web app."""
+
 import logging
 
 from app.db.database import init_db
@@ -21,7 +23,6 @@ CORS(app)  # Enable CORS for all routes
 
 @app.route("/api/health", methods=["GET"])
 def health_check() -> ResponseReturnValue:
-    """Simple health check endpoint."""
     return jsonify({"status": "ok"}, 200)
 
 
@@ -37,7 +38,7 @@ def get_cover_api() -> ResponseReturnValue:
 
 @app.route("/api/bookshelves", methods=["GET"])
 def get_all_bookshelves_api() -> ResponseReturnValue:
-    return get_all_bookshelves(request)
+    return get_all_bookshelves()
 
 
 @app.route("/api/bookshelves/nearby", methods=["GET"])

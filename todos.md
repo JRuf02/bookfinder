@@ -3,6 +3,7 @@
 ## Main todos
 
 - Code Quality:
+  - ask Patrick about excludes in .ruff.toml
   - Use combined ruff.toml in settings.json AND in Makefile (combined ruff config for docker ruff and devcontainer ruff) <========
   - top level make file
     - make test
@@ -11,7 +12,8 @@
   - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
   - Unit tests
     - Unit tests for python (backend)
-    - Unit tests for react?! (frontend) <===================================start in shelfActions.tsx
+      - Database sqlite tests <========================================================= THIS FIRST !!!
+    - Unit tests for react?! (frontend) <= start in shelfActions.tsx
       - API calls should be tested, user interface doesn't need to be tested
       - Logic should be tested
 

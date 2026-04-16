@@ -1,5 +1,5 @@
-import os
 import sqlite3
+from pathlib import Path
 
 from app.utils.isbn_utils import normalize_isbn
 
@@ -7,7 +7,8 @@ from app.utils.isbn_utils import normalize_isbn
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
+# TODO: Move DB_PATH to __init__.py and import it in all db files
+DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
 
 
 def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
@@ -100,7 +101,8 @@ def get_shelf_metadata_from_db(req: Request) -> ResponseReturnValue:
     c = conn.cursor()
     c.execute(
         """
-        SELECT osm_id, name, latitude, longitude, address, type, operator, website, opening_hours, osm_check_date, osm_last_updated
+        SELECT osm_id, name, latitude, longitude, address, type, operator, website,
+              opening_hours, osm_check_date, osm_last_updated
         FROM bookshelves WHERE osm_id = ?
     """,
         (osm_id,),

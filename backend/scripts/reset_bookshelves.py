@@ -1,16 +1,16 @@
-# Standalone script to reset the bookshelves table in the SQLite database.
-# Drops the existing bookshelves table and recreates it.
-# Fills the new table with data from a CSV file containing bookshelf information.
+"""Standalone script to reset the bookshelves table in the SQLite database.
+
+Drops the existing bookshelves table and recreates it.
+Fills the new table with data from a CSV file containing bookshelf information.
+"""
 
 import csv
-import os
 import re
 import sqlite3
+from pathlib import Path
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "books.db")
-CSV_PATH = os.path.join(
-    os.path.dirname(__file__), "osm-bookcases-ger-qlever-2025-07-13.csv"
-)
+DB_PATH = Path(__file__).parent / ".." / "books.db"
+CSV_PATH = Path(__file__).parent / "osm-bookcases-ger-qlever-2025-07-13.csv"
 
 
 # TODO: WRITE TESTS FOR THIS!!!
@@ -57,7 +57,7 @@ def _reset_bookshelves():
     conn.commit()
 
     # Read CSV and insert rows
-    with open(CSV_PATH, newline="", encoding="utf-8") as csvfile:
+    with CSV_PATH.open(newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             shape = row.get("shape", "")

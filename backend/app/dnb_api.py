@@ -1,11 +1,10 @@
 import logging
-import xml.etree.ElementTree as ET
 
+import defusedxml.ElementTree as ET
 import requests
+from app.models.book import Book
 from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
-
-from app.models.book import Book
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +14,9 @@ def fetch_book_from_dnb(isbn: str) -> Book:
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn}"&recordSchema=MARC21-xml&maximumRecords=1'
 
     try:
-        response = requests.get(url)
+        # TODO: Use smaller try-catch blocks and handle different error cases
+        # (network, parsing, no record found, ...) separately
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
 
         xml_text = response.text
@@ -60,7 +61,8 @@ def fetch_book_from_dnb(isbn: str) -> Book:
                     and name_text is not None
                     and "aut" in role_text.lower()
                 ):
-                    # TODO: also check ctb (contributor) + error handling when no author found at all
+                    # TODO: also check ctb (contributor) + error handling when
+                    # no author found at all
                     authors.append(name_text)
 
             # More authors (sometimes authors are only in field 700)
@@ -109,6 +111,8 @@ def fetch_book_from_dnb(isbn: str) -> Book:
     except Exception as e:
         logger.error(f"Error fetching book data: {e}")
         # TODO: Handle errors consistently (vgl. fetch_cover_from_dnb)
+        # return None or an error class (e.g. dataclass) instead of empty book?
+        # e.g. timeout, no record found, parsing error, ...
         return Book(
             isbn=isbn,
             title="Error fetching data",
@@ -129,7 +133,7 @@ def fetch_cover_from_dnb(isbn: str, size: str = "l") -> ResponseReturnValue:
     cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn}&size={size}"
 
     try:
-        response = requests.get(cover_url, stream=True)
+        response = requests.get(cover_url, stream=True, timeout=3)
 
         # Create a Flask response with the image data
         return Response(

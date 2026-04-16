@@ -6,7 +6,7 @@ from flask import Request
 from flask.typing import ResponseReturnValue
 
 
-def get_all_bookshelves(request: Request) -> ResponseReturnValue:
+def get_all_bookshelves() -> ResponseReturnValue:
     """Get metadata of all bookshelves."""
     # TODO: Move all api logic from get_all_bookshelves_from_db to this function
     return get_all_bookshelves_from_db()

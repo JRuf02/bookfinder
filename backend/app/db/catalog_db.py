@@ -1,5 +1,5 @@
-import os
 import sqlite3
+from pathlib import Path
 
 from app.utils.geo_utils import haversine
 
@@ -7,7 +7,7 @@ from app.utils.geo_utils import haversine
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "books.db")
+DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
 
 
 def search_in_catalog_db(request: Request) -> ResponseReturnValue:
@@ -27,7 +27,9 @@ def search_in_catalog_db(request: Request) -> ResponseReturnValue:
     c = conn.cursor()
     c.execute(
         """
-        SELECT cc.osm_id, cc.isbn, b.title, b.author, bs.latitude, bs.longitude, bs.name, b.dnb_isbn, bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
+        SELECT cc.osm_id, cc.isbn, b.title, b.author,
+        bs.latitude, bs.longitude, bs.name,
+        b.dnb_isbn, bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
         FROM current_catalog cc
         JOIN books b ON cc.isbn = b.isbn
         JOIN bookshelves bs ON cc.osm_id = bs.osm_id

@@ -2,11 +2,11 @@ import logging
 import sqlite3
 from pathlib import Path
 
+from app.utils.geo_utils import haversine
+
 # TODO: Move all api logic to app/routes/bookshelves.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
-
-from app.utils.geo_utils import haversine
 
 logger = logging.getLogger(__name__)
 DB_PATH = Path(__file__).parent.parent.parent / "books.db"
@@ -17,7 +17,8 @@ def get_all_bookshelves_from_db() -> ResponseReturnValue:
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        SELECT osm_id, name, latitude, longitude, address, type, operator, website, opening_hours, osm_check_date, osm_last_updated
+        SELECT osm_id, name, latitude, longitude, address, type, operator, website,
+              opening_hours, osm_check_date, osm_last_updated
         FROM bookshelves
     """)
     rows = c.fetchall()
@@ -61,7 +62,8 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        SELECT osm_id, name, latitude, longitude, address, type, operator, website, opening_hours, osm_check_date, osm_last_updated
+        SELECT osm_id, name, latitude, longitude, address, type, operator, website,
+              opening_hours, osm_check_date, osm_last_updated
         FROM bookshelves
     """)
     rows = c.fetchall()
