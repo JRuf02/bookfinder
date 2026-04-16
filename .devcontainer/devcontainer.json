@@ -22,6 +22,7 @@
         // General
         "ms-azuretools.vscode-docker",
         "GitHub.copilot",
+        "qwtel.sqlite-viewer",
         // React / TypeScript
         "dbaeumer.vscode-eslint", // can be run with 'npm run lint'
         "esbenp.prettier-vscode",

@@ -1,8 +1,8 @@
 import logging
 
-import defusedxml.ElementTree as ET
 import requests
 from app.models.book import Book
+from defusedxml import ElementTree
 from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
 
@@ -20,7 +20,7 @@ def fetch_book_from_dnb(isbn: str) -> Book:
         response.raise_for_status()
 
         xml_text = response.text
-        root = ET.fromstring(xml_text)
+        root = ElementTree.fromstring(xml_text)
 
         # Extract data from XML
         title = "Unknown Title"
@@ -82,7 +82,7 @@ def fetch_book_from_dnb(isbn: str) -> Book:
                 ):
                     authors.append(name_text)
 
-            # author = ', '.join(authors) if authors else "Unknown Author"
+            # author = ', '.join(authors) if authors else "Unknown Author" TODO: remove
             author = authors[0] if authors else "Unknown Author"
 
             # Extract DNB ISBN
