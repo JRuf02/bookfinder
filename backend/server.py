@@ -6,7 +6,7 @@ from app.db.database import init_db
 from app.routes.books import get_book
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
 from app.routes.catalog import search_in_catalog
-from app.routes.covers import get_cover
+from app.routes.covers import get_cover_by_dnb_isbn
 from app.routes.shelf import (
     get_books_in_shelf,
     get_shelf_metadata,
@@ -33,7 +33,7 @@ def get_book_api() -> ResponseReturnValue:
 
 @app.route("/api/covers", methods=["GET"])
 def get_cover_api() -> ResponseReturnValue:
-    return get_cover(request)
+    return get_cover_by_dnb_isbn(request)
 
 
 @app.route("/api/bookshelves", methods=["GET"])

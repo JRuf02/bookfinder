@@ -1,7 +1,6 @@
 import logging
-import sqlite3
-from pathlib import Path
 
+from app.db.database import db_cursor
 from app.utils.geo_utils import haversine
 
 # TODO: Move all api logic to app/routes/bookshelves.py
@@ -9,20 +8,18 @@ from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
 logger = logging.getLogger(__name__)
-DB_PATH = Path(__file__).parent.parent.parent / "books.db"
 
 
 def get_all_bookshelves_from_db() -> ResponseReturnValue:
     """Fetch all bookshelves from the database."""
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("""
-        SELECT osm_id, name, latitude, longitude, address, type, operator, website,
-              opening_hours, osm_check_date, osm_last_updated
-        FROM bookshelves
-    """)
-    rows = c.fetchall()
-    conn.close()
+    with db_cursor() as c:
+        c.execute("""
+            SELECT osm_id, name, latitude, longitude, address, type, operator, website,
+                opening_hours, osm_check_date, osm_last_updated
+            FROM bookshelves
+        """)
+        rows = c.fetchall()
+
     shelves = [
         {
             "osm_id": row[0],
@@ -59,17 +56,17 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
     if lat is None or lon is None:
         return jsonify({"error": "lat and lon are required"}), 400
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("""
-        SELECT osm_id, name, latitude, longitude, address, type, operator, website,
-              opening_hours, osm_check_date, osm_last_updated
-        FROM bookshelves
-    """)
-    rows = c.fetchall()
-    conn.close()
+    with db_cursor() as c:
+        c.execute("""
+            SELECT osm_id, name, latitude, longitude, address, type, operator, website,
+                opening_hours, osm_check_date, osm_last_updated
+            FROM bookshelves
+        """)
+        rows = c.fetchall()
+
     nearby = []
     for row in rows:
+        # TODO: Change to named tuple or dict cursor to avoid this error-prone indexing
         shelf_lat = row[2]
         shelf_lon = row[3]
         if shelf_lat is None or shelf_lon is None:

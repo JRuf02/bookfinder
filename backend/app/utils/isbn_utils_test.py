@@ -1,7 +1,7 @@
 from app.utils import isbn_utils
 
 
-def test_normalize_isbn():
+def test_normalize_isbn() -> None:
     assert isbn_utils.normalize_isbn("978-3-16-148410-0") == "9783161484100"
     assert isbn_utils.normalize_isbn(" 978 3 16 148410 0 ") == "9783161484100"
     assert isbn_utils.normalize_isbn("9783161484100") == "9783161484100"

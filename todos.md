@@ -16,6 +16,8 @@
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
       - API calls should be tested, user interface doesn't need to be tested
       - Logic should be tested
+  - Move all jsonify (i/o) from app/db to app/routes or higher
+    - Add custom error data types instead (e.g. dataclass db_connection_error)
 
 - StaticMap component (or version of existing Map with other params)
   - zu Anzeigezwecken: Soll zentriert auf current shelf sein
@@ -158,6 +160,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
 - support multiple languages?
 - add isbn checksum validation?
 - reverse-geocoded addresses in bookshelf data

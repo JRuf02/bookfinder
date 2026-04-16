@@ -1,9 +1,6 @@
-import sqlite3
-from pathlib import Path
-
+from app.db.database import db_cursor
 from app.models.book import Book
 
-DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
 ISBN_10_LENGTH = 10
 
 
@@ -27,16 +24,14 @@ def get_book_from_database(isbn: str) -> Book | None:
         )
     )
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        "SELECT isbn, title, author, dnb_isbn, dnb_id, cover_url "
-        "FROM books "
-        "WHERE isbn = ?",
-        (isbn,),
-    )
-    row = c.fetchone()
-    conn.close()
+    with db_cursor() as c:
+        c.execute(
+            "SELECT isbn, title, author, dnb_isbn, dnb_id, cover_url "
+            "FROM books "
+            "WHERE isbn = ?",
+            (isbn,),
+        )
+        row = c.fetchone()
     if row:
         return Book(
             isbn=row[0],
@@ -52,21 +47,19 @@ def get_book_from_database(isbn: str) -> Book | None:
 def save_book_to_db(book: Book) -> None:
     """Save book data to the local SQLite database."""
     # TODO? Use function from shelf_db.py to normalize ISBNS?
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        """
-        INSERT OR REPLACE INTO books (isbn, title, author, dnb_isbn, dnb_id, cover_url)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """,
-        (
-            book.isbn,
-            book.title,
-            book.author,
-            book.dnb_isbn,
-            book.dnb_id,
-            book.cover_url,
-        ),
-    )  # TODO test what happens if coverUrl = None
-    conn.commit()
-    conn.close()
+    with db_cursor() as c:
+        c.execute(
+            """
+            INSERT OR REPLACE INTO books (isbn, title, author, dnb_isbn, dnb_id,
+            cover_url)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """,
+            (
+                book.isbn,
+                book.title,
+                book.author,
+                book.dnb_isbn,
+                book.dnb_id,
+                book.cover_url,
+            ),
+        )  # TODO test what happens if coverUrl = None

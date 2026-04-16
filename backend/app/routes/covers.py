@@ -3,8 +3,8 @@ from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
 
-def get_cover(request: Request) -> ResponseReturnValue:
-    """Should be called with dnb isbn format."""
+def get_cover_by_dnb_isbn(request: Request) -> ResponseReturnValue:
+    """Call with dnb isbn format and size."""
     isbn = request.args.get("isbn")
     size = request.args.get("size", "l")
 

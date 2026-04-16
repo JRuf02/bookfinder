@@ -22,7 +22,8 @@ def get_books_in_shelf(request: Request) -> ResponseReturnValue:
 
 def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     """Insert a book into the given shelf."""
-    # TODO: Use function from utils to normalize ISBN / check if the db function uses it already
+    # TODO: Use function from utils to normalize ISBN / check if the db function
+    #       uses it already
     data = request.json
     osm_id = data.get("osm_id")
     isbn = data.get("isbn")
@@ -40,7 +41,8 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
 
 def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     """Remove a book from the given shelf."""
-    # TODO: Use function from utils to normalize ISBN / check if the db function uses it already
+    # TODO: Use function from utils to normalize ISBN / check if the db function
+    #       uses it already
     data = request.json
     osm_id = data.get("osm_id")
     isbn = data.get("isbn")

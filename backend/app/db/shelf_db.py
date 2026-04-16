@@ -1,14 +1,9 @@
-import sqlite3
-from pathlib import Path
-
+from app.db.database import db_cursor
 from app.utils.isbn_utils import normalize_isbn
 
 # TODO: Move all api logic to app/routes/shelf.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
-
-# TODO: Move DB_PATH to __init__.py and import it in all db files
-DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
 
 
 def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
@@ -19,17 +14,14 @@ def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
     isbn = normalize_isbn(isbn)
     if not isbn:
         pass  # TODO: Handle invalid ISBN case -> return error/raise exception
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        """
-        INSERT INTO current_catalog (osm_id, isbn)
-        VALUES (?, ?)
-    """,
-        (osm_id, isbn),
-    )
-    conn.commit()
-    conn.close()
+    with db_cursor() as c:
+        c.execute(
+            """
+            INSERT INTO current_catalog (osm_id, isbn)
+            VALUES (?, ?)
+        """,
+            (osm_id, isbn),
+        )
 
 
 def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
@@ -39,24 +31,21 @@ def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
     isbn = normalize_isbn(isbn)
     if not isbn:
         pass  # TODO: Handle invalid ISBN case
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    # Find the entry_id of the oldest matching entry
-    c.execute(
-        """
-        SELECT entry_id FROM current_catalog
-        WHERE osm_id = ? AND isbn = ?
-        ORDER BY time_of_entry ASC, entry_id ASC
-        LIMIT 1
-    """,
-        (osm_id, isbn),
-    )
-    row = c.fetchone()
-    if row:
-        entry_id = row[0]
-        c.execute("DELETE FROM current_catalog WHERE entry_id = ?", (entry_id,))
-        conn.commit()
-    conn.close()
+    with db_cursor() as c:
+        # Find the entry_id of the oldest matching entry
+        c.execute(
+            """
+            SELECT entry_id FROM current_catalog
+            WHERE osm_id = ? AND isbn = ?
+            ORDER BY time_of_entry ASC, entry_id ASC
+            LIMIT 1
+        """,
+            (osm_id, isbn),
+        )
+        row = c.fetchone()
+        if row:
+            entry_id = row[0]
+            c.execute("DELETE FROM current_catalog WHERE entry_id = ?", (entry_id,))
 
 
 def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
@@ -64,20 +53,19 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     osm_id = req.args.get("osm_id")
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        """
-        SELECT b.isbn, b.title, b.author, b.dnb_isbn, b.dnb_id, b.cover_url
-        FROM current_catalog cc
-        JOIN books b ON cc.isbn = b.isbn
-        WHERE cc.osm_id = ?
-        ORDER BY cc.time_of_entry DESC
-    """,
-        (osm_id,),
-    )
-    rows = c.fetchall()
-    conn.close()
+    with db_cursor() as c:
+        c.execute(
+            """
+            SELECT b.isbn, b.title, b.author, b.dnb_isbn, b.dnb_id, b.cover_url
+            FROM current_catalog cc
+            JOIN books b ON cc.isbn = b.isbn
+            WHERE cc.osm_id = ?
+            ORDER BY cc.time_of_entry DESC
+        """,
+            (osm_id,),
+        )
+        rows = c.fetchall()
+
     # TODO: Single function to convert db rows to list of Book objects
     books = [
         {
@@ -98,18 +86,17 @@ def get_shelf_metadata_from_db(req: Request) -> ResponseReturnValue:
     osm_id = req.args.get("osm_id")
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        """
-        SELECT osm_id, name, latitude, longitude, address, type, operator, website,
-              opening_hours, osm_check_date, osm_last_updated
-        FROM bookshelves WHERE osm_id = ?
-    """,
-        (osm_id,),
-    )
-    row = c.fetchone()
-    conn.close()
+    with db_cursor() as c:
+        c.execute(
+            """
+            SELECT osm_id, name, latitude, longitude, address, type, operator, website,
+                opening_hours, osm_check_date, osm_last_updated
+            FROM bookshelves WHERE osm_id = ?
+        """,
+            (osm_id,),
+        )
+        row = c.fetchone()
+
     if not row:
         return jsonify({"error": "Shelf not found"}), 404
     shelf = {

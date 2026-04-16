@@ -1,13 +1,9 @@
-import sqlite3
-from pathlib import Path
-
+from app.db.database import db_cursor
 from app.utils.geo_utils import haversine
 
 # TODO: Move all api logic to app/routes/catalog.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
-
-DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
 
 
 def search_in_catalog_db(request: Request) -> ResponseReturnValue:
@@ -23,22 +19,21 @@ def search_in_catalog_db(request: Request) -> ResponseReturnValue:
             {"error": "lat and lon are required"}
         ), 400  # TODO: change to optional?
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        """
-        SELECT cc.osm_id, cc.isbn, b.title, b.author,
-        bs.latitude, bs.longitude, bs.name,
-        b.dnb_isbn, bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
-        FROM current_catalog cc
-        JOIN books b ON cc.isbn = b.isbn
-        JOIN bookshelves bs ON cc.osm_id = bs.osm_id
-        WHERE b.title LIKE ?
-    """,
-        (f"%{title}%",),
-    )
-    rows = c.fetchall()
-    conn.close()
+    with db_cursor() as c:
+        c.execute(
+            """
+            SELECT cc.osm_id, cc.isbn, b.title, b.author,
+            bs.latitude, bs.longitude, bs.name,
+            b.dnb_isbn, bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
+            FROM current_catalog cc
+            JOIN books b ON cc.isbn = b.isbn
+            JOIN bookshelves bs ON cc.osm_id = bs.osm_id
+            WHERE b.title LIKE ?
+        """,
+            (f"%{title}%",),
+        )
+        rows = c.fetchall()
+
     results = []
     for row in rows:
         shelf_lat = row[4]
@@ -47,6 +42,7 @@ def search_in_catalog_db(request: Request) -> ResponseReturnValue:
             # Don't include results without coordinates  # TODO: change this behaviour?
             continue
         dist_km = haversine(lon, lat, shelf_lon, shelf_lat)
+        # TODO: Change to named tuple or dict cursor to avoid error-prone indexing
         results.append(
             {
                 "osm_id": row[0],

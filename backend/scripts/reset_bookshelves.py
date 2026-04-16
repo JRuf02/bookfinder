@@ -9,18 +9,19 @@ import re
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / ".." / "books.db"
+from app.db.database import db_cursor
+
 CSV_PATH = Path(__file__).parent / "osm-bookcases-ger-qlever-2025-07-13.csv"
 
 
 # TODO: WRITE TESTS FOR THIS!!!
 
 
-def parse_shape(shape):
+def parse_shape(shape: str) -> tuple[float | None, float | None]:
     """Extract longitude and latitude from shape column."""
     if shape.startswith("POINT("):
         coords = shape[6:-1].split()
-        if len(coords) == 2:
+        if len(coords) == 2:  # noqa: PLR2004
             lon, lat = coords
             return float(lat), float(lon)
     elif shape.startswith("POLYGON("):
@@ -33,58 +34,55 @@ def parse_shape(shape):
     return None, None
 
 
-def _reset_bookshelves():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    # Drop and recreate table
-    c.execute("DROP TABLE IF EXISTS bookshelves")
-    c.execute("""
-        CREATE TABLE bookshelves (
-            osm_id TEXT PRIMARY KEY,
-            name TEXT,
-            latitude REAL,
-            longitude REAL,
-            address TEXT,
-            type TEXT,
-            operator TEXT,
-            website TEXT,
-            opening_hours TEXT,
-            osm_check_date TEXT,
-            osm_last_updated DATETIME,
-            time_of_entry DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    conn.commit()
-
-    # Read CSV and insert rows
-    with CSV_PATH.open(newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            shape = row.get("shape", "")
-            lat, lon = parse_shape(shape) if shape else (None, None)
-            c.execute(
-                """
-                INSERT OR REPLACE INTO bookshelves (
-                    osm_id, name, latitude, longitude, address, type, operator, website,
-                    opening_hours, osm_check_date, osm_last_updated
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-                (
-                    row.get("osm_id") or None,
-                    row.get("name") or None,
-                    lat,
-                    lon,
-                    None,  # location not in CSV
-                    row.get("type") or None,
-                    row.get("operator") or None,
-                    row.get("website") or None,
-                    row.get("opening_hours") or None,
-                    row.get("osm_check_date") or None,
-                    row.get("osm_last_updated") or None,
-                ),
+def _reset_bookshelves() -> None:
+    with db_cursor() as c:
+        # Drop and recreate table
+        c.execute("DROP TABLE IF EXISTS bookshelves")
+        c.execute("""
+            CREATE TABLE bookshelves (
+                osm_id TEXT PRIMARY KEY,
+                name TEXT,
+                latitude REAL,
+                longitude REAL,
+                address TEXT,
+                type TEXT,
+                operator TEXT,
+                website TEXT,
+                opening_hours TEXT,
+                osm_check_date TEXT,
+                osm_last_updated DATETIME,
+                time_of_entry DATETIME DEFAULT CURRENT_TIMESTAMP
             )
-    conn.commit()
-    conn.close()
+        """)
+
+        # Read CSV and insert rows
+        with CSV_PATH.open(newline="", encoding="utf-8") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                shape = str(row.get("shape", ""))
+                lat, lon = parse_shape(shape) if shape else (None, None)
+                c.execute(
+                    """
+                    INSERT OR REPLACE INTO bookshelves (
+                        osm_id, name, latitude, longitude, address, type, operator, website,
+                        opening_hours, osm_check_date, osm_last_updated
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                    (
+                        row.get("osm_id") or None,
+                        row.get("name") or None,
+                        lat,
+                        lon,
+                        None,  # location not in CSV
+                        row.get("type") or None,
+                        row.get("operator") or None,
+                        row.get("website") or None,
+                        row.get("opening_hours") or None,
+                        row.get("osm_check_date") or None,
+                        row.get("osm_last_updated") or None,
+                    ),
+                )
+
     print("bookshelves table reset and filled from CSV.")  # noqa: T201
 
 

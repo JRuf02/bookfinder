@@ -14,3 +14,6 @@ lint.ignore = [
     "BLE001", # Do not catch blind exception: `Exception` -> TODO remove from ignored
     "TRY400" # Use `logging.exception` instead of `logging.error` -> TODO remove from ignored
 ]
+
+[lint.per-file-ignores]
+"*_test.py" = ["S101"] # Allow asserts in test files

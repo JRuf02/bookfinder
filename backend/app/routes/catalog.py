@@ -4,6 +4,8 @@ from flask.typing import ResponseReturnValue
 
 
 def search_in_catalog(request: Request) -> ResponseReturnValue:
-    """Search for books in the catalog (by title) and compute distance from given coordinates."""
+    """Search for books in the catalog (by title) and
+    compute distance from given coordinates.
+    """
     # TODO: Move api logic from db/catalog_db.py here
     return search_in_catalog_db(request)
