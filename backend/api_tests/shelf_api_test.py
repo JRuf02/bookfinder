@@ -1,14 +1,39 @@
+from flask.testing import FlaskClient
+
 from app.db.database import db_cursor
 
 from .fixtures import app, client
 
 
-def test_request_example(client):
-    response = client.get("/api/health")
-    assert response.status_code == 200
+def test_fetch_shelf_metadata_invalid_osm_id(client: FlaskClient) -> None:
+    raise NotImplementedError
 
 
-def test_insert_book_to_missing_shelf(client):
+def test_fetch_shelf_metadata_found_in_db(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_fetch_shelf_metadata_not_found_in_db(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_get_books_in_shelf_invalid_osm_id(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_get_books_in_shelf_no_books(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_get_books_in_shelf_with_books(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_get_books_in_shelf_valid_osm_id_but_not_in_db(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_insert_book_to_missing_shelf(client: FlaskClient) -> None:
     response = client.post(
         "/api/shelf/insert",
         json={
@@ -17,9 +42,14 @@ def test_insert_book_to_missing_shelf(client):
         },
     )
     assert response.status_code == 404
+    assert response.json is not None
     assert response.json["status"] == "error"
     assert "does not exist" in response.json["message"]
     # TODO: Test if number of books in catalog is still 0
+
+
+def test_insert_missing_book_to_missing_shelf(app):
+    raise NotImplementedError
 
 
 def test_insert_missing_book_to_shelf(app):
@@ -65,5 +95,45 @@ def test_insert_missing_book_to_shelf(app):
     assert response.json[0]["isbn"] == "9783486587234"
 
 
-def test_insert_book_to_shelf(client):
-    pass  # TODO
+def test_insert_book_to_shelf(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_insert_book_to_shelf_already_in_shelf(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_insert_book_to_shelf_invalid_isbn(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_insert_book_to_shelf_invalid_osm_id(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_remove_book_from_missing_shelf(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_remove_missing_book_from_missing_shelf(app):
+    raise NotImplementedError
+
+
+def test_remove_missing_book_from_shelf(app):
+    raise NotImplementedError
+
+
+def test_remove_book_from_shelf(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_remove_book_from_shelf_not_containing_book(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_remove_book_from_shelf_invalid_isbn(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
+def test_remove_book_from_shelf_invalid_osm_id(client: FlaskClient) -> None:
+    raise NotImplementedError

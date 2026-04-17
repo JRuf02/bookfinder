@@ -31,15 +31,11 @@ def create_app() -> Flask:
     def health_check() -> ResponseReturnValue:
         return jsonify({"status": "success"}, 200)
 
-    @app.route(
-        "/api/books", methods=["GET"]
-    )  # TODO: maybe change to /api/book? only returns one book
+    @app.route("/api/book", methods=["GET"])
     def get_book_api() -> ResponseReturnValue:
         return get_book_api_logic(request)
 
-    @app.route(
-        "/api/covers", methods=["GET"]
-    )  # TODO: maybe change to /api/cover? only returns one cover
+    @app.route("/api/cover", methods=["GET"])
     def get_cover_api() -> ResponseReturnValue:
         return get_cover_by_dnb_isbn(request)
 
@@ -59,10 +55,6 @@ def create_app() -> Flask:
     def get_books_in_shelf_api() -> ResponseReturnValue:
         return get_books_in_shelf(request)
 
-    @app.route("/api/catalog/search", methods=["GET"])
-    def search_in_catalog_api() -> ResponseReturnValue:
-        return search_in_catalog(request)
-
     @app.route("/api/shelf/insert", methods=["POST"])
     def insert_book_to_shelf_api() -> ResponseReturnValue:
         return insert_book_to_shelf(request)
@@ -70,6 +62,10 @@ def create_app() -> Flask:
     @app.route("/api/shelf/remove", methods=["POST"])
     def remove_book_from_shelf_api() -> ResponseReturnValue:
         return remove_book_from_shelf(request)
+
+    @app.route("/api/catalog/search", methods=["GET"])
+    def search_in_catalog_api() -> ResponseReturnValue:
+        return search_in_catalog(request)
 
     return app
 

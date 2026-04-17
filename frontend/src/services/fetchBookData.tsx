@@ -1,7 +1,7 @@
 export async function fetchBookData(isbn: string) {
   try {
     // Use relative URL to ensure protocol matching (HTTP or HTTPS)
-    const url = `/api/books?isbn=${isbn}`; // vite needs to proxy the call to the api
+    const url = `/api/book?isbn=${isbn}`; // vite needs to proxy the call to the api
 
     const response = await fetch(url);
     if (!response.ok) {

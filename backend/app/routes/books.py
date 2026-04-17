@@ -13,13 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 def get_book_api_logic(request: Request) -> ResponseReturnValue:
-    """API endpoint to fetch book data by ISBN."""
+    """API endpoint to fetch book metadata by ISBN."""
     isbn = Isbn.parse(request.args.get("isbn"))
     if not isbn:
         return jsonify(
             {"status": "error", "message": "ISBN parameter is required"}
         ), 400
-    # TODO: if not valid isbn, return error message, else create normalized and checked isbn type
     book = get_book(isbn)
     if not book:
         return jsonify({"status": "error", "message": "Book not found"}), 404

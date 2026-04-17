@@ -41,7 +41,7 @@ export default function ResultsList({
                 component="img"
                 image={
                   result.dnb_isbn
-                    ? `/api/covers?dnb_isbn=${result.dnb_isbn}&size=m`
+                    ? `/api/cover?dnb_isbn=${result.dnb_isbn}&size=m`
                     : logo
                 }
                 alt={`Cover of ${result.title}`}
