@@ -160,7 +160,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
-- sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
+- SQL execute command strings in eigenes file in app/db auslagern z.B. als Konstante GET_ALL_BOOKS_COMMAND, ...
 - support multiple languages?
 - add isbn checksum validation?
 - reverse-geocoded addresses in bookshelf data

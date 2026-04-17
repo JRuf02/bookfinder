@@ -38,3 +38,4 @@
   - use typechecker for python (e.g. mypy)
   - start-all.sh and postcreatecommands removed, all bundled in dockerfile
 - move venv to the python / server directory if possible
+- sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates

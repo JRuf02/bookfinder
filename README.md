@@ -107,3 +107,15 @@ http://127.0.0.1:5000/api/catalog/search?lat=48.05&lon=7.90&title=Informatik
 ## TODOS
 
 see `todos.md`
+
+## Note to me
+
+### Persisting library versions and vscode extensions
+
+- Installed VSCode extension? -> add it to `.devcontainer/devcontainer.json` to persist it
+- Install and persist Python libraries
+  1. Start the venv: `source /workspaces/isbn-scanner-venv/.venv/bin/activate`
+  2. Install via pip: `pip install [package-name]`
+  3. Find the version number in the success message
+  4. Add the library with its version number to the pip install command in the Dockerfile
+- Want to enforce a VSCode setting for this project? -> add it to `.vscode/settings.json` to persist it
