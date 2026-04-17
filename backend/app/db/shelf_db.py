@@ -3,6 +3,7 @@ from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
 from app.db.database import db_cursor
+from app.models.shelf import Shelf
 from app.utils.isbn_utils import normalize_isbn
 
 
@@ -13,7 +14,7 @@ def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
     """Insert a book into a bookshelf (current_catalog)."""
     isbn = normalize_isbn(isbn)
     if not isbn:
-        pass  # TODO: Handle invalid ISBN case -> return error/raise exception
+        raise ValueError("Invalid ISBN")
     with db_cursor() as c:
         c.execute(
             """
@@ -81,11 +82,26 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     return jsonify(books)  # TODO: Use Book class before jsonify
 
 
-def get_shelf_metadata_from_db(req: Request) -> ResponseReturnValue:
+def check_if_book_in_shelf(osm_id: str, isbn: str) -> bool:
+    """Check if a book with the given ISBN is in the given shelf."""
+    isbn = normalize_isbn(isbn)
+    if not isbn:
+        raise ValueError("Invalid ISBN")
+    with db_cursor() as c:
+        c.execute(
+            """
+            SELECT 1 FROM current_catalog
+            WHERE osm_id = ? AND isbn = ?
+            LIMIT 1
+        """,
+            (osm_id, isbn),
+        )
+        return c.fetchone() is not None
+
+
+def get_shelf_metadata_from_db(osm_id: str) -> Shelf | None:
     """Fetch metadata of the given shelf."""
-    osm_id = req.args.get("osm_id")
-    if not osm_id:
-        return jsonify({"error": "osm_id is required"}), 400
+
     with db_cursor() as c:
         c.execute(
             """
@@ -98,18 +114,18 @@ def get_shelf_metadata_from_db(req: Request) -> ResponseReturnValue:
         row = c.fetchone()
 
     if not row:
-        return jsonify({"error": "Shelf not found"}), 404
-    shelf = {
-        "osm_id": row[0],
-        "name": row[1],
-        "latitude": row[2],
-        "longitude": row[3],
-        "address": row[4],
-        "type": row[5],
-        "operator": row[6],
-        "website": row[7],
-        "opening_hours": row[8],
-        "osm_check_date": row[9],
-        "osm_last_updated": row[10],
-    }
-    return jsonify(shelf)
+        return None
+
+    return Shelf(
+        osm_id=row[0],
+        name=row[1],
+        latitude=row[2],
+        longitude=row[3],
+        address=row[4],
+        type=row[5],
+        operator=row[6],
+        website=row[7],
+        opening_hours=row[8],
+        osm_check_date=row[9],
+        osm_last_updated=row[10],
+    )

@@ -3,12 +3,14 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / ".." / ".." / "books.db"
+from flask import current_app
 
 
 @contextmanager
-def db_cursor() -> Generator[sqlite3.Cursor, None, None]:
-    conn = sqlite3.connect(DB_PATH)
+def db_cursor(db_path: Path | None = None) -> Generator[sqlite3.Cursor, None, None]:
+    if db_path is None:
+        db_path = Path(current_app.config["DB_PATH"])
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
         yield cursor
@@ -21,9 +23,9 @@ def db_cursor() -> Generator[sqlite3.Cursor, None, None]:
         conn.close()
 
 
-def init_db() -> None:
+def init_db(db_path: Path) -> None:
     """Initialize the SQLite database."""
-    with db_cursor() as c:
+    with db_cursor(db_path) as c:
         c.execute("""
             CREATE TABLE IF NOT EXISTS books (
                 isbn TEXT PRIMARY KEY,

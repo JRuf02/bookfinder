@@ -15,7 +15,7 @@ compile:
 
 test:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
-	$(TEST_CMD) /workspaces/isbn-scanner/backend && \
+	PYTHONPATH=/workspaces/isbn-scanner/backend $(TEST_CMD) /workspaces/isbn-scanner/backend && \
 	deactivate
 
 checkstyle:
