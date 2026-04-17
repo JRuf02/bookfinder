@@ -1,4 +1,4 @@
-from flask import Request
+from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
 from app.db.catalog_db import search_in_catalog_db
@@ -8,5 +8,14 @@ def search_in_catalog(request: Request) -> ResponseReturnValue:
     """Search for books in the catalog (by title) and
     compute distance from given coordinates.
     """
-    # TODO: Move api logic from db/catalog_db.py here
-    return search_in_catalog_db(request)
+    # TODO: Normalize the title input
+    title = request.args.get("title")
+    lat = request.args.get("lat", type=float)
+    lon = request.args.get("lon", type=float)
+    if not title:
+        return jsonify({"error": "title is required"}), 400
+    if lat is None or lon is None:
+        return jsonify(
+            {"error": "lat and lon are required"}
+        ), 400  # TODO: change to optional?
+    return search_in_catalog_db(title, lat, lon)

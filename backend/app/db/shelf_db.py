@@ -3,35 +3,29 @@ from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
 from app.db.database import db_cursor
+from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import Shelf
-from app.utils.isbn_utils import normalize_isbn
 
 
-def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:
+def insert_book_to_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
     # TODO: Add tests for this and the other functions!
     # TODO: Check if shelf exists, if not create it
     # TODO: Check if book has a books table entry, if not create it
     """Insert a book into a bookshelf (current_catalog)."""
-    isbn = normalize_isbn(isbn)
-    if not isbn:
-        raise ValueError("Invalid ISBN")
     with db_cursor() as c:
         c.execute(
             """
             INSERT INTO current_catalog (osm_id, isbn)
             VALUES (?, ?)
         """,
-            (osm_id, isbn),
+            (str(osm_id), str(isbn)),
         )
 
 
-def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
+def remove_book_from_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
     """Remove the oldest instance of a book from a bookshelf (current_catalog)."""
     # TODO: Add tests for this function!
     # TODO: Check if shelf, book and isbn exist
-    isbn = normalize_isbn(isbn)
-    if not isbn:
-        pass  # TODO: Handle invalid ISBN case
     with db_cursor() as c:
         # Find the entry_id of the oldest matching entry
         c.execute(
@@ -41,7 +35,7 @@ def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
             ORDER BY time_of_entry ASC, entry_id ASC
             LIMIT 1
         """,
-            (osm_id, isbn),
+            (str(osm_id), str(isbn)),
         )
         row = c.fetchone()
         if row:
@@ -51,7 +45,7 @@ def remove_book_from_shelf_in_db(osm_id: str, isbn: str) -> None:
 
 def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     """Fetch list of all books in the given shelf."""
-    osm_id = req.args.get("osm_id")
+    osm_id = OsmId.parse(req.args.get("osm_id"))
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
     with db_cursor() as c:
@@ -63,7 +57,7 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
             WHERE cc.osm_id = ?
             ORDER BY cc.time_of_entry DESC
         """,
-            (osm_id,),
+            (str(osm_id),),
         )
         rows = c.fetchall()
 
@@ -82,11 +76,8 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     return jsonify(books)  # TODO: Use Book class before jsonify
 
 
-def check_if_book_in_shelf(osm_id: str, isbn: str) -> bool:
+def check_if_book_in_shelf(osm_id: OsmId, isbn: Isbn) -> bool:
     """Check if a book with the given ISBN is in the given shelf."""
-    isbn = normalize_isbn(isbn)
-    if not isbn:
-        raise ValueError("Invalid ISBN")
     with db_cursor() as c:
         c.execute(
             """
@@ -94,12 +85,12 @@ def check_if_book_in_shelf(osm_id: str, isbn: str) -> bool:
             WHERE osm_id = ? AND isbn = ?
             LIMIT 1
         """,
-            (osm_id, isbn),
+            (str(osm_id), str(isbn)),
         )
         return c.fetchone() is not None
 
 
-def get_shelf_metadata_from_db(osm_id: str) -> Shelf | None:
+def get_shelf_metadata_from_db(osm_id: OsmId) -> Shelf | None:
     """Fetch metadata of the given shelf."""
 
     with db_cursor() as c:
@@ -109,7 +100,7 @@ def get_shelf_metadata_from_db(osm_id: str) -> Shelf | None:
                 opening_hours, osm_check_date, osm_last_updated
             FROM bookshelves WHERE osm_id = ?
         """,
-            (osm_id,),
+            (str(osm_id),),
         )
         row = c.fetchone()
 

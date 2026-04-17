@@ -10,6 +10,7 @@ from app.db.shelf_db import (
     remove_book_from_shelf_in_db,
 )
 from app.models.book import Book
+from app.models.identifiers import Isbn, OsmId
 from app.routes.books import get_book
 from app.utils.naming import as_json_dict
 
@@ -17,7 +18,7 @@ from app.utils.naming import as_json_dict
 def get_shelf_metadata(request: Request) -> ResponseReturnValue:
     """Fetch metadata of the given shelf."""
     # TODO: Move api logic from db/shelf_db.py to here
-    osm_id = request.args.get("osm_id")
+    osm_id = OsmId.parse(request.args.get("osm_id"))
     if not osm_id:
         return jsonify({"error": "osm_id is required"}), 400
     shelf = get_shelf_metadata_from_db(osm_id)
@@ -32,7 +33,7 @@ def get_books_in_shelf(request: Request) -> ResponseReturnValue:
     return get_books_in_shelf_from_db(request)
 
 
-def check_if_shelf_exists(osm_id: str) -> bool:
+def check_if_shelf_exists(osm_id: OsmId) -> bool:
     """Check if a shelf with the given osm_id exists in the database."""
     return get_shelf_metadata_from_db(osm_id) is not None
 
@@ -42,11 +43,17 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     # TODO: Use function from utils to normalize ISBN / check if the db function
     #       uses it already
     data = request.json
-    osm_id = data.get("osm_id")
-    isbn = data.get("isbn")
-    if not osm_id or not isbn:
+    osm_id = OsmId.parse(data.get("osm_id"))
+    isbn = Isbn.parse(data.get("isbn"))
+
+    if not osm_id:
         return jsonify(
-            {"status": "error", "message": "osm_id and isbn are required"}
+            {"status": "error", "message": "osm_id not provided or invalid"}
+        ), 400
+
+    if not isbn:
+        return jsonify(
+            {"status": "error", "message": "isbn not provided or invalid"}
         ), 400
 
     if not check_if_shelf_exists(osm_id):
@@ -81,8 +88,8 @@ def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     # TODO: Use function from utils to normalize ISBN / check if the db function
     #       uses it already
     data = request.json
-    osm_id = data.get("osm_id")
-    isbn = data.get("isbn")
+    osm_id = OsmId.parse(data.get("osm_id"))
+    isbn = Isbn.parse(data.get("isbn"))
     if not osm_id or not isbn:
         return jsonify({"error": "osm_id and isbn are required"}), 400
     # TODO: check if shelf and book exist

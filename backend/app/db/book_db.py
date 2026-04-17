@@ -1,35 +1,19 @@
 from app.db.database import db_cursor
 from app.models.book import Book
+from app.models.identifiers import Isbn
 
 ISBN_10_LENGTH = 10
 
 
-def get_book_from_database(isbn: str) -> Book | None:
+def get_book_from_database(isbn: Isbn) -> Book | None:
     """Fetch book data from the local SQLite database using the ISBN."""
-    if not isbn:
-        return None
-
-    # TODO: Use function from shelf_db.py to normalize ISBN
-    # Normalize ISBN (remove spaces, dashes, and convert to uppercase)
-    # TODO: move to util function + test
-    isbn = isbn.replace(" ", "").replace("-", "").upper()
-    # Remove any non-numeric characters (except for 'X' at the end of ISBN-10)
-    isbn = "".join(
-        filter(
-            lambda x: (
-                x.isdigit()
-                or (x == "X" and len(isbn) == ISBN_10_LENGTH and isbn[-1] == "X")
-            ),
-            isbn,
-        )
-    )
 
     with db_cursor() as c:
         c.execute(
             "SELECT isbn, title, author, dnb_isbn, dnb_id, cover_url "
             "FROM books "
             "WHERE isbn = ?",
-            (isbn,),
+            (str(isbn),),
         )
         row = c.fetchone()
     if row:
@@ -55,7 +39,7 @@ def save_book_to_db(book: Book) -> None:
             VALUES (?, ?, ?, ?, ?, ?)
         """,
             (
-                book.isbn,
+                str(book.isbn),
                 book.title,
                 book.author,
                 book.dnb_isbn,

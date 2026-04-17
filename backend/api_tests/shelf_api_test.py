@@ -12,7 +12,7 @@ def test_insert_book_to_missing_shelf(client):
     response = client.post(
         "/api/shelf/insert",
         json={
-            "osm_id": "idonotexist",
+            "osm_id": "https://www.openstreetmap.org/node/9999805317",  # valid, but not in db yet
             "isbn": "9783486587234",
         },
     )

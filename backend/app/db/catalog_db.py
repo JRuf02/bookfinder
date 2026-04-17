@@ -6,18 +6,8 @@ from app.db.database import db_cursor
 from app.utils.geo_utils import haversine
 
 
-def search_in_catalog_db(request: Request) -> ResponseReturnValue:
+def search_in_catalog_db(title: str, lat: float, lon: float) -> ResponseReturnValue:
     """Search for books by title and return entries with shelf info and distance."""
-    # TODO: Normalize the title input
-    title = request.args.get("title")
-    lat = request.args.get("lat", type=float)
-    lon = request.args.get("lon", type=float)
-    if not title:
-        return jsonify({"error": "title is required"}), 400
-    if lat is None or lon is None:
-        return jsonify(
-            {"error": "lat and lon are required"}
-        ), 400  # TODO: change to optional?
 
     with db_cursor() as c:
         c.execute(

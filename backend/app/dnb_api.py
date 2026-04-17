@@ -6,11 +6,12 @@ from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
 
 from app.models.book import Book
+from app.models.identifiers import DnbIsbn, Isbn
 
 logger = logging.getLogger(__name__)
 
 
-def fetch_book_from_dnb(isbn: str) -> Book:
+def fetch_book_from_dnb(isbn: Isbn) -> Book:
     """Fetch book data from DNB using the ISBN."""
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn}"&recordSchema=MARC21-xml&maximumRecords=1'
 
@@ -26,7 +27,7 @@ def fetch_book_from_dnb(isbn: str) -> Book:
         # Extract data from XML
         title = "Unknown Title"
         author = "Unknown Author"
-        dnb_isbn = isbn
+        dnb_isbn = str(isbn)  # TODO: check sanity of this line
         dnb_id = ""
 
         # Find record
@@ -124,14 +125,14 @@ def fetch_book_from_dnb(isbn: str) -> Book:
         )
 
 
-def fetch_cover_from_dnb(isbn: str, size: str = "l") -> ResponseReturnValue:
+def fetch_cover_from_dnb(dnb_isbn: DnbIsbn, size: str = "l") -> ResponseReturnValue:
     """Fetch cover image from DNB using the ISBN."""
 
     # Validate size parameter (should be 's', 'm', or 'l')
     if size not in ["s", "m", "l"]:
         return jsonify({"error": "Invalid size parameter"}), 400
 
-    cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn}&size={size}"
+    cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={str(dnb_isbn)}&size={size}"
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)
