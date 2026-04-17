@@ -1,7 +1,8 @@
 from dataclasses import asdict
 
-from app.models.book import Book
 from camel_converter.decorators import dict_to_camel
+
+from app.models.book import Book
 
 
 @dict_to_camel

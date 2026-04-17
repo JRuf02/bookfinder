@@ -1,3 +1,5 @@
+src = ["/workspaces/isbn-scanner/backend/"]
+
 lint.select = ["ALL"] # Use very strict style checking
 lint.ignore = [
     "D211", "D213", "TD", "COM", # Ignore conflicting and overly strict rules

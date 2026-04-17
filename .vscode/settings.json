@@ -5,7 +5,9 @@
     "**/*Zone.Identifier": true,
     "**/__pycache__/**": true,
     "**/.mypy_cache/**": true,
-    "**/node_modules/**": true
+    "**/node_modules/**": true,
+    "**/.ruff_cache/**": true,
+    "**/.pytest_cache/**": true
   },
   "files.watcherExclude": {
     "**/.venv/**": true,
@@ -30,7 +32,15 @@
   "typescript.disableAutomaticTypeAcquisition": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "never",
+      "source.organizeImports.ruff": "explicit"
+    }
   },
-  "ruff.configuration": "${workspaceFolder}/.ruff.toml"
+  "ruff.configuration": "${workspaceFolder}/.ruff.toml",
+  "ruff.nativeServer": "on",
+  "ruff.configurationPreference": "filesystemFirst",
+  "ruff.path": ["/workspaces/isbn-scanner-venv/.venv/bin/ruff"]
 }

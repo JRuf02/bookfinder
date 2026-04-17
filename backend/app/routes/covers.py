@@ -1,6 +1,7 @@
-from app.dnb_api import fetch_cover_from_dnb
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
+
+from app.dnb_api import fetch_cover_from_dnb
 
 
 def get_cover_by_dnb_isbn(request: Request) -> ResponseReturnValue:

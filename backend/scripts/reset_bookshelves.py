@@ -6,7 +6,6 @@ Fills the new table with data from a CSV file containing bookshelf information.
 
 import csv
 import re
-import sqlite3
 from pathlib import Path
 
 from app.db.database import db_cursor
@@ -64,8 +63,8 @@ def _reset_bookshelves() -> None:
                 c.execute(
                     """
                     INSERT OR REPLACE INTO bookshelves (
-                        osm_id, name, latitude, longitude, address, type, operator, website,
-                        opening_hours, osm_check_date, osm_last_updated
+                        osm_id, name, latitude, longitude, address, type, operator,
+                        website, opening_hours, osm_check_date, osm_last_updated
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                     (

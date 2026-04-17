@@ -1,10 +1,11 @@
 import logging
 
 import requests
-from app.models.book import Book
 from defusedxml import ElementTree
 from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
+
+from app.models.book import Book
 
 logger = logging.getLogger(__name__)
 

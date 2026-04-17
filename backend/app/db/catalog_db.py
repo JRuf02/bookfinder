@@ -1,9 +1,9 @@
-from app.db.database import db_cursor
-from app.utils.geo_utils import haversine
-
 # TODO: Move all api logic to app/routes/catalog.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
+
+from app.db.database import db_cursor
+from app.utils.geo_utils import haversine
 
 
 def search_in_catalog_db(request: Request) -> ResponseReturnValue:

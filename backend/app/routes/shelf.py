@@ -1,11 +1,12 @@
+from flask import Request, jsonify
+from flask.typing import ResponseReturnValue
+
 from app.db.shelf_db import (
     get_books_in_shelf_from_db,
     get_shelf_metadata_from_db,
     insert_book_to_shelf_in_db,
     remove_book_from_shelf_in_db,
 )
-from flask import Request, jsonify
-from flask.typing import ResponseReturnValue
 
 
 def get_shelf_metadata(request: Request) -> ResponseReturnValue:

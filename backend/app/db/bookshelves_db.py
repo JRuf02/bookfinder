@@ -1,11 +1,11 @@
 import logging
 
-from app.db.database import db_cursor
-from app.utils.geo_utils import haversine
-
 # TODO: Move all api logic to app/routes/bookshelves.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
+
+from app.db.database import db_cursor
+from app.utils.geo_utils import haversine
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,9 @@
-from app.db.database import db_cursor
-from app.utils.isbn_utils import normalize_isbn
-
 # TODO: Move all api logic to app/routes/shelf.py
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
+
+from app.db.database import db_cursor
+from app.utils.isbn_utils import normalize_isbn
 
 
 def insert_book_to_shelf_in_db(osm_id: str, isbn: str) -> None:

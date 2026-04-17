@@ -1,9 +1,10 @@
+from flask import Request
+from flask.typing import ResponseReturnValue
+
 from app.db.bookshelves_db import (
     get_all_bookshelves_from_db,
     get_nearby_bookshelves_from_db,
 )
-from flask import Request
-from flask.typing import ResponseReturnValue
 
 
 def get_all_bookshelves() -> ResponseReturnValue:

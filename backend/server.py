@@ -2,6 +2,10 @@
 
 import logging
 
+from flask import Flask, jsonify, request
+from flask.typing import ResponseReturnValue
+from flask_cors import CORS
+
 from app.db.database import init_db
 from app.routes.books import get_book
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
@@ -13,9 +17,6 @@ from app.routes.shelf import (
     insert_book_to_shelf,
     remove_book_from_shelf,
 )
-from flask import Flask, jsonify, request
-from flask.typing import ResponseReturnValue
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes

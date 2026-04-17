@@ -1,6 +1,7 @@
-from app.db.catalog_db import search_in_catalog_db
 from flask import Request
 from flask.typing import ResponseReturnValue
+
+from app.db.catalog_db import search_in_catalog_db
 
 
 def search_in_catalog(request: Request) -> ResponseReturnValue:

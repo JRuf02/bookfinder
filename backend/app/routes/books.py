@@ -1,11 +1,12 @@
 import logging
 
+from flask import Request, jsonify
+from flask.typing import ResponseReturnValue
+
 from app.db.book_db import get_book_from_database, save_book_to_db
 from app.dnb_api import fetch_book_from_dnb
 from app.utils.isbn_utils import normalize_isbn
 from app.utils.naming import as_json_dict
-from flask import Request, jsonify
-from flask.typing import ResponseReturnValue
 
 logger = logging.getLogger(__name__)
 

@@ -119,3 +119,11 @@ see `todos.md`
   3. Find the version number in the success message
   4. Add the library with its version number to the pip install command in the Dockerfile
 - Want to enforce a VSCode setting for this project? -> add it to `.vscode/settings.json` to persist it
+
+### Ruff not formatting and linting?
+
+1. Add `"ruff.nativeServer": "off"` to `.vscode/settings.json`
+2. Open `ctrl + p`
+3. `Developer: Reload Window`
+4. Test on a python file
+5. Remove `"ruff.nativeServer": "off"` from `.vscode/settings.json`
