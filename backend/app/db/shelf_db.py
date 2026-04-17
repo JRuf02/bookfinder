@@ -47,7 +47,7 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     """Fetch list of all books in the given shelf."""
     osm_id = OsmId.parse(req.args.get("osm_id"))
     if not osm_id:
-        return jsonify({"error": "osm_id is required"}), 400
+        return jsonify({"status": "error", "message": "osm_id is required"}), 400
     with db_cursor() as c:
         c.execute(
             """

@@ -41,7 +41,7 @@ export default function ResultsList({
                 component="img"
                 image={
                   result.dnb_isbn
-                    ? `/api/covers?isbn=${result.dnb_isbn}&size=m`
+                    ? `/api/covers?dnb_isbn=${result.dnb_isbn}&size=m`
                     : logo
                 }
                 alt={`Cover of ${result.title}`}
@@ -77,7 +77,7 @@ export default function ResultsList({
                         {field.charAt(0).toUpperCase() + field.slice(1)}:{" "}
                         {result[field]}
                       </Typography>
-                    )
+                    ),
                 )}
               </Box>
             </Stack>

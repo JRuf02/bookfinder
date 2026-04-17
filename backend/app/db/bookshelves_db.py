@@ -54,7 +54,7 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
     )
 
     if lat is None or lon is None:
-        return jsonify({"error": "lat and lon are required"}), 400
+        return jsonify({"status": "error", "message": "lat and lon are required"}), 400
 
     with db_cursor() as c:
         c.execute("""

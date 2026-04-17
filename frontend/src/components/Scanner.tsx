@@ -133,7 +133,7 @@ function useCamera() {
 // Custom hook to manage barcode reading
 function useBarcodeReader(
   videoRef: React.RefObject<HTMLVideoElement>,
-  onResult: (isbn: string) => void
+  onResult: (isbn: string) => void,
 ) {
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const controlsRef = useRef<any>(null);
@@ -215,7 +215,7 @@ function useBarcodeReader(
               }
             }
           }
-        }
+        },
       );
 
       // Check if component was unmounted during async operation
@@ -308,7 +308,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
         // Check if we're still in the same effect instance
         if (mountCountRef.current !== currentMount) {
           console.log(
-            `Camera started but mount changed, aborting (mount #${currentMount})`
+            `Camera started but mount changed, aborting (mount #${currentMount})`,
           );
           stopCamera();
           return;
@@ -322,7 +322,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
             // Check again if we're still relevant
             if (mountCountRef.current !== currentMount) {
               console.log(
-                `Metadata loaded but mount changed, aborting (mount #${currentMount})`
+                `Metadata loaded but mount changed, aborting (mount #${currentMount})`,
               );
               return;
             }
@@ -342,7 +342,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
             } catch (err) {
               console.error(
                 `Failed to start scanning (mount #${currentMount}):`,
-                err
+                err,
               );
             }
           };
@@ -356,7 +356,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
               handleMetadata,
               {
                 once: true,
-              }
+              },
             );
           } else {
             console.error("Video element not available");
@@ -365,7 +365,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
       } catch (err) {
         console.error(
           `Scanner initialization error (mount #${currentMount}):`,
-          err
+          err,
         );
       }
     }

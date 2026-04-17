@@ -7,10 +7,7 @@ from app.models.identifiers import DnbIsbn
 
 def get_cover_by_dnb_isbn(request: Request) -> ResponseReturnValue:
     """Call with dnb isbn format and size."""
-    dnb_isbn = DnbIsbn.parse(
-        # TODO: change in frontend from isbn to dnb_isbn
-        request.args.get("dnb_isbn")
-    )
+    dnb_isbn = DnbIsbn.parse(request.args.get("dnb_isbn"))
     size = request.args.get("size", "l")
 
     if not dnb_isbn:

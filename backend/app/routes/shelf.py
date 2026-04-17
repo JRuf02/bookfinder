@@ -20,10 +20,10 @@ def get_shelf_metadata(request: Request) -> ResponseReturnValue:
     # TODO: Move api logic from db/shelf_db.py to here
     osm_id = OsmId.parse(request.args.get("osm_id"))
     if not osm_id:
-        return jsonify({"error": "osm_id is required"}), 400
+        return jsonify({"status": "error", "message": "osm_id is required"}), 400
     shelf = get_shelf_metadata_from_db(osm_id)
     if not shelf:
-        return jsonify({"error": "Shelf not found"}), 404
+        return jsonify({"status": "error", "message": "Shelf not found"}), 404
     return jsonify(as_json_dict(shelf))
 
 
@@ -90,8 +90,14 @@ def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     data = request.json
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
-    if not osm_id or not isbn:
-        return jsonify({"error": "osm_id and isbn are required"}), 400
+    if not osm_id:
+        return jsonify(
+            {"status": "error", "message": "osm_id not provided or invalid"}
+        ), 400
+    if not isbn:
+        return jsonify(
+            {"status": "error", "message": "isbn not provided or invalid"}
+        ), 400
     # TODO: check if shelf and book exist
     remove_book_from_shelf_in_db(osm_id, isbn)  # todo check if successful
     # TODO: Only return success if book was actually removed successfully

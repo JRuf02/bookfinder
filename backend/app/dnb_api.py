@@ -130,7 +130,7 @@ def fetch_cover_from_dnb(dnb_isbn: DnbIsbn, size: str = "l") -> ResponseReturnVa
 
     # Validate size parameter (should be 's', 'm', or 'l')
     if size not in ["s", "m", "l"]:
-        return jsonify({"error": "Invalid size parameter"}), 400
+        return jsonify({"status": "error", "message": "Invalid size parameter"}), 400
 
     cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={str(dnb_isbn)}&size={size}"
 
@@ -145,4 +145,6 @@ def fetch_cover_from_dnb(dnb_isbn: DnbIsbn, size: str = "l") -> ResponseReturnVa
         )
     except Exception as e:
         logger.error(f"Error fetching cover: {e}")
-        return jsonify({"error": "Failed to fetch cover image"}), 500
+        return jsonify(
+            {"status": "error", "message": "Failed to fetch cover image"}
+        ), 500

@@ -13,9 +13,9 @@ def search_in_catalog(request: Request) -> ResponseReturnValue:
     lat = request.args.get("lat", type=float)
     lon = request.args.get("lon", type=float)
     if not title:
-        return jsonify({"error": "title is required"}), 400
+        return jsonify({"status": "error", "message": "title is required"}), 400
     if lat is None or lon is None:
         return jsonify(
-            {"error": "lat and lon are required"}
+            {"status": "error", "message": "lat and lon are required"}
         ), 400  # TODO: change to optional?
     return search_in_catalog_db(title, lat, lon)

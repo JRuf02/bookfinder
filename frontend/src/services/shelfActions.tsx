@@ -13,7 +13,7 @@ function normalizeIsbn(isbn: string): string {
 export async function shelfAction(
   action: "insert" | "remove",
   osmId: string,
-  dnbIsbn: string
+  dnbIsbn: string,
 ): Promise<{ success: boolean; message: string }> {
   const url = action === "insert" ? "/api/shelf/insert" : "/api/shelf/remove";
   const isbn = normalizeIsbn(dnbIsbn);
@@ -29,7 +29,7 @@ export async function shelfAction(
     } else {
       return {
         success: false,
-        message: data.error || "Error performing action.",
+        message: data.message || "Error performing action.",
       };
     }
   } catch {

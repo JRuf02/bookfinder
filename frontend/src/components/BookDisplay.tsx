@@ -27,7 +27,7 @@ export default function BookDisplay({
     // Use own server endpoint instead of DNB API directly
     // Use relative URL to ensure protocol matching (HTTP or HTTPS)
     // TODO: Consider caching cover images on backend or using book.coverUrl
-    setCoverUrl(`/api/covers?isbn=${book.dnbIsbn}&size=l`);
+    setCoverUrl(`/api/covers?dnb_isbn=${book.dnbIsbn}&size=l`);
     setImageError(false);
   }, [book.dnbIsbn]);
 

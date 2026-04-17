@@ -8,7 +8,7 @@ export async function fetchBookData(isbn: string) {
       throw new Error(`Server returned ${response.status}`);
     }
     const data = await response.json();
-    return data;
+    return data.data;
   } catch (e) {
     console.error("Error fetching book data:", e);
     return { title: "Error fetching data", author: "", dnbIsbn: "", dnbId: "" };
