@@ -11,6 +11,7 @@ export async function fetchBookData(isbn: string) {
     return data.data;
   } catch (e) {
     console.error("Error fetching book data:", e);
+    // TODO: set author etc. None and show error message in UI instead of returning empty strings
     return { title: "Error fetching data", author: "", isbn: "", dnbId: "" };
   }
 }

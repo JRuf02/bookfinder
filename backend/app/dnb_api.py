@@ -26,10 +26,9 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
         root = ElementTree.fromstring(xml_text)
 
         # Extract data from XML
-        title = "Unknown Title"
-        author = "Unknown Author"
-        isbn_str = str(isbn)  # TODO: check sanity of this line
-        dnb_id = ""
+        title = None
+        author = None
+        dnb_id = None
 
         # Find record
         record_element = root.find(".//{http://www.loc.gov/MARC21/slim}record")
@@ -85,15 +84,10 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
                 ):
                     authors.append(name_text)
 
-            # author = ', '.join(authors) if authors else "Unknown Author" TODO: remove
-            author = authors[0] if authors else "Unknown Author"
-
-            # Extract DNB ISBN
-            isbn_field = record_element.find(
-                './/{http://www.loc.gov/MARC21/slim}datafield[@tag="020"]/{http://www.loc.gov/MARC21/slim}subfield[@code="9"]'
-            )
-            if isbn_field is not None and isbn_field.text:
-                isbn_str = isbn_field.text
+            # TODO: handle multiple authors better
+            # author = ', '.join(authors) if authors else "Unknown Author" TODO
+            if authors:
+                author = authors[0]
 
             # Extract DNB ID
             id_field = record_element.find(
@@ -102,13 +96,17 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
             if id_field is not None and id_field.text:
                 dnb_id = id_field.text
 
+        if dnb_id is None:
+            logger.debug(f"No record found in DNB for ISBN: {isbn!s}")
+            return None
+
         return Book(
             isbn=isbn,
             title=title,
             author=author,
             dnb_id=dnb_id,
             # TODO? don't hardcode coverUrl
-            cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn_str}&size=l",
+            cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size=l",
         )
     except Exception as e:
         logger.error(f"Error fetching book data: {e}")

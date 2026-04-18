@@ -8,7 +8,7 @@ class Book:
     """Data class to represent book information fetched from DNB."""
 
     isbn: Isbn
-    title: str
-    author: str
+    title: str | None
+    author: str | None
     dnb_id: str
     cover_url: str | None = None

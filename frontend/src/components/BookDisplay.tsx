@@ -39,10 +39,10 @@ export default function BookDisplay({
     <Card sx={{ maxWidth: 400, textAlign: "center", p: 2 }}>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          ISBN: <strong>{isbn}</strong>
+          Query: <strong>{isbn}</strong>
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          ISBN (DNB format): <strong>{book.isbn}</strong>
+          ISBN: <strong>{book.isbn}</strong>
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
           {book.title}

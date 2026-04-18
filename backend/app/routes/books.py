@@ -15,15 +15,16 @@ logger = logging.getLogger(__name__)
 def get_book_api_logic(request: Request) -> ResponseReturnValue:
     """Handle the api/book request by validating inputs and fetching data."""
     isbn = Isbn.parse(request.args.get("isbn"))
+
     if not isbn:
-        return jsonify(
-            {"status": "error", "message": "ISBN parameter is required"}
-        ), 400
+        return jsonify({"status": "error", "message": "Invalid or missing ISBN"}), 400
+
     book = get_book(isbn)
+
     if not book:
         return jsonify({"status": "error", "message": "Book not found"}), 404
 
-    return jsonify({"status": "success", "data": as_json_dict(book)})
+    return jsonify({"status": "success", "data": as_json_dict(book)}), 200
 
 
 def get_book(isbn: Isbn) -> Book | None:  # TODO: check usages
