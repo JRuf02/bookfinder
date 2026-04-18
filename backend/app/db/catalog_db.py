@@ -14,7 +14,7 @@ def search_in_catalog_db(title: str, lat: float, lon: float) -> ResponseReturnVa
             """
             SELECT cc.osm_id, cc.isbn, b.title, b.author,
             bs.latitude, bs.longitude, bs.name,
-            b.dnb_isbn, bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
+            bs.type, bs.address, bs.opening_hours, bs.operator, bs.website
             FROM current_catalog cc
             JOIN books b ON cc.isbn = b.isbn
             JOIN bookshelves bs ON cc.osm_id = bs.osm_id
@@ -40,12 +40,11 @@ def search_in_catalog_db(title: str, lat: float, lon: float) -> ResponseReturnVa
                 "title": row[2],
                 "author": row[3],
                 "shelf_name": row[6],
-                "dnb_isbn": row[7],
-                "type": row[8],
-                "address": row[9],
-                "opening_hours": row[10],
-                "operator": row[11],
-                "website": row[12],
+                "type": row[7],
+                "address": row[8],
+                "opening_hours": row[9],
+                "operator": row[10],
+                "website": row[11],
                 "latitude": shelf_lat,
                 "longitude": shelf_lon,
                 "distance_km": dist_km,

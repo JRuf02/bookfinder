@@ -2,7 +2,9 @@ src = ["/workspaces/isbn-scanner/backend/"]
 
 lint.select = ["ALL"] # Use very strict style checking
 lint.ignore = [
-    "D211", "D213", "TD", "COM", # Ignore conflicting and overly strict rules
+    "D211", "D213", "TD", # Ignore conflicting rules
+    "TD", # Ignore overly strict rules
+    "COM", # Should not be used alongside the formatter
     "D203", # Incompatible with formatter
     "D202", # No blank lines allowed after function docstring
     "FIX002", # Find TODOs in code -> remove ignore later

@@ -13,7 +13,6 @@ type CatalogResult = {
   latitude: number;
   longitude: number;
   distance_km: number;
-  dnb_isbn: string;
   address?: string;
   opening_hours?: string;
 };
@@ -35,14 +34,14 @@ export default function CatalogHomeScreen() {
         const { lat, lon } = await getUserLocation();
         const resp = await fetch(
           `/api/catalog/search?title=${encodeURIComponent(
-            inputTitle
-          )}&lat=${lat}&lon=${lon}`
+            inputTitle,
+          )}&lat=${lat}&lon=${lon}`,
         );
         if (!resp.ok) throw new Error("Server error");
         const data = await resp.json();
         // Sort results by distance
         data.sort(
-          (a: CatalogResult, b: CatalogResult) => a.distance_km - b.distance_km
+          (a: CatalogResult, b: CatalogResult) => a.distance_km - b.distance_km,
         );
         setResults(data);
       } catch (err: any) {
@@ -51,7 +50,7 @@ export default function CatalogHomeScreen() {
         setLoading(false);
       }
     },
-    [inputTitle]
+    [inputTitle],
   );
 
   return (

@@ -6,14 +6,15 @@ from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
 
 from app.models.book import Book
-from app.models.identifiers import DnbIsbn, Isbn
+from app.models.identifiers import Isbn
 
 logger = logging.getLogger(__name__)
 
 
-def fetch_book_from_dnb(isbn: Isbn) -> Book:
+def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
     """Fetch book data from DNB using the ISBN."""
-    url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn}"&recordSchema=MARC21-xml&maximumRecords=1'
+    url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{str(isbn)}"&recordSchema=MARC21-xml&maximumRecords=1'
+    # TODO: fallback query={isbn.canonical} if no book found
 
     try:
         # TODO: Use smaller try-catch blocks and handle different error cases
@@ -27,7 +28,7 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book:
         # Extract data from XML
         title = "Unknown Title"
         author = "Unknown Author"
-        dnb_isbn = str(isbn)  # TODO: check sanity of this line
+        isbn_str = str(isbn)  # TODO: check sanity of this line
         dnb_id = ""
 
         # Find record
@@ -92,7 +93,7 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book:
                 './/{http://www.loc.gov/MARC21/slim}datafield[@tag="020"]/{http://www.loc.gov/MARC21/slim}subfield[@code="9"]'
             )
             if isbn_field is not None and isbn_field.text:
-                dnb_isbn = isbn_field.text
+                isbn_str = isbn_field.text
 
             # Extract DNB ID
             id_field = record_element.find(
@@ -105,34 +106,27 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book:
             isbn=isbn,
             title=title,
             author=author,
-            dnb_isbn=dnb_isbn,
             dnb_id=dnb_id,
             # TODO? don't hardcode coverUrl
-            cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={dnb_isbn}&size=l",
+            cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn_str}&size=l",
         )
     except Exception as e:
         logger.error(f"Error fetching book data: {e}")
         # TODO: Handle errors consistently (vgl. fetch_cover_from_dnb)
         # return None or an error class (e.g. dataclass) instead of empty book?
         # e.g. timeout, no record found, parsing error, ...
-        return Book(
-            isbn=isbn,
-            title="Error fetching data",
-            author="",
-            dnb_isbn="",
-            dnb_id="",
-            cover_url=None,
-        )
+        return None
 
 
-def fetch_cover_from_dnb(dnb_isbn: DnbIsbn, size: str = "l") -> ResponseReturnValue:
+def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> ResponseReturnValue:
     """Fetch cover image from DNB using the ISBN."""
 
     # Validate size parameter (should be 's', 'm', or 'l')
     if size not in ["s", "m", "l"]:
         return jsonify({"status": "error", "message": "Invalid size parameter"}), 400
 
-    cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={str(dnb_isbn)}&size={size}"
+    cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={str(isbn)}&size={size}"
+    print(f"Fetching cover from DNB: {cover_url}")
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)

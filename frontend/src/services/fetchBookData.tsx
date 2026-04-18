@@ -11,6 +11,6 @@ export async function fetchBookData(isbn: string) {
     return data.data;
   } catch (e) {
     console.error("Error fetching book data:", e);
-    return { title: "Error fetching data", author: "", dnbIsbn: "", dnbId: "" };
+    return { title: "Error fetching data", author: "", isbn: "", dnbId: "" };
   }
 }

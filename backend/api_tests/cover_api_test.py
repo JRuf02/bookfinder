@@ -5,7 +5,7 @@ from app.db.database import db_cursor
 from .fixtures import app, client
 
 
-def test_get_cover_with_invalid_dnb_isbn(client: FlaskClient) -> None:
+def test_get_cover_with_invalid_isbn(client: FlaskClient) -> None:
     raise NotImplementedError
 
 

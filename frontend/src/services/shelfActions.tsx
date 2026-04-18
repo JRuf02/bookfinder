@@ -13,10 +13,10 @@ function normalizeIsbn(isbn: string): string {
 export async function shelfAction(
   action: "insert" | "remove",
   osmId: string,
-  dnbIsbn: string,
+  isbn: string,
 ): Promise<{ success: boolean; message: string }> {
   const url = action === "insert" ? "/api/shelf/insert" : "/api/shelf/remove";
-  const isbn = normalizeIsbn(dnbIsbn);
+
   try {
     const resp = await fetch(url, {
       method: "POST",

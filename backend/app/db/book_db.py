@@ -10,20 +10,20 @@ def get_book_from_database(isbn: Isbn) -> Book | None:
 
     with db_cursor() as c:
         c.execute(
-            "SELECT isbn, title, author, dnb_isbn, dnb_id, cover_url "
-            "FROM books "
-            "WHERE isbn = ?",
+            "SELECT isbn, title, author, dnb_id, cover_url FROM books WHERE isbn = ?",
             (str(isbn),),
         )
         row = c.fetchone()
     if row:
+        isbn: Isbn | None = Isbn.parse(str(row[0]))
+        assert isbn is not None, f"Failed to parse ISBN from database: {row[0]}"
+
         return Book(
-            isbn=row[0],
+            isbn=isbn,
             title=row[1],
             author=row[2],
-            dnb_isbn=row[3],
-            dnb_id=row[4],
-            cover_url=row[5],
+            dnb_id=row[3],
+            cover_url=row[4],
         )
     return None
 
@@ -34,15 +34,14 @@ def save_book_to_db(book: Book) -> None:
     with db_cursor() as c:
         c.execute(
             """
-            INSERT OR REPLACE INTO books (isbn, title, author, dnb_isbn, dnb_id,
+            INSERT OR REPLACE INTO books (isbn, title, author, dnb_id,
             cover_url)
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         """,
             (
                 str(book.isbn),
                 book.title,
                 book.author,
-                book.dnb_isbn,
                 book.dnb_id,
                 book.cover_url,
             ),

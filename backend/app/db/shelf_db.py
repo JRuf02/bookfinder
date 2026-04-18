@@ -51,7 +51,7 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
     with db_cursor() as c:
         c.execute(
             """
-            SELECT b.isbn, b.title, b.author, b.dnb_isbn, b.dnb_id, b.cover_url
+            SELECT b.isbn, b.title, b.author, b.dnb_id, b.cover_url
             FROM current_catalog cc
             JOIN books b ON cc.isbn = b.isbn
             WHERE cc.osm_id = ?
@@ -67,9 +67,8 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
             "isbn": row[0],
             "title": row[1],
             "author": row[2],
-            "dnb_isbn": row[3],
-            "dnb_id": row[4],
-            "cover_url": row[5],
+            "dnb_id": row[3],
+            "cover_url": row[4],
         }
         for row in rows
     ]

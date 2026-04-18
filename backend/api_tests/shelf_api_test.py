@@ -92,7 +92,7 @@ def test_insert_missing_book_to_shelf(app):
     )
     assert response.status_code == 200
     assert len(response.json) == 1
-    assert response.json[0]["isbn"] == "9783486587234"
+    assert response.json[0]["isbn"] == "978-3-486-58723-4"
 
 
 def test_insert_book_to_shelf(client: FlaskClient) -> None:

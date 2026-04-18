@@ -31,7 +31,6 @@ def init_db(db_path: Path) -> None:
                 isbn TEXT PRIMARY KEY,
                 title TEXT,
                 author TEXT,
-                dnb_isbn TEXT,
                 dnb_id TEXT,
                 cover_url TEXT,
                 time_of_entry DATETIME DEFAULT CURRENT_TIMESTAMP

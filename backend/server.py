@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 
 from flask import Flask, jsonify, request
+from flask.json.provider import _default as _json_default
 from flask.typing import ResponseReturnValue
 from flask_cors import CORS
 
@@ -11,7 +12,7 @@ from app.db.database import init_db
 from app.routes.books import get_book_api_logic
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
 from app.routes.catalog import search_in_catalog
-from app.routes.covers import get_cover_by_dnb_isbn
+from app.routes.covers import get_cover_by_isbn
 from app.routes.shelf import (
     get_books_in_shelf,
     get_shelf_metadata,
@@ -23,6 +24,7 @@ from app.routes.shelf import (
 def create_app() -> Flask:
 
     app = Flask(__name__)
+
     CORS(app)  # Enable CORS for all routes
 
     app.config["DB_PATH"] = Path(__file__).parent / "books.db"
@@ -37,7 +39,7 @@ def create_app() -> Flask:
 
     @app.route("/api/cover", methods=["GET"])
     def get_cover_api() -> ResponseReturnValue:
-        return get_cover_by_dnb_isbn(request)
+        return get_cover_by_isbn(request)
 
     @app.route("/api/bookshelves", methods=["GET"])
     def get_all_bookshelves_api() -> ResponseReturnValue:

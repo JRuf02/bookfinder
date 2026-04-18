@@ -16,10 +16,10 @@ export function getUserLocation(): Promise<{ lat: number; lon: number }> {
         console.log(err);
         reject(
           new Error(
-            "Could not get your location.\nPlease allow location access in your browser settings."
-          )
+            "Could not get your location.\nPlease allow location access in your browser settings.",
+          ),
         );
-      }
+      },
     );
   });
 }

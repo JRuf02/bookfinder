@@ -10,6 +10,5 @@ class Book:
     isbn: Isbn
     title: str
     author: str
-    dnb_isbn: str
     dnb_id: str
     cover_url: str | None = None

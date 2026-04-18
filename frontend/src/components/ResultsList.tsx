@@ -16,7 +16,6 @@ type Result = {
   latitude: number;
   longitude: number;
   distance_km: number;
-  dnb_isbn?: string;
   address?: string;
   opening_hours?: string;
   [key: string]: any;
@@ -40,9 +39,7 @@ export default function ResultsList({
               <CardMedia
                 component="img"
                 image={
-                  result.dnb_isbn
-                    ? `/api/cover?dnb_isbn=${result.dnb_isbn}&size=m`
-                    : logo
+                  result.isbn ? `/api/cover?isbn=${result.isbn}&size=m` : logo
                 }
                 alt={`Cover of ${result.title}`}
                 sx={{

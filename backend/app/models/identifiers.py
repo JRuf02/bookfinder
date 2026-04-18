@@ -1,15 +1,46 @@
 import re
 from dataclasses import dataclass
 
+import isbnlib
+
+"""
+TODO: Write unit tests for these:
+ISBN-10 examples:
+valid:
+3-123-40873-2
+3-123-40873-X
+3-123-40873-x
+
+invalid, but accepted and normalized to valid:
+3123408732
+312340873X
+3-12340873-2
+
+invalid:
+-123-40873-2
+3-40873-2
+3--40873-2
+3-123-4087x-x
+3-123-40873-22
+3-123408-73-2
+3-123--40873-2
+-3-123-40873-2
+"""
+
 
 @dataclass(frozen=True)
 class Isbn:
-    """Normalized and verified ISBN."""
+    """Normalized and verified ISBN-13."""
 
     value: str
 
     def __str__(self) -> str:
         return self.value
+
+    @property
+    def canonical(self) -> str:
+        """Return ISBN in canonical form of ISBN-13 (digits only, no hyphens)."""
+        return isbnlib.canonical(self.value)
 
     @classmethod
     def parse(cls, raw_isbn: str | None) -> "Isbn | None":
@@ -18,47 +49,21 @@ class Isbn:
         if not raw_isbn:
             return None
 
-        # normalize
-        isbn = raw_isbn.strip()
-        cleaned = "".join(filter(str.isdigit, isbn))
-        if isbn.endswith(("X", "x")):
-            cleaned = cleaned + "X"
+        raw_isbn = raw_isbn.strip()
 
-        # validate
-        if len(cleaned) not in (10, 13):
-            return None
-        if len(cleaned) == 13 and "X" in cleaned:
-            return None
-        # TODO: Implement checksum validation for ISBN-10 and ISBN-13
+        cleaned = isbnlib.clean(raw_isbn)
 
-        return cls(value=cleaned)
+        if isbnlib.is_isbn10(cleaned):
+            cleaned = isbnlib.to_isbn13(cleaned)
 
-
-@dataclass(frozen=True)
-class DnbIsbn:
-    """DNB formatted ISBN."""
-
-    value: str
-    normalized: Isbn
-
-    def __str__(self) -> str:
-        return self.value
-
-    @classmethod
-    def parse(cls, raw_dnb_isbn: str | None) -> "DnbIsbn | None":
-
-        if not raw_dnb_isbn:
+        if not isbnlib.is_isbn13(cleaned):
             return None
 
-        raw_dnb_isbn = raw_dnb_isbn.strip()
-        # TODO: Check if exactly 5 groups (4 hyphens) are present in the raw DNB ISBN
-        # TODO: Check for invalid characters in the raw DNB ISBN (only digits, -, 'X')
+        canonical = isbnlib.canonical(cleaned)
 
-        normalized_isbn = Isbn.parse(raw_dnb_isbn)
-        if not normalized_isbn:
-            return None
+        hyphenated = isbnlib.mask(canonical)
 
-        return cls(value=raw_dnb_isbn, normalized=normalized_isbn)
+        return cls(value=hyphenated)
 
 
 @dataclass(frozen=True)

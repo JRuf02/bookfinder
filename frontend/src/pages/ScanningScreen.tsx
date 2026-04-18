@@ -16,7 +16,7 @@ export default function ScanningScreen() {
   const [book, setBook] = useState<{
     title: string;
     author: string;
-    dnbIsbn: string;
+    isbn: string;
     dnbId: string;
   } | null>(null);
   const [scanning, setScanning] = useState(true);

@@ -38,7 +38,7 @@ export default function ShelfActionScreen({
       setResult({ success: false, message: "Shelf ID is required." });
       return;
     }
-    const res = await shelfAction(action, shelfId, book.dnbIsbn);
+    const res = await shelfAction(action, shelfId, book.isbn);
     setResult(res);
   };
 
@@ -49,7 +49,7 @@ export default function ShelfActionScreen({
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="h6">{book.title}</Typography>
           <Typography variant="body2">by {book.author}</Typography>
-          <Typography variant="body2">ISBN: {book.dnbIsbn}</Typography>
+          <Typography variant="body2">ISBN: {book.isbn}</Typography>
         </Card>
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="body2">

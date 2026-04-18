@@ -11,6 +11,7 @@ from pathlib import Path
 from app.db.database import db_cursor
 
 CSV_PATH = Path(__file__).parent / "osm-bookcases-ger-qlever-2025-07-13.csv"
+DB_PATH = Path(__file__).parent.parent / "books.db"
 
 
 # TODO: WRITE TESTS FOR THIS!!!
@@ -34,7 +35,7 @@ def parse_shape(shape: str) -> tuple[float | None, float | None]:
 
 
 def _reset_bookshelves() -> None:
-    with db_cursor() as c:
+    with db_cursor(DB_PATH) as c:
         # Drop and recreate table
         c.execute("DROP TABLE IF EXISTS bookshelves")
         c.execute("""
