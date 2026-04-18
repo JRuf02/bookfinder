@@ -35,6 +35,7 @@ class Isbn:
     value: str
 
     def __str__(self) -> str:
+        """Return the ISBN as a string in ISBN-13 format with hyphens."""
         return self.value
 
     @property
@@ -73,10 +74,12 @@ class OsmId:
     value: str
 
     def __str__(self) -> str:
+        """Return the OSM ID as a string."""
         return self.value
 
     @classmethod
     def parse(cls, raw_osm_id: str | None) -> "OsmId | None":
+        """Parse and validate raw OSM ID input, return OsmId instance if valid."""
 
         if not raw_osm_id:
             return None

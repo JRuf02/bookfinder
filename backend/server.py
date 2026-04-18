@@ -20,7 +20,7 @@ from app.routes.shelf import (
 )
 
 
-def create_app() -> Flask:
+def create_app() -> Flask:  # noqa: C901
 
     app = Flask(__name__)
 

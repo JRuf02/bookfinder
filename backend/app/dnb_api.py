@@ -126,7 +126,7 @@ def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> ResponseReturnValue:
         return jsonify({"status": "error", "message": "Invalid size parameter"}), 400
 
     cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size={size}"
-    print(f"Fetching cover from DNB: {cover_url}")
+    logger.info(f"Fetching cover from DNB: {cover_url}")
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)

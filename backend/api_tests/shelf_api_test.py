@@ -1,3 +1,4 @@
+from flask import Flask
 from flask.testing import FlaskClient
 
 from app.db.database import db_cursor
@@ -37,7 +38,8 @@ def test_insert_book_to_missing_shelf(client: FlaskClient) -> None:
     response = client.post(
         "/api/shelf/insert",
         json={
-            "osm_id": "https://www.openstreetmap.org/node/9999805317",  # valid, but not in db yet
+            # valid osm_id, but not in db yet
+            "osm_id": "https://www.openstreetmap.org/node/9999805317",
             "isbn": "9783486587234",
         },
     )
@@ -48,11 +50,11 @@ def test_insert_book_to_missing_shelf(client: FlaskClient) -> None:
     # TODO: Test if number of books in catalog is still 0
 
 
-def test_insert_missing_book_to_missing_shelf(app):
+def test_insert_missing_book_to_missing_shelf(app: Flask) -> None:
     raise NotImplementedError
 
 
-def test_insert_missing_book_to_shelf(app):
+def test_insert_missing_book_to_shelf(app: Flask) -> None:
     client = app.test_client()
     with db_cursor(app.config["DB_PATH"]) as c:
         c.execute(
@@ -85,12 +87,14 @@ def test_insert_missing_book_to_shelf(app):
         },
     )
     assert response.status_code == 200
+    assert response.json is not None
     assert response.json["status"] == "success"
 
     response = client.get(
         "/api/shelf/books?osm_id=https://www.openstreetmap.org/node/11935877522"
     )
     assert response.status_code == 200
+    assert response.json is not None
     assert len(response.json) == 1
     assert response.json[0]["isbn"] == "978-3-486-58723-4"
 
@@ -115,11 +119,11 @@ def test_remove_book_from_missing_shelf(client: FlaskClient) -> None:
     raise NotImplementedError
 
 
-def test_remove_missing_book_from_missing_shelf(app):
+def test_remove_missing_book_from_missing_shelf(app: Flask) -> None:
     raise NotImplementedError
 
 
-def test_remove_missing_book_from_shelf(app):
+def test_remove_missing_book_from_shelf(app: Flask) -> None:
     raise NotImplementedError
 
 

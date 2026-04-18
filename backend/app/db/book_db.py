@@ -15,9 +15,6 @@ def get_book_from_database(isbn: Isbn) -> Book | None:
         )
         row = c.fetchone()
     if row:
-        isbn: Isbn | None = Isbn.parse(str(row[0]))
-        assert isbn is not None, f"Failed to parse ISBN from database: {row[0]}"
-
         return Book(
             isbn=isbn,
             title=row[1],
