@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
     """Fetch book data from DNB using the ISBN."""
-    url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{str(isbn)}"&recordSchema=MARC21-xml&maximumRecords=1'
+    url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn!s}"&recordSchema=MARC21-xml&maximumRecords=1'
     # TODO: fallback query={isbn.canonical} if no book found
 
     try:
@@ -125,7 +125,7 @@ def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> ResponseReturnValue:
     if size not in ["s", "m", "l"]:
         return jsonify({"status": "error", "message": "Invalid size parameter"}), 400
 
-    cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={str(isbn)}&size={size}"
+    cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size={size}"
     print(f"Fetching cover from DNB: {cover_url}")
 
     try:

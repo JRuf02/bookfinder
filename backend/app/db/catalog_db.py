@@ -1,5 +1,5 @@
 # TODO: Move all api logic to app/routes/catalog.py
-from flask import Request, jsonify
+from flask import jsonify
 from flask.typing import ResponseReturnValue
 
 from app.db.database import db_cursor

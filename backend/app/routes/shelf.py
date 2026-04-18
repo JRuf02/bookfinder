@@ -9,7 +9,6 @@ from app.db.shelf_db import (
     insert_book_to_shelf_in_db,
     remove_book_from_shelf_in_db,
 )
-from app.models.book import Book
 from app.models.identifiers import Isbn, OsmId
 from app.routes.books import get_book
 from app.utils.naming import as_json_dict

@@ -4,7 +4,6 @@ import logging
 from pathlib import Path
 
 from flask import Flask, jsonify, request
-from flask.json.provider import _default as _json_default
 from flask.typing import ResponseReturnValue
 from flask_cors import CORS
 

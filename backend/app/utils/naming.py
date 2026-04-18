@@ -1,7 +1,6 @@
 from dataclasses import asdict
 
 from camel_converter.decorators import dict_to_camel
-from isbnlib import Isbn
 
 from app.models.book import Book
 

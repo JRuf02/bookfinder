@@ -1,8 +1,6 @@
 from flask.testing import FlaskClient
 
-from app.db.database import db_cursor
-
-from .fixtures import app, client
+from .fixtures import app, client  # noqa: F401
 
 
 def test_get_all_bookshelves_empty(client: FlaskClient) -> None:

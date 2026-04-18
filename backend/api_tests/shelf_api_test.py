@@ -2,7 +2,7 @@ from flask.testing import FlaskClient
 
 from app.db.database import db_cursor
 
-from .fixtures import app, client
+from .fixtures import app, client  # noqa: F401
 
 
 def test_fetch_shelf_metadata_invalid_osm_id(client: FlaskClient) -> None:

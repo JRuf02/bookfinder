@@ -22,5 +22,6 @@ lint.ignore = [
 [lint.per-file-ignores]
 "*_test.py" = [
     "S101", # Allow asserts in test files
-    "PLR2004" # Magic value used in comparison
+    "PLR2004", # Magic value used in comparison
+    "F811" # Allow fixtures
 ]

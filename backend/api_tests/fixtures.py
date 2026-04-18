@@ -2,13 +2,12 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
-from flask import current_app
 
-from app.db.database import db_cursor, init_db
+from app.db.database import init_db
 from server import create_app
 
 
-@pytest.fixture()
+@pytest.fixture
 def app():
     app = create_app()
     with TemporaryDirectory() as temp_dir:
