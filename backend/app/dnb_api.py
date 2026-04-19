@@ -1,9 +1,11 @@
 import logging
+from xml.etree.ElementTree import Element
 
 import requests
 from defusedxml import ElementTree
 from flask import Response, jsonify
 from flask.typing import ResponseReturnValue
+from http_constants.status import HttpStatus
 
 from app.models.book import Book
 from app.models.identifiers import Isbn
@@ -16,104 +18,118 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn!s}"&recordSchema=MARC21-xml&maximumRecords=1'
     # TODO: fallback query={isbn.canonical} if no book found
 
-    try:
-        # TODO: Use smaller try-catch blocks and handle different error cases
-        # (network, parsing, no record found, ...) separately
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-
-        xml_text = response.text
-        root = ElementTree.fromstring(xml_text)
-
-        # Extract data from XML
-        title = None
-        author = None
-        dnb_id = None
-
-        # Find record
-        record_element = root.find(".//{http://www.loc.gov/MARC21/slim}record")
-
-        if record_element is not None:
-            # Extract title
-            title_field = record_element.find(
-                './/{http://www.loc.gov/MARC21/slim}datafield[@tag="245"]/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
-            )
-            if title_field is not None and title_field.text:
-                title = title_field.text
-
-            authors = []
-
-            # Author (field 100 sometimes also artist or protagonist)
-            main_author_field = record_element.find(
-                './/{http://www.loc.gov/MARC21/slim}datafield[@tag="100"]'
-            )
-            if main_author_field is not None:
-                role = main_author_field.find(
-                    './/{http://www.loc.gov/MARC21/slim}subfield[@code="4"]'
-                )  # Should be 'aut' for author
-                name = main_author_field.find(
-                    './/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
-                )
-
-                role_text = role.text if role is not None else None
-                name_text = name.text if name is not None else None
-
-                if (
-                    role_text is not None
-                    and name_text is not None
-                    and "aut" in role_text.lower()
-                ):
-                    # TODO: also check ctb (contributor) + error handling when
-                    # no author found at all
-                    authors.append(name_text)
-
-            # More authors (sometimes authors are only in field 700)
-            for df in record_element.findall(
-                './/{http://www.loc.gov/MARC21/slim}datafield[@tag="700"]'
-            ):
-                role = df.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="4"]')
-                name = df.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="a"]')
-
-                role_text = role.text if role is not None else None
-                name_text = name.text if name is not None else None
-
-                if (
-                    role_text is not None
-                    and name_text is not None
-                    and "aut" in role_text.lower()
-                ):
-                    authors.append(name_text)
-
-            # TODO: handle multiple authors better
-            # author = ', '.join(authors) if authors else "Unknown Author" TODO
-            if authors:
-                author = authors[0]
-
-            # Extract DNB ID
-            id_field = record_element.find(
-                './/{http://www.loc.gov/MARC21/slim}controlfield[@tag="001"]'
-            )
-            if id_field is not None and id_field.text:
-                dnb_id = id_field.text
-
-        if dnb_id is None:
-            logger.debug(f"No record found in DNB for ISBN: {isbn!s}")
-            return None
-
-        return Book(
-            isbn=isbn,
-            title=title,
-            author=author,
-            dnb_id=dnb_id,
-            # TODO? don't hardcode coverUrl
-            cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size=l",
-        )
-    except Exception as e:
-        logger.error(f"Error fetching book data: {e}")
-        # TODO: Handle errors consistently (vgl. fetch_cover_from_dnb)
-        # return None or an error class (e.g. dataclass) instead of empty book?
-        # e.g. timeout, no record found, parsing error, ...
+    response = requests.get(url, timeout=10)
+    if response.status_code != HttpStatus.OK.value:
+        logger.error(f"Failed to fetch data from DNB: {response.status_code}")
         return None
+
+    xml_text = response.text
+    try:
+        root = ElementTree.fromstring(xml_text)
+    except ElementTree.ParseError as e:
+        logger.error(f"Invalid XML from DNB: {e}")
+        return None
+
+    # Find record
+    record_element = root.find(".//{http://www.loc.gov/MARC21/slim}record")
+    if record_element is None:
+        logger.debug(f"No record found in DNB for ISBN: {isbn!s}")
+        return None
+
+    title = extract_title_from_marc_21_xml(record_element)
+    author = extract_author_from_marc_21_xml(record_element)
+    dnb_id = extract_dnb_id_from_marc_21_xml(record_element)
+
+    if dnb_id is None:
+        logger.debug(f"No record found in DNB for ISBN: {isbn!s}")
+        return None
+
+    return Book(
+        isbn=isbn,
+        title=title,
+        author=author,
+        dnb_id=dnb_id,
+        # TODO? don't hardcode coverUrl?
+        cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size=l",
+    )
+
+
+def extract_title_from_marc_21_xml(record_element: Element) -> str | None:
+    title = None
+
+    title_field = record_element.find(
+        './/{http://www.loc.gov/MARC21/slim}datafield[@tag="245"]/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
+    )
+    if title_field is not None and title_field.text:
+        title = title_field.text
+
+    return title
+
+
+def extract_author_from_marc_21_xml(record_element: Element) -> str | None:
+    author = None
+
+    authors = []
+
+    # Author (field 100 sometimes also artist or protagonist)
+    main_author_field = record_element.find(
+        './/{http://www.loc.gov/MARC21/slim}datafield[@tag="100"]'
+    )
+    if main_author_field is not None:
+        role = main_author_field.find(
+            './/{http://www.loc.gov/MARC21/slim}subfield[@code="4"]'
+        )  # Should be 'aut' for author
+        name = main_author_field.find(
+            './/{http://www.loc.gov/MARC21/slim}subfield[@code="a"]'
+        )
+
+        role_text = role.text if role is not None else None
+        name_text = name.text if name is not None else None
+
+        if (
+            role_text is not None
+            and name_text is not None
+            and "aut" in role_text.lower()
+        ):
+            # TODO: also check ctb (contributor) + error handling when
+            # no author found at all
+            authors.append(name_text)
+
+    # More authors (sometimes authors are only in field 700)
+    for df in record_element.findall(
+        './/{http://www.loc.gov/MARC21/slim}datafield[@tag="700"]'
+    ):
+        role = df.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="4"]')
+        name = df.find('.//{http://www.loc.gov/MARC21/slim}subfield[@code="a"]')
+
+        role_text = role.text if role is not None else None
+        name_text = name.text if name is not None else None
+
+        if (
+            role_text is not None
+            and name_text is not None
+            and "aut" in role_text.lower()
+        ):
+            authors.append(name_text)
+
+    # TODO: handle multiple authors better
+    # author = ', '.join(authors) if authors else "Unknown Author" TODO
+    if authors:
+        author = authors[0]
+
+    return author
+
+
+def extract_dnb_id_from_marc_21_xml(record_element: Element) -> str | None:
+    dnb_id = None
+
+    id_field = record_element.find(
+        './/{http://www.loc.gov/MARC21/slim}controlfield[@tag="001"]'
+    )
+    if id_field is not None and id_field.text:
+        dnb_id = id_field.text
+
+    return dnb_id
 
 
 def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> ResponseReturnValue:
