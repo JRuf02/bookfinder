@@ -85,7 +85,6 @@ def test_get_nearby_bookshelves_extreme_location(client: FlaskClient) -> None:
 
 
 def test_get_nearby_bookshelves_no_radius(client: FlaskClient) -> None:
-    raise NotImplementedError
     insert_test_shelf_into_db(client.application)
 
     response = client.get(
@@ -98,15 +97,27 @@ def test_get_nearby_bookshelves_no_radius(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    # print(response.json["data"])
-    # TODO: use dict-able dataclass LocatedShelf to avoid
-    #       TypeError: asdict() should be called on dataclass instances
-    # TODO: Fill with expected shelf data after implementing LocatedShelf:
-    # assert response.json["data"] == []  # TODO: here, one shelf should be returned
+    assert response.json["data"] == [
+        {
+            "distanceMeters": 2167.4248689944407,
+            "shelf": {
+                "address": None,
+                "latitude": 48.0998168,
+                "longitude": 8.0546482,
+                "name": "test shelf",
+                "openingHours": None,
+                "operator": None,
+                "osmCheckDate": None,
+                "osmId": "https://www.openstreetmap.org/node/11935877522",
+                "osmLastUpdated": None,
+                "type": None,
+                "website": None,
+            },
+        }
+    ]
 
 
 def test_get_nearby_bookshelves_invalid_radius(client: FlaskClient) -> None:
-    raise NotImplementedError
     insert_test_shelf_into_db(client.application)
 
     response = client.get(
@@ -120,15 +131,27 @@ def test_get_nearby_bookshelves_invalid_radius(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    # print(response.json["data"])
-    # TODO: use dict-able dataclass LocatedShelf to avoid
-    #       TypeError: asdict() should be called on dataclass instances
-    # TODO: Fill with expected shelf data after implementing LocatedShelf:
-    # assert response.json["data"] == []  # TODO: here, one shelf should be returned
+    assert response.json["data"] == [
+        {
+            "distanceMeters": 2167.4248689944407,
+            "shelf": {
+                "address": None,
+                "latitude": 48.0998168,
+                "longitude": 8.0546482,
+                "name": "test shelf",
+                "openingHours": None,
+                "operator": None,
+                "osmCheckDate": None,
+                "osmId": "https://www.openstreetmap.org/node/11935877522",
+                "osmLastUpdated": None,
+                "type": None,
+                "website": None,
+            },
+        }
+    ]
 
 
 def test_get_nearby_bookshelves_extreme_radius(client: FlaskClient) -> None:
-    raise NotImplementedError
     # If radius is larger than earth, return all shelves in the database
     insert_test_shelf_into_db(client.application)
 
@@ -143,11 +166,24 @@ def test_get_nearby_bookshelves_extreme_radius(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    # print(response.json["data"])
-    # TODO: use dict-able dataclass LocatedShelf to avoid
-    #       TypeError: asdict() should be called on dataclass instances
-    # TODO: Fill with expected shelf data after implementing LocatedShelf:
-    # assert response.json["data"] == []  # TODO: here, one shelf should be returned
+    assert response.json["data"] == [
+        {
+            "distanceMeters": 2167.4248689944407,
+            "shelf": {
+                "address": None,
+                "latitude": 48.0998168,
+                "longitude": 8.0546482,
+                "name": "test shelf",
+                "openingHours": None,
+                "operator": None,
+                "osmCheckDate": None,
+                "osmId": "https://www.openstreetmap.org/node/11935877522",
+                "osmLastUpdated": None,
+                "type": None,
+                "website": None,
+            },
+        }
+    ]
 
 
 def test_get_nearby_bookshelves_no_shelves_in_db(client: FlaskClient) -> None:
@@ -183,5 +219,7 @@ def test_get_nearby_bookshelves_no_shelves_within_radius(client: FlaskClient) ->
     assert response.json["data"] == []  # No shelves within radius
 
 
-def test_get_nearby_bookshelves_with_nearby_shelves(client: FlaskClient) -> None:
+def test_get_nearby_bookshelves_with_shelves_in_and_outside_radius(
+    client: FlaskClient,
+) -> None:
     raise NotImplementedError  # TODO

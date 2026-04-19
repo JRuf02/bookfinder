@@ -2,6 +2,7 @@
 
 ## Main todos
 
+- let frontend send 5000m radius default, backend should require proper radius
 - Use api/bookshelves/nearby in frontend or revove from backend
   - Maybe add 'nearest shelves' to catalog page?
 

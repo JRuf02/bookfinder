@@ -38,8 +38,6 @@ def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
     return jsonify(
         {
             "status": "success",
-            "data": [
-                as_json_dict(bookshelf) for bookshelf in nearby_shelves
-            ],  # TODO: use dict-able dataclass LocatedShelf
+            "data": [as_json_dict(bookshelf) for bookshelf in nearby_shelves],
         }
     )

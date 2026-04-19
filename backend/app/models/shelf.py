@@ -18,3 +18,11 @@ class Shelf:
     opening_hours: str
     osm_check_date: str  # TODO: use datetime.date
     osm_last_updated: str  # TODO: use datetime.date
+
+
+@dataclass
+class LocatedShelf:
+    """Data class to represent a shelf with distance information."""
+
+    shelf: Shelf
+    distance_meters: float
