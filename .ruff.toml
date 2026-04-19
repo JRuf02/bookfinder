@@ -9,6 +9,7 @@ lint.ignore = [
     "D202", # No blank lines allowed after function docstring
     "FIX002", # Find TODOs in code -> remove ignore later
     # sqlite: c.execute("sel"\n"from") or c.execute("""sel\nfrom""")? book_db.py-> ask Patrick
+    # ruff = black = 88 chars per line. Allowed? -> ASK 
     "D103", # Missing docstring in public function -> ask Patrick
     "D100", # Missing docstring in public module -> ask Patrick
     "D205", # 1 blank line required between summary line and description (see geo_utils.py) -> ask Patrick

@@ -21,5 +21,25 @@ def get_all_bookshelves() -> ResponseReturnValue:
 
 def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
     """Get nearby bookshelves based on latitude, longitude and radius."""
-    # TODO: Move all api logic from get_nearby_bookshelves_from_db to this function
-    return get_nearby_bookshelves_from_db(request)
+    lat = request.args.get("lat", type=float)  # None, if conversion to float fails
+    lon = request.args.get("lon", type=float)
+    radius = request.args.get("radius", default=5000.0, type=float)  # meters
+
+    if lat is None or lon is None:
+        return jsonify(
+            {
+                "status": "error",
+                "message": "lat and lon missing or invalid.",
+            }
+        ), 400
+
+    nearby_shelves = get_nearby_bookshelves_from_db(lat, lon, radius)
+
+    return jsonify(
+        {
+            "status": "success",
+            "data": [
+                as_json_dict(bookshelf) for bookshelf in nearby_shelves
+            ],  # TODO: use dict-able dataclass LocatedShelf
+        }
+    )

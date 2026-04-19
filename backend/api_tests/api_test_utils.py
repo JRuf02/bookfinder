@@ -15,8 +15,8 @@ def insert_test_shelf_into_db(app: Flask) -> None:
             (
                 "https://www.openstreetmap.org/node/11935877522",
                 "test shelf",
-                48.099817,
-                8.054648,
+                48.0998168,
+                8.0546482,
                 None,
                 None,
                 None,

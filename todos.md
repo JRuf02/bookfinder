@@ -2,6 +2,9 @@
 
 ## Main todos
 
+- Use api/bookshelves/nearby in frontend or revove from backend
+  - Maybe add 'nearest shelves' to catalog page?
+
 - Code Quality:
   - ask Patrick about excludes in .ruff.toml
   - Use combined ruff.toml in settings.json AND in Makefile (combined ruff config for docker ruff and devcontainer ruff) <========

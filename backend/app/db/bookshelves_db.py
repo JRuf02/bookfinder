@@ -1,9 +1,5 @@
 import logging
 
-# TODO: Move all api logic to app/routes/bookshelves.py
-from flask import Request, jsonify
-from flask.typing import ResponseReturnValue
-
 from app.db.database import db_cursor
 from app.models.identifiers import OsmId
 from app.models.shelf import Shelf
@@ -50,22 +46,10 @@ def get_all_bookshelves_from_db() -> list[Shelf]:
     return shelves
 
 
-def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
-    """Fetch bookshelves in a given radius from the database."""
-    lat = req.args.get("lat", type=float)
-    lon = req.args.get("lon", type=float)
-    radius = req.args.get("radius", default=5000.0, type=float)  # meters
-
-    logger.info("lat: %s, lon: %s, radius: %s", lat, lon, radius)
-    logger.debug(
-        "lat type: %s, lon type: %s, radius type: %s",
-        type(lat),
-        type(lon),
-        type(radius),
-    )
-
-    if lat is None or lon is None:
-        return jsonify({"status": "error", "message": "lat and lon are required"}), 400
+def get_nearby_bookshelves_from_db(
+    lat: float, lon: float, radius: float
+) -> list[Shelf]:
+    """Fetch bookshelves in a given radius (in meters) from the database."""
 
     with db_cursor() as c:
         c.execute("""
@@ -75,7 +59,7 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
         """)
         rows = c.fetchall()
 
-    nearby = []
+    nearby_shelves = []
     for row in rows:
         # TODO: Change to named tuple or dict cursor to avoid this error-prone indexing
         shelf_lat = row[2]
@@ -100,7 +84,8 @@ def get_nearby_bookshelves_from_db(req: Request) -> ResponseReturnValue:
                 "osm_last_updated": row[10],
                 "distance_m": dist_m,
             }
-            nearby.append(shelf)
-    logger.info("Found %s nearby bookshelves within %s meters.", len(nearby), radius)
-    # TODO: No Flask references in db package, move this logic to routes
-    return jsonify(nearby)
+            nearby_shelves.append(shelf)
+    logger.info(
+        "Found %s nearby bookshelves within %s meters.", len(nearby_shelves), radius
+    )
+    return nearby_shelves
