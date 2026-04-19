@@ -12,17 +12,17 @@ def as_json_dict(obj: Book | Shelf | LocatedShelf) -> dict:
 
     data = asdict(obj)
 
-    if "isbn" in data and data["isbn"] is not None:
+    if "isbn" in data and isinstance(data["isbn"], dict):
         data["isbn"] = data["isbn"]["value"]
 
-    if "osm_id" in data and data["osm_id"] is not None:
+    if "osm_id" in data and isinstance(data["osm_id"], dict):
         data["osm_id"] = data["osm_id"]["value"]
 
     if (
         "shelf" in data
         and data["shelf"] is not None
         and "osm_id" in data["shelf"]
-        and data["shelf"]["osm_id"] is not None
+        and isinstance(data["shelf"]["osm_id"], dict)
     ):
         data["shelf"]["osm_id"] = data["shelf"]["osm_id"]["value"]
 
