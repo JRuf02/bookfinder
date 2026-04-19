@@ -122,6 +122,14 @@ see `todos.md`
 
 ### Ruff not formatting and linting?
 
+#### Try this first
+
+1. `ctrl + shift + p`
+2. Type `Ruff: Restart Server`
+3. Enter
+
+#### If nothing helps
+
 1. Add `"ruff.nativeServer": "off"` to `.vscode/settings.json`
 2. Open `ctrl + p`
 3. `Developer: Reload Window`

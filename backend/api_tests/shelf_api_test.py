@@ -1,8 +1,7 @@
 from flask import Flask
 from flask.testing import FlaskClient
 
-from app.db.database import db_cursor
-
+from .api_test_utils import insert_test_shelf_into_db
 from .fixtures import app, client  # noqa: F401
 
 
@@ -56,28 +55,7 @@ def test_insert_missing_book_to_missing_shelf(app: Flask) -> None:
 
 def test_insert_missing_book_to_shelf(app: Flask) -> None:
     client = app.test_client()
-    with db_cursor(app.config["DB_PATH"]) as c:
-        c.execute(
-            """
-            INSERT OR REPLACE INTO bookshelves (
-                osm_id, name, latitude, longitude, address, type, operator,
-                website, opening_hours, osm_check_date, osm_last_updated
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                "https://www.openstreetmap.org/node/11935877522",
-                "test shelf",
-                48.099817,
-                8.054648,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            ),
-        )
+    insert_test_shelf_into_db(app)
 
     response = client.post(
         "/api/shelf/insert",

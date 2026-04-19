@@ -40,19 +40,19 @@ export default function MapPopup({
           </Link>
         </Typography>
       )}
-      {shelf.opening_hours && (
+      {shelf.openingHours && (
         <Typography variant="body2">
-          Opening hours: {shelf.opening_hours}
+          Opening hours: {shelf.openingHours}
         </Typography>
       )}
-      {shelf.osm_check_date && (
+      {shelf.osmCheckDate && (
         <Typography variant="body2">
-          OSM check date: {shelf.osm_check_date}
+          OSM check date: {shelf.osmCheckDate}
         </Typography>
       )}
-      {shelf.osm_last_updated && (
+      {shelf.osmLastUpdated && (
         <Typography variant="body2">
-          OSM last updated: {shelf.osm_last_updated}
+          OSM last updated: {shelf.osmLastUpdated}
         </Typography>
       )}
       <Stack direction="row" spacing={1} sx={{ mt: 1 }}>

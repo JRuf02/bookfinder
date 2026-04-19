@@ -75,7 +75,7 @@ export default function ShelfSelectMap({
       {bookshelves.map((shelf) =>
         shelf.latitude && shelf.longitude ? (
           <Marker
-            key={shelf.osm_id}
+            key={shelf.osmId}
             position={[shelf.latitude, shelf.longitude]}
           >
             <Popup>
@@ -100,12 +100,12 @@ export default function ShelfSelectMap({
                       }
                 }
                 onSelect={() => {
-                  setShelfId(shelf.osm_id);
+                  setShelfId(shelf.osmId);
                 }}
               />
             </Popup>
           </Marker>
-        ) : null
+        ) : null,
       )}
 
       {/* Selected shelf marker */}

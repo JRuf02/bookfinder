@@ -3,15 +3,19 @@ from dataclasses import asdict
 from camel_converter.decorators import dict_to_camel
 
 from app.models.book import Book
+from app.models.shelf import Shelf
 
 
 @dict_to_camel
-def as_json_dict(book: Book) -> dict:
+def as_json_dict(obj: Book | Shelf) -> dict:
     """Convert Book dataclass to dict with camelCase keys for frontend."""
 
-    data = asdict(book)
+    data = asdict(obj)
 
     if "isbn" in data and data["isbn"] is not None:
         data["isbn"] = data["isbn"]["value"]
+
+    if "osm_id" in data and data["osm_id"] is not None:
+        data["osm_id"] = data["osm_id"]["value"]
 
     return data

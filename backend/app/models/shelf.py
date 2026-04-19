@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 
+from app.models.identifiers import OsmId
+
 
 @dataclass
 class Shelf:
     """Data class to represent shelf information."""
 
-    osm_id: str
+    osm_id: OsmId
     name: str
     latitude: float
     longitude: float
@@ -14,5 +16,5 @@ class Shelf:
     operator: str
     website: str
     opening_hours: str
-    osm_check_date: str
-    osm_last_updated: str
+    osm_check_date: str  # TODO: use datetime.date
+    osm_last_updated: str  # TODO: use datetime.date
