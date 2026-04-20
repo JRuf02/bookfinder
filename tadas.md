@@ -1,5 +1,6 @@
 # TADAAA (Todos, but done)
 
+- Use combined ruff.toml in settings.json AND in Makefile (combined ruff config for docker ruff and devcontainer ruff)
 - digitize hand-written todos
 - Implement Home screen (skeleton)
 - make ScanningScreen more maintainable by splitting into multiple pages!
