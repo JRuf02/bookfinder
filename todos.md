@@ -172,6 +172,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- HomeScreen on desktop should show books of selected shelf next to the home screen on the white area
 - SQL execute command strings in eigenes file in app/db auslagern z.B. als Konstante GET_ALL_BOOKS_COMMAND, ...
 - support multiple languages?
 - add isbn checksum validation?
