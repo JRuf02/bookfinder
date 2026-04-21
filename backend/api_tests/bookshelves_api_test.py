@@ -74,13 +74,11 @@ def test_get_nearby_bookshelves_extreme_location(client: FlaskClient) -> None:
         query_string={"lat": "48.012345", "lon": "200.2", "radius": "6000"},
     )
 
-    # TODO: Implement this behavior in the API
     assert response.status_code == HttpStatus.BAD_REQUEST.value
     assert response.json is not None
     assert response.json["status"] == "error"
     assert response.json["message"] == (
-        "Invalid coordinates. "
-        "Latitude must be between -90 and 90, longitude between -180 and 180."
+        "Longitude must be between -180 and 180. Got 200.2."
     )
 
 
@@ -222,4 +220,67 @@ def test_get_nearby_bookshelves_no_shelves_within_radius(client: FlaskClient) ->
 def test_get_nearby_bookshelves_with_shelves_in_and_outside_radius(
     client: FlaskClient,
 ) -> None:
-    raise NotImplementedError  # TODO
+    # Add shelves to db
+    # within radius
+    insert_test_shelf_into_db(client.application)
+    # outside radius
+    insert_test_shelf_into_db(
+        client.application,
+        49.12345,
+        9.012345,
+        "https://www.openstreetmap.org/node/11935877523",
+    )
+    # within radius
+    insert_test_shelf_into_db(
+        client.application,
+        48.099817,
+        8.054647,
+        "https://www.openstreetmap.org/node/11935877524",
+    )
+
+    response = client.get(
+        "/api/bookshelves/nearby",
+        query_string={
+            "lat": "48.1120896",
+            "lon": "8.0319702",
+            # radius will be 5000 by default, but we set it explicitly here for clarity
+            "radius": "5000",
+        },
+    )
+    assert response.status_code == HttpStatus.OK.value
+    assert response.json is not None
+    assert response.json["status"] == "success"
+    assert response.json["data"] == [
+        {
+            "distanceMeters": 2167.4248689944407,
+            "shelf": {
+                "address": None,
+                "latitude": 48.0998168,
+                "longitude": 8.0546482,
+                "name": "test shelf",
+                "openingHours": None,
+                "operator": None,
+                "osmCheckDate": None,
+                "osmId": "https://www.openstreetmap.org/node/11935877522",
+                "osmLastUpdated": None,
+                "type": None,
+                "website": None,
+            },
+        },
+        {
+            "distanceMeters": 2167.3416421234588,
+            "shelf": {
+                "address": None,
+                "latitude": 48.099817,
+                "longitude": 8.054647,
+                "name": "test shelf",
+                "openingHours": None,
+                "operator": None,
+                "osmCheckDate": None,
+                "osmId": "https://www.openstreetmap.org/node/11935877524",
+                "osmLastUpdated": None,
+                "type": None,
+                "website": None,
+            },
+        },
+    ]
