@@ -28,6 +28,7 @@
   - statisch: kann nicht gescrollt/gezoomt etc werden
   - hat methode onClick, die vom parent definiert wird
     - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+    - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - Python Backend
   - Move all api logic from app/db/bookshelves_db.py to app/routes/bookshelves.py
