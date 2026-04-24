@@ -7,41 +7,27 @@ import {
   Stack,
 } from "@mui/material";
 import logo from "../../graphics/logo-long-no-bg.png";
-
-type Result = {
-  osm_id: string;
-  title: string;
-  author: string;
-  shelf_name: string;
-  latitude: number;
-  longitude: number;
-  distance_km: number;
-  address?: string;
-  opening_hours?: string;
-  [key: string]: any;
-};
+import { CatalogResult } from "../pages/CatalogHomeScreen";
 
 type ResultsListProps = {
-  results: Result[];
-  fields?: string[];
+  results: CatalogResult[];
 };
 
-export default function ResultsList({
-  results,
-  fields = [],
-}: ResultsListProps) {
+export default function ResultsList({ results }: ResultsListProps) {
   return (
     <>
-      {results.map((result) => (
-        <Card key={result.osm_id + result.title} sx={{ mb: 2 }}>
+      {results.map((result, index) => (
+        <Card key={index} sx={{ mb: 2 }}>
           <CardContent>
             <Stack direction="row" spacing={2} alignItems="center">
               <CardMedia
                 component="img"
                 image={
-                  result.isbn ? `/api/cover?isbn=${result.isbn}&size=m` : logo
+                  result.book.isbn
+                    ? `/api/cover?isbn=${result.book.isbn}&size=m`
+                    : logo
                 }
-                alt={`Cover of ${result.title}`}
+                alt={`Cover of ${result.book.title}`}
                 sx={{
                   width: 80,
                   height: 120,
@@ -57,24 +43,47 @@ export default function ResultsList({
                 }}
               />
               <Box>
-                <Typography variant="h6">{result.title}</Typography>
+                <Typography variant="h6">{result.book.title}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  by {result.author}
+                  by {result.book.author}
                 </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
-                  Shelf: {result.shelf_name || "Unknown"}
+                  Shelf: {result.locatedShelf.shelf.name || "Unknown"}
                 </Typography>
                 <Typography variant="body2">
-                  Distance: {result.distance_km.toFixed(2)} km
+                  Distance:{" "}
+                  {result.locatedShelf.distanceMeters?.toFixed(2) || "Unknown"}{" "}
+                  m
                 </Typography>
-                {fields.map(
-                  (field) =>
-                    result[field] /* only render if field exists in data */ && (
-                      <Typography variant="body2" key={field}>
-                        {field.charAt(0).toUpperCase() + field.slice(1)}:{" "}
-                        {result[field]}
-                      </Typography>
-                    ),
+                {result.locatedShelf.shelf.type && (
+                  <Typography variant="body2">
+                    Type: {result.locatedShelf.shelf.type}
+                  </Typography>
+                )}
+                {result.locatedShelf.shelf.address && (
+                  <Typography variant="body2">
+                    Address: {result.locatedShelf.shelf.address}
+                  </Typography>
+                )}
+                {result.locatedShelf.shelf.operator && (
+                  <Typography variant="body2">
+                    Operator: {result.locatedShelf.shelf.operator}
+                  </Typography>
+                )}
+                {result.locatedShelf.shelf.openingHours && (
+                  <Typography variant="body2">
+                    Opening Hours: {result.locatedShelf.shelf.openingHours}
+                  </Typography>
+                )}
+                {result.locatedShelf.shelf.website && (
+                  <Typography variant="body2">
+                    Website: {result.locatedShelf.shelf.website}
+                  </Typography>
+                )}
+                {result.locatedShelf.shelf.osmId && (
+                  <Typography variant="body2">
+                    OSM ID: {result.locatedShelf.shelf.osmId}
+                  </Typography>
                 )}
               </Box>
             </Stack>

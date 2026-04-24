@@ -5,16 +5,38 @@ import { useCallback, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import { getUserLocation } from "../services/location";
 
-type CatalogResult = {
-  osm_id: string;
-  title: string;
-  author: string;
-  shelf_name: string;
+// move to subfolder '/types'. Only define params in-file
+export type Book = {
+  isbn: string;
+  title?: string;
+  author?: string;
+  dnbId: string;
+  coverUrl?: string;
+};
+
+export type Shelf = {
+  osmId: string;
+  name?: string;
   latitude: number;
   longitude: number;
-  distance_km: number;
   address?: string;
-  opening_hours?: string;
+  type?: string;
+  operator?: string;
+  website?: string;
+  openingHours?: string;
+  osmCheckDate: string;
+  osmLastUpdated?: string;
+};
+
+export type LocatedShelf = {
+  shelf: Shelf;
+  distanceMeters: number | null;
+};
+
+// move to subfolder '/types'. Only define params in-file
+export type CatalogResult = {
+  book: Book;
+  locatedShelf: LocatedShelf;
 };
 
 export default function CatalogHomeScreen() {
@@ -38,12 +60,8 @@ export default function CatalogHomeScreen() {
           )}&lat=${lat}&lon=${lon}`,
         );
         if (!resp.ok) throw new Error("Server error");
-        const data = await resp.json();
-        // Sort results by distance
-        data.sort(
-          (a: CatalogResult, b: CatalogResult) => a.distance_km - b.distance_km,
-        );
-        setResults(data);
+        const resp_json = await resp.json();
+        setResults(resp_json.data);
       } catch (err: any) {
         setError(err.message || "Could not fetch results.");
       } finally {
@@ -109,17 +127,7 @@ export default function CatalogHomeScreen() {
           pb: 2,
         }}
       >
-        <ResultsList
-          results={results}
-          fields={[
-            "type",
-            "address",
-            "operator",
-            "opening_hours",
-            "website",
-            "osm_id",
-          ]}
-        />
+        <ResultsList results={results} />
       </Box>
     </Container>
   );

@@ -8,16 +8,16 @@ class Shelf:
     """Data class to represent shelf information."""
 
     osm_id: OsmId
-    name: str
+    name: str | None
     latitude: float
     longitude: float
-    address: str
-    type: str
-    operator: str
-    website: str
-    opening_hours: str
+    address: str | None
+    type: str | None
+    operator: str | None
+    website: str | None
+    opening_hours: str | None
     osm_check_date: str  # TODO: use datetime.date
-    osm_last_updated: str  # TODO: use datetime.date
+    osm_last_updated: str | None  # TODO: use datetime.date
 
 
 @dataclass
