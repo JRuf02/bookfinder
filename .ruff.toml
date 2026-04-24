@@ -7,14 +7,12 @@ lint.ignore = [
     "COM", # Should not be used alongside the formatter
     "D203", # Incompatible with formatter
     "D202", # No blank lines allowed after function docstring
-    "FIX002", # Find TODOs in code -> remove ignore later
-    # sqlite: c.execute("sel"\n"from") or c.execute("""sel\nfrom""")? book_db.py-> ask Patrick
-    # ruff = black = 88 chars per line. Allowed? -> ASK 
-    "D103", # Missing docstring in public function -> ask Patrick
-    "D100", # Missing docstring in public module -> ask Patrick
-    "D205", # 1 blank line required between summary line and description (see geo_utils.py) -> ask Patrick
-    "S104", # Possible binding to all interfaces 0.0.0.0 -> remove ignore when in production
-    "S201", # Use of `debug=True` in Flask app detected -> remove ignore when in production
+    "FIX002", # Find TODOs in code -> TODO remove this ignore later
+    "D103", # Missing docstring in public function -> TODO remove later and check if it makes sense per case
+    "D100", # Missing docstring in public module -> TODO remove later and check if it makes sense per case
+    "D205", # 1 blank line required between summary line and description (see geo_utils.py) -> TODO remove later and check if it makes sense per case. Can probably also stay ignored.
+    "S104", # Possible binding to all interfaces 0.0.0.0 -> TODO remove ignore when in production
+    "S201", # Use of `debug=True` in Flask app detected -> TODO remove ignore when in production
     "G004", # Logging statement uses f-string
     "BLE001", # Do not catch blind exception: `Exception` -> TODO remove from ignored
     "TRY400" # Use `logging.exception` instead of `logging.error` -> TODO remove from ignored

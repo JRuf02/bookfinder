@@ -8,20 +8,16 @@
   - Maybe add 'nearest shelves' to catalog page?
 
 - Code Quality:
-  - ask Patrick about excludes in .ruff.toml
   - top level make file
     - make test
       - Runs make test from frontend and backend makefiles
       - Starts servers and checks if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered / api/health) <=========== TODO
   - Unit tests
-    - Unit tests for python (backend)
-      - Database sqlite tests <========================================================= THIS FIRST !!!
+    - Unit tests for python (backend) only for complex logic functions
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
-      - API calls should be tested, user interface doesn't need to be tested
-      - Logic should be tested
-  - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
-  - Move all jsonify (i/o) from app/db to app/routes or higher
-    - Add custom error data types instead (e.g. dataclass db_connection_error)
+      - API calls should be tested (-> done in python), user interface doesn't need to be tested
+      - Only complex logic should be tested
+  - sqlite: c.execute("sel"\n"from") vs. c.execute("""sel\nfrom""")? vereinheitlichen, u.a. in book_db.py
 
 - StaticMap component (or version of existing Map with other params)
   - zu Anzeigezwecken: Soll zentriert auf current shelf sein
@@ -32,11 +28,17 @@
 
 - Python Backend
   - Move all api logic from app/db/bookshelves_db.py to app/routes/bookshelves.py
+  - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
+    - Move all jsonify (i/o) from app/db to app/routes or higher
+      - Add custom error data types instead (e.g. dataclass db_connection_error)
+  - Improve search (make more fuzzy / use sqlite MATCH)
 
 - Logic & Documentation:
+  - Only readme and blog post are very important
+  - Include system diagrams in blog post
   - Database tables diagram / readme
   - System diagram (draw.io->UML->callback)
-    - possible production setup ()
+    - production setup ()
     - dev setup ()
   - Diagram Frontend-Backend-ExternalServers(e.g. leaflet)
   - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
@@ -57,12 +59,12 @@
   - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
 
 - CatalogSearchScreen
-  - Real-Time: Shows fuzzy-search results as soon as the first letter is typed in
+  - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)
 
 - CatalogResultsScreen
   - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum
   - hat 2 Versionen (Version wird von parent Komponente festgelegt):
-    - Books/Results near you
+    - Catalog Search Results (near you oder generell)
     - Books at shelf xy: showing all books from one shelf
   - Kann Bücher von auf Karte gewähltem Regal zeigen
 
@@ -96,6 +98,10 @@
   - server.py / dnb_api.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
   - if cover in size=l not available, try different sizes!
 
+- Production Setup:
+  - Implement production setup (e.g. nginx + gunicorn)
+  - add makefile targets make run and make run dev
+
 - Finalization:
   - .vscode/tasks.json tasks löschen wenn makefile fertig
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
@@ -111,10 +117,11 @@
   - adhere to coding standards
     - split up long files (e.g. tests > 400 lines)
     - type annotations in python!
-    - PEP8 style einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
+    - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
     - add docstrings (incl. examples) and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
+
   - Automation
     - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
     - implement and test final makefiles

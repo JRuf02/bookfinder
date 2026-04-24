@@ -6,6 +6,8 @@
 - make ScanningScreen more maintainable by splitting into multiple pages!
 - use rem / % in global.css as well!!!
 - ensure theme.ts is used
+- ask Patrick about excludes in .ruff.toml
+- PEP8 style einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
 - make sure nothing is hidden beneath bottom nav bar
 - drop and recreate + fill table bookshelves
 - query location only after user input!
