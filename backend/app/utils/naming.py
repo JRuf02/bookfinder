@@ -1,29 +1,43 @@
-from dataclasses import asdict
+from dataclasses import is_dataclass
 
-from camel_converter.decorators import dict_to_camel
-
-from app.models.book import Book
-from app.models.shelf import LocatedShelf, Shelf
+from camel_converter import dict_to_camel
 
 
-@dict_to_camel
-def as_json_dict(obj: Book | Shelf | LocatedShelf) -> dict:
-    """Convert Book dataclass to dict with camelCase keys for frontend."""
+def as_json_dict(
+    obj: object,
+) -> object:
+    """Convert objects to dict with camelCase keys for the frontend.
 
-    data = asdict(obj)
+    Dataclasses with a field named "value" will be replaced by that value.
+    """
 
-    if "isbn" in data and isinstance(data["isbn"], dict):
-        data["isbn"] = data["isbn"]["value"]
+    if isinstance(obj, tuple):
+        return tuple(as_json_dict(item) for item in obj)
 
-    if "osm_id" in data and isinstance(data["osm_id"], dict):
-        data["osm_id"] = data["osm_id"]["value"]
+    if isinstance(obj, list):
+        return [as_json_dict(item) for item in obj]
 
-    if (
-        "shelf" in data
-        and data["shelf"] is not None
-        and "osm_id" in data["shelf"]
-        and isinstance(data["shelf"]["osm_id"], dict)
-    ):
-        data["shelf"]["osm_id"] = data["shelf"]["osm_id"]["value"]
+    if isinstance(obj, set):
+        return {as_json_dict(item) for item in obj}
+
+    if is_dataclass(obj):
+        data = vars(obj)
+
+        if "value" in data and isinstance(data["value"], (str, int)):
+            data = data["value"]
+
+    else:
+        data = obj
+
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if (
+                isinstance(value, dict)
+                or is_dataclass(value)
+                or isinstance(value, list)
+            ):
+                data[key] = as_json_dict(value)
+
+        data = dict_to_camel(data)
 
     return data

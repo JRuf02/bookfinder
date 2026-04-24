@@ -1,6 +1,8 @@
 from flask import Flask
 
 from app.db.database import db_cursor
+from app.models.book import Book
+from app.models.identifiers import Isbn
 
 
 def insert_test_shelf_into_db(
@@ -30,4 +32,57 @@ def insert_test_shelf_into_db(
                 None,
                 None,
             ),
+        )
+
+
+def insert_test_book_into_shelf_in_db(
+    app: Flask,
+    book: Book | None = None,
+    osm_id: str = "https://www.openstreetmap.org/node/11935877522",
+) -> None:
+    """Insert a test book into the given shelf in the database.
+
+    If no book is given, a default example book will be inserted.
+    Adds the book to the books table and creates an entry in the current_catalog
+    table showing the book in the given shelf.
+    Does not add the shelf to the shelf table.
+    Call insert_test_shelf_into_db first, if needed.
+    """
+
+    # Create default example book to insert if no book is specified
+    if book is None:
+        book = Book(
+            # Use Isbn.parse("978-3-453-43690-9") to create Isbn objects in production!
+            isbn=Isbn("978-3-453-43690-9"),  # For testing, we skip validation here
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+            cover_url="https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
+        )
+
+    # Create an entry for the book in the books table
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(
+            """
+            INSERT OR REPLACE INTO books (isbn, title, author, dnb_id,
+            cover_url)
+            VALUES (?, ?, ?, ?, ?)
+        """,
+            (
+                str(book.isbn),
+                book.title,
+                book.author,
+                book.dnb_id,
+                book.cover_url,
+            ),
+        )
+
+    # Insert the book into the shelf
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(
+            """
+            INSERT INTO current_catalog (osm_id, isbn)
+            VALUES (?, ?)
+        """,
+            (str(osm_id), str(book.isbn)),
         )

@@ -11,6 +11,7 @@ def db_cursor(db_path: Path | None = None) -> Generator[sqlite3.Cursor, None, No
     if db_path is None:
         db_path = Path(current_app.config["DB_PATH"])
     conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row  # Named column access for readability
     cursor = conn.cursor()
     try:
         yield cursor

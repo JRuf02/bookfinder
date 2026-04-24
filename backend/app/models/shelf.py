@@ -25,4 +25,4 @@ class LocatedShelf:
     """Data class to represent a shelf with distance information."""
 
     shelf: Shelf
-    distance_meters: float
+    distance_meters: float | None

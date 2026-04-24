@@ -26,6 +26,8 @@ def get_all_bookshelves() -> ResponseReturnValue:
 def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
     """Get nearby bookshelves based on latitude, longitude and radius."""
 
+    # TODO: Use GeoCoordinates.parse() here and in the db function
+
     lat = request.args.get("lat", type=float)  # None, if conversion to float fails
     lon = request.args.get("lon", type=float)
     radius = request.args.get("radius", default=5000.0, type=float)  # meters

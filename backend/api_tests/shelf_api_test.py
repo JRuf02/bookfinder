@@ -77,6 +77,10 @@ def test_insert_missing_book_to_shelf(app: Flask) -> None:
     assert response.json[0]["isbn"] == "978-3-486-58723-4"
 
 
+def test_insert_book_with_non_ascii_title(client: FlaskClient) -> None:
+    raise NotImplementedError
+
+
 def test_insert_book_to_shelf(client: FlaskClient) -> None:
     raise NotImplementedError
 

@@ -107,6 +107,7 @@
     - backend API documentation
     - Docker setup how to
   - adhere to coding standards
+    - split up long files (e.g. tests > 400 lines)
     - type annotations in python!
     - PEP8 style einheitliche camelCase etc Nutzung [so link](https://stackoverflow.com/questions/42127593/should-python-class-filenames-also-be-camelcased)
     - add docstrings (incl. examples) and documentation

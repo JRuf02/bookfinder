@@ -97,7 +97,7 @@ def test_get_nearby_bookshelves_no_radius(client: FlaskClient) -> None:
     assert response.json["status"] == "success"
     assert response.json["data"] == [
         {
-            "distanceMeters": 2167.4248689944407,
+            "distanceMeters": 2167.425,
             "shelf": {
                 "address": None,
                 "latitude": 48.0998168,
@@ -131,7 +131,7 @@ def test_get_nearby_bookshelves_invalid_radius(client: FlaskClient) -> None:
     assert response.json["status"] == "success"
     assert response.json["data"] == [
         {
-            "distanceMeters": 2167.4248689944407,
+            "distanceMeters": 2167.425,
             "shelf": {
                 "address": None,
                 "latitude": 48.0998168,
@@ -166,7 +166,7 @@ def test_get_nearby_bookshelves_extreme_radius(client: FlaskClient) -> None:
     assert response.json["status"] == "success"
     assert response.json["data"] == [
         {
-            "distanceMeters": 2167.4248689944407,
+            "distanceMeters": 2167.425,
             "shelf": {
                 "address": None,
                 "latitude": 48.0998168,
@@ -252,7 +252,7 @@ def test_get_nearby_bookshelves_with_shelves_in_and_outside_radius(
     assert response.json["status"] == "success"
     assert response.json["data"] == [
         {
-            "distanceMeters": 2167.4248689944407,
+            "distanceMeters": 2167.425,
             "shelf": {
                 "address": None,
                 "latitude": 48.0998168,
@@ -268,7 +268,7 @@ def test_get_nearby_bookshelves_with_shelves_in_and_outside_radius(
             },
         },
         {
-            "distanceMeters": 2167.3416421234588,
+            "distanceMeters": 2167.342,
             "shelf": {
                 "address": None,
                 "latitude": 48.099817,

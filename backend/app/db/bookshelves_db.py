@@ -70,8 +70,7 @@ def get_nearby_bookshelves_from_db(
                 row[0],
             )
             continue
-        dist_km = haversine(lon, lat, shelf_lon, shelf_lat)
-        dist_m = dist_km * 1000
+        dist_m = haversine(lon, lat, shelf_lon, shelf_lat)
         if dist_m <= radius:
             osm_id = OsmId.parse(row[0])
             if osm_id is None:

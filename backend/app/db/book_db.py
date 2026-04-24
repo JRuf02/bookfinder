@@ -17,10 +17,10 @@ def get_book_from_database(isbn: Isbn) -> Book | None:
     if row:
         return Book(
             isbn=isbn,
-            title=row[1],
-            author=row[2],
-            dnb_id=row[3],
-            cover_url=row[4],
+            title=row["title"],
+            author=row["author"],
+            dnb_id=row["dnb_id"],
+            cover_url=row["cover_url"],
         )
     return None
 

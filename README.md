@@ -135,3 +135,11 @@ see `todos.md`
 3. `Developer: Reload Window`
 4. Test on a python file
 5. Remove `"ruff.nativeServer": "off"` from `.vscode/settings.json`
+
+### Test a single file, with detailed diffs
+
+```
+cd backend
+source /workspaces/isbn-scanner-venv/.venv/bin/activate
+PYTHONPATH=/workspaces/isbn-scanner/backend pytest -vv api_tests/cover_api_test.py
+```

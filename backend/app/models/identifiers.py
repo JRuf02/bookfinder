@@ -30,7 +30,12 @@ invalid:
 
 @dataclass(frozen=True)
 class Isbn:
-    """Normalized and verified ISBN-13."""
+    """Normalized and verified ISBN-13.
+
+    Always create via Isbn.parse() to ensure validity.
+    Do not use Isbn() constructor directly in production code,
+    as it does not perform validation or normalization!
+    """
 
     value: str
 
