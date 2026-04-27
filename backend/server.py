@@ -52,7 +52,7 @@ def create_app() -> Flask:  # noqa: C901
     def get_shelf_metadata_api() -> ResponseReturnValue:
         return get_shelf_metadata(request)
 
-    @app.route("/api/shelf/books", methods=["GET"])
+    @app.route("/api/shelf/books", methods=["GET"])  # TODO: Use this endpoint!
     def get_books_in_shelf_api() -> ResponseReturnValue:
         return get_books_in_shelf(request)
 

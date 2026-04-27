@@ -23,11 +23,13 @@ def get_shelf_metadata(request: Request) -> ResponseReturnValue:
         return jsonify(
             {"status": "error", "message": "osm_id missing or invalid"}
         ), HttpStatus.BAD_REQUEST.value
+
     shelf = get_shelf_metadata_from_db(osm_id)
     if not shelf:
         return jsonify(
             {"status": "error", "message": "Shelf not found"}
         ), HttpStatus.NOT_FOUND.value
+
     return jsonify(
         {"status": "success", "data": as_json_dict(shelf)}
     ), HttpStatus.OK.value
@@ -35,8 +37,17 @@ def get_shelf_metadata(request: Request) -> ResponseReturnValue:
 
 def get_books_in_shelf(request: Request) -> ResponseReturnValue:
     """Fetch all books from the given shelf."""
-    # TODO: Move api logic from db/shelf_db.py to here
-    return get_books_in_shelf_from_db(request)
+
+    osm_id = OsmId.parse(request.args.get("osm_id"))
+    if not osm_id:
+        return jsonify(
+            {"status": "error", "message": "osm_id missing or invalid"}
+        ), HttpStatus.BAD_REQUEST.value
+
+    books = get_books_in_shelf_from_db(osm_id)
+    return jsonify(
+        {"status": "success", "data": [as_json_dict(book) for book in books]}
+    ), HttpStatus.OK.value
 
 
 def check_if_shelf_exists(osm_id: OsmId) -> bool:

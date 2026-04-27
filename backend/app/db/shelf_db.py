@@ -1,10 +1,12 @@
 # TODO: Move all api logic to app/routes/shelf.py
-from flask import Request, jsonify
-from flask.typing import ResponseReturnValue
+import logging
 
 from app.db.database import db_cursor
+from app.models.book import Book
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import Shelf
+
+logger = logging.getLogger(__name__)
 
 
 def insert_book_to_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
@@ -43,11 +45,9 @@ def remove_book_from_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
             c.execute("DELETE FROM current_catalog WHERE entry_id = ?", (entry_id,))
 
 
-def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
+def get_books_in_shelf_from_db(osm_id: OsmId) -> list[Book]:
     """Fetch list of all books in the given shelf."""
-    osm_id = OsmId.parse(req.args.get("osm_id"))
-    if not osm_id:
-        return jsonify({"status": "error", "message": "osm_id is required"}), 400
+
     with db_cursor() as c:
         c.execute(
             """
@@ -61,18 +61,27 @@ def get_books_in_shelf_from_db(req: Request) -> ResponseReturnValue:
         )
         rows = c.fetchall()
 
-    # TODO: Single function to convert db rows to list of Book objects
-    books = [
-        {
-            "isbn": row[0],
-            "title": row[1],
-            "author": row[2],
-            "dnb_id": row[3],
-            "cover_url": row[4],
-        }
-        for row in rows
-    ]
-    return jsonify(books)  # TODO: Use Book class before jsonify
+    books = []
+    for row in rows:
+        isbn = Isbn.parse(row[0])
+
+        if not isbn:
+            logger.warning(
+                f"Invalid ISBN {row[0]} in database for shelf {osm_id}. Skipping entry."
+            )
+            continue
+
+        books.append(
+            Book(
+                isbn=isbn,
+                title=row[1],
+                author=row[2],
+                dnb_id=row[3],
+                cover_url=row[4],
+            )
+        )
+
+    return books
 
 
 def check_if_book_in_shelf(osm_id: OsmId, isbn: Isbn) -> bool:

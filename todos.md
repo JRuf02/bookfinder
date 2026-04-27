@@ -182,6 +182,8 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- Search should handle oe = ö
+- Add button for dnb link (d-nb.info/<dnb_id>) z.b. `https://d-nb.info/1027780482`
 - fuzzy autocomplete vorschläge bei catalog search while typing
 - HomeScreen on desktop should show books of selected shelf next to the home screen on the white area
 - SQL execute command strings in eigenes file in app/db auslagern z.B. als Konstante GET_ALL_BOOKS_COMMAND, ...
