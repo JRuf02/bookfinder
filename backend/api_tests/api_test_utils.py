@@ -83,6 +83,67 @@ def insert_test_book_into_shelf_in_db(
             """
             INSERT INTO current_catalog (osm_id, isbn)
             VALUES (?, ?)
-        """,
+            """,
             (str(osm_id), str(book.isbn)),
         )
+
+
+def insert_test_book_into_books_table_in_db(
+    app: Flask,
+    book: Book | None = None,
+) -> None:
+    """Insert a test book into the books table in the database.
+
+    If no book is given, a default example book will be inserted.
+    Adds the book only to the books table (for metadata), not to the catalog.
+    """
+
+    if book is None:
+        book = Book(
+            # Use Isbn.parse("978-3-453-43690-9") to create Isbn objects in production!
+            isbn=Isbn("978-3-453-43690-9"),  # For testing, we skip validation here
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+            cover_url="https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
+        )
+
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(
+            """
+            INSERT OR REPLACE INTO books (isbn, title, author, dnb_id,
+            cover_url)
+            VALUES (?, ?, ?, ?, ?)
+        """,
+            (
+                str(book.isbn),
+                book.title,
+                book.author,
+                book.dnb_id,
+                book.cover_url,
+            ),
+        )
+
+
+def get_number_of_entries_in_table_current_catalog(app: Flask) -> int:
+    """Get the number of entries in the current_catalog table of the database."""
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute("SELECT COUNT(*) FROM current_catalog")
+        row = c.fetchone()
+        return row[0] if row else 0
+
+
+def get_number_of_books_in_table_books(app: Flask) -> int:
+    """Get the number of entries in the books table of the database."""
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute("SELECT COUNT(*) FROM books")
+        row = c.fetchone()
+        return row[0] if row else 0
+
+
+def get_number_of_shelves_in_table_bookshelves(app: Flask) -> int:
+    """Get the number of entries in the bookshelves table of the database."""
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute("SELECT COUNT(*) FROM bookshelves")
+        row = c.fetchone()
+        return row[0] if row else 0
