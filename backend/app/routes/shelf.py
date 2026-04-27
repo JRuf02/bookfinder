@@ -1,5 +1,6 @@
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
+from http_constants.status import HttpStatus
 
 from app.db.book_db import save_book_to_db
 from app.db.shelf_db import (
@@ -16,14 +17,20 @@ from app.utils.naming import as_json_dict
 
 def get_shelf_metadata(request: Request) -> ResponseReturnValue:
     """Fetch metadata of the given shelf."""
-    # TODO: Move api logic from db/shelf_db.py to here
+
     osm_id = OsmId.parse(request.args.get("osm_id"))
     if not osm_id:
-        return jsonify({"status": "error", "message": "osm_id is required"}), 400
+        return jsonify(
+            {"status": "error", "message": "osm_id missing or invalid"}
+        ), HttpStatus.BAD_REQUEST.value
     shelf = get_shelf_metadata_from_db(osm_id)
     if not shelf:
-        return jsonify({"status": "error", "message": "Shelf not found"}), 404
-    return jsonify(as_json_dict(shelf))
+        return jsonify(
+            {"status": "error", "message": "Shelf not found"}
+        ), HttpStatus.NOT_FOUND.value
+    return jsonify(
+        {"status": "success", "data": as_json_dict(shelf)}
+    ), HttpStatus.OK.value
 
 
 def get_books_in_shelf(request: Request) -> ResponseReturnValue:

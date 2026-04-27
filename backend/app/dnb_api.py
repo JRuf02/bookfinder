@@ -3,8 +3,6 @@ from xml.etree.ElementTree import Element
 
 import requests
 from defusedxml import ElementTree
-from flask import Response
-from flask.typing import ResponseReturnValue
 from http_constants.status import HttpStatus
 
 from app.models.book import Book
@@ -132,9 +130,7 @@ def extract_dnb_id_from_marc_21_xml(record_element: Element) -> str | None:
     return dnb_id
 
 
-def fetch_cover_from_dnb(
-    isbn: Isbn, size: str = "l"
-) -> tuple[bytes, str] | None:
+def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> tuple[bytes, str] | None:
     """Fetch cover image from DNB using the ISBN."""
 
     cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size={size}"

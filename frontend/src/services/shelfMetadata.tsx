@@ -13,14 +13,15 @@ export type ShelfMetadata = {
 };
 
 export async function fetchShelfMetadata(
-  osmId: string
+  osmId: string,
 ): Promise<ShelfMetadata | null> {
   try {
     const resp = await fetch(
-      `/api/shelf/metadata?osm_id=${encodeURIComponent(osmId)}`
+      `/api/shelf/metadata?osm_id=${encodeURIComponent(osmId)}`,
     );
     if (!resp.ok) return null;
-    return await resp.json();
+    const resp_json = await resp.json();
+    return resp_json.data;
   } catch {
     return null;
   }

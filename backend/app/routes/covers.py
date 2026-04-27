@@ -18,7 +18,9 @@ def get_cover_by_isbn(request: Request) -> ResponseReturnValue:
 
     # Validate size parameter
     if size not in ["s", "m", "l"]:
-        return jsonify({"status": "error", "message": "Invalid size parameter"}), HttpStatus.BAD_REQUEST.value
+        return jsonify(
+            {"status": "error", "message": "Invalid size parameter"}
+        ), HttpStatus.BAD_REQUEST.value
 
     cover = get_cover_from_db(isbn, size)
 
