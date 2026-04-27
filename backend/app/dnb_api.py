@@ -3,7 +3,7 @@ from xml.etree.ElementTree import Element
 
 import requests
 from defusedxml import ElementTree
-from flask import Response, jsonify
+from flask import Response
 from flask.typing import ResponseReturnValue
 from http_constants.status import HttpStatus
 
@@ -132,27 +132,28 @@ def extract_dnb_id_from_marc_21_xml(record_element: Element) -> str | None:
     return dnb_id
 
 
-def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> ResponseReturnValue:
+def fetch_cover_from_dnb(
+    isbn: Isbn, size: str = "l"
+) -> tuple[bytes, str] | None:
     """Fetch cover image from DNB using the ISBN."""
-
-    # Validate size parameter (should be 's', 'm', or 'l')
-    if size not in ["s", "m", "l"]:
-        return jsonify({"status": "error", "message": "Invalid size parameter"}), 400
 
     cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size={size}"
     logger.info(f"Fetching cover from DNB: {cover_url}")
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)
-
-        # Create a Flask response with the image data
-        return Response(
-            response.content,
-            status=response.status_code,
-            content_type=response.headers.get("Content-Type", "image/jpeg"),
-        )
-    except Exception as e:
+    except Exception as e:  # TODO: catch more specific exceptions
         logger.error(f"Error fetching cover: {e}")
-        return jsonify(
-            {"status": "error", "message": "Failed to fetch cover image"}
-        ), 500
+        return None
+
+    if response.status_code != HttpStatus.OK.value:
+        logger.error(f"Failed to fetch cover from DNB: {response.status_code}")
+        return None
+
+    if isinstance(response.content, bytes):
+        return response.content, response.headers.get("Content-Type", "image/jpeg")
+
+    logger.error(
+        f"Invalid response content type for cover image: {type(response.content)}"
+    )
+    return None

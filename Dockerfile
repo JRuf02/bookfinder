@@ -23,7 +23,8 @@ types-requests==2.32.4.20260107 \
 defusedxml==0.7.1 \
 camel-converter==5.1.0 \
 isbnlib==3.10.14 \
-http-constants==0.5.0
+http-constants==0.5.0 \
+pillow==12.2.0
 
 
 WORKDIR /workspaces/isbn-scanner

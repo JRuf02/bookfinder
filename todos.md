@@ -182,6 +182,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- fuzzy autocomplete vorschläge bei catalog search while typing
 - HomeScreen on desktop should show books of selected shelf next to the home screen on the white area
 - SQL execute command strings in eigenes file in app/db auslagern z.B. als Konstante GET_ALL_BOOKS_COMMAND, ...
 - support multiple languages?
@@ -224,3 +225,4 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - fastAPI statt flask ([discussion](https://www.reddit.com/r/flask/comments/13pyxie/flask_vs_fastapi/))
   - Nginx / Apache + Gunicorn (create production setup) (see /documentation)
   - rent & use own domain/online server (e.g. from Hetzner)
+- Use my standard response format (status, data) for response of cover image as well
