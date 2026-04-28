@@ -36,7 +36,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ## show on mobile
 
 - connect to same network / router
-- find ipv4 address of host via iplookup
+- find ipv4 address of host via ipconfig
 - go to `https://hostip:5173`
 
 ### easy open on mobile (experimental, doesn't work on Windows host yet)
