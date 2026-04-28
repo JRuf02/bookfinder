@@ -141,6 +141,7 @@
 
 - Umlaut not in db, weird non-ascii (catalog search glücklich does not work)
 - bug: after clicking insert on homescreen map popup, the locate me button does not work any more
+- homescreen mapPopup remove/insert buttons leiten weiter, aber selecten den shelf nicht
 
 ```
 Normalized ISBN: 123456789X
