@@ -147,3 +147,26 @@ def get_number_of_shelves_in_table_bookshelves(app: Flask) -> int:
         c.execute("SELECT COUNT(*) FROM bookshelves")
         row = c.fetchone()
         return row[0] if row else 0
+
+
+def get_time_of_entry_of_book_in_shelf(app: Flask, osm_id: str, isbn: str) -> list[str]:
+    """Get the time_of_entry of all books with the given isbn in the given shelf,
+    from the current_catalog table.
+
+    Returns a list of time_of_entry because an isbn can be in a shelf multiple times.
+    Returns the list sorted from oldest to newest entry.
+    Warning: Does not parse and validate osm_id and isbn.
+    Sufficient for testing purposes. Do not use this function in production code!
+    In production code, always use OsmId and Isbn objects to ensure validity!
+    """
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(
+            """
+            SELECT time_of_entry FROM current_catalog
+            WHERE osm_id = ? AND isbn = ?
+            ORDER BY time_of_entry ASC
+        """,
+            (osm_id, isbn),
+        )
+        row = c.fetchall()
+        return [r[0] for r in row] if row else []

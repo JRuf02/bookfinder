@@ -2,7 +2,9 @@
 import logging
 
 from app.db.database import db_cursor
+from app.db.database_utils import check_if_shelf_exists
 from app.models.book import Book
+from app.models.errors import DatabaseQueryError
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import Shelf
 
@@ -10,10 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 def insert_book_to_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
-    # TODO: Add tests for this and the other functions!
-    # TODO: Check if shelf exists, if not create it
-    # TODO: Check if book has a books table entry, if not create it
     """Insert a book into a bookshelf (current_catalog)."""
+
     with db_cursor() as c:
         c.execute(
             """
@@ -24,10 +24,13 @@ def insert_book_to_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
         )
 
 
-def remove_book_from_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
-    """Remove the oldest instance of a book from a bookshelf (current_catalog)."""
-    # TODO: Add tests for this function!
-    # TODO: Check if shelf, book and isbn exist
+def remove_book_from_shelf_in_db(
+    osm_id: OsmId, isbn: Isbn
+) -> DatabaseQueryError | None:
+    """Remove the oldest instance of a book from a bookshelf (current_catalog).
+    Return None if the book was removed successfully, or a DatabaseQueryError otherwise.
+    """
+
     with db_cursor() as c:
         # Find the entry_id of the oldest matching entry
         c.execute(
@@ -39,10 +42,26 @@ def remove_book_from_shelf_in_db(osm_id: OsmId, isbn: Isbn) -> None:
         """,
             (str(osm_id), str(isbn)),
         )
+
         row = c.fetchone()
-        if row:
-            entry_id = row[0]
-            c.execute("DELETE FROM current_catalog WHERE entry_id = ?", (entry_id,))
+
+        if not row:
+            if not check_if_shelf_exists(osm_id):
+                return DatabaseQueryError(
+                    message=f"Shelf with OSM ID {osm_id} does not exist."
+                )
+            return DatabaseQueryError(
+                message=f"Book with ISBN {isbn} not found in shelf {osm_id}."
+            )
+
+        entry_id = row[0]
+        c.execute("DELETE FROM current_catalog WHERE entry_id = ?", (entry_id,))
+
+        if c.rowcount != 1:
+            logger.error(f"Expected to delete 1 row, but deleted {c.rowcount} rows.")
+            return DatabaseQueryError(message="Error removing book from shelf.")
+
+        return None
 
 
 def get_books_in_shelf_from_db(osm_id: OsmId) -> list[Book]:
@@ -82,20 +101,6 @@ def get_books_in_shelf_from_db(osm_id: OsmId) -> list[Book]:
         )
 
     return books
-
-
-def check_if_book_in_shelf(osm_id: OsmId, isbn: Isbn) -> bool:
-    """Check if a book with the given ISBN is in the given shelf."""
-    with db_cursor() as c:
-        c.execute(
-            """
-            SELECT 1 FROM current_catalog
-            WHERE osm_id = ? AND isbn = ?
-            LIMIT 1
-        """,
-            (str(osm_id), str(isbn)),
-        )
-        return c.fetchone() is not None
 
 
 def get_shelf_metadata_from_db(osm_id: OsmId) -> Shelf | None:

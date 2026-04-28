@@ -27,7 +27,7 @@ def get_book_from_database(isbn: Isbn) -> Book | None:
 
 def save_book_to_db(book: Book) -> None:
     """Save book data to the local SQLite database."""
-    # TODO? Use function from shelf_db.py to normalize ISBNS?
+
     with db_cursor() as c:
         c.execute(
             """

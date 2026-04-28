@@ -31,7 +31,7 @@ def test_insert_book_to_missing_shelf(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
-    assert "Shelf with osm_id " in response.json["message"]
+    assert "Shelf with OSM ID " in response.json["message"]
     assert " does not exist" in response.json["message"]
     # Number of books in the catalog should still be 0
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
@@ -57,7 +57,7 @@ def test_insert_missing_book_to_missing_shelf(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
-    assert "Shelf with osm_id " in response.json["message"]
+    assert "Shelf with OSM ID " in response.json["message"]
     assert " does not exist" in response.json["message"]
     # Number of books in catalog and in the books table should still be 0
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0

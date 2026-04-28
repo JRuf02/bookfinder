@@ -1,3 +1,5 @@
+import time
+
 from flask.testing import FlaskClient
 from http_constants.status import HttpStatus
 
@@ -8,6 +10,7 @@ from .api_test_utils import (
     get_number_of_books_in_table_books,
     get_number_of_entries_in_table_current_catalog,
     get_number_of_shelves_in_table_bookshelves,
+    get_time_of_entry_of_book_in_shelf,
     insert_test_book_into_shelf_in_db,
     insert_test_shelf_into_db,
 )
@@ -86,7 +89,7 @@ def test_remove_book_from_completely_missing_shelf(client: FlaskClient) -> None:
     assert response.json["status"] == "error"
     assert (
         response.json["message"]
-        == "Shelf with osm_id https://www.openstreetmap.org/node/111111 does not exist."
+        == "Shelf with OSM ID https://www.openstreetmap.org/node/111111 does not exist."
     )
 
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
@@ -110,7 +113,7 @@ def test_remove_missing_book_from_missing_shelf(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
-    assert "Shelf with osm_id " in response.json["message"]
+    assert "Shelf with OSM ID " in response.json["message"]
     assert " does not exist" in response.json["message"]
     # Number of books in catalog and in the books table should still be 0
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
@@ -156,7 +159,16 @@ def test_remove_book_from_shelf_book_twice_in_shelf(client: FlaskClient) -> None
 
     # Insert the same book twice into the same shelf
     insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
+    time.sleep(1)
     insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
+
+    times_of_entry = get_time_of_entry_of_book_in_shelf(
+        client.application,
+        osm_id="https://www.openstreetmap.org/node/11935877522",
+        isbn="978-3-453-43690-9",
+    )
+    assert len(times_of_entry) == 2
+    assert times_of_entry[0] < times_of_entry[1]
 
     assert get_number_of_entries_in_table_current_catalog(client.application) == 2
     assert get_number_of_books_in_table_books(client.application) == 1
@@ -182,7 +194,15 @@ def test_remove_book_from_shelf_book_twice_in_shelf(client: FlaskClient) -> None
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
-    # TODO: Ensure and test here that the oldest entry of the book is removed!!!
+
+    # If two identical books are in the shelf, the older one should be removed.
+    new_times_of_entry = get_time_of_entry_of_book_in_shelf(
+        client.application,
+        osm_id="https://www.openstreetmap.org/node/11935877522",
+        isbn="978-3-453-43690-9",
+    )
+    assert len(new_times_of_entry) == 1
+    assert new_times_of_entry[0] == times_of_entry[1]
 
 
 def test_remove_book_from_shelf_containing_only_that_book(client: FlaskClient) -> None:
@@ -312,16 +332,94 @@ def test_remove_book_from_shelf_not_containing_book(client: FlaskClient) -> None
 
 
 def test_remove_book_from_shelf_invalid_isbn(client: FlaskClient) -> None:
-    raise NotImplementedError
+
+    insert_test_shelf_into_db(client.application)  # node/11935877522
+    insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
+
+    response = client.post(
+        "/api/shelf/remove",
+        json={
+            "osm_id": "https://www.openstreetmap.org/node/11935877522",
+            "isbn": "978-3-453-43690-9-1234-567",  # invalid isbn
+        },
+    )
+
+    assert response.status_code == HttpStatus.BAD_REQUEST.value
+    assert response.json is not None
+    assert response.json["status"] == "error"
+    assert response.json["message"] == "isbn not provided or invalid"
+
+    # Number of books in catalog and in the books table should still be 1
+    assert get_number_of_entries_in_table_current_catalog(client.application) == 1
+    assert get_number_of_books_in_table_books(client.application) == 1
+    assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
 
 
 def test_remove_book_from_shelf_missing_isbn(client: FlaskClient) -> None:
-    raise NotImplementedError
+
+    insert_test_shelf_into_db(client.application)  # node/11935877522
+    insert_test_book_into_shelf_in_db(client.application)
+
+    response = client.post(
+        "/api/shelf/remove",
+        json={
+            "osm_id": "https://www.openstreetmap.org/node/11935877522",
+        },
+    )
+
+    assert response.status_code == HttpStatus.BAD_REQUEST.value
+    assert response.json is not None
+    assert response.json["status"] == "error"
+    assert response.json["message"] == "isbn not provided or invalid"
+
+    # Number of books in catalog and in the books table should still be 1
+    assert get_number_of_entries_in_table_current_catalog(client.application) == 1
+    assert get_number_of_books_in_table_books(client.application) == 1
+    assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
 
 
 def test_remove_book_from_shelf_invalid_osm_id(client: FlaskClient) -> None:
-    raise NotImplementedError
+
+    insert_test_shelf_into_db(client.application)  # node/11935877522
+    insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
+
+    response = client.post(
+        "/api/shelf/remove",
+        json={
+            "osm_id": "https://www.youtube.com/watch?v=3San3uKKHgg",
+            "isbn": "978-3-453-43690-9",
+        },
+    )
+
+    assert response.status_code == HttpStatus.BAD_REQUEST.value
+    assert response.json is not None
+    assert response.json["status"] == "error"
+    assert response.json["message"] == "osm_id not provided or invalid"
+
+    # Number of books in catalog and in the books table should still be 1
+    assert get_number_of_entries_in_table_current_catalog(client.application) == 1
+    assert get_number_of_books_in_table_books(client.application) == 1
+    assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
 
 
 def test_remove_book_from_shelf_missing_osm_id(client: FlaskClient) -> None:
-    raise NotImplementedError
+
+    insert_test_shelf_into_db(client.application)  # node/11935877522
+    insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
+
+    response = client.post(
+        "/api/shelf/remove",
+        json={
+            "isbn": "978-3-453-43690-9",
+        },
+    )
+
+    assert response.status_code == HttpStatus.BAD_REQUEST.value
+    assert response.json is not None
+    assert response.json["status"] == "error"
+    assert response.json["message"] == "osm_id not provided or invalid"
+
+    # Number of books in catalog and in the books table should still be 1
+    assert get_number_of_entries_in_table_current_catalog(client.application) == 1
+    assert get_number_of_books_in_table_books(client.application) == 1
+    assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
