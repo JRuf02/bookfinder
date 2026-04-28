@@ -102,8 +102,7 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
 
 def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     """Remove a book from the given shelf."""
-    # TODO: Use function from utils to normalize ISBN / check if the db function
-    #       uses it already
+
     data = request.json
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
@@ -115,7 +114,9 @@ def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
         return jsonify(
             {"status": "error", "message": "isbn not provided or invalid"}
         ), 400
-    # TODO: check if shelf and book exist
+    # TODO: check if shelf and book exist in current_catalog
+    # TODO: Ensure and test that always the oldest entry of the book is removed
+    #       if book twice in shelf!!!
     remove_book_from_shelf_in_db(osm_id, isbn)  # todo check if successful
     # TODO: Only return success if book was actually removed successfully
     return jsonify(
