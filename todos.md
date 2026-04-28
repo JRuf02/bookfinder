@@ -142,7 +142,7 @@
 - Umlaut not in db, weird non-ascii (catalog search glücklich does not work)
 - bug: after clicking insert on homescreen map popup, the locate me button does not work any more
 - homescreen mapPopup remove/insert buttons leiten weiter, aber selecten den shelf nicht
-- Kamera stellt nicht scharf auf mobile bei schlechtem Licht; Fokus immer weit in der Ferne
+- Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 
 ```
 Normalized ISBN: 123456789X
@@ -184,6 +184,8 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- Ask 'are you sure' before reloading page on mobile (when book scanned, but not inserted yet)
+  - Wenn website aus Versehen neu geladen wird soll kein Datenverlust entstehen
 - Search should handle oe = ö
 - Add button for dnb link (d-nb.info/<dnb_id>) z.b. `https://d-nb.info/1027780482`
 - fuzzy autocomplete vorschläge bei catalog search while typing

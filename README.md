@@ -39,6 +39,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - find ipv4 address of host via ipconfig
 - go to `https://hostip:5173`
 
+### If it fails
+
+- Check that you used the right ipv4 address from ipconfig (wireless-LAN, not ethernet)
+- Add firewall rule (allow inbound TCP on 5137 and 5000) on host if it does not exist
+- Use another wifi (public wifis like eduroam can have client isolation)
+
 ### easy open on mobile (experimental, doesn't work on Windows host yet)
 
 ```
