@@ -4,40 +4,7 @@ import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import { getUserLocation } from "../services/location";
-
-// move to subfolder '/types'. Only define params in-file
-export type Book = {
-  isbn: string;
-  title?: string;
-  author?: string;
-  dnbId: string;
-  coverUrl?: string;
-};
-
-export type Shelf = {
-  osmId: string;
-  name?: string;
-  latitude: number;
-  longitude: number;
-  address?: string;
-  type?: string;
-  operator?: string;
-  website?: string;
-  openingHours?: string;
-  osmCheckDate: string;
-  osmLastUpdated?: string;
-};
-
-export type LocatedShelf = {
-  shelf: Shelf;
-  distanceMeters: number | null;
-};
-
-// move to subfolder '/types'. Only define params in-file
-export type CatalogResult = {
-  book: Book;
-  locatedShelf: LocatedShelf;
-};
+import { CatalogResult } from "../models/CatalogResult";
 
 export default function CatalogHomeScreen() {
   const [inputTitle, setInputTitle] = useState("");
