@@ -1,4 +1,4 @@
-import { Shelf } from "../types";
+import { Shelf } from "../types/Shelf";
 
 export async function fetchAllBookshelves(): Promise<Shelf[]> {
   try {

@@ -7,7 +7,7 @@ export function CenterMapOnShelf({
   userCoords,
   onShelfCoords,
 }: {
-  shelfId: string | null;
+  shelfId: string | null | undefined;
   userCoords: [number, number] | null;
   onShelfCoords: (coords: [number, number] | null) => void;
 }) {

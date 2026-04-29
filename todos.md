@@ -2,10 +2,8 @@
 
 ## Main todos
 
-- Move type definitions to /models in frontend <=====================
-  - Only define type params in-file
-- Frontend formatter
-- let frontend send 5000m radius default, backend should require proper radius
+- use state/AppContextProvider.tsx
+
 - Use api/bookshelves/nearby in frontend or revove from backend
   - Maybe add 'nearest shelves' to catalog page?
 
@@ -29,31 +27,25 @@
     - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - Python Backend
-  - Move all api logic from app/db/bookshelves_db.py to app/routes/bookshelves.py
-  - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
-    - Move all jsonify (i/o) from app/db to app/routes or higher
-      - Add custom error data types instead (e.g. dataclass db_connection_error)
   - Improve search (make more fuzzy / use sqlite MATCH)
 
 - Logic & Documentation:
   - Only readme and blog post are very important
-  - Include system diagrams in blog post
-  - Database tables diagram / readme
-  - System diagram (draw.io->UML->callback)
-    - production setup ()
-    - dev setup ()
-  - Diagram Frontend-Backend-ExternalServers(e.g. leaflet)
-  - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
-  - Backend/api documentation -> 1-2 diagrams
-  - (caching von) backend/.db verstehen + optimieren
-  - Sequenzdiagramm für 'Buch einstellen' Aktion
+  - System diagrams for blog post
+    - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
+    - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
+  - Database tables diagram and/or section with table structure in readme
+  - Backend/api documentation -> 1-2 diagrams (optional)
+  - Sequenzdiagramm für 'Buch einstellen' Aktion (optional)
+  - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
+    - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogHomeScreen
   - hat Suchleiste
-    - Suchfunktion Backend wieder verstehen: Sequenzdiagramm für 'Buch finden' Aktion <=================================== schon gekritzelt, jetzt bitte noch digitalisieren! flowchart: draw.io -> UML -> Callback / app.diagrams.net
-    - Suchfunktion Backend ggf verbessern
+    - Suchfunktion Backend verbessern
     - Buchsuche soll auch ohne standort gehen
     - Schalter für near you vs Suche ohne Standort
+
   - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
     - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
     - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfSelectScreen geöffnet und dann die Results gezeigt
@@ -86,6 +78,7 @@
 
 - InfoScreen
   - add info page
+  - dark mode toggle?
 
 - ManualInsertScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) existiert
   - inserting old books / without isbn / foreign isbn possible
@@ -94,10 +87,11 @@
   - scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) wird bei error gezeigt
 
 - Resilience & Edge Cases:
-  - check if the book exists in shelf before removing (front- and backend!)
-  - make sure the books normalized dnb (long) isbn without - and without spaces is stored in current_catalog and books db, not the isbn raw input! -> worked before switching to mui!?.
-  - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!) e.g. in shelfActions.tsx
-  - server.py / dnb_api.py ctb contributor adden + error handling falls eins der attribute nicht gefunden
+  - dnb_api.py
+    - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
+    - ctb (contributor) und andere data field synonyme für author adden
+    - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
+    - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
   - if cover in size=l not available, try different sizes!
 
 - Production Setup:
@@ -123,6 +117,9 @@
     - add docstrings (incl. examples) and documentation
     - clean up console.log and console.error usage
     - remove unused inputs (tsx and py)
+    - Configure and run frontend formatter (e.g. Prettier)
+    - Run linter (ESLint and Ruff)
+  - blog post
 
   - Automation
     - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
@@ -138,6 +135,9 @@
     - tested on android/mobile
     - tested on iPad/iPhone
     - tested on Desktop
+
+- Blog Post
+  - Include system diagrams, important parts of readme, screenshots, documentation, ...
 
 ## Bugs
 
@@ -161,6 +161,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
     - use None instead of empty str / dummy data / title: "Error"
     - Generate text like 'Error Fetching Data' and 'Unknown Title/Author' in the UI component
   - ersatz für cover image if not available
+  - let frontend send 5000m radius default, backend should require proper radius
 - save cover images as binary blob to books.db
 - SQL injection should not be possible -> use escape methods
 - json Message should be generated by frontend from the 200 code

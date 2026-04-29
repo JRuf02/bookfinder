@@ -5,28 +5,28 @@ import {
   Typography,
   Button,
   Dialog,
-  TextField,
   Stack,
   Container,
 } from "@mui/material";
 import { shelfAction } from "../services/shelfActions";
 import ActionResultAlert from "../components/ActionResultAlert";
-import { useShelf } from "../context/ShelfContext";
 import ShelfSelectMap from "../components/map/ShelfSelectMap";
+import { useAppState } from "../state/AppStateProvider";
+
+type ShelfActionScreenProps = {
+  book: any;
+  action: "insert" | "remove";
+  onCancel: () => void;
+  onRescan: () => void;
+};
 
 export default function ShelfActionScreen({
   book,
   action,
   onCancel,
   onRescan,
-}: {
-  book: any;
-  action: "insert" | "remove";
-  onCancel: () => void;
-  onRescan: () => void;
-}) {
-  const { shelfId, setShelfId } = useShelf(); // this is the shelf's osm id
-  const [osmDialogOpen, setOsmDialogOpen] = useState(false); // legacy manual osm id input dialog TODO: remove if not needed
+}: ShelfActionScreenProps) {
+  const { state } = useAppState();
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -34,6 +34,7 @@ export default function ShelfActionScreen({
   } | null>(null);
 
   const handleShelfSubmit = async () => {
+    let shelfId = state.currentShelf?.osmId;
     if (!shelfId) {
       setResult({ success: false, message: "Shelf ID is required." });
       return;
@@ -41,6 +42,8 @@ export default function ShelfActionScreen({
     const res = await shelfAction(action, shelfId, book.isbn);
     setResult(res);
   };
+
+  let shelfIdRepr = state.currentShelf?.osmId || "Not set";
 
   // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (
@@ -53,7 +56,7 @@ export default function ShelfActionScreen({
         </Card>
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="body2">
-            Bookshelf OSM ID: {shelfId || "Not set"}
+            Bookshelf OSM ID: {shelfIdRepr}
           </Typography>
           <Button variant="outlined" onClick={() => setMapDialogOpen(true)}>
             Change
@@ -84,21 +87,6 @@ export default function ShelfActionScreen({
               }}
             >
               Done
-            </Button>
-          </Box>
-        </Dialog>
-
-        {/* Legacy OSM ID input dialog (optional - can be removed) */}
-        <Dialog open={osmDialogOpen} onClose={() => setOsmDialogOpen(false)}>
-          <Box sx={{ p: 2 }}>
-            <Typography>Enter OSM ID:</Typography>
-            <TextField
-              value={shelfId || ""}
-              onChange={(e) => setShelfId(e.target.value)}
-              sx={{ mt: 1, mb: 2 }}
-            />
-            <Button variant="contained" onClick={() => setOsmDialogOpen(false)}>
-              OK
             </Button>
           </Box>
         </Dialog>

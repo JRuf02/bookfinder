@@ -4,15 +4,15 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import App from "./App";
 import theme from "./theme/theme";
-import { ShelfProvider } from "./context/ShelfContext";
+import { AppStateProvider } from "./state/AppStateProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ShelfProvider>
+    <AppStateProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <App />
       </ThemeProvider>
-    </ShelfProvider>
-  </React.StrictMode>
+    </AppStateProvider>
+  </React.StrictMode>,
 );

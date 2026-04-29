@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useShelf } from "../../context/ShelfContext";
 import { getUserLocation } from "../../services/location";
-import { fetchAllBookshelves, Bookshelf } from "../../services/bookshelves";
+import { fetchAllBookshelves } from "../../services/bookshelves";
 import { CenterMapOnShelf } from "./CenterMapOnShelf";
 import { CenterMapOnUser } from "./CenterMapOnUser";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
+import { Shelf } from "../../types/Shelf";
+import { useAppState } from "../../state/AppStateProvider";
 
 type ShelfSelectMapProps = {
   showSelect?: boolean;
   showInsert?: boolean;
   showRemove?: boolean;
-  onInsert?: (shelf: Bookshelf) => void;
-  onRemove?: (shelf: Bookshelf) => void;
+  onInsert?: (shelf: Shelf) => void;
+  onRemove?: (shelf: Shelf) => void;
 };
 
 export default function ShelfSelectMap({
@@ -23,11 +24,12 @@ export default function ShelfSelectMap({
   onInsert,
   onRemove,
 }: ShelfSelectMapProps) {
-  const { shelfId, setShelfId } = useShelf();
+  const { state, dispatch } = useAppState();
+  // TODO: Use type for GeoCoordinates
   const [shelfCoords, setShelfCoords] = useState<[number, number] | null>(null);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
   const [shouldCenterOnUser, setShouldCenterOnUser] = useState(false);
-  const [bookshelves, setBookshelves] = useState<Bookshelf[]>([]);
+  const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
 
   useEffect(() => {
     fetchAllBookshelves().then(setBookshelves);
@@ -45,6 +47,8 @@ export default function ShelfSelectMap({
     }
   };
 
+  // TODO: call center functions here, not as a non-rendering component inside the map
+
   return (
     <MapContainer
       center={[51.505, -0.09]}
@@ -59,7 +63,7 @@ export default function ShelfSelectMap({
 
       {/* Center on selected shelf (or fallback) at map load */}
       <CenterMapOnShelf
-        shelfId={shelfId}
+        shelfId={state.currentShelf?.osmId}
         userCoords={userCoords}
         onShelfCoords={setShelfCoords}
       />
@@ -100,7 +104,7 @@ export default function ShelfSelectMap({
                       }
                 }
                 onSelect={() => {
-                  setShelfId(shelf.osmId);
+                  dispatch({ type: "SET_CURRENT_SHELF", payload: shelf });
                 }}
               />
             </Popup>

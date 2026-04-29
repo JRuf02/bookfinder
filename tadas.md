@@ -1,5 +1,22 @@
 # TADAAA (Todos, but done)
 
+- Logic & Documentation
+  - System diagram (draw.io->UML->callback)
+    - production setup
+    - dev setup
+
+- Python Backend
+  - Move all api logic from app/db/bookshelves_db.py to app/routes/bookshelves.py
+    - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
+      - Move all jsonify (i/o) from app/db to app/routes or higher
+        - Add custom error data types instead (e.g. dataclass db_connection_error)
+- check if the book exists in shelf before removing (backend!)
+- make sure the books normalized isbn with dashes and without spaces is stored in current_catalog and books db, not the isbn raw input!
+- dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
+- (caching von) backend/.db verstehen + aufräumen
+- Suchfunktion Backend wieder verstehen + aufräumen + testen
+- Move type definitions to /types in frontend
+  - Only define type params in-file
 - Use combined ruff.toml in settings.json AND in Makefile (combined ruff config for docker ruff and devcontainer ruff)
 - digitize hand-written todos
 - Implement Home screen (skeleton)

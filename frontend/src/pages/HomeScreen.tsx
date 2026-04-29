@@ -4,25 +4,25 @@ import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import ShelfSelectMap from "../components/map/ShelfSelectMap";
-import { useShelf } from "../context/ShelfContext";
-import type { Bookshelf } from "../services/bookshelves";
+import { Shelf } from "../types/Shelf";
+import { useAppState } from "../state/AppStateProvider";
 
 export default function HomeScreen() {
   const [inputIsbn, setInputIsbn] = useState("");
-  const { setShelfId } = useShelf();
+  const { dispatch } = useAppState();
   const navigate = useNavigate();
 
   const handleInputSubmit = useCallback(() => {
     // todo: Handle the ISBN input submission
   }, [inputIsbn]);
 
-  const handleInsert = (shelf: Bookshelf): void => {
-    setShelfId(shelf.osm_id);
+  const handleInsert = (shelf: Shelf): void => {
+    dispatch({ type: "SET_CURRENT_SHELF", payload: shelf });
     navigate("/scan/insert");
   };
 
-  const handleRemove = (shelf: Bookshelf): void => {
-    setShelfId(shelf.osm_id);
+  const handleRemove = (shelf: Shelf): void => {
+    dispatch({ type: "SET_CURRENT_SHELF", payload: shelf });
     navigate("/scan/remove");
   };
 
