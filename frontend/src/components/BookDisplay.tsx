@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Book } from "../types/Book";
 import {
   Box,
   Typography,
@@ -8,7 +9,6 @@ import {
   CardContent,
 } from "@mui/material";
 
-type Book = { title: string; author: string; isbn: string; dnbId: string }; // TODO: Move to /models and import from there
 type BookDisplayProps = {
   book: Book;
   isbn: string;

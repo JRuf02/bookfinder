@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import BookDisplay from "../components/BookDisplay";
 import { fetchBookData } from "../services/fetchBookData";
-import { Button, Stack, Box, Container } from "@mui/material";
+import { Button, Stack, Box, Container, Typography } from "@mui/material";
 import ShelfActionScreen from "./ShelfActionScreen";
+import { Book } from "../types/Book";
 
 export default function ScanningResultsScreen({
   isbn,
@@ -13,14 +14,23 @@ export default function ScanningResultsScreen({
   mode?: "insert" | "remove" | "both";
   onRescan: () => void;
 }) {
-  const [book, setBook] = useState<any>(null);
+  const [book, setBook] = useState<Book | null>(null);
+  const [backendError, setBackendError] = useState<string | null>(null);
   const [shelfActionType, setShelfActionType] = useState<
     "insert" | "remove" | null
   >(null);
 
   useEffect(() => {
     async function getBook() {
-      setBook(await fetchBookData(isbn));
+      setBackendError(null);
+      setBook(null);
+      await fetchBookData(isbn).then((data) => {
+        if (data.ok) {
+          setBook(data.data);
+        } else {
+          setBackendError(data.error);
+        }
+      });
     }
     getBook();
   }, [isbn]);
@@ -66,6 +76,19 @@ export default function ScanningResultsScreen({
               </Button>
             </Stack>
           </>
+        )}
+        {backendError && (
+          <Box sx={{ mt: "2rem", textAlign: "center" }}>
+            <Typography variant="h6" color="error">
+              Error fetching book data
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {backendError}
+            </Typography>
+            <Button variant="outlined" onClick={onRescan} sx={{ mt: "1rem" }}>
+              Try Again
+            </Button>
+          </Box>
         )}
       </Box>
     </Container>

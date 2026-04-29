@@ -4,7 +4,7 @@ import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import { getUserLocation } from "../services/location";
-import { CatalogResult } from "../models/CatalogResult";
+import { CatalogResult } from "../types/CatalogResult";
 
 export default function CatalogHomeScreen() {
   const [inputTitle, setInputTitle] = useState("");
