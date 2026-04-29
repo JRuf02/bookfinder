@@ -63,7 +63,7 @@ export default function ShelfSelectMap({
 
       {/* Center on selected shelf (or fallback) at map load */}
       <CenterMapOnShelf
-        shelfId={state.currentShelf?.osmId}
+        shelfId={state.selectedShelf?.osmId}
         userCoords={userCoords}
         onShelfCoords={setShelfCoords}
       />
@@ -104,7 +104,7 @@ export default function ShelfSelectMap({
                       }
                 }
                 onSelect={() => {
-                  dispatch({ type: "SET_CURRENT_SHELF", payload: shelf });
+                  dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
                 }}
               />
             </Popup>

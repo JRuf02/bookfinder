@@ -1,9 +1,11 @@
 import { Shelf } from "../types/Shelf";
 
 export interface AppState {
-  currentShelf: Shelf | null;
+  selectedShelf?: Shelf;
+  scanMode: "insert" | "remove" | "both";
 }
 
 export type AppAction =
-  | { type: "SET_CURRENT_SHELF"; payload: Shelf }
-  | { type: "CLEAR_CURRENT_SHELF" };
+  | { type: "SET_SELECTED_SHELF"; payload: Shelf }
+  | { type: "CLEAR_SELECTED_SHELF" }
+  | { type: "SET_SCAN_MODE"; payload: "insert" | "remove" | "both" };

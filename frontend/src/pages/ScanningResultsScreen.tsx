@@ -4,16 +4,18 @@ import { fetchBookData } from "../services/fetchBookData";
 import { Button, Stack, Box, Container, Typography } from "@mui/material";
 import ShelfActionScreen from "./ShelfActionScreen";
 import { Book } from "../types/Book";
+import { useAppState } from "../state/AppStateProvider";
+
+type ScanningResultsScreenProps = {
+  isbn: string;
+  onRescan: () => void;
+};
 
 export default function ScanningResultsScreen({
   isbn,
-  mode = "both",
   onRescan,
-}: {
-  isbn: string;
-  mode?: "insert" | "remove" | "both";
-  onRescan: () => void;
-}) {
+}: ScanningResultsScreenProps) {
+  const { state } = useAppState();
   const [book, setBook] = useState<Book | null>(null);
   const [backendError, setBackendError] = useState<string | null>(null);
   const [shelfActionType, setShelfActionType] = useState<
@@ -53,7 +55,7 @@ export default function ScanningResultsScreen({
           <>
             <BookDisplay book={book} isbn={isbn} onRescan={onRescan} />
             <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-              {(mode === "insert" || mode === "both") && (
+              {(state.scanMode === "insert" || state.scanMode === "both") && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -62,7 +64,7 @@ export default function ScanningResultsScreen({
                   Insert into bookshelf
                 </Button>
               )}
-              {(mode === "remove" || mode === "both") && (
+              {(state.scanMode === "remove" || state.scanMode === "both") && (
                 <Button
                   variant="contained"
                   color="secondary"

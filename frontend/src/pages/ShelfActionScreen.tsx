@@ -34,7 +34,7 @@ export default function ShelfActionScreen({
   } | null>(null);
 
   const handleShelfSubmit = async () => {
-    let shelfId = state.currentShelf?.osmId;
+    let shelfId = state.selectedShelf?.osmId;
     if (!shelfId) {
       setResult({ success: false, message: "Shelf ID is required." });
       return;
@@ -43,7 +43,7 @@ export default function ShelfActionScreen({
     setResult(res);
   };
 
-  let shelfIdRepr = state.currentShelf?.osmId || "Not set";
+  let shelfIdRepr = state.selectedShelf?.osmId || "Not set";
 
   // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (

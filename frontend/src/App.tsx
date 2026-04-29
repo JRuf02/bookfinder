@@ -22,7 +22,6 @@ function App() {
         <Route path="/" element={<HomeScreen />} />
         <Route path="/catalog" element={<CatalogHomeScreen />} />
         <Route path="/scan" element={<ScanningScreen />} />
-        <Route path="/scan/:mode" element={<ScanningScreen />} />
         {/* ...other routes */}
         <Route path="*" element={<NotFoundScreen />} />
       </Routes>

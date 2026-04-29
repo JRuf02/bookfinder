@@ -16,14 +16,24 @@ export default function HomeScreen() {
     // todo: Handle the ISBN input submission
   }, [inputIsbn]);
 
+  const navigateToInsert = (): void => {
+    dispatch({ type: "SET_SCAN_MODE", payload: "insert" });
+    navigate("/scan");
+  };
+
+  const navigateToRemove = (): void => {
+    dispatch({ type: "SET_SCAN_MODE", payload: "remove" });
+    navigate("/scan");
+  };
+
   const handleInsert = (shelf: Shelf): void => {
-    dispatch({ type: "SET_CURRENT_SHELF", payload: shelf });
-    navigate("/scan/insert");
+    dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
+    navigateToInsert();
   };
 
   const handleRemove = (shelf: Shelf): void => {
-    dispatch({ type: "SET_CURRENT_SHELF", payload: shelf });
-    navigate("/scan/remove");
+    dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
+    navigateToRemove();
   };
 
   const LOGO_BAR_HEIGHT = "3.5rem";
@@ -114,7 +124,7 @@ export default function HomeScreen() {
             fontSize: "1.25rem",
             borderRadius: 3,
           }}
-          onClick={() => navigate("/scan/insert")}
+          onClick={navigateToInsert}
         >
           Insert Book
         </Button>
@@ -130,7 +140,7 @@ export default function HomeScreen() {
             fontSize: "1.25rem",
             borderRadius: 3,
           }}
-          onClick={() => navigate("/scan/remove")}
+          onClick={navigateToRemove}
         >
           Remove Book
         </Button>
