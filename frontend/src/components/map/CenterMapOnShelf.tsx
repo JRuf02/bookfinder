@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import { fetchShelfMetadata } from "../../services/shelfMetadata";
 
+// TODO: Move centering logic to a non-rendering component, e.g. in services/map/centerMapOnShelf.ts
+
 export function CenterMapOnShelf({
   shelfId,
   userCoords,

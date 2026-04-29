@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
-import ShelfSelectMap from "../components/map/ShelfSelectMap";
+import ShelfMap from "../components/map/ShelfMap";
 import { Shelf } from "../types/Shelf";
 import { useAppState } from "../state/AppStateProvider";
 
@@ -104,7 +104,7 @@ export default function HomeScreen() {
             letterSpacing: 1,
           }}
         >
-          <ShelfSelectMap
+          <ShelfMap
             showSelect={true}
             showInsert={true}
             showRemove={true}

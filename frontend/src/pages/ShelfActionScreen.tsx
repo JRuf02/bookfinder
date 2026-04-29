@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { shelfAction } from "../services/shelfActions";
 import ActionResultAlert from "../components/ActionResultAlert";
-import ShelfSelectMap from "../components/map/ShelfSelectMap";
+import ShelfMap from "../components/map/ShelfMap";
 import { useAppState } from "../state/AppStateProvider";
 
 type ShelfActionScreenProps = {
@@ -71,11 +71,7 @@ export default function ShelfActionScreen({
           fullWidth
         >
           <Box sx={{ height: "70vh", width: "100%", position: "relative" }}>
-            <ShelfSelectMap
-              showSelect={true}
-              showInsert={false}
-              showRemove={false}
-            />
+            <ShelfMap showSelect={true} showInsert={false} showRemove={false} />
             <Button
               variant="contained"
               onClick={() => setMapDialogOpen(false)}

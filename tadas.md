@@ -49,7 +49,7 @@
 - use rem / relative scaling for ui elements relative to appcontainer, which is 100dvh
 - Fill bookshelves table with public_bookcases from osm
 - backend for catalog search by title
-- use ShelfSelectMap for selecting shelf after scanning (ShelfActionScreen.tsx)
+- use ShelfMap for selecting shelf after scanning (ShelfActionScreen.tsx)
 - map view
 - CatalogHomeScreen
 - Übersicht über catalog search screens und features erstellen

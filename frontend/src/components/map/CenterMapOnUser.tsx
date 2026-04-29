@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 
+// TODO: Move centering logic to a non-rendering component, e.g. in services/map/centerMapOnShelf.ts
 // TODO: Rename this component to CenterMapOnLocation or also handle location here?
 export function CenterMapOnUser({
   userCoords,

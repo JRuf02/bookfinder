@@ -3,6 +3,7 @@
 ## Main todos
 
 - use state/AppContextProvider.tsx
+  - move userCoords there
 
 - Use api/bookshelves/nearby in frontend or revove from backend
   - Maybe add 'nearest shelves' to catalog page?
@@ -48,8 +49,8 @@
 
   - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
     - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
-    - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfSelectScreen geöffnet und dann die Results gezeigt
-  - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfSelectScreen
+    - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
+  - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfScreen
   - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
 
 - CatalogSearchScreen
@@ -69,7 +70,7 @@
 
 - HomeScreen
   - select button on homescreen map redirects to the catalog
-  - select button on shelfSelectMap on home screen renamed to "show books"
+  - select button on shelfMap on home screen renamed to "show books"
   - Search on home screen works and leads to CatalogSearchScreen
 
 - Scanning/InsertScreens
@@ -168,7 +169,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - show search results even when no location given
-- visibly mark the selected shelf on ShelfSelectMap if one is selected
+- visibly mark the selected shelf on ShelfMap if one is selected
 - smoothen permission handling for the camera
 - make map scrolling/zooming more responsive... e.g. by:
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map

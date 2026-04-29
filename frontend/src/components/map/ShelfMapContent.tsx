@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { Marker, Popup, useMap } from "react-leaflet";
 import { getUserLocation } from "../../services/location";
 import { fetchAllBookshelves } from "../../services/bookshelves";
-import { CenterMapOnShelf } from "./CenterMapOnShelf";
 import { CenterMapOnUser } from "./CenterMapOnUser";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
 import { Shelf } from "../../types/Shelf";
 import { useAppState } from "../../state/AppStateProvider";
 
-type ShelfSelectMapProps = {
+type ShelfMapContentProps = {
   showSelect?: boolean;
   showInsert?: boolean;
   showRemove?: boolean;
@@ -17,19 +16,19 @@ type ShelfSelectMapProps = {
   onRemove?: (shelf: Shelf) => void;
 };
 
-export default function ShelfSelectMap({
-  showSelect = true,
-  showInsert = false,
-  showRemove = false,
+export default function ShelfMapContent({
+  showSelect,
+  showInsert,
+  showRemove,
   onInsert,
   onRemove,
-}: ShelfSelectMapProps) {
+}: ShelfMapContentProps) {
   const { state, dispatch } = useAppState();
   // TODO: Use type for GeoCoordinates
-  const [shelfCoords, setShelfCoords] = useState<[number, number] | null>(null);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
   const [shouldCenterOnUser, setShouldCenterOnUser] = useState(false);
   const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
+  const map = useMap();
 
   useEffect(() => {
     fetchAllBookshelves().then(setBookshelves);
@@ -47,27 +46,25 @@ export default function ShelfSelectMap({
     }
   };
 
+  //////////
   // TODO: call center functions here, not as a non-rendering component inside the map
+  // Center on most recently used shelf
+  useEffect(() => {
+    if (state.selectedShelf) {
+      map.setView(
+        [state.selectedShelf.latitude, state.selectedShelf.longitude],
+        15,
+      );
+    } else if (userCoords) {
+      // Fallback 1: Center on user location
+      map.setView(userCoords, 15);
+    } else {
+      map.setView([48.0126, 7.835], 15); // Fallback: Default location
+    }
+  }, [map]);
 
   return (
-    <MapContainer
-      center={[51.505, -0.09]}
-      zoom={13}
-      scrollWheelZoom={true}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      {/* Center on selected shelf (or fallback) at map load */}
-      <CenterMapOnShelf
-        shelfId={state.selectedShelf?.osmId}
-        userCoords={userCoords}
-        onShelfCoords={setShelfCoords}
-      />
-
+    <>
       {/* Recenter on user when LocateMe button is clicked */}
       <CenterMapOnUser
         userCoords={userCoords}
@@ -113,8 +110,13 @@ export default function ShelfSelectMap({
       )}
 
       {/* Selected shelf marker */}
-      {shelfCoords && (
-        <Marker position={shelfCoords}>
+      {state.selectedShelf && (
+        <Marker
+          position={[
+            state.selectedShelf.latitude,
+            state.selectedShelf.longitude,
+          ]}
+        >
           <Popup>
             <span>Selected Shelf</span>
           </Popup>
@@ -132,6 +134,6 @@ export default function ShelfSelectMap({
 
       {/* Locate Me button */}
       <LocateMeButton onClick={handleLocateMeClick} />
-    </MapContainer>
+    </>
   );
 }
