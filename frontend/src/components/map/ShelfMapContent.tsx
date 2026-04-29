@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { getUserLocation } from "../../services/location";
 import { fetchAllBookshelves } from "../../services/bookshelves";
-import { CenterMapOnUser } from "./CenterMapOnUser";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
 import { Shelf } from "../../types/Shelf";
@@ -26,7 +25,6 @@ export default function ShelfMapContent({
   const { state, dispatch } = useAppState();
   // TODO: Use type for GeoCoordinates
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
-  const [shouldCenterOnUser, setShouldCenterOnUser] = useState(false);
   const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
   const map = useMap();
 
@@ -38,16 +36,14 @@ export default function ShelfMapContent({
   const handleLocateMeClick = async () => {
     try {
       const { lat, lon } = await getUserLocation();
+      map.setView([lat, lon], 15);
       setUserCoords([lat, lon]);
-      setShouldCenterOnUser(true);
     } catch {
       // TODO: show error to user / log
       alert("Could not get your location.");
     }
   };
 
-  //////////
-  // TODO: call center functions here, not as a non-rendering component inside the map
   // Center on most recently used shelf
   useEffect(() => {
     if (state.selectedShelf) {
@@ -55,23 +51,13 @@ export default function ShelfMapContent({
         [state.selectedShelf.latitude, state.selectedShelf.longitude],
         15,
       );
-    } else if (userCoords) {
-      // Fallback 1: Center on user location
-      map.setView(userCoords, 15);
     } else {
-      map.setView([48.0126, 7.835], 15); // Fallback: Default location
+      map.setView([48.0126, 7.835], 12); // Fallback: Default location
     }
   }, [map]);
 
   return (
     <>
-      {/* Recenter on user when LocateMe button is clicked */}
-      <CenterMapOnUser
-        userCoords={userCoords}
-        shouldCenter={shouldCenterOnUser}
-        onDone={() => setShouldCenterOnUser(false)}
-      />
-
       {/* Render all bookshelf markers */}
       {bookshelves.map((shelf) =>
         shelf.latitude && shelf.longitude ? (
