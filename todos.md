@@ -6,7 +6,7 @@
   - Maybe add 'nearest shelves' to catalog page?
 
 - Code Quality:
-  - top level make file
+  - top level Makefile
     - make test
       - Runs make test from frontend and backend makefiles
   - Unit tests
@@ -137,6 +137,7 @@
 
 - Blog Post
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
+  - Include used Hilfsmittel like copilot autocompletion
 
 ## Bugs
 

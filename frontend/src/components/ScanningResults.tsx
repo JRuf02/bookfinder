@@ -4,10 +4,11 @@ import { fetchBookData } from "../services/fetchBookData";
 import { Button, Stack, Box, Container, Typography } from "@mui/material";
 import { Book } from "../types/Book";
 import { useAppState } from "../state/AppStateProvider";
+import { ShelfAction } from "../types/ShelfAction";
 
 type ScanningResultsProps = {
   isbn: string;
-  onActionSelected: (book: Book, action: "insert" | "remove") => void;
+  onActionSelected: (action: ShelfAction) => void;
   onRescan: () => void;
 };
 
@@ -36,7 +37,10 @@ export default function ScanningResults({
   }, [isbn]);
 
   const handleActionSelected = (action: "insert" | "remove") => {
-    onActionSelected(book as Book, action);
+    onActionSelected({
+      book: book as Book,
+      action,
+    });
   };
 
   return (

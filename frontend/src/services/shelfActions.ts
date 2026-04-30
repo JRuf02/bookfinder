@@ -1,14 +1,3 @@
-// TODO: Add tests for this function!
-// Normalize ISBN: keep only digits, and uppercase 'X' at the end if isbn ends with 'x' or 'X'
-function normalizeIsbn(isbn: string): string {
-  const endsWithX = isbn.trim().toUpperCase().endsWith("X");
-  // Remove all non-digit characters
-  const cleaned = isbn.replace(/[^0-9]/g, "");
-  return endsWithX ? cleaned + "X" : cleaned;
-}
-
-// TODO: Error handling for removing non-existing entries (better only in routes/shelf.py)
-
 // Send POST to insert or remove book from shelf
 export async function shelfAction(
   action: "insert" | "remove",

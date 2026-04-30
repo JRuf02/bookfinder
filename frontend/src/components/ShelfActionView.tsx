@@ -12,16 +12,15 @@ import { shelfAction } from "../services/shelfActions";
 import ActionResultAlert from "./ActionResultAlert";
 import ShelfMap from "./map/ShelfMap";
 import { useAppState } from "../state/AppStateProvider";
+import { ShelfAction } from "../types/ShelfAction";
 
 type ShelfActionViewProps = {
-  book: any;
-  action: "insert" | "remove";
+  action: ShelfAction;
   onCancel: () => void;
   onRescan: () => void;
 };
 
 export default function ShelfActionView({
-  book,
   action,
   onCancel,
   onRescan,
@@ -40,7 +39,7 @@ export default function ShelfActionView({
       return;
     }
     dispatch({ type: "RESET_PRESELECTED_SHELF_ACTION" });
-    const res = await shelfAction(action, shelfId, book.isbn);
+    const res = await shelfAction(action.action, shelfId, action.book.isbn);
     setResult(res);
   };
 
@@ -51,9 +50,9 @@ export default function ShelfActionView({
     <Container className="app-container">
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
         <Card sx={{ mb: "1rem", p: 2 }}>
-          <Typography variant="h6">{book.title}</Typography>
-          <Typography variant="body2">by {book.author}</Typography>
-          <Typography variant="body2">ISBN: {book.isbn}</Typography>
+          <Typography variant="h6">{action.book.title}</Typography>
+          <Typography variant="body2">by {action.book.author}</Typography>
+          <Typography variant="body2">ISBN: {action.book.isbn}</Typography>
         </Card>
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="body2">
@@ -99,7 +98,7 @@ export default function ShelfActionView({
               color="primary"
               onClick={handleShelfSubmit}
             >
-              {action === "insert" ? "Insert" : "Remove"}
+              {action.action === "insert" ? "Insert" : "Remove"}
             </Button>
           </Stack>
         ) : (
