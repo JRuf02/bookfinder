@@ -23,8 +23,6 @@ export default function ShelfMapContent({
   onRemove,
 }: ShelfMapContentProps) {
   const { state, dispatch } = useAppState();
-  // TODO: Use type for GeoCoordinates
-  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
   const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
   const map = useMap();
 
@@ -37,7 +35,10 @@ export default function ShelfMapContent({
     try {
       const { lat, lon } = await getUserLocation();
       map.setView([lat, lon], 15);
-      setUserCoords([lat, lon]);
+      dispatch({
+        type: "SET_USER_COORDINATES",
+        payload: { latitude: lat, longitude: lon },
+      });
     } catch {
       // TODO: show error to user / log
       alert("Could not get your location.");
@@ -110,8 +111,13 @@ export default function ShelfMapContent({
       )}
 
       {/* User location marker */}
-      {userCoords && (
-        <Marker position={userCoords}>
+      {state.userCoordinates && (
+        <Marker
+          position={[
+            state.userCoordinates.latitude,
+            state.userCoordinates.longitude,
+          ]}
+        >
           <Popup>
             <span>Your location</span>
           </Popup>

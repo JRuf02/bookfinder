@@ -10,6 +10,9 @@
     - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
       - Move all jsonify (i/o) from app/db to app/routes or higher
         - Add custom error data types instead (e.g. dataclass db_connection_error)
+
+- use state/AppContextProvider.tsx
+  - move userCoords there
 - check if the book exists in shelf before removing (backend!)
 - Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
 - make sure the books normalized isbn with dashes and without spaces is stored in current_catalog and books db, not the isbn raw input!

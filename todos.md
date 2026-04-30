@@ -2,9 +2,6 @@
 
 ## Main todos
 
-- use state/AppContextProvider.tsx
-  - move userCoords there
-
 - Use api/bookshelves/nearby in frontend or revove from backend
   - Maybe add 'nearest shelves' to catalog page?
 
@@ -12,7 +9,6 @@
   - top level make file
     - make test
       - Runs make test from frontend and backend makefiles
-      - Starts servers and checks if both are up (request to frontend (check response type/if content there (e.g. check html for button)), request to backend, e.g. check that more than 0 entries in db delivered / api/health) <=========== TODO
   - Unit tests
     - Unit tests for python (backend) only for complex logic functions
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx

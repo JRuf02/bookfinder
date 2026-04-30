@@ -3,6 +3,7 @@ import { AppAction, AppState } from "./AppState";
 export const initialState: AppState = {
   selectedShelf: undefined,
   preSelectedShelfAction: "both",
+  userCoordinates: undefined,
 };
 
 export function appReducer(state: AppState, action: AppAction): AppState {
@@ -12,6 +13,10 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, selectedShelf: action.payload };
     case "CLEAR_SELECTED_SHELF":
       return { ...state, selectedShelf: undefined };
+    case "SET_USER_COORDINATES":
+      return { ...state, userCoordinates: action.payload };
+    case "CLEAR_USER_COORDINATES":
+      return { ...state, userCoordinates: undefined };
     case "SET_PRESELECTED_SHELF_ACTION":
       return { ...state, preSelectedShelfAction: action.payload };
     case "RESET_PRESELECTED_SHELF_ACTION":
