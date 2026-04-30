@@ -187,6 +187,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen (react library verfügbar)
 - 'show nearest shelf' button auf ShelfMap -> zentriert darauf & öffnet popup
 - Ask 'are you sure' before reloading page on mobile (when book scanned, but not inserted yet)
   - Wenn website aus Versehen neu geladen wird soll kein Datenverlust entstehen
