@@ -9,24 +9,24 @@ import {
   Container,
 } from "@mui/material";
 import { shelfAction } from "../services/shelfActions";
-import ActionResultAlert from "../components/ActionResultAlert";
-import ShelfMap from "../components/map/ShelfMap";
+import ActionResultAlert from "./ActionResultAlert";
+import ShelfMap from "./map/ShelfMap";
 import { useAppState } from "../state/AppStateProvider";
 
-type ShelfActionScreenProps = {
+type ShelfActionViewProps = {
   book: any;
   action: "insert" | "remove";
   onCancel: () => void;
   onRescan: () => void;
 };
 
-export default function ShelfActionScreen({
+export default function ShelfActionView({
   book,
   action,
   onCancel,
   onRescan,
-}: ShelfActionScreenProps) {
-  const { state } = useAppState();
+}: ShelfActionViewProps) {
+  const { state, dispatch } = useAppState();
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -39,6 +39,7 @@ export default function ShelfActionScreen({
       setResult({ success: false, message: "Shelf ID is required." });
       return;
     }
+    dispatch({ type: "RESET_PRESELECTED_SHELF_ACTION" });
     const res = await shelfAction(action, shelfId, book.isbn);
     setResult(res);
   };

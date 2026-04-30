@@ -17,12 +17,12 @@ export default function HomeScreen() {
   }, [inputIsbn]);
 
   const navigateToInsert = (): void => {
-    dispatch({ type: "SET_SCAN_MODE", payload: "insert" });
+    dispatch({ type: "SET_PRESELECTED_SHELF_ACTION", payload: "insert" });
     navigate("/scan");
   };
 
   const navigateToRemove = (): void => {
-    dispatch({ type: "SET_SCAN_MODE", payload: "remove" });
+    dispatch({ type: "SET_PRESELECTED_SHELF_ACTION", payload: "remove" });
     navigate("/scan");
   };
 

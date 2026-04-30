@@ -1,26 +1,24 @@
 import { useState, useEffect } from "react";
-import BookDisplay from "../components/BookDisplay";
+import BookDisplay from "./BookDisplay";
 import { fetchBookData } from "../services/fetchBookData";
 import { Button, Stack, Box, Container, Typography } from "@mui/material";
-import ShelfActionScreen from "./ShelfActionScreen";
 import { Book } from "../types/Book";
 import { useAppState } from "../state/AppStateProvider";
 
-type ScanningResultsScreenProps = {
+type ScanningResultsProps = {
   isbn: string;
+  onActionSelected: (book: Book, action: "insert" | "remove") => void;
   onRescan: () => void;
 };
 
-export default function ScanningResultsScreen({
+export default function ScanningResults({
   isbn,
+  onActionSelected,
   onRescan,
-}: ScanningResultsScreenProps) {
+}: ScanningResultsProps) {
   const { state } = useAppState();
   const [book, setBook] = useState<Book | null>(null);
   const [backendError, setBackendError] = useState<string | null>(null);
-  const [shelfActionType, setShelfActionType] = useState<
-    "insert" | "remove" | null
-  >(null);
 
   useEffect(() => {
     async function getBook() {
@@ -37,16 +35,9 @@ export default function ScanningResultsScreen({
     getBook();
   }, [isbn]);
 
-  if (shelfActionType && book) {
-    return (
-      <ShelfActionScreen
-        book={book}
-        action={shelfActionType}
-        onCancel={() => setShelfActionType(null)}
-        onRescan={onRescan}
-      />
-    );
-  }
+  const handleActionSelected = (action: "insert" | "remove") => {
+    onActionSelected(book as Book, action);
+  };
 
   return (
     <Container className="app-container">
@@ -55,20 +46,22 @@ export default function ScanningResultsScreen({
           <>
             <BookDisplay book={book} isbn={isbn} onRescan={onRescan} />
             <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-              {(state.scanMode === "insert" || state.scanMode === "both") && (
+              {(state.preSelectedShelfAction === "insert" ||
+                state.preSelectedShelfAction === "both") && (
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => setShelfActionType("insert")}
+                  onClick={() => handleActionSelected("insert")}
                 >
                   Insert into bookshelf
                 </Button>
               )}
-              {(state.scanMode === "remove" || state.scanMode === "both") && (
+              {(state.preSelectedShelfAction === "remove" ||
+                state.preSelectedShelfAction === "both") && (
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => setShelfActionType("remove")}
+                  onClick={() => handleActionSelected("remove")}
                 >
                   Remove from bookshelf
                 </Button>

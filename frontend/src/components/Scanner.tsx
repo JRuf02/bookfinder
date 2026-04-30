@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { BrowserMultiFormatReader } from "@zxing/browser";
-import "@zxing/library";
+import "@zxing/library"; // check if this import does anything
 
 type ScannerProps = {
   onResult: (isbn: string) => void;

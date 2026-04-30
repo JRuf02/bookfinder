@@ -74,8 +74,10 @@
   - Search on home screen works and leads to CatalogSearchScreen
 
 - Scanning/InsertScreens
+  - nearest shelf wird pre-selected wenn shelf im appcontext null ist
   - select button switches to "selected" when clicked on shelfActionScreen
-  - Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
+  - 'scan another' should compile a list of books that can be inserted/removed at once
+  - rescan sinnvoll umbenennen (z.B. 'verwerfen' / 'not my book' / 'incorrect book')
 
 - InfoScreen
   - add info page
@@ -188,6 +190,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- 'show nearest shelf' button auf ShelfMap -> zentriert darauf & öffnet popup
 - Ask 'are you sure' before reloading page on mobile (when book scanned, but not inserted yet)
   - Wenn website aus Versehen neu geladen wird soll kein Datenverlust entstehen
 - Search should handle oe = ö

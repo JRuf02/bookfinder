@@ -11,6 +11,7 @@
       - Move all jsonify (i/o) from app/db to app/routes or higher
         - Add custom error data types instead (e.g. dataclass db_connection_error)
 - check if the book exists in shelf before removing (backend!)
+- Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
 - make sure the books normalized isbn with dashes and without spaces is stored in current_catalog and books db, not the isbn raw input!
 - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
 - (caching von) backend/.db verstehen + aufräumen
