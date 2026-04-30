@@ -53,7 +53,7 @@ def get_books_in_shelf(request: Request) -> ResponseReturnValue:
 def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     """Insert a book into the given shelf."""
 
-    data = request.json
+    data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
 
@@ -98,7 +98,7 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
 def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     """Remove a book from the given shelf."""
 
-    data = request.json
+    data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
 

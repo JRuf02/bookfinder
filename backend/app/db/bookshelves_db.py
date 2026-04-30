@@ -51,6 +51,7 @@ def get_nearby_bookshelves_from_db(
 ) -> list[LocatedShelf]:
     """Fetch bookshelves in a given radius (in meters) from the database."""
 
+    # TODO: Extend query by bbox for performance
     with db_cursor() as c:
         c.execute("""
             SELECT osm_id, name, latitude, longitude, address, type, operator, website,

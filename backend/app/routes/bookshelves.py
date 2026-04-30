@@ -23,6 +23,8 @@ def get_all_bookshelves() -> ResponseReturnValue:
     )
 
 
+# TODO: Use or remove/rewrite endpoint
+# TODO? Exchange radius for num nearby shelves?
 def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
     """Get nearby bookshelves based on latitude, longitude and radius."""
 
