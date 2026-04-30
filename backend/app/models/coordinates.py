@@ -12,6 +12,7 @@ class GeoCoordinateError:
     message: str
 
 
+# TODO: Add unit tests for GeoCoordinates.parse(), e.g. lat=lon=0.0
 @dataclass(frozen=True)
 class GeoCoordinates:
     """Verified geographic coordinates.
@@ -36,13 +37,13 @@ class GeoCoordinates:
         then return a GeoCoordinates instance.
         """
 
-        if not raw_latitude and not raw_longitude:
+        if raw_latitude is None and raw_longitude is None:
             return None
 
-        if not raw_latitude:
+        if raw_latitude is None:
             return GeoCoordinateError("Latitude is missing.")
 
-        if not raw_longitude:
+        if raw_longitude is None:
             return GeoCoordinateError("Longitude is missing.")
 
         if not math.isfinite(raw_latitude):
