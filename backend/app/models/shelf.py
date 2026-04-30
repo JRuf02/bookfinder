@@ -9,7 +9,7 @@ class Shelf:
 
     osm_id: OsmId
     name: str | None
-    latitude: float
+    latitude: float  # TODO: Use GeoCoordinates
     longitude: float
     address: str | None
     type: str | None

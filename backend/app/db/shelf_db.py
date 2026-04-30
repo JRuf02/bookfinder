@@ -121,15 +121,15 @@ def get_shelf_metadata_from_db(osm_id: OsmId) -> Shelf | None:
         return None
 
     return Shelf(
-        osm_id=row[0],
-        name=row[1],
-        latitude=row[2],
-        longitude=row[3],
-        address=row[4],
-        type=row[5],
-        operator=row[6],
-        website=row[7],
-        opening_hours=row[8],
-        osm_check_date=row[9],
-        osm_last_updated=row[10],
+        osm_id=osm_id,
+        name=row["name"],
+        latitude=float(row["latitude"]),
+        longitude=float(row["longitude"]),
+        address=row["address"],
+        type=row["type"],
+        operator=row["operator"],
+        website=row["website"],
+        opening_hours=row["opening_hours"],
+        osm_check_date=row["osm_check_date"],
+        osm_last_updated=row["osm_last_updated"],
     )
