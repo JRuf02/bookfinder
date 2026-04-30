@@ -21,7 +21,7 @@ def as_json_dict(
         return {as_json_dict(item) for item in obj}
 
     if is_dataclass(obj):
-        data = vars(obj)
+        data = dict(vars(obj))
 
         if "value" in data and isinstance(data["value"], (str, int)):
             data = data["value"]
