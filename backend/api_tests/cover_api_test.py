@@ -5,8 +5,8 @@ from http_constants.status import HttpStatus
 from PIL import Image
 
 
-def test_get_cover_with_invalid_isbn(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_cover_with_invalid_isbn(client: FlaskClient) -> None:
+    response = client.get(
         "/api/cover",
         query_string={
             "isbn": "invalid_isbn",
@@ -19,8 +19,8 @@ def test_get_cover_with_invalid_isbn(mocked_client: FlaskClient) -> None:
     assert response.json["message"] == "ISBN parameter not provided or invalid"
 
 
-def test_get_cover_with_invalid_size(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_cover_with_invalid_size(client: FlaskClient) -> None:
+    response = client.get(
         "/api/cover",
         query_string={
             "isbn": "978-3-551-35401-3",
@@ -33,8 +33,8 @@ def test_get_cover_with_invalid_size(mocked_client: FlaskClient) -> None:
     assert response.json["message"] == "Invalid size parameter"
 
 
-def test_get_cover_image_not_found_in_dnb(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_cover_image_not_found_in_dnb(client: FlaskClient) -> None:
+    response = client.get(
         "/api/cover",
         query_string={
             "isbn": "978-1-5266-2658-5",  # This book is not in the dnb
@@ -47,8 +47,8 @@ def test_get_cover_image_not_found_in_dnb(mocked_client: FlaskClient) -> None:
     assert response.json["message"] == "Failed to fetch cover image"
 
 
-def test_get_cover_image_size_l(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_cover_image_size_l(client: FlaskClient) -> None:
+    response = client.get(
         "/api/cover",
         query_string={
             "isbn": "978-3-551-35401-3",
@@ -63,8 +63,8 @@ def test_get_cover_image_size_l(mocked_client: FlaskClient) -> None:
         assert img.height > 0
 
 
-def test_get_cover_image_size_m(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_cover_image_size_m(client: FlaskClient) -> None:
+    response = client.get(
         "/api/cover",
         query_string={
             "isbn": "978-3-551-35401-3",
@@ -79,8 +79,8 @@ def test_get_cover_image_size_m(mocked_client: FlaskClient) -> None:
         assert img.height > 0
 
 
-def test_get_cover_image_size_s(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_cover_image_size_s(client: FlaskClient) -> None:
+    response = client.get(
         "/api/cover",
         query_string={
             "isbn": "978-3-551-35401-3",

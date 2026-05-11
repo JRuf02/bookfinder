@@ -5,19 +5,19 @@ from http_constants.status import HttpStatus
 from api_tests.api_test_utils import insert_test_shelf_into_db
 
 
-def test_get_all_bookshelves_empty(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get("/api/bookshelves")
+def test_get_all_bookshelves_empty(client: FlaskClient) -> None:
+    response = client.get("/api/bookshelves")
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
     assert response.json["data"] == []
 
 
-def test_get_all_bookshelves_with_data(mocked_app: Flask) -> None:
-    insert_test_shelf_into_db(mocked_app)
+def test_get_all_bookshelves_with_data(app: Flask) -> None:
+    insert_test_shelf_into_db(app)
 
-    mocked_client = mocked_app.test_client()
-    response = mocked_client.get("/api/bookshelves")
+    client = app.test_client()
+    response = client.get("/api/bookshelves")
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
@@ -38,26 +38,24 @@ def test_get_all_bookshelves_with_data(mocked_app: Flask) -> None:
     ]
 
 
-def test_get_nearby_bookshelves_no_parameters(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get("/api/bookshelves/nearby", query_string={})
+def test_get_nearby_bookshelves_no_parameters(client: FlaskClient) -> None:
+    response = client.get("/api/bookshelves/nearby", query_string={})
     assert response.status_code == HttpStatus.BAD_REQUEST.value
     assert response.json is not None
     assert response.json["status"] == "error"
     assert response.json["message"] == "lat and lon missing or invalid."
 
 
-def test_get_nearby_bookshelves_no_location(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
-        "/api/bookshelves/nearby", query_string={"radius": "6000"}
-    )
+def test_get_nearby_bookshelves_no_location(client: FlaskClient) -> None:
+    response = client.get("/api/bookshelves/nearby", query_string={"radius": "6000"})
     assert response.status_code == HttpStatus.BAD_REQUEST.value
     assert response.json is not None
     assert response.json["status"] == "error"
     assert response.json["message"] == "lat and lon missing or invalid."
 
 
-def test_get_nearby_bookshelves_invalid_location(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_nearby_bookshelves_invalid_location(client: FlaskClient) -> None:
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={"lat": "notafloat", "lon": "notafloat", "radius": "6000"},
     )
@@ -67,9 +65,9 @@ def test_get_nearby_bookshelves_invalid_location(mocked_client: FlaskClient) -> 
     assert response.json["message"] == "lat and lon missing or invalid."
 
 
-def test_get_nearby_bookshelves_extreme_location(mocked_client: FlaskClient) -> None:
+def test_get_nearby_bookshelves_extreme_location(client: FlaskClient) -> None:
     # lat and lon are valid floats, but not valid coordinates (lon > 180)
-    response = mocked_client.get(
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={"lat": "48.012345", "lon": "200.2", "radius": "6000"},
     )
@@ -82,10 +80,10 @@ def test_get_nearby_bookshelves_extreme_location(mocked_client: FlaskClient) -> 
     )
 
 
-def test_get_nearby_bookshelves_no_radius(mocked_client: FlaskClient) -> None:
-    insert_test_shelf_into_db(mocked_client.application)
+def test_get_nearby_bookshelves_no_radius(client: FlaskClient) -> None:
+    insert_test_shelf_into_db(client.application)
 
-    response = mocked_client.get(
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={
             "lat": " 48.1120896",
@@ -115,10 +113,10 @@ def test_get_nearby_bookshelves_no_radius(mocked_client: FlaskClient) -> None:
     ]
 
 
-def test_get_nearby_bookshelves_invalid_radius(mocked_client: FlaskClient) -> None:
-    insert_test_shelf_into_db(mocked_client.application)
+def test_get_nearby_bookshelves_invalid_radius(client: FlaskClient) -> None:
+    insert_test_shelf_into_db(client.application)
 
-    response = mocked_client.get(
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={
             "lat": " 48.1120896",
@@ -149,11 +147,11 @@ def test_get_nearby_bookshelves_invalid_radius(mocked_client: FlaskClient) -> No
     ]
 
 
-def test_get_nearby_bookshelves_extreme_radius(mocked_client: FlaskClient) -> None:
+def test_get_nearby_bookshelves_extreme_radius(client: FlaskClient) -> None:
     # If radius is larger than earth, return all shelves in the database
-    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_shelf_into_db(client.application)
 
-    response = mocked_client.get(
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={
             "lat": " 48.1120896",
@@ -184,8 +182,8 @@ def test_get_nearby_bookshelves_extreme_radius(mocked_client: FlaskClient) -> No
     ]
 
 
-def test_get_nearby_bookshelves_no_shelves_in_db(mocked_client: FlaskClient) -> None:
-    response = mocked_client.get(
+def test_get_nearby_bookshelves_no_shelves_in_db(client: FlaskClient) -> None:
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={
             "lat": " 48.1120896",
@@ -199,12 +197,12 @@ def test_get_nearby_bookshelves_no_shelves_in_db(mocked_client: FlaskClient) -> 
 
 
 def test_get_nearby_bookshelves_no_shelves_within_radius(
-    mocked_client: FlaskClient,
+    client: FlaskClient,
 ) -> None:
 
-    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_shelf_into_db(client.application)
 
-    response = mocked_client.get(
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={
             "lat": "48.26744120702259",
@@ -220,27 +218,27 @@ def test_get_nearby_bookshelves_no_shelves_within_radius(
 
 
 def test_get_nearby_bookshelves_with_shelves_in_and_outside_radius(
-    mocked_client: FlaskClient,
+    client: FlaskClient,
 ) -> None:
     # Add shelves to db
     # within radius
-    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_shelf_into_db(client.application)
     # outside radius
     insert_test_shelf_into_db(
-        mocked_client.application,
+        client.application,
         49.12345,
         9.012345,
         "https://www.openstreetmap.org/node/11935877523",
     )
     # within radius
     insert_test_shelf_into_db(
-        mocked_client.application,
+        client.application,
         48.099817,
         8.054647,
         "https://www.openstreetmap.org/node/11935877524",
     )
 
-    response = mocked_client.get(
+    response = client.get(
         "/api/bookshelves/nearby",
         query_string={
             "lat": "48.1120896",

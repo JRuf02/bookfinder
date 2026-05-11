@@ -18,6 +18,11 @@ test:
 	PYTHONPATH=/workspaces/isbn-scanner/backend $(TEST_CMD) /workspaces/isbn-scanner/backend && \
 	deactivate
 
+test-dnb:
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	PYTHONPATH=/workspaces/isbn-scanner/backend $(TEST_CMD) --use-real-dnb-api /workspaces/isbn-scanner/backend && \
+	deactivate
+
 checkstyle:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
 	ruff check --no-fix --config /workspaces/isbn-scanner/.ruff.toml /workspaces/isbn-scanner/backend && \
