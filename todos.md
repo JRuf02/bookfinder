@@ -10,6 +10,7 @@
     - make test
       - Runs make test from frontend and backend makefiles
   - Unit tests
+    - Backend test for when DNB is down
     - Unit tests for python (backend) only for complex logic functions
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
       - API calls should be tested (-> done in python), user interface doesn't need to be tested
@@ -27,6 +28,7 @@
   - Improve search (make more fuzzy / use sqlite MATCH)
 
 - Logic & Documentation:
+  - add docstring to AppReducer, AppState and provider files
   - Only readme and blog post are very important
   - System diagrams for blog post
     - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
@@ -187,6 +189,10 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- Mock dnb calls in tests with (from requests_mock.mocker import Mocker) so that tests dont fail if dnb offline?
+  - add to fixtures.py: def app(requests_mock: Mocker) ... requests_mock.get(url) ...
+  - Currently, I want tests to fail if dnb changes (because I want to see when the dnb changes)
+  - Maybe one extra test file for checking if dnb is up & responding as expectesd, rest with mocker?
 - human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen (react library verfügbar)
 - 'show nearest shelf' button auf ShelfMap -> zentriert darauf & öffnet popup
 - Ask 'are you sure' before reloading page on mobile (when book scanned, but not inserted yet)

@@ -11,7 +11,7 @@ To get this information, we need to use external databases.
 
 - [html book data (catalog page)](https://portal.dnb.de/opac/simpleSearch?query=%223551551677%22) -> needs parsing
 
-- [jpg (cover image)](https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m) (can be tested with `wget --no-check-certificate https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m`)
+- [jpg (cover image)](https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m) (can be tested with `wget --no-check-certificate "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-551-55167-2&size=m"`)
 
 - xml book data
   - [marc-21-xml formatted](https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="3551551677"&recordSchema=MARC21-xml&maximumRecords=1) (currently used for this project)

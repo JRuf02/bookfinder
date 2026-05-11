@@ -24,7 +24,9 @@ defusedxml==0.7.1 \
 camel-converter==5.1.0 \
 isbnlib==3.10.14 \
 http-constants==0.5.0 \
-pillow==12.2.0
+pillow==12.2.0 \
+fixtures==4.3.2 \
+requests-mock==1.12.1
 
 
 WORKDIR /workspaces/isbn-scanner

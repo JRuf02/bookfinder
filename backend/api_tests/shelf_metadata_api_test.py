@@ -2,11 +2,10 @@ from flask.testing import FlaskClient
 from http_constants.status import HttpStatus
 
 from .api_test_utils import insert_test_shelf_into_db
-from .fixtures import app, client  # noqa: F401
 
 
-def test_fetch_shelf_metadata_invalid_osm_id(client: FlaskClient) -> None:
-    response = client.get(
+def test_fetch_shelf_metadata_invalid_osm_id(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/shelf/metadata",
         query_string={
             "osm_id": "invalid_osm_id",
@@ -18,9 +17,9 @@ def test_fetch_shelf_metadata_invalid_osm_id(client: FlaskClient) -> None:
     assert response.json["message"] == "osm_id missing or invalid"
 
 
-def test_fetch_shelf_metadata_found_in_db(client: FlaskClient) -> None:
-    insert_test_shelf_into_db(client.application)
-    response = client.get(
+def test_fetch_shelf_metadata_found_in_db(mocked_client: FlaskClient) -> None:
+    insert_test_shelf_into_db(mocked_client.application)
+    response = mocked_client.get(
         "/api/shelf/metadata",
         query_string={
             "osm_id": "https://www.openstreetmap.org/node/11935877522",
@@ -44,8 +43,8 @@ def test_fetch_shelf_metadata_found_in_db(client: FlaskClient) -> None:
     }
 
 
-def test_fetch_shelf_metadata_not_found_in_db(client: FlaskClient) -> None:
-    response = client.get(
+def test_fetch_shelf_metadata_not_found_in_db(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/shelf/metadata",
         query_string={
             "osm_id": "https://www.openstreetmap.org/node/3093755951",

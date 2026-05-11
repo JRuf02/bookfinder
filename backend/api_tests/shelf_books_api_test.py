@@ -8,11 +8,10 @@ from .api_test_utils import (
     insert_test_book_into_shelf_in_db,
     insert_test_shelf_into_db,
 )
-from .fixtures import app, client  # noqa: F401
 
 
-def test_get_books_in_shelf_invalid_osm_id(client: FlaskClient) -> None:
-    response = client.get(
+def test_get_books_in_shelf_invalid_osm_id(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/shelf/books",
         query_string={"osm_id": "popelstreetmap.org/node/11935877522"},
     )
@@ -23,12 +22,13 @@ def test_get_books_in_shelf_invalid_osm_id(client: FlaskClient) -> None:
     assert response.json["message"] == "osm_id missing or invalid"
 
 
-def test_get_books_in_shelf_no_books(client: FlaskClient) -> None:
+def test_get_books_in_shelf_no_books(mocked_client: FlaskClient) -> None:
     insert_test_shelf_into_db(
-        client.application, osm_id="https://www.openstreetmap.org/node/11935877522"
+        mocked_client.application,
+        osm_id="https://www.openstreetmap.org/node/11935877522",
     )
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/shelf/books",
         query_string={"osm_id": "https://www.openstreetmap.org/node/11935877522"},
     )
@@ -39,7 +39,7 @@ def test_get_books_in_shelf_no_books(client: FlaskClient) -> None:
     assert response.json["data"] == []
 
 
-def test_get_books_in_shelf_with_books(client: FlaskClient) -> None:
+def test_get_books_in_shelf_with_books(mocked_client: FlaskClient) -> None:
     test_book_1 = Book(
         isbn=Isbn("978-3-453-43690-9"),
         title="Sprengstoff",
@@ -62,24 +62,24 @@ def test_get_books_in_shelf_with_books(client: FlaskClient) -> None:
         dnb_id="12347",
     )
 
-    insert_test_shelf_into_db(client.application)
+    insert_test_shelf_into_db(mocked_client.application)
     insert_test_book_into_shelf_in_db(
-        client.application,
+        mocked_client.application,
         test_book_1,
         osm_id="https://www.openstreetmap.org/node/11935877522",
     )
     insert_test_book_into_shelf_in_db(
-        client.application,
+        mocked_client.application,
         test_book_2,
         osm_id="https://www.openstreetmap.org/node/11935877522",
     )
     insert_test_book_into_shelf_in_db(
-        client.application,
+        mocked_client.application,
         test_book_3,
         osm_id="https://www.openstreetmap.org/node/3093755951",  # other shelf
     )
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/shelf/books",
         query_string={"osm_id": "https://www.openstreetmap.org/node/11935877522"},
     )
@@ -105,8 +105,10 @@ def test_get_books_in_shelf_with_books(client: FlaskClient) -> None:
     ]
 
 
-def test_get_books_in_shelf_valid_osm_id_but_not_in_db(client: FlaskClient) -> None:
-    response = client.get(
+def test_get_books_in_shelf_valid_osm_id_but_not_in_db(
+    mocked_client: FlaskClient,
+) -> None:
+    response = mocked_client.get(
         "/api/shelf/books",
         query_string={"osm_id": "https://www.openstreetmap.org/node/11935877522"},
     )

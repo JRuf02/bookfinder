@@ -8,11 +8,9 @@ from api_tests.api_test_utils import (
 from app.models.book import Book
 from app.models.identifiers import Isbn
 
-from .fixtures import app, client  # noqa: F401
 
-
-def test_search_in_catalog_title_none_author_none(client: FlaskClient) -> None:
-    response = client.get(
+def test_search_in_catalog_title_none_author_none(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -28,8 +26,10 @@ def test_search_in_catalog_title_none_author_none(client: FlaskClient) -> None:
     assert response.json["message"] == ("Title or author must be given.")
 
 
-def test_search_in_catalog_title_and_author_not_given(client: FlaskClient) -> None:
-    response = client.get(
+def test_search_in_catalog_title_and_author_not_given(
+    mocked_client: FlaskClient,
+) -> None:
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -43,8 +43,10 @@ def test_search_in_catalog_title_and_author_not_given(client: FlaskClient) -> No
     assert response.json["message"] == ("Title or author must be given.")
 
 
-def test_search_in_catalog_title_and_author_empty_str(client: FlaskClient) -> None:
-    response = client.get(
+def test_search_in_catalog_title_and_author_empty_str(
+    mocked_client: FlaskClient,
+) -> None:
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -60,12 +62,12 @@ def test_search_in_catalog_title_and_author_empty_str(client: FlaskClient) -> No
     assert response.json["message"] == ("Title or author must be given.")
 
 
-def test_search_in_catalog_no_author(client: FlaskClient) -> None:
+def test_search_in_catalog_no_author(mocked_client: FlaskClient) -> None:
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": "48.012345",
@@ -106,12 +108,12 @@ def test_search_in_catalog_no_author(client: FlaskClient) -> None:
     ]
 
 
-def test_search_in_catalog_author_given_title_none(client: FlaskClient) -> None:
+def test_search_in_catalog_author_given_title_none(mocked_client: FlaskClient) -> None:
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -153,7 +155,7 @@ def test_search_in_catalog_author_given_title_none(client: FlaskClient) -> None:
     ]
 
 
-def test_search_in_catalog_title_empty_string(client: FlaskClient) -> None:
+def test_search_in_catalog_title_empty_string(mocked_client: FlaskClient) -> None:
 
     test_book = Book(
         isbn=Isbn("978-3-486-58723-4"),
@@ -162,10 +164,10 @@ def test_search_in_catalog_title_empty_string(client: FlaskClient) -> None:
         dnb_id="12345",
     )
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application, test_book)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application, test_book)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -208,7 +210,7 @@ def test_search_in_catalog_title_empty_string(client: FlaskClient) -> None:
 
 
 def test_search_in_catalog_title_contains_non_ascii_characters(
-    client: FlaskClient,
+    mocked_client: FlaskClient,
 ) -> None:
 
     test_book = Book(
@@ -218,10 +220,10 @@ def test_search_in_catalog_title_contains_non_ascii_characters(
         dnb_id="12345",
     )
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application, test_book)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application, test_book)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -263,8 +265,8 @@ def test_search_in_catalog_title_contains_non_ascii_characters(
     ]
 
 
-def test_search_in_catalog_nonfinite_coordinates(client: FlaskClient) -> None:
-    response = client.get(
+def test_search_in_catalog_nonfinite_coordinates(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": float("NaN"),
@@ -282,8 +284,8 @@ def test_search_in_catalog_nonfinite_coordinates(client: FlaskClient) -> None:
     )
 
 
-def test_search_in_catalog_extreme_coordinates(client: FlaskClient) -> None:
-    response = client.get(
+def test_search_in_catalog_extreme_coordinates(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": 50.3,
@@ -301,12 +303,12 @@ def test_search_in_catalog_extreme_coordinates(client: FlaskClient) -> None:
     )
 
 
-def test_search_in_catalog_book_not_in_catalog(client: FlaskClient) -> None:
+def test_search_in_catalog_book_not_in_catalog(mocked_client: FlaskClient) -> None:
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)  # Stephen King
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application)  # Stephen King
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -322,8 +324,8 @@ def test_search_in_catalog_book_not_in_catalog(client: FlaskClient) -> None:
     assert response.json["data"] == []
 
 
-def test_search_in_catalog_empty_catalog(client: FlaskClient) -> None:
-    response = client.get(
+def test_search_in_catalog_empty_catalog(mocked_client: FlaskClient) -> None:
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -340,13 +342,13 @@ def test_search_in_catalog_empty_catalog(client: FlaskClient) -> None:
 
 
 def test_search_in_catalog_with_coordinates_book_not_in_catalog(
-    client: FlaskClient,
+    mocked_client: FlaskClient,
 ) -> None:
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)  # Stephen King
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application)  # Stephen King
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": 49,
@@ -363,18 +365,19 @@ def test_search_in_catalog_with_coordinates_book_not_in_catalog(
 
 
 def test_search_in_catalog_by_author_and_title_with_coordinates(
-    client: FlaskClient,
+    mocked_client: FlaskClient,
 ) -> None:
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": 49.1234567891,
             "lon": 8.1234567891,
             "title": "spre",
+            # Should be found even if author name in db is "King, Stephen"
             "author": "Stephen king",
         },
     )
@@ -382,6 +385,8 @@ def test_search_in_catalog_by_author_and_title_with_coordinates(
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
+    # TODO: Improve search implementation to find the following book.
+    #       Currently, this test is expected to fail (King, Stephen vs. Stephen king).
     assert response.json["data"] == [
         {
             "book": {
@@ -412,18 +417,19 @@ def test_search_in_catalog_by_author_and_title_with_coordinates(
 
 
 def test_search_in_catalog_by_author_and_title_without_coordinates(
-    client: FlaskClient,
+    mocked_client: FlaskClient,
 ) -> None:
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
             "lon": None,
             "title": "spre",
+            # Should be found even if author name in db is "King, Stephen"
             "author": "Stephen king",
         },
     )
@@ -431,6 +437,8 @@ def test_search_in_catalog_by_author_and_title_without_coordinates(
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
+    # TODO: Improve search implementation to find the following book.
+    #       Currently, this test is expected to fail (King, Stephen vs. Stephen king).
     assert response.json["data"] == [
         {
             "book": {
@@ -460,7 +468,7 @@ def test_search_in_catalog_by_author_and_title_without_coordinates(
     ]
 
 
-def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
+def test_search_in_catalog_author_name_formats(mocked_client: FlaskClient) -> None:
     """Search for 'Stephen King' or 'stephen king' should find books with author
     'King, Stephen' and 'Stephen Edwin King', but not 'Stephen Spielberg'.
     """
@@ -495,13 +503,13 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
         dnb_id="12348",
     )
 
-    insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application, test_book_1)
-    insert_test_book_into_shelf_in_db(client.application, test_book_2)
-    insert_test_book_into_shelf_in_db(client.application, test_book_3)
-    insert_test_book_into_shelf_in_db(client.application, test_book_4)
+    insert_test_shelf_into_db(mocked_client.application)
+    insert_test_book_into_shelf_in_db(mocked_client.application, test_book_1)
+    insert_test_book_into_shelf_in_db(mocked_client.application, test_book_2)
+    insert_test_book_into_shelf_in_db(mocked_client.application, test_book_3)
+    insert_test_book_into_shelf_in_db(mocked_client.application, test_book_4)
 
-    response = client.get(
+    response = mocked_client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
@@ -515,6 +523,8 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
+    # TODO: Improve search implementation to find the following books.
+    #       Currently, this test is expected to fail.
     assert response.json["data"] == [
         {
             "book": {
