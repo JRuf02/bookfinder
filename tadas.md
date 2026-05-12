@@ -10,6 +10,7 @@
     - clearly separate sqlite3 and flask files (e.g. no flask in app/db) for easy testing
       - Move all jsonify (i/o) from app/db to app/routes or higher
         - Add custom error data types instead (e.g. dataclass db_connection_error)
+  - Authors like Rowling, J.K. are handeled correctly
 
 - use state/AppContextProvider.tsx
   - move userCoords there

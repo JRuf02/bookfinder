@@ -47,6 +47,7 @@ export default function CatalogHomeScreen() {
         setResults(resp_json.data);
       } catch (err: any) {
         setError(err.message || "Could not fetch results.");
+        console.error("Error during search:", err);
       } finally {
         setLoading(false);
       }
@@ -55,6 +56,7 @@ export default function CatalogHomeScreen() {
   );
 
   return (
+    // TODO: sort results by Distance | Newest | Oldest | Relevance (fuzzy score)
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to css!
     <Container
@@ -88,6 +90,7 @@ export default function CatalogHomeScreen() {
           }}
         />
       </Box>
+      Sort by: Distance | Newest | Oldest | Relevance
       <ISBNInput
         value={inputTitle}
         placeholder="Search books near you by title"
@@ -115,7 +118,6 @@ export default function CatalogHomeScreen() {
         label="Search near me"
         labelPlacement="end"
       />
-
       {loading && <CircularProgress sx={{ mt: 2 }} />}
       {error && (
         <Typography color="error" sx={{ mt: 2 }}>

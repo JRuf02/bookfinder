@@ -1,4 +1,3 @@
-# TODO: Move all api logic to app/routes/catalog.py
 import logging
 
 from fuzzysearch import find_near_matches
@@ -37,19 +36,11 @@ def search_in_catalog_db(
         msg = "Title or author must be given."
         raise ValueError(msg)
 
-    # TODO: remove commas and other special characters from title and author
-
-    # TODO: author.split(" ") and then WHERE author LIKE a AND author LIKE b
-    #       (Search for "Stephen King" should find "King, Stephen" and
-    #       "Stephen Edwin King", but not "Stephen Spielberg")
-    # TODO: Add fuzzy search after db query?
-
-    # TODO: Ensure that authors like Rowling, J.K. are handeled correctly
-
-    # TODO: ask Patrick if fast enough:
+    # TODO: ask Patrick if this is fast enough:
+    # This returns all books, pre-sorted by distance from the user
     all_book_entities = _fetch_all_books_from_catalog(user_coordinates)
-    # TODO: _fetch_all_books_from_catalog sorts by distance. keep as-is?
 
+    # Sort by fuzzy scores, filter out non-matching entries
     return rank_and_filter_book_entities(title, author, all_book_entities)
 
 
@@ -58,6 +49,10 @@ def rank_and_filter_book_entities(
     author: str | None,
     all_book_entities: list[dict],
 ) -> list[dict[str, Book | LocatedShelf]]:
+    """Rank and filter the given book entities based on how well they match
+    the given title and author.
+    The returned list is sorted by relevance (best matches first).
+    """
 
     max_l_distance_author = 3
 
@@ -71,7 +66,10 @@ def rank_and_filter_book_entities(
     author_parts = [part.strip() for part in author_parts]
     author_parts = [part for part in author_parts if len(part) >= max_l_distance_author]
 
+    # Compute fuzzy scores for all books and filter out non-matching ones
     for book in all_book_entities:
+        # Compute fuzzy scores that measure how well the queried title / author matches
+        # this book's title / author
         if not book["book"].author:
             logger.warning(f"Book without author in db: {book['book']}")
             author_parts_matched, author_parts_score = (0, 0)
@@ -91,13 +89,14 @@ def rank_and_filter_book_entities(
                 else (0, 0)
             )
 
-        # combine rankings
+        # Filter out the book if it doesn't match the queried title / author at all.
         if title_given and title_matched == 0:
             continue
 
         if author_given and author_parts_matched == 0:
             continue
 
+        # combine title and author scores into one tuple
         combined_score = (
             title_matched,
             title_score,
@@ -117,6 +116,11 @@ def rank_and_filter_book_entities(
 
 
 def calculate_title_score(query_title: str, db_title: str) -> tuple[float, float]:
+    """Calculate a fuzzy score for how well the query_title matches the db_title.
+    Returns (0, 0) for no match and (1, -distance) for a match,
+    where distance is the Levenshtein distance.
+    """
+
     matches = find_near_matches(
         query_title, db_title, max_l_dist=min(int(len(query_title) * 0.5), 3)
     )
@@ -129,9 +133,23 @@ def calculate_title_score(query_title: str, db_title: str) -> tuple[float, float
 def calculate_author_score(
     author_parts: list[str], book_author: str
 ) -> tuple[float, float]:
-    # book_author example: "king, stephen"
-    # author_parts example: ["stephen", "erwin", "kong"]
-    # return example: (2, -1)
+    """Calculate a fuzzy score for how well the query author matches the book author.
+
+    Each part of the author's name is matched against book_author.
+    The score is based on how many parts match,
+    and the Levenshtein distance of the matches.
+    Returns (0, 0) for no match and (num_parts_matched, -distance) for a match, where
+    distance is the sum of the minimum Levenshtein distances of each author_part that
+    matches the book_author, and num_parts_matched is the number of parts that match.
+
+    Example:
+    author_parts: ["stephen", "erwin", "kong"]
+    book_author: "king, stephen"
+
+    calculate_author_score(author_parts, book_author) -> (2, -1)
+
+    """
+
     minimum_distances = []
     for author_part in author_parts:
         matches = find_near_matches(
