@@ -15,6 +15,9 @@ def search_in_catalog(request: Request) -> ResponseReturnValue:
     title = request.args.get("title")
     author = request.args.get("author")
 
+    author = author.strip() if author is not None else None
+    title = title.strip() if title is not None else None
+
     coords = GeoCoordinates.parse(
         raw_latitude=request.args.get("lat", type=float),
         raw_longitude=request.args.get("lon", type=float),

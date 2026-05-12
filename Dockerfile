@@ -26,7 +26,8 @@ isbnlib==3.10.14 \
 http-constants==0.5.0 \
 pillow==12.2.0 \
 fixtures==4.3.2 \
-requests-mock==1.12.1
+requests-mock==1.12.1 \
+fuzzysearch==0.8.1
 
 
 WORKDIR /workspaces/isbn-scanner

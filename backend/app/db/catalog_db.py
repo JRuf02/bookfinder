@@ -1,6 +1,8 @@
 # TODO: Move all api logic to app/routes/catalog.py
 import logging
 
+from fuzzysearch import find_near_matches
+
 from app.db.database import db_cursor
 from app.models.book import Book
 from app.models.coordinates import GeoCoordinateError, GeoCoordinates
@@ -22,6 +24,19 @@ def search_in_catalog_db(
     If user coordinates are None, distance will be returned as None.
     """
 
+    author = author.strip() if author is not None else None
+    title = title.strip() if title is not None else None
+
+    if author == "":
+        author = None
+
+    if title == "":
+        title = None
+
+    if author is None and title is None:
+        msg = "Title or author must be given."
+        raise ValueError(msg)
+
     # TODO: remove commas and other special characters from title and author
 
     # TODO: author.split(" ") and then WHERE author LIKE a AND author LIKE b
@@ -31,6 +46,106 @@ def search_in_catalog_db(
 
     # TODO: Ensure that authors like Rowling, J.K. are handeled correctly
 
+    # TODO: ask Patrick if fast enough:
+    all_book_entities = _fetch_all_books_from_catalog(user_coordinates)
+    # TODO: _fetch_all_books_from_catalog sorts by distance. keep as-is?
+
+    return rank_and_filter_book_entities(title, author, all_book_entities)
+
+
+def rank_and_filter_book_entities(
+    title: str | None,
+    author: str | None,
+    all_book_entities: list[dict],
+) -> list[dict[str, Book | LocatedShelf]]:
+
+    max_l_distance_author = 3
+
+    title_given = title is not None and title != ""
+    author_given = author is not None and author != ""
+
+    title = title if title is not None else ""
+    author = author if author is not None else ""
+
+    author_parts = author.lower().replace(",", " ").split(" ")
+    author_parts = [part.strip() for part in author_parts]
+    author_parts = [part for part in author_parts if len(part) >= max_l_distance_author]
+
+    for book in all_book_entities:
+        if not book["book"].author:
+            logger.warning(f"Book without author in db: {book['book']}")
+            author_parts_matched, author_parts_score = (0, 0)
+        else:
+            author_parts_matched, author_parts_score = (
+                calculate_author_score(author_parts, book["book"].author.lower())
+                if author_given
+                else (0, 0)
+            )
+        if not book["book"].title:
+            logger.warning(f"Book without title in db: {book['book']}")
+            title_matched, title_score = (0, 0)
+        else:
+            title_matched, title_score = (
+                calculate_title_score(title, book["book"].title.lower())
+                if title_given
+                else (0, 0)
+            )
+
+        # combine rankings
+        if title_given and title_matched == 0:
+            continue
+
+        if author_given and author_parts_matched == 0:
+            continue
+
+        combined_score = (
+            title_matched,
+            title_score,
+            author_parts_matched,
+            author_parts_score,
+        )
+
+        book["score"] = combined_score
+
+    filtered = [book for book in all_book_entities if "score" in book]
+    filtered.sort(key=lambda book: book["score"], reverse=True)
+
+    for book in filtered:
+        del book["score"]
+
+    return filtered
+
+
+def calculate_title_score(query_title: str, db_title: str) -> tuple[float, float]:
+    matches = find_near_matches(
+        query_title, db_title, max_l_dist=min(int(len(query_title) * 0.5), 3)
+    )
+    if len(matches) > 0:
+        minimum_distance = min(match.dist for match in matches)
+        return 1, -minimum_distance
+    return 0, 0
+
+
+def calculate_author_score(
+    author_parts: list[str], book_author: str
+) -> tuple[float, float]:
+    # book_author example: "king, stephen"
+    # author_parts example: ["stephen", "erwin", "kong"]
+    # return example: (2, -1)
+    minimum_distances = []
+    for author_part in author_parts:
+        matches = find_near_matches(
+            author_part, book_author, max_l_dist=min(int(len(author_part) * 0.5), 3)
+        )
+        if len(matches) > 0:
+            minimum_distance = min(match.dist for match in matches)
+            minimum_distances.append(minimum_distance)
+    return len(minimum_distances), -sum(minimum_distances)
+
+
+def _fetch_all_books_from_catalog(
+    user_coordinates: GeoCoordinates | None = None,
+) -> list[dict[str, Book | LocatedShelf]]:
     with db_cursor() as c:
         c.execute(
             """
@@ -45,10 +160,7 @@ def search_in_catalog_db(
             FROM current_catalog cc
             JOIN books b ON cc.isbn = b.isbn
             JOIN bookshelves bs ON cc.osm_id = bs.osm_id
-            WHERE (? IS NULL OR b.title LIKE ?)
-            AND (? IS NULL OR b.author LIKE ?)
         """,  # TODO: LIMIT and OFFSET for pagination?
-            (title, f"%{title}%", author, f"%{author}%"),
         )
         rows = c.fetchall()
 
@@ -118,5 +230,6 @@ def search_in_catalog_db(
 
     if user_coordinates is not None:
         results.sort(key=lambda x: x["located_shelf"].distance_meters)
+    # TODO: this sort will be overwritten by fuzzysearch. Check if that is right.
 
     return results
