@@ -5,10 +5,15 @@ import { useCallback, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import { getUserLocation } from "../services/location";
 import { CatalogResult } from "../types/CatalogResult";
+import Checkbox from "@mui/material/Checkbox";
+import LocationOffIcon from "@mui/icons-material/LocationOff";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function CatalogHomeScreen() {
   const [inputTitle, setInputTitle] = useState("");
   const [inputAuthor, setInputAuthor] = useState("");
+  const [useLocation, setUseLocation] = useState(false);
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,12 +26,22 @@ export default function CatalogHomeScreen() {
       setResults([]);
 
       try {
-        const { lat, lon } = await getUserLocation();
-        const resp = await fetch(
-          `/api/catalog/search?title=${encodeURIComponent(
-            inputTitle,
-          )}&author=${inputAuthor}&lat=${lat}&lon=${lon}`,
-        );
+        // build query params safely
+        const params = new URLSearchParams({
+          title: inputTitle,
+          author: inputAuthor,
+        });
+
+        // only request & send location if toggle is enabled
+        if (useLocation) {
+          const { lat, lon } = await getUserLocation();
+
+          params.append("lat", lat.toString());
+          params.append("lon", lon.toString());
+        }
+
+        const resp = await fetch(`/api/catalog/search?${params.toString()}`);
+
         if (!resp.ok) throw new Error("Server error");
         const resp_json = await resp.json();
         setResults(resp_json.data);
@@ -36,10 +51,11 @@ export default function CatalogHomeScreen() {
         setLoading(false);
       }
     },
-    [inputTitle, inputAuthor],
+    [inputTitle, inputAuthor, useLocation],
   );
 
   return (
+    // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to css!
     <Container
       className="app-container"
@@ -86,6 +102,20 @@ export default function CatalogHomeScreen() {
         onChange={(e) => setInputAuthor(e.target.value)}
         onSubmit={handleInputSubmit}
       />
+      <FormControlLabel
+        value="end"
+        control={
+          <Checkbox
+            checked={useLocation}
+            onChange={(e) => setUseLocation(e.target.checked)}
+            icon={<LocationOffIcon />}
+            checkedIcon={<LocationOnIcon />}
+          />
+        }
+        label="Search near me"
+        labelPlacement="end"
+      />
+
       {loading && <CircularProgress sx={{ mt: 2 }} />}
       {error && (
         <Typography color="error" sx={{ mt: 2 }}>
