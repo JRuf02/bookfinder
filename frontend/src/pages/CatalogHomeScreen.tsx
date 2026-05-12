@@ -8,6 +8,7 @@ import { CatalogResult } from "../types/CatalogResult";
 
 export default function CatalogHomeScreen() {
   const [inputTitle, setInputTitle] = useState("");
+  const [inputAuthor, setInputAuthor] = useState("");
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export default function CatalogHomeScreen() {
         const resp = await fetch(
           `/api/catalog/search?title=${encodeURIComponent(
             inputTitle,
-          )}&lat=${lat}&lon=${lon}`,
+          )}&author=${inputAuthor}&lat=${lat}&lon=${lon}`,
         );
         if (!resp.ok) throw new Error("Server error");
         const resp_json = await resp.json();
@@ -35,7 +36,7 @@ export default function CatalogHomeScreen() {
         setLoading(false);
       }
     },
-    [inputTitle],
+    [inputTitle, inputAuthor],
   );
 
   return (
@@ -76,6 +77,13 @@ export default function CatalogHomeScreen() {
         placeholder="Search books near you by title"
         label="Search books near you by title"
         onChange={(e) => setInputTitle(e.target.value)}
+        onSubmit={handleInputSubmit}
+      />
+      <ISBNInput
+        value={inputAuthor}
+        placeholder="Search books near you by author"
+        label="Search books near you by author"
+        onChange={(e) => setInputAuthor(e.target.value)}
         onSubmit={handleInputSubmit}
       />
       {loading && <CircularProgress sx={{ mt: 2 }} />}
