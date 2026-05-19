@@ -9,6 +9,57 @@ from app.models.book import Book
 from app.models.identifiers import Isbn
 
 
+def assert_correct_test_book_entity_in_response_data(
+    response,  # noqa: ANN001
+    distance_meters: float | None = None,
+) -> None:
+    """Ensure the "data" field in the response JSON consists of only one BookEntity,
+    and that it is the test book in the test shelf.
+
+    response: TestResponse (from werkzeug.test).
+    No type annotation because default mime type for TestResponse is None.
+
+    distance_meters: The distance that should be in the response.
+    """
+
+    assert response is not None
+    assert response.json is not None
+
+    assert len(response.json["data"]) == 1
+
+    assert response.json["data"][0].keys() == {
+        "book",
+        "locatedShelf",
+        "entityId",
+        "inShelfSince",
+    }
+    assert response.json["data"][0]["book"] == {
+        "author": "King, Stephen",
+        "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
+        "dnbId": "1028147899",
+        "isbn": "978-3-453-43690-9",
+        "title": "Sprengstoff",
+    }
+    assert response.json["data"][0]["locatedShelf"] == {
+        "distanceMeters": distance_meters,
+        "shelf": {
+            "address": None,
+            "latitude": 48.0998168,
+            "longitude": 8.0546482,
+            "name": "test shelf",
+            "openingHours": None,
+            "operator": None,
+            "osmCheckDate": None,
+            "osmId": "https://www.openstreetmap.org/node/11935877522",
+            "osmLastUpdated": None,
+            "type": None,
+            "website": None,
+        },
+    }
+    assert response.json["data"][0]["entityId"] == 1
+    assert response.json["data"][0]["inShelfSince"] is not None
+
+
 def test_search_in_catalog_title_none_author_none(client: FlaskClient) -> None:
     response = client.get(
         "/api/catalog/search",
@@ -79,33 +130,9 @@ def test_search_in_catalog_no_author(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    assert response.json["data"] == [
-        {
-            "book": {
-                "author": "King, Stephen",
-                "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-                "dnbId": "1028147899",
-                "isbn": "978-3-453-43690-9",
-                "title": "Sprengstoff",
-            },
-            "locatedShelf": {
-                "distanceMeters": 14536.422,
-                "shelf": {
-                    "address": None,
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "name": "test shelf",
-                    "openingHours": None,
-                    "operator": None,
-                    "osmCheckDate": None,
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "osmLastUpdated": None,
-                    "type": None,
-                    "website": None,
-                },
-            },
-        }
-    ]
+    assert_correct_test_book_entity_in_response_data(
+        response, distance_meters=14536.422
+    )
 
 
 def test_search_in_catalog_author_given_title_none(client: FlaskClient) -> None:
@@ -126,33 +153,7 @@ def test_search_in_catalog_author_given_title_none(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    assert response.json["data"] == [
-        {
-            "book": {
-                "author": "King, Stephen",
-                "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-                "dnbId": "1028147899",
-                "isbn": "978-3-453-43690-9",
-                "title": "Sprengstoff",
-            },
-            "locatedShelf": {
-                "distanceMeters": None,
-                "shelf": {
-                    "address": None,
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "name": "test shelf",
-                    "openingHours": None,
-                    "operator": None,
-                    "osmCheckDate": None,
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "osmLastUpdated": None,
-                    "type": None,
-                    "website": None,
-                },
-            },
-        }
-    ]
+    assert_correct_test_book_entity_in_response_data(response)
 
 
 def test_search_in_catalog_title_empty_string(client: FlaskClient) -> None:
@@ -180,33 +181,39 @@ def test_search_in_catalog_title_empty_string(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    assert response.json["data"] == [
-        {
-            "book": {
-                "isbn": "978-3-486-58723-4",
-                "title": "Test Book",
-                "author": "Author, Test",
-                "coverUrl": None,
-                "dnbId": "12345",
-            },
-            "locatedShelf": {
-                "shelf": {
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "name": "test shelf",
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "address": None,
-                    "type": None,
-                    "operator": None,
-                    "website": None,
-                    "openingHours": None,
-                    "osmCheckDate": None,
-                    "osmLastUpdated": None,
-                },
-                "distanceMeters": None,
-            },
-        }
-    ]
+    assert len(response.json["data"]) == 1
+
+    assert response.json["data"][0].keys() == {
+        "book",
+        "locatedShelf",
+        "entityId",
+        "inShelfSince",
+    }
+    assert response.json["data"][0]["book"] == {
+        "author": "Author, Test",
+        "coverUrl": None,
+        "dnbId": "12345",
+        "isbn": "978-3-486-58723-4",
+        "title": "Test Book",
+    }
+    assert response.json["data"][0]["locatedShelf"] == {
+        "distanceMeters": None,
+        "shelf": {
+            "address": None,
+            "latitude": 48.0998168,
+            "longitude": 8.0546482,
+            "name": "test shelf",
+            "openingHours": None,
+            "operator": None,
+            "osmCheckDate": None,
+            "osmId": "https://www.openstreetmap.org/node/11935877522",
+            "osmLastUpdated": None,
+            "type": None,
+            "website": None,
+        },
+    }
+    assert response.json["data"][0]["entityId"] == 1
+    assert response.json["data"][0]["inShelfSince"] is not None
 
 
 def test_search_in_catalog_title_contains_non_ascii_characters(
@@ -236,33 +243,39 @@ def test_search_in_catalog_title_contains_non_ascii_characters(
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    assert response.json["data"] == [
-        {
-            "book": {
-                "isbn": "978-3-486-58723-4",
-                "title": "😀äöüß?3e",
-                "author": "Test Author",
-                "coverUrl": None,
-                "dnbId": "12345",
-            },
-            "locatedShelf": {
-                "shelf": {
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "name": "test shelf",
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "address": None,
-                    "type": None,
-                    "operator": None,
-                    "website": None,
-                    "openingHours": None,
-                    "osmCheckDate": None,
-                    "osmLastUpdated": None,
-                },
-                "distanceMeters": None,
-            },
-        }
-    ]
+    assert len(response.json["data"]) == 1
+
+    assert response.json["data"][0].keys() == {
+        "book",
+        "locatedShelf",
+        "entityId",
+        "inShelfSince",
+    }
+    assert response.json["data"][0]["book"] == {
+        "author": "Test Author",
+        "coverUrl": None,
+        "dnbId": "12345",
+        "isbn": "978-3-486-58723-4",
+        "title": "😀äöüß?3e",
+    }
+    assert response.json["data"][0]["locatedShelf"] == {
+        "distanceMeters": None,
+        "shelf": {
+            "address": None,
+            "latitude": 48.0998168,
+            "longitude": 8.0546482,
+            "name": "test shelf",
+            "openingHours": None,
+            "operator": None,
+            "osmCheckDate": None,
+            "osmId": "https://www.openstreetmap.org/node/11935877522",
+            "osmLastUpdated": None,
+            "type": None,
+            "website": None,
+        },
+    }
+    assert response.json["data"][0]["entityId"] == 1
+    assert response.json["data"][0]["inShelfSince"] is not None
 
 
 def test_search_in_catalog_nonfinite_coordinates(client: FlaskClient) -> None:
@@ -385,35 +398,9 @@ def test_search_in_catalog_by_author_and_title_with_coordinates(
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    # TODO: Improve search implementation to find the following book.
-    #       Currently, this test is expected to fail (King, Stephen vs. Stephen king).
-    assert response.json["data"] == [
-        {
-            "book": {
-                "author": "King, Stephen",
-                "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-                "dnbId": "1028147899",
-                "isbn": "978-3-453-43690-9",
-                "title": "Sprengstoff",
-            },
-            "locatedShelf": {
-                "distanceMeters": None,  # TODO: Set distance
-                "shelf": {
-                    "address": None,
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "name": "test shelf",
-                    "openingHours": None,
-                    "operator": None,
-                    "osmCheckDate": None,
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "osmLastUpdated": None,
-                    "type": None,
-                    "website": None,
-                },
-            },
-        }
-    ]
+    assert_correct_test_book_entity_in_response_data(
+        response, distance_meters=113935.914
+    )
 
 
 def test_search_in_catalog_by_author_and_title_without_coordinates(
@@ -437,40 +424,13 @@ def test_search_in_catalog_by_author_and_title_without_coordinates(
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    # TODO: Improve search implementation to find the following book.
-    #       Currently, this test is expected to fail (King, Stephen vs. Stephen king).
-    assert response.json["data"] == [
-        {
-            "book": {
-                "author": "King, Stephen",
-                "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-                "dnbId": "1028147899",
-                "isbn": "978-3-453-43690-9",
-                "title": "Sprengstoff",
-            },
-            "locatedShelf": {
-                "distanceMeters": None,
-                "shelf": {
-                    "address": None,
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "name": "test shelf",
-                    "openingHours": None,
-                    "operator": None,
-                    "osmCheckDate": None,
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "osmLastUpdated": None,
-                    "type": None,
-                    "website": None,
-                },
-            },
-        }
-    ]
+    assert_correct_test_book_entity_in_response_data(response)
 
 
 def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     """Search for 'Stephen King' or 'stephen king' should find books with author
-    'King, Stephen' and 'Stephen Edwin King', but not 'Stephen Spielberg'.
+    'King, Stephen' and 'Stephen Edwin King', but not 'Anna'.
+    'King, S.E.' and 'Steven Spielberg' should also be found, but ranked lower.
     """
 
     test_book_1 = Book(
@@ -481,7 +441,7 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     )
 
     # Other formats for the same author name,
-    # should still find the book when searching for "test author"
+    # should still find the book when searching for "stephen king"
     test_book_2 = Book(
         isbn=Isbn("978-3-473-58522-9"),
         title="Test Book 2",
@@ -492,15 +452,23 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     test_book_3 = Book(
         isbn=Isbn("978-3-473-58526-7"),
         title="Test Book 3",
-        author="Stephen E. King",
+        author="King, S.E.",
         dnb_id="12347",
     )
 
+    # Should be returned, but at the and of the search results due to low author score
     test_book_4 = Book(
         isbn=Isbn("978-3-15-000001-4"),
         title="Test Book 4",
-        author="Stephen Spielberg",  # Should not be returned
+        author="Steven Spielberg",
         dnb_id="12348",
+    )
+
+    test_book_5 = Book(
+        isbn=Isbn("978-3-15-000002-1"),
+        title="Test Book 5",
+        author="Anna",  # Should not be found when searching for "stephen king"
+        dnb_id="12349",
     )
 
     insert_test_shelf_into_db(client.application)
@@ -508,6 +476,7 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     insert_test_book_into_shelf_in_db(client.application, test_book_2)
     insert_test_book_into_shelf_in_db(client.application, test_book_3)
     insert_test_book_into_shelf_in_db(client.application, test_book_4)
+    insert_test_book_into_shelf_in_db(client.application, test_book_5)
 
     response = client.get(
         "/api/catalog/search",
@@ -523,82 +492,56 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    # TODO: Improve search implementation to find the following books.
-    #       Currently, this test is expected to fail.
-    assert response.json["data"] == [
-        {
-            "book": {
-                "isbn": "978-3-486-58723-4",
-                "title": "Test Book 1",
-                "author": "King, Stephen",
-                "coverUrl": None,
-                "dnbId": "12345",
+    assert len(response.json["data"]) == 4
+
+    # Ensure that each result is a proper BookEntity.
+    for i in range(4):
+        assert response.json["data"][i].keys() == {
+            "book",
+            "locatedShelf",
+            "entityId",
+            "inShelfSince",
+        }
+        assert response.json["data"][i]["entityId"] == i + 1
+        assert response.json["data"][i]["inShelfSince"] is not None
+
+        # Check that the LocatedShelf is correct.
+        assert response.json["data"][i]["locatedShelf"] == {
+            "distanceMeters": None,
+            "shelf": {
+                "address": None,
+                "latitude": 48.0998168,
+                "longitude": 8.0546482,
+                "name": "test shelf",
+                "openingHours": None,
+                "operator": None,
+                "osmCheckDate": None,
+                "osmId": "https://www.openstreetmap.org/node/11935877522",
+                "osmLastUpdated": None,
+                "type": None,
+                "website": None,
             },
-            "locatedShelf": {
-                "shelf": {
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "name": "test shelf",
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "address": None,
-                    "type": None,
-                    "operator": None,
-                    "website": None,
-                    "openingHours": None,
-                    "osmCheckDate": None,
-                    "osmLastUpdated": None,
-                },
-                "distanceMeters": None,
-            },
-        },
-        {
-            "book": {
-                "isbn": "978-3-473-58522-9",
-                "title": "Test Book 2",
-                "author": "Stephen Edwin King",
-                "coverUrl": None,
-                "dnbId": "12346",
-            },
-            "locatedShelf": {
-                "shelf": {
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "name": "test shelf",
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "address": None,
-                    "type": None,
-                    "operator": None,
-                    "website": None,
-                    "openingHours": None,
-                    "osmCheckDate": None,
-                    "osmLastUpdated": None,
-                },
-                "distanceMeters": None,
-            },
-        },
-        {
-            "book": {
-                "isbn": "978-3-473-58526-7",
-                "title": "Test Book 3",
-                "author": "Stephen E. King",
-                "coverUrl": None,
-                "dnbId": "12347",
-            },
-            "locatedShelf": {
-                "shelf": {
-                    "osmId": "https://www.openstreetmap.org/node/11935877522",
-                    "name": "test shelf",
-                    "latitude": 48.0998168,
-                    "longitude": 8.0546482,
-                    "address": None,
-                    "type": None,
-                    "operator": None,
-                    "website": None,
-                    "openingHours": None,
-                    "osmCheckDate": None,
-                    "osmLastUpdated": None,
-                },
-                "distanceMeters": None,
-            },
-        },
-    ]
+        }
+
+    # Ensure that the books are ranked in the expected order.
+    assert response.json["data"][0]["book"]["author"] == "King, Stephen"
+    assert response.json["data"][1]["book"]["author"] == "Stephen Edwin King"
+    assert response.json["data"][2]["book"]["author"] == "King, S.E."
+    assert response.json["data"][3]["book"]["author"] == "Steven Spielberg"
+
+    # Check that the book details are correct (we only test the second and fourth book).
+    assert response.json["data"][1]["book"] == {
+        "author": "Stephen Edwin King",
+        "coverUrl": None,
+        "dnbId": "12346",
+        "isbn": "978-3-473-58522-9",
+        "title": "Test Book 2",
+    }
+
+    assert response.json["data"][3]["book"] == {
+        "author": "Steven Spielberg",
+        "coverUrl": None,
+        "dnbId": "12348",
+        "isbn": "978-3-15-000001-4",
+        "title": "Test Book 4",
+    }

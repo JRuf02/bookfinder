@@ -3,7 +3,7 @@ import logging
 from fuzzysearch import find_near_matches
 
 from app.db.database import db_cursor
-from app.models.book import Book
+from app.models.book import Book, BookEntity
 from app.models.coordinates import GeoCoordinateError, GeoCoordinates
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import LocatedShelf, Shelf
@@ -16,7 +16,7 @@ def search_in_catalog_db(
     title: str | None = None,
     author: str | None = None,
     user_coordinates: GeoCoordinates | None = None,
-) -> list[dict[str, Book | LocatedShelf]]:
+) -> list[BookEntity]:
     """Search for books by title and / or author and return entries
     with shelf info and distance.
 
@@ -47,8 +47,8 @@ def search_in_catalog_db(
 def rank_and_filter_book_entities(
     title: str | None,
     author: str | None,
-    all_book_entities: list[dict],
-) -> list[dict[str, Book | LocatedShelf]]:
+    all_book_entities: list[BookEntity],
+) -> list[BookEntity]:
     """Rank and filter the given book entities based on how well they match
     the given title and author.
     The returned list is sorted by relevance (best matches first).
@@ -66,25 +66,26 @@ def rank_and_filter_book_entities(
     author_parts = [part.strip() for part in author_parts]
     author_parts = [part for part in author_parts if len(part) >= max_l_distance_author]
 
+    scored_entities: list[tuple[BookEntity, tuple[float, float, float, float]]] = []
     # Compute fuzzy scores for all books and filter out non-matching ones
-    for book in all_book_entities:
+    for entity in all_book_entities:
         # Compute fuzzy scores that measure how well the queried title / author matches
         # this book's title / author
-        if not book["book"].author:
-            logger.warning(f"Book without author in db: {book['book']}")
+        if not entity.book.author:
+            logger.warning(f"Book without author in db: {entity.book}")
             author_parts_matched, author_parts_score = (0, 0)
         else:
             author_parts_matched, author_parts_score = (
-                calculate_author_score(author_parts, book["book"].author.lower())
+                calculate_author_score(author_parts, entity.book.author.lower())
                 if author_given
                 else (0, 0)
             )
-        if not book["book"].title:
-            logger.warning(f"Book without title in db: {book['book']}")
+        if not entity.book.title:
+            logger.warning(f"Book without title in db: {entity.book}")
             title_matched, title_score = (0, 0)
         else:
             title_matched, title_score = (
-                calculate_title_score(title, book["book"].title.lower())
+                calculate_title_score(title, entity.book.title.lower())
                 if title_given
                 else (0, 0)
             )
@@ -104,15 +105,11 @@ def rank_and_filter_book_entities(
             author_parts_score,
         )
 
-        book["score"] = combined_score
+        scored_entities.append((entity, combined_score))
 
-    filtered = [book for book in all_book_entities if "score" in book]
-    filtered.sort(key=lambda book: book["score"], reverse=True)
+    scored_entities.sort(key=lambda x: x[1], reverse=True)
 
-    for book in filtered:
-        del book["score"]
-
-    return filtered
+    return [entity for entity, _ in scored_entities]
 
 
 def calculate_title_score(query_title: str, db_title: str) -> tuple[float, float]:
@@ -163,18 +160,19 @@ def calculate_author_score(
 
 def _fetch_all_books_from_catalog(
     user_coordinates: GeoCoordinates | None = None,
-) -> list[dict[str, Book | LocatedShelf]]:
+) -> list[BookEntity]:
     with db_cursor() as c:
         c.execute(
             """
-            SELECT cc.osm_id, cc.isbn,
+            SELECT cc.entry_id, cc.osm_id, cc.isbn,
             b.title, b.author, b.dnb_id, b.cover_url,
             bs.latitude AS shelf_latitude,
             bs.longitude AS shelf_longitude,
             bs.name AS shelf_name,
             bs.type AS shelf_type,
             bs.address, bs.opening_hours, bs.operator, bs.website,
-            bs.osm_check_date, bs.osm_last_updated
+            bs.osm_check_date, bs.osm_last_updated,
+            cc.time_of_entry
             FROM current_catalog cc
             JOIN books b ON cc.isbn = b.isbn
             JOIN bookshelves bs ON cc.osm_id = bs.osm_id
@@ -218,16 +216,29 @@ def _fetch_all_books_from_catalog(
             logger.warning(f"Missing osm_id for shelf of book with ISBN {isbn}")
             continue  # Skip entries without osm_id
 
+        entry_id = row["entry_id"]
+        if row["time_of_entry"] is None:
+            logger.warning(
+                f"Missing time_of_entry for catalog entity with entry_id {entry_id}"
+            )
+            continue  # Skip entries without time_of_entry
+
+        if entry_id is None:
+            # This should not happen, as entry_id is a primary key
+            logger.error(f"Entity without entry_id in current_catalog. ISBN: {isbn}")
+            continue
+
         results.append(
-            {
-                "book": Book(
+            BookEntity(
+                entity_id=entry_id,
+                book=Book(
                     isbn=isbn,
                     title=row["title"],
                     author=row["author"],
                     dnb_id=row["dnb_id"],
                     cover_url=row["cover_url"],
                 ),
-                "located_shelf": LocatedShelf(
+                located_shelf=LocatedShelf(
                     shelf=Shelf(
                         osm_id=osm_id,
                         name=row["shelf_name"],
@@ -243,11 +254,13 @@ def _fetch_all_books_from_catalog(
                     ),
                     distance_meters=dist_m,
                 ),
-            }
+                in_shelf_since=row["time_of_entry"],
+            )
         )
 
     if user_coordinates is not None:
-        results.sort(key=lambda x: x["located_shelf"].distance_meters)
-    # TODO: this sort will be overwritten by fuzzysearch. Check if that is right.
+        results.sort(key=lambda x: x.located_shelf.distance_meters)
+    # This pre-sorting can be overwritten by fuzzysearch (in the calling function),
+    # but entities with the same fuzzy score will remain sorted by distance.
 
     return results

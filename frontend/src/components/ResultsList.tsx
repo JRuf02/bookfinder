@@ -7,7 +7,7 @@ import {
   Stack,
 } from "@mui/material";
 import logo from "../../graphics/logo-long-no-bg.png";
-import { CatalogResult } from "../pages/CatalogHomeScreen";
+import { CatalogResult } from "../types/CatalogResult";
 
 type ResultsListProps = {
   results: CatalogResult[];
@@ -16,8 +16,8 @@ type ResultsListProps = {
 export default function ResultsList({ results }: ResultsListProps) {
   return (
     <>
-      {results.map((result, index) => (
-        <Card key={index} sx={{ mb: 2 }}>
+      {results.map((result) => (
+        <Card key={result.entityId} sx={{ mb: 2 }}>
           <CardContent>
             <Stack direction="row" spacing={2} alignItems="center">
               <CardMedia
@@ -85,6 +85,9 @@ export default function ResultsList({ results }: ResultsListProps) {
                     OSM ID: {result.locatedShelf.shelf.osmId}
                   </Typography>
                 )}
+                <Typography variant="body2">
+                  In shelf since: {result.inShelfSince}
+                </Typography>
               </Box>
             </Stack>
           </CardContent>
