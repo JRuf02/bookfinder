@@ -3,7 +3,7 @@ import logging
 
 from app.db.database import db_cursor
 from app.db.database_utils import check_if_shelf_exists
-from app.models.book import Book
+from app.models.book import Book, BookEntity
 from app.models.errors import DatabaseQueryError
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import Shelf
@@ -64,17 +64,25 @@ def remove_book_from_shelf_in_db(
         return None
 
 
-def get_books_in_shelf_from_db(osm_id: OsmId) -> list[Book]:
-    """Fetch list of all books in the given shelf."""
+def get_books_in_shelf_from_db(
+    osm_id: OsmId,
+) -> list[BookEntity]:
+    """Fetch list of all books in the given shelf.
+
+    Sets LocatedShelf = None for each BookEntity, to avoid shelf metadata duplication.
+    Returns a list of BookEntities ordered by time of entry, most recently added first.
+    Returns empty list if shelf is empty or does not exist.
+    """
 
     with db_cursor() as c:
         c.execute(
             """
-            SELECT b.isbn, b.title, b.author, b.dnb_id, b.cover_url
+            SELECT b.isbn, b.title, b.author, b.dnb_id, b.cover_url,
+            cc.time_of_entry, cc.entry_id
             FROM current_catalog cc
             JOIN books b ON cc.isbn = b.isbn
             WHERE cc.osm_id = ?
-            ORDER BY cc.time_of_entry DESC
+            ORDER BY cc.time_of_entry DESC, cc.entry_id DESC
         """,
             (str(osm_id),),
         )
@@ -82,21 +90,26 @@ def get_books_in_shelf_from_db(osm_id: OsmId) -> list[Book]:
 
     books = []
     for row in rows:
-        isbn = Isbn.parse(row[0])
+        isbn = Isbn.parse(row["isbn"])
 
         if not isbn:
             logger.warning(
-                f"Invalid ISBN {row[0]} in database for shelf {osm_id}. Skipping entry."
+                f"Invalid ISBN {row['isbn']} in database for shelf {osm_id}. Skipping."
             )
             continue
 
         books.append(
-            Book(
-                isbn=isbn,
-                title=row[1],
-                author=row[2],
-                dnb_id=row[3],
-                cover_url=row[4],
+            BookEntity(
+                entity_id=row["entry_id"],
+                book=Book(
+                    isbn=isbn,
+                    title=row["title"],
+                    author=row["author"],
+                    dnb_id=row["dnb_id"],
+                    cover_url=row["cover_url"],
+                ),
+                located_shelf=None,
+                in_shelf_since=row["time_of_entry"],
             )
         )
 

@@ -87,22 +87,35 @@ def test_get_books_in_shelf_with_books(client: FlaskClient) -> None:
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    assert response.json["data"] == [
-        {
-            "isbn": "978-3-453-43690-9",
-            "title": "Sprengstoff",
-            "author": "King, Stephen",
-            "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-            "dnbId": "1028147899",
-        },
-        {
-            "isbn": "978-3-15-000001-4",
-            "title": "Faust",
-            "author": "Goethe, Johann Wolfgang von",
-            "coverUrl": None,
-            "dnbId": "1027780482",
-        },
-    ]
+    assert len(response.json["data"]) == 2
+
+    for i in range(2):
+        assert response.json["data"][i].keys() == {
+            "book",
+            "locatedShelf",
+            "entityId",
+            "inShelfSince",
+        }
+        assert response.json["data"][i]["locatedShelf"] is None
+        assert response.json["data"][i]["entityId"] == 2 - i
+        assert response.json["data"][i]["inShelfSince"] is not None
+
+    assert response.json["data"][1]["book"] == {
+        "author": "King, Stephen",
+        "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
+        "dnbId": "1028147899",
+        "isbn": "978-3-453-43690-9",
+        "title": "Sprengstoff",
+    }
+
+    # most recently inserted book should be first in the list
+    assert response.json["data"][0]["book"] == {
+        "author": "Goethe, Johann Wolfgang von",
+        "coverUrl": None,
+        "dnbId": "1027780482",
+        "isbn": "978-3-15-000001-4",
+        "title": "Faust",
+    }
 
 
 def test_get_books_in_shelf_valid_osm_id_but_not_in_db(

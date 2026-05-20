@@ -21,5 +21,5 @@ class BookEntity:
 
     entity_id: int
     book: Book
-    located_shelf: LocatedShelf
+    located_shelf: LocatedShelf | None
     in_shelf_since: str

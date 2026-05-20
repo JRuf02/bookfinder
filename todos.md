@@ -189,6 +189,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- Use datetime and isoformat() in code and db for times? e.g. row["time_of_entry"].isoformat()
 - Mock dnb calls in tests with (from requests_mock.mocker import Mocker) so that tests dont fail if dnb offline?
   - add to fixtures.py: def app(requests_mock: Mocker) ... requests_mock.get(url) ...
   - Currently, I want tests to fail if dnb changes (because I want to see when the dnb changes)

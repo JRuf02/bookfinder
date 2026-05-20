@@ -161,7 +161,7 @@ def test_remove_book_from_shelf_book_twice_in_shelf(client: FlaskClient) -> None
 
     # Insert the same book twice into the same shelf
     insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
-    time.sleep(1)
+    time.sleep(1)  # ensure different timestamps for the two entries
     insert_test_book_into_shelf_in_db(client.application)  # 978-3-453-43690-9
 
     times_of_entry = get_time_of_entry_of_book_in_shelf(
@@ -286,15 +286,16 @@ def test_remove_book_from_shelf_other_books_in_shelf(
     )
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
-    assert response.json["data"] == [
-        {
-            "isbn": "978-3-551-35401-3",
-            "title": "Harry Potter und der Stein der Weisen",
-            "author": "Rowling, J.K.",
-            "dnbId": "12345",
-            "coverUrl": None,
-        }
-    ]
+    assert response.json["status"] == "success"
+    assert len(response.json["data"]) == 1
+    assert response.json["data"][0]["book"] == {
+        "isbn": "978-3-551-35401-3",
+        "title": "Harry Potter und der Stein der Weisen",
+        "author": "Rowling, J.K.",
+        "dnbId": "12345",
+        "coverUrl": None,
+    }
+    assert response.json["data"][0]["entityId"] == 2
 
 
 def test_remove_book_from_shelf_not_containing_book(client: FlaskClient) -> None:

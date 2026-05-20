@@ -98,7 +98,7 @@ def test_insert_missing_book_to_shelf(app: Flask) -> None:
     assert response.json is not None
     assert response.json["status"] == "success"
     assert len(response.json["data"]) == 1
-    assert response.json["data"][0]["isbn"] == "978-3-486-58723-4"
+    assert response.json["data"][0]["book"]["isbn"] == "978-3-486-58723-4"
 
     # Book should now be added to the current_catalog and to the books table.
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
@@ -181,14 +181,13 @@ def test_insert_book_with_non_ascii_title(client: FlaskClient) -> None:
     assert response.json is not None
     assert response.json["status"] == "success"
     assert len(response.json["data"]) == 1
-    assert response.json["data"][0]["isbn"] == "978-1-5266-2658-5"
-    assert response.json["data"][0]["author"] == "Authör, Exämple"
-    assert response.json["data"][0]["dnbId"] == "1234567890"
-    assert response.json["data"][0]["coverUrl"] is None
-    assert (
-        response.json["data"][0]["title"]
-        == "Téstbûck with nön-ÄSCII chäräctérs 😀äöüß?3e"
-    )
+    assert response.json["data"][0]["book"] == {
+        "isbn": "978-1-5266-2658-5",
+        "title": "Téstbûck with nön-ÄSCII chäräctérs 😀äöüß?3e",
+        "author": "Authör, Exämple",
+        "dnbId": "1234567890",
+        "coverUrl": None,
+    }
 
     # Book should now be added to the current_catalog and still be in the books table.
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
@@ -238,37 +237,33 @@ def test_insert_book_to_shelf_other_books_already_in_shelf(
     assert response.json is not None
     assert response.json["status"] == "success"
     assert len(response.json["data"]) == 2
-    assert response.json["data"] == [
-        {
-            "author": "Rowling, J.K.",
-            "coverUrl": None,
-            "dnbId": "1234567890",
-            "isbn": "978-1-5266-2658-5",
-            "title": "Harry Potter and the Test Book that is already in the Shelf",
-        },
-        {
-            "author": "King, Stephen",
-            "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-            "dnbId": "1028147899",
-            "isbn": "978-3-453-43690-9",
-            "title": "Sprengstoff",
-        },
-    ] or response.json["data"] == [  # TODO? define ordering for api/shelf/books?
-        {
-            "author": "King, Stephen",
-            "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-            "dnbId": "1028147899",
-            "isbn": "978-3-453-43690-9",
-            "title": "Sprengstoff",
-        },
-        {
-            "author": "Rowling, J.K.",
-            "coverUrl": None,
-            "dnbId": "1234567890",
-            "isbn": "978-1-5266-2658-5",
-            "title": "Harry Potter and the Test Book that is already in the Shelf",
-        },
-    ]
+
+    for i in range(2):
+        assert response.json["data"][i].keys() == {
+            "book",
+            "inShelfSince",
+            "entityId",
+            "locatedShelf",
+        }
+        assert response.json["data"][i]["inShelfSince"] is not None
+        assert response.json["data"][i]["entityId"] == 2 - i
+
+    # Most recently inserted book should be first in the list
+    assert response.json["data"][0]["book"] == {
+        "author": "King, Stephen",
+        "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
+        "dnbId": "1028147899",
+        "isbn": "978-3-453-43690-9",
+        "title": "Sprengstoff",
+    }
+
+    assert response.json["data"][1]["book"] == {
+        "author": "Rowling, J.K.",
+        "coverUrl": None,
+        "dnbId": "1234567890",
+        "isbn": "978-1-5266-2658-5",
+        "title": "Harry Potter and the Test Book that is already in the Shelf",
+    }
 
     assert get_number_of_entries_in_table_current_catalog(client.application) == 2
     assert get_number_of_books_in_table_books(client.application) == 2
@@ -318,22 +313,23 @@ def test_insert_book_to_shelf_same_book_already_in_shelf(
     assert response.json is not None
     assert response.json["status"] == "success"
     assert len(response.json["data"]) == 2
-    assert response.json["data"] == [
-        {
+
+    for i in range(2):
+        assert response.json["data"][i].keys() == {
+            "book",
+            "inShelfSince",
+            "entityId",
+            "locatedShelf",
+        }
+        assert response.json["data"][i]["inShelfSince"] is not None
+        assert response.json["data"][i]["entityId"] == 2 - i  # newest entity first
+        assert response.json["data"][i]["book"] == {
             "author": "King, Stephen",
             "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
             "dnbId": "1028147899",
             "isbn": "978-3-453-43690-9",
             "title": "Sprengstoff",
-        },
-        {
-            "author": "King, Stephen",
-            "coverUrl": "https://portal.dnb.de/opac/mvb/cover?isbn=978-3-453-43690-9&size=l",
-            "dnbId": "1028147899",
-            "isbn": "978-3-453-43690-9",
-            "title": "Sprengstoff",
-        },
-    ]
+        }
 
     assert get_number_of_entries_in_table_current_catalog(client.application) == 2
     assert get_number_of_books_in_table_books(client.application) == 1
