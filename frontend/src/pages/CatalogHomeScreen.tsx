@@ -245,33 +245,7 @@ export default function CatalogHomeScreen() {
           }}
         />
       </Box>
-      {activeShelf && (
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Showing books for shelf: {activeShelf.name || activeShelf.osmId}
-        </Typography>
-      )}
       Sort by: Distance | Newest | Oldest | Relevance
-      <ISBNInput
-        value={inputTitle}
-        placeholder="Search books near you by title"
-        label="Search books near you by title"
-        onChange={(e) => setInputTitle(e.target.value)}
-        onSubmit={handleInputSubmit}
-      />
-      <ISBNInput
-        value={inputAuthor}
-        placeholder="Search books near you by author"
-        label="Search books near you by author"
-        onChange={(e) => setInputAuthor(e.target.value)}
-        onSubmit={handleInputSubmit}
-      />
-      <ISBNInput
-        value={inputISBN}
-        placeholder="Search books near you by ISBN"
-        label="Search books near you by ISBN"
-        onChange={(e) => setInputISBN(e.target.value)}
-        onSubmit={handleISBNSubmit}
-      />
       <FormControlLabel
         value="end"
         control={
@@ -285,6 +259,45 @@ export default function CatalogHomeScreen() {
         label="Search near me"
         labelPlacement="end"
       />
+      <Box
+        sx={{
+          width: "100%",
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+          gap: 0,
+        }}
+      >
+        <ISBNInput
+          value={inputTitle}
+          placeholder="Search books near you by title"
+          label="Search books near you by title"
+          onChange={(e) => setInputTitle(e.target.value)}
+          onSubmit={handleInputSubmit}
+        />
+        <ISBNInput
+          value={inputAuthor}
+          placeholder="Search books near you by author"
+          label="Search books near you by author"
+          onChange={(e) => setInputAuthor(e.target.value)}
+          onSubmit={handleInputSubmit}
+        />
+      </Box>
+      <ISBNInput
+        value={inputISBN}
+        placeholder="Search books near you by ISBN"
+        label="Search books near you by ISBN"
+        onChange={(e) => setInputISBN(e.target.value)}
+        onSubmit={handleISBNSubmit}
+      />
+      {activeShelf && (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mt: 0.5, mb: 0.5 }}
+        >
+          Showing books for shelf: {activeShelf.name || activeShelf.osmId}
+        </Typography>
+      )}
       {loading && <CircularProgress sx={{ mt: 2 }} />}
       {error && (
         <Typography color="error" sx={{ mt: 2 }}>

@@ -1,6 +1,7 @@
 import { TextField, Button, Box } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
+// TODO: rename component (not just ISBN input, but also title/author search)
 type ISBNInputProps = {
   placeholder?: string;
   label?: string;
@@ -26,6 +27,8 @@ export default function ISBNInput({
         width: "100%",
         alignItems: "center",
         gap: 1,
+        mt: 0.5,
+        mb: 0.5,
       }}
     >
       <TextField
@@ -48,7 +51,7 @@ export default function ISBNInput({
         size="medium"
         endIcon={<SendIcon />}
       >
-        Lookup
+        Search
       </Button>
     </Box>
   );
