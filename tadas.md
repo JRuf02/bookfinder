@@ -12,6 +12,15 @@
         - Add custom error data types instead (e.g. dataclass db_connection_error)
   - Authors like Rowling, J.K. are handeled correctly
 
+- CatalogHomeScreen
+  - hat Suchleiste
+    - Suchfunktion Backend verbessern
+    - Buchsuche soll auch ohne standort gehen
+    - Schalter für near you vs Suche ohne Standort
+
+- HomeScreen
+  - select button on homescreen map redirects to the catalog
+
 - use state/AppContextProvider.tsx
   - move userCoords there
 - check if the book exists in shelf before removing (backend!)

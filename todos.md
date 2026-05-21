@@ -24,9 +24,6 @@
     - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
     - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
-- Python Backend
-  - Improve search (make more fuzzy / use sqlite MATCH)
-
 - Logic & Documentation:
   - add docstring to AppReducer, AppState and provider files
   - Only readme and blog post are very important
@@ -40,11 +37,6 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogHomeScreen
-  - hat Suchleiste
-    - Suchfunktion Backend verbessern
-    - Buchsuche soll auch ohne standort gehen
-    - Schalter für near you vs Suche ohne Standort
-
   - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
     - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
     - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
@@ -67,8 +59,6 @@
   - ausleihen-Button der direkt zum shelfActionScreen leitet
 
 - HomeScreen
-  - select button on homescreen map redirects to the catalog
-  - select button on shelfMap on home screen renamed to "show books"
   - Search on home screen works and leads to CatalogSearchScreen
 
 - Scanning/InsertScreens
@@ -189,6 +179,9 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 
 ## Nice to have
 
+- CatalogHomeScreen: Hat button "select shelf to show books" und zeigt schon beim ersten öffnen die bücher des nähesten shelf?
+  - oder zeigt die most recently inserted books deutschlandweit als start?
+  - Results klickbar -> 'remove'/'take out' button
 - Use datetime and isoformat() in code and db for times? e.g. row["time_of_entry"].isoformat()
 - Mock dnb calls in tests with (from requests_mock.mocker import Mocker) so that tests dont fail if dnb offline?
   - add to fixtures.py: def app(requests_mock: Mocker) ... requests_mock.get(url) ...
@@ -244,3 +237,5 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - Nginx / Apache + Gunicorn (create production setup) (see /documentation)
   - rent & use own domain/online server (e.g. from Hetzner)
 - Use my standard response format (status, data) for response of cover image as well
+- Python Backend
+  - Improve search (make more fuzzy / use sqlite MATCH)
