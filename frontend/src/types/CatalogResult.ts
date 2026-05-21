@@ -4,6 +4,6 @@ import { LocatedShelf } from "./Shelf";
 export type CatalogResult = {
   entityId: number;
   book: Book;
-  locatedShelf: LocatedShelf;
+  locatedShelf: LocatedShelf | null;
   inShelfSince: string;
 };

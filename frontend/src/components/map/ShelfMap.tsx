@@ -6,16 +6,20 @@ type ShelfMapProps = {
   showSelect?: boolean;
   showInsert?: boolean;
   showRemove?: boolean;
+  showShowBooks?: boolean;
   onInsert?: (shelf: Shelf) => void;
   onRemove?: (shelf: Shelf) => void;
+  onShowBooks?: (shelf: Shelf) => void;
 };
 
 export default function ShelfMap({
   showSelect = true,
   showInsert = false,
   showRemove = false,
+  showShowBooks = false,
   onInsert,
   onRemove,
+  onShowBooks,
 }: ShelfMapProps) {
   return (
     <MapContainer
@@ -33,8 +37,10 @@ export default function ShelfMap({
         showSelect={showSelect}
         showInsert={showInsert}
         showRemove={showRemove}
+        showShowBooks={showShowBooks}
         onInsert={onInsert}
         onRemove={onRemove}
+        onShowBooks={onShowBooks}
       />
     </MapContainer>
   );

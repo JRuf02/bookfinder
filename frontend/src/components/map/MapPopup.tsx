@@ -1,14 +1,16 @@
 import { Button, Stack, Typography, Link } from "@mui/material";
-import { Bookshelf } from "../../services/bookshelves";
+import { Shelf } from "../../types/Shelf";
 
 type MapPopupProps = {
-  shelf: Bookshelf;
+  shelf: Shelf;
   showInsert?: boolean;
   showRemove?: boolean;
   showSelect?: boolean;
+  showShowBooks?: boolean;
   onInsert?: () => void;
   onRemove?: () => void;
   onSelect?: () => void;
+  onShowBooks?: () => void;
 };
 
 export default function MapPopup({
@@ -16,9 +18,11 @@ export default function MapPopup({
   showInsert,
   showRemove,
   showSelect,
+  showShowBooks,
   onInsert,
   onRemove,
   onSelect,
+  onShowBooks,
 }: MapPopupProps) {
   return (
     <Stack spacing={1} alignItems="flex-start" sx={{ minWidth: 200 }}>
@@ -84,6 +88,16 @@ export default function MapPopup({
             onClick={onSelect}
           >
             Select{/*Todo: Change to "Selected" if already selected*/}
+          </Button>
+        )}
+        {showShowBooks && (
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={onShowBooks}
+          >
+            Show Books{/*Todo: use mui icons?*/}
           </Button>
         )}
       </Stack>

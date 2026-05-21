@@ -11,16 +11,20 @@ type ShelfMapContentProps = {
   showSelect?: boolean;
   showInsert?: boolean;
   showRemove?: boolean;
+  showShowBooks?: boolean;
   onInsert?: (shelf: Shelf) => void;
   onRemove?: (shelf: Shelf) => void;
+  onShowBooks?: (shelf: Shelf) => void;
 };
 
 export default function ShelfMapContent({
   showSelect,
   showInsert,
   showRemove,
+  showShowBooks,
   onInsert,
   onRemove,
+  onShowBooks,
 }: ShelfMapContentProps) {
   const { state, dispatch } = useAppState();
   const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
@@ -73,30 +77,38 @@ export default function ShelfMapContent({
                 showInsert={showInsert}
                 showRemove={showRemove}
                 showSelect={showSelect}
+                showShowBooks={showShowBooks}
                 onInsert={
                   onInsert
                     ? () => onInsert(shelf)
                     : () => {
-                        console.log("Insert handler not provided");
+                        console.error("Insert handler not provided");
                       }
                 }
                 onRemove={
                   onRemove
                     ? () => onRemove(shelf)
                     : () => {
-                        console.log("Remove handler not provided");
+                        console.error("Remove handler not provided");
                       }
                 }
                 onSelect={() => {
                   dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
                 }}
+                onShowBooks={
+                  onShowBooks
+                    ? () => onShowBooks(shelf)
+                    : () => {
+                        console.error("ShowBooks handler not provided");
+                      }
+                }
               />
             </Popup>
           </Marker>
         ) : null,
       )}
 
-      {/* Selected shelf marker */}
+      {/* Selected shelf marker TODO: remove this, show "selected" on standard popup instead */}
       {state.selectedShelf && (
         <Marker
           position={[

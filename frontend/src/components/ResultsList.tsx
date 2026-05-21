@@ -48,39 +48,39 @@ export default function ResultsList({ results }: ResultsListProps) {
                   by {result.book.author}
                 </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
-                  Shelf: {result.locatedShelf.shelf.name || "Unknown"}
+                  Shelf: {result.locatedShelf?.shelf.name || "Unknown"}
                 </Typography>
                 <Typography variant="body2">
                   Distance:{" "}
-                  {result.locatedShelf.distanceMeters?.toFixed(2) || "Unknown"}{" "}
+                  {result.locatedShelf?.distanceMeters?.toFixed(2) || "Unknown"}{" "}
                   m
                 </Typography>
-                {result.locatedShelf.shelf.type && (
+                {result.locatedShelf?.shelf.type && (
                   <Typography variant="body2">
                     Type: {result.locatedShelf.shelf.type}
                   </Typography>
                 )}
-                {result.locatedShelf.shelf.address && (
+                {result.locatedShelf?.shelf.address && (
                   <Typography variant="body2">
                     Address: {result.locatedShelf.shelf.address}
                   </Typography>
                 )}
-                {result.locatedShelf.shelf.operator && (
+                {result.locatedShelf?.shelf.operator && (
                   <Typography variant="body2">
                     Operator: {result.locatedShelf.shelf.operator}
                   </Typography>
                 )}
-                {result.locatedShelf.shelf.openingHours && (
+                {result.locatedShelf?.shelf.openingHours && (
                   <Typography variant="body2">
                     Opening Hours: {result.locatedShelf.shelf.openingHours}
                   </Typography>
                 )}
-                {result.locatedShelf.shelf.website && (
+                {result.locatedShelf?.shelf.website && (
                   <Typography variant="body2">
                     Website: {result.locatedShelf.shelf.website}
                   </Typography>
                 )}
-                {result.locatedShelf.shelf.osmId && (
+                {result.locatedShelf?.shelf.osmId && (
                   <Typography variant="body2">
                     OSM ID: {result.locatedShelf.shelf.osmId}
                   </Typography>

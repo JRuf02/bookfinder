@@ -1,26 +1,77 @@
 import { Box, Typography, Container, CircularProgress } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
 import logo from "../../graphics/logo-long-no-bg.png";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import { getUserLocation } from "../services/location";
+import { fetchShelfBooks } from "../services/shelfBooks";
 import { CatalogResult } from "../types/CatalogResult";
+import { Shelf } from "../types/Shelf";
 import Checkbox from "@mui/material/Checkbox";
 import LocationOffIcon from "@mui/icons-material/LocationOff";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { useLocation } from "react-router-dom";
+
+type CatalogNavigationState = {
+  initialView?: "search" | "shelf-books";
+  shelf?: Shelf;
+};
 
 export default function CatalogHomeScreen() {
+  const location = useLocation();
+  const navigationState =
+    (location.state as CatalogNavigationState | null) ?? null;
+  const shelfFromState = useMemo(() => {
+    if (
+      navigationState?.initialView === "shelf-books" &&
+      navigationState.shelf
+    ) {
+      return navigationState.shelf;
+    }
+    return null;
+  }, [navigationState]);
+
   const [inputTitle, setInputTitle] = useState("");
   const [inputAuthor, setInputAuthor] = useState("");
-  const [useLocation, setUseLocation] = useState(false);
+  const [useUserLocation, setUseUserLocation] = useState(false);
+  const [activeShelf, setActiveShelf] = useState<Shelf | null>(shelfFromState);
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const loadBooksFromShelf = useCallback(async (shelf: Shelf) => {
+    setLoading(true);
+    setError(null);
+    setResults([]);
+
+    try {
+      const result = await fetchShelfBooks(shelf);
+
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
+
+      setResults(result.data);
+    } catch (err: any) {
+      setError(err.message || "Could not fetch shelf books.");
+      console.error("Error fetching books from shelf:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (shelfFromState) {
+      setActiveShelf(shelfFromState);
+      void loadBooksFromShelf(shelfFromState);
+    }
+  }, [loadBooksFromShelf, shelfFromState]);
+
   const handleInputSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      setActiveShelf(null);
       setLoading(true);
       setError(null);
       setResults([]);
@@ -33,13 +84,14 @@ export default function CatalogHomeScreen() {
         });
 
         // only request & send location if toggle is enabled
-        if (useLocation) {
+        if (useUserLocation) {
           const { lat, lon } = await getUserLocation();
 
           params.append("lat", lat.toString());
           params.append("lon", lon.toString());
         }
 
+        // TODO: Move api logic to services?
         const resp = await fetch(`/api/catalog/search?${params.toString()}`);
 
         if (!resp.ok) throw new Error("Server error");
@@ -52,7 +104,7 @@ export default function CatalogHomeScreen() {
         setLoading(false);
       }
     },
-    [inputTitle, inputAuthor, useLocation],
+    [inputTitle, inputAuthor, useUserLocation],
   );
 
   return (
@@ -90,6 +142,11 @@ export default function CatalogHomeScreen() {
           }}
         />
       </Box>
+      {activeShelf && (
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Showing books for shelf: {activeShelf.name || activeShelf.osmId}
+        </Typography>
+      )}
       Sort by: Distance | Newest | Oldest | Relevance
       <ISBNInput
         value={inputTitle}
@@ -109,8 +166,8 @@ export default function CatalogHomeScreen() {
         value="end"
         control={
           <Checkbox
-            checked={useLocation}
-            onChange={(e) => setUseLocation(e.target.checked)}
+            checked={useUserLocation}
+            onChange={(e) => setUseUserLocation(e.target.checked)}
             icon={<LocationOffIcon />}
             checkedIcon={<LocationOnIcon />}
           />

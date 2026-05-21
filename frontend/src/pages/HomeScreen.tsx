@@ -36,6 +36,16 @@ export default function HomeScreen() {
     navigateToRemove();
   };
 
+  const handleShowBooks = (shelf: Shelf): void => {
+    dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
+    navigate("/catalog", {
+      state: {
+        initialView: "shelf-books",
+        shelf,
+      },
+    });
+  };
+
   const LOGO_BAR_HEIGHT = "3.5rem";
   const CONTENT_MAX_WIDTH = "25rem";
 
@@ -105,11 +115,13 @@ export default function HomeScreen() {
           }}
         >
           <ShelfMap
-            showSelect={true}
+            showSelect={false}
             showInsert={true}
             showRemove={true}
+            showShowBooks={true}
             onInsert={handleInsert}
             onRemove={handleRemove}
+            onShowBooks={handleShowBooks}
           />
         </Card>
 
