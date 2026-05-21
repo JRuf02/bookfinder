@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Card } from "@mui/material";
 import ISBNInput from "../components/ISBNInput";
@@ -8,13 +8,28 @@ import { Shelf } from "../types/Shelf";
 import { useAppState } from "../state/AppStateProvider";
 
 export default function HomeScreen() {
-  const [inputIsbn, setInputIsbn] = useState("");
+  const [inputSearchTerm, setInputSearchTerm] = useState("");
   const { dispatch } = useAppState();
   const navigate = useNavigate();
 
-  const handleInputSubmit = useCallback(() => {
-    // todo: Handle the ISBN input submission
-  }, [inputIsbn]);
+  const handleInputSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+
+      const searchTerm = inputSearchTerm.trim();
+      if (!searchTerm) {
+        return;
+      }
+
+      navigate("/catalog", {
+        state: {
+          initialView: "single-term-search",
+          searchTerm,
+        },
+      });
+    },
+    [inputSearchTerm, navigate],
+  );
 
   const navigateToInsert = (): void => {
     dispatch({ type: "SET_PRESELECTED_SHELF_ACTION", payload: "insert" });
@@ -90,10 +105,10 @@ export default function HomeScreen() {
       >
         {/* Search Input */}
         <ISBNInput
-          value={inputIsbn}
+          value={inputSearchTerm}
           placeholder="Search book by title, author, or ISBN"
           label="Search book by title, author, or ISBN"
-          onChange={(e) => setInputIsbn(e.target.value)}
+          onChange={(e) => setInputSearchTerm(e.target.value)}
           onSubmit={handleInputSubmit}
         />
 

@@ -264,3 +264,105 @@ def _fetch_all_books_from_catalog(
     # but entities with the same fuzzy score will remain sorted by distance.
 
     return results
+
+
+def search_in_catalog_by_isbn(
+    isbn: Isbn, user_coordinates: GeoCoordinates | None = None
+) -> list[BookEntity]:
+    """Search for books by ISBN and return entries with shelf info and distance."""
+
+    with db_cursor() as c:
+        c.execute(
+            """
+            SELECT cc.entry_id, cc.osm_id, cc.isbn,
+            b.title, b.author, b.dnb_id, b.cover_url,
+            bs.latitude AS shelf_latitude,
+            bs.longitude AS shelf_longitude,
+            bs.name AS shelf_name,
+            bs.type AS shelf_type,
+            bs.address, bs.opening_hours, bs.operator, bs.website,
+            bs.osm_check_date, bs.osm_last_updated,
+            cc.time_of_entry
+            FROM current_catalog cc
+            JOIN books b ON cc.isbn = b.isbn
+            JOIN bookshelves bs ON cc.osm_id = bs.osm_id
+            WHERE b.isbn = ?
+        """,
+            (str(isbn),),
+        )
+        rows = c.fetchall()
+
+    results = []
+    for row in rows:
+        osm_id = OsmId.parse(row["osm_id"])
+        if osm_id is None:
+            logger.warning("Missing osm_id for shelf. Skipping book entity.")
+            continue  # Skip entries without osm_id
+
+        entry_id = row["entry_id"]
+        if row["time_of_entry"] is None:
+            logger.warning(
+                f"Missing time_of_entry for catalog entity with entry_id {entry_id}"
+            )
+            continue  # Skip entries without time_of_entry
+        if entry_id is None:
+            # This should not happen, as entry_id is a primary key
+            logger.error(f"Entity without entry_id in current_catalog for ISBN {isbn}.")
+            continue
+
+        shelf_coordinates = GeoCoordinates.parse(
+            raw_latitude=row["shelf_latitude"], raw_longitude=row["shelf_longitude"]
+        )
+        if shelf_coordinates is None or isinstance(
+            shelf_coordinates, GeoCoordinateError
+        ):
+            # Don't include results without coordinates
+            logger.warning(
+                f"Invalid shelf coordinates for shelf with OSM id {row['osm_id']}."
+            )
+            continue
+
+        if user_coordinates is not None:
+            dist_m = haversine(
+                user_coordinates.longitude,
+                user_coordinates.latitude,
+                shelf_coordinates.longitude,
+                shelf_coordinates.latitude,
+            )
+        else:
+            dist_m = None
+
+        results.append(
+            BookEntity(
+                entity_id=entry_id,
+                book=Book(
+                    isbn=isbn,
+                    title=row["title"],
+                    author=row["author"],
+                    dnb_id=row["dnb_id"],
+                    cover_url=row["cover_url"],
+                ),
+                located_shelf=LocatedShelf(
+                    shelf=Shelf(
+                        osm_id=osm_id,
+                        name=row["shelf_name"],
+                        latitude=row["shelf_latitude"],
+                        longitude=row["shelf_longitude"],
+                        address=row["address"],
+                        type=row["shelf_type"],
+                        operator=row["operator"],
+                        website=row["website"],
+                        opening_hours=row["opening_hours"],
+                        osm_check_date=row["osm_check_date"],
+                        osm_last_updated=row["osm_last_updated"],
+                    ),
+                    distance_meters=dist_m,
+                ),
+                in_shelf_since=row["time_of_entry"],
+            )
+        )
+
+    if user_coordinates is not None:
+        results.sort(key=lambda x: x.located_shelf.distance_meters)
+
+    return results

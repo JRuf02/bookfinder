@@ -10,7 +10,7 @@ from flask_cors import CORS
 from app.db.database import init_db
 from app.routes.books import get_book_api_logic
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
-from app.routes.catalog import search_in_catalog
+from app.routes.catalog import search_in_catalog, single_term_search_in_catalog
 from app.routes.covers import get_cover_by_isbn
 from app.routes.shelf import (
     get_books_in_shelf,
@@ -67,6 +67,11 @@ def create_app() -> Flask:  # noqa: C901
     @app.route("/api/catalog/search", methods=["GET"])
     def search_in_catalog_api() -> ResponseReturnValue:
         return search_in_catalog(request)
+
+    # TODO: Tests for this endpoint
+    @app.route("/api/catalog/search/single-term", methods=["GET"])
+    def single_term_search_in_catalog_api() -> ResponseReturnValue:
+        return single_term_search_in_catalog(request)
 
     return app
 

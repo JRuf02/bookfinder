@@ -47,6 +47,9 @@ export default function ResultsList({ results }: ResultsListProps) {
                 <Typography variant="body2" color="text.secondary">
                   by {result.book.author}
                 </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {result.book.isbn || "Unknown"}
+                </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
                   Shelf: {result.locatedShelf?.shelf.name || "Unknown"}
                 </Typography>
@@ -85,7 +88,11 @@ export default function ResultsList({ results }: ResultsListProps) {
                     OSM ID: {result.locatedShelf.shelf.osmId}
                   </Typography>
                 )}
-                <Typography variant="body2">
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: 1 }}
+                >
                   In shelf since: {result.inShelfSince}
                 </Typography>
               </Box>

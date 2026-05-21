@@ -4,6 +4,7 @@ import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import { getUserLocation } from "../services/location";
+import { singleTermCatalogSearch } from "../services/catalogSearch";
 import { fetchShelfBooks } from "../services/shelfBooks";
 import { CatalogResult } from "../types/CatalogResult";
 import { Shelf } from "../types/Shelf";
@@ -12,14 +13,20 @@ import LocationOffIcon from "@mui/icons-material/LocationOff";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
+import { useAppState } from "../state/AppStateProvider";
 
 type CatalogNavigationState = {
-  initialView?: "search" | "shelf-books";
-  shelf?: Shelf;
+  initialView?: "search" | "shelf-books" | "single-term-search";
+  shelf?: Shelf; // Should only be used if initialView is "shelf-books"
+  searchTerm?: string; // Should only be used if initialView is "single-term-search"
 };
 
 export default function CatalogHomeScreen() {
-  const location = useLocation();
+  // Optional parameters when navigating to the CatalogHomeScreen:
+  // - initialView: If set to "shelf-books", the screen will immediately load books from the provided shelf.
+  // - shelf: The shelf to load books from if initialView is "shelf-books".
+  // - searchTerm: The search term to use if initialView is "single-term-search".
+  const location = useLocation(); // Access navigation state
   const navigationState =
     (location.state as CatalogNavigationState | null) ?? null;
   const shelfFromState = useMemo(() => {
@@ -31,14 +38,25 @@ export default function CatalogHomeScreen() {
     }
     return null;
   }, [navigationState]);
+  const searchTermFromState = useMemo(() => {
+    if (
+      navigationState?.initialView === "single-term-search" &&
+      navigationState.searchTerm
+    ) {
+      return navigationState.searchTerm;
+    }
+    return null;
+  }, [navigationState]);
 
-  const [inputTitle, setInputTitle] = useState("");
-  const [inputAuthor, setInputAuthor] = useState("");
-  const [useUserLocation, setUseUserLocation] = useState(false);
+  const [inputTitle, setInputTitle] = useState<string>("");
+  const [inputAuthor, setInputAuthor] = useState<string>("");
+  const [inputISBN, setInputISBN] = useState<string>("");
+  const [useUserLocation, setUseUserLocation] = useState<boolean>(false);
   const [activeShelf, setActiveShelf] = useState<Shelf | null>(shelfFromState);
   const [results, setResults] = useState<CatalogResult[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { state, dispatch } = useAppState();
 
   const loadBooksFromShelf = useCallback(async (shelf: Shelf) => {
     setLoading(true);
@@ -61,12 +79,89 @@ export default function CatalogHomeScreen() {
     }
   }, []);
 
+  const loadSingleTermSearch = useCallback(async (searchTerm: string) => {
+    setLoading(true);
+    setError(null);
+    setResults([]);
+
+    // if userCoordinates is in AppState, pass them to the search function to prioritize nearby results
+    let userCoords = state.userCoordinates ? state.userCoordinates : null;
+
+    try {
+      const result = await singleTermCatalogSearch(searchTerm, userCoords);
+
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
+
+      setResults(result.data);
+      setActiveShelf(null);
+    } catch (err: any) {
+      setError(err.message || "Could not fetch results.");
+      console.error("Error during single-term search:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (shelfFromState) {
       setActiveShelf(shelfFromState);
       void loadBooksFromShelf(shelfFromState);
+    } else if (searchTermFromState) {
+      void loadSingleTermSearch(searchTermFromState);
     }
-  }, [loadBooksFromShelf, shelfFromState]);
+  }, [
+    loadBooksFromShelf,
+    loadSingleTermSearch,
+    searchTermFromState,
+    shelfFromState,
+  ]);
+
+  const handleISBNSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setActiveShelf(null);
+      setLoading(true);
+      setError(null);
+      setResults([]);
+      setInputTitle("");
+      setInputAuthor("");
+
+      try {
+        const isbn = inputISBN.trim();
+        if (!isbn) {
+          return;
+        }
+
+        const currentUserLocation = useUserLocation
+          ? await getUserLocation()
+          : null;
+
+        // cache user coordinates in global AppState
+        if (currentUserLocation) {
+          dispatch({
+            type: "SET_USER_COORDINATES",
+            payload: currentUserLocation,
+          });
+        }
+
+        const result = await singleTermCatalogSearch(isbn, currentUserLocation);
+
+        if (!result.ok) {
+          throw new Error(result.error);
+        }
+
+        setResults(result.data);
+      } catch (err: any) {
+        setError(err.message || "Could not fetch results.");
+        console.error("Error during ISBN single-term search:", err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [inputISBN, useUserLocation],
+  );
 
   const handleInputSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -75,6 +170,7 @@ export default function CatalogHomeScreen() {
       setLoading(true);
       setError(null);
       setResults([]);
+      setInputISBN("");
 
       try {
         // build query params safely
@@ -85,13 +181,20 @@ export default function CatalogHomeScreen() {
 
         // only request & send location if toggle is enabled
         if (useUserLocation) {
-          const { lat, lon } = await getUserLocation();
+          const currentUserLocation = await getUserLocation();
 
-          params.append("lat", lat.toString());
-          params.append("lon", lon.toString());
+          // cache user coordinates in global AppState
+          if (currentUserLocation) {
+            dispatch({
+              type: "SET_USER_COORDINATES",
+              payload: currentUserLocation,
+            });
+          }
+
+          params.append("lat", currentUserLocation.latitude.toString());
+          params.append("lon", currentUserLocation.longitude.toString());
         }
 
-        // TODO: Move api logic to services?
         const resp = await fetch(`/api/catalog/search?${params.toString()}`);
 
         if (!resp.ok) throw new Error("Server error");
@@ -161,6 +264,13 @@ export default function CatalogHomeScreen() {
         label="Search books near you by author"
         onChange={(e) => setInputAuthor(e.target.value)}
         onSubmit={handleInputSubmit}
+      />
+      <ISBNInput
+        value={inputISBN}
+        placeholder="Search books near you by ISBN"
+        label="Search books near you by ISBN"
+        onChange={(e) => setInputISBN(e.target.value)}
+        onSubmit={handleISBNSubmit}
       />
       <FormControlLabel
         value="end"

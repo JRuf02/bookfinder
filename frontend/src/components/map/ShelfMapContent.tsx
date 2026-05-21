@@ -37,11 +37,11 @@ export default function ShelfMapContent({
   // Handler for LocateMeControl
   const handleLocateMeClick = async () => {
     try {
-      const { lat, lon } = await getUserLocation();
-      map.setView([lat, lon], 15);
+      const userCoords = await getUserLocation();
+      map.setView([userCoords.latitude, userCoords.longitude], 15);
       dispatch({
         type: "SET_USER_COORDINATES",
-        payload: { latitude: lat, longitude: lon },
+        payload: userCoords,
       });
     } catch {
       // TODO: show error to user / log
