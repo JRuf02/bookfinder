@@ -7,7 +7,13 @@ from app.models.identifiers import Isbn
 
 
 def get_cover_by_isbn(request: Request) -> ResponseReturnValue:
-    """Call with dnb isbn format and size."""
+    """Get cover image for a book by its ISBN.
+
+    Request parameters:
+    - isbn: ISBN of the book (required)
+    - size: Size of the cover image, one of "s", "m", "l" (optional, default: "l")
+    """
+
     isbn = Isbn.parse(request.args.get("isbn"))
     size = request.args.get("size", "l").lower()
 

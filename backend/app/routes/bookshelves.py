@@ -13,7 +13,10 @@ MAX_LONGITUDE = 180
 
 
 def get_all_bookshelves() -> ResponseReturnValue:
-    """Get metadata of all bookshelves."""
+    """Get metadata of all bookshelves.
+
+    Request parameters: None
+    """
     bookshelves = get_all_bookshelves_from_db()
     return jsonify(
         {
@@ -26,7 +29,13 @@ def get_all_bookshelves() -> ResponseReturnValue:
 # TODO: Use or remove/rewrite endpoint
 # TODO? Exchange radius for num nearby shelves?
 def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
-    """Get nearby bookshelves based on latitude, longitude and radius."""
+    """Get nearby bookshelves based on latitude, longitude and radius.
+
+    Request parameters:
+    - lat: User latitude (required)
+    - lon: User longitude (required)
+    - radius: Search radius in meters (optional, default: 5000)
+    """
 
     # TODO: Use GeoCoordinates.parse() here and in the db function
 

@@ -11,6 +11,12 @@ from app.utils.naming import as_json_dict
 def search_in_catalog(request: Request) -> ResponseReturnValue:
     """Search for books in the catalog (by title and / or author) and
     compute distance to the shelf if given user coordinates.
+
+    Request parameters:
+    - title: Book title (optional, but at least title or author must be given)
+    - author: Book author (optional, but at least title or author must be given)
+    - lat: User latitude (optional, required if lon given)
+    - lon: User longitude (optional, required if lat given)
     """
 
     title = request.args.get("title")
@@ -56,6 +62,14 @@ def search_in_catalog(request: Request) -> ResponseReturnValue:
 def single_term_search_in_catalog(request: Request) -> ResponseReturnValue:
     """Search for books in the catalog by a single search term, which is matched
     against title, author and ISBN).
+    If the search term is a valid ISBN, it is searched as ISBN only.
+    The request can also contain user coordinates to compute distance to the shelf
+    of each search result.
+
+    Request parameters:
+    - q: Search term (required)
+    - lat: User latitude (optional, required if lon given)
+    - lon: User longitude (optional, required if lat given)
     """
 
     search_term = request.args.get("q")

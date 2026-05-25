@@ -13,12 +13,19 @@ logger = logging.getLogger(__name__)
 
 
 def get_book_api_logic(request: Request) -> ResponseReturnValue:
-    """Handle the api/book request by validating inputs and fetching data."""
+    """Get book metadata by ISBN.
+
+    Request parameters:
+    - isbn: ISBN of the book to fetch data for (required)
+    """
+
+    # Validate and parse input
     isbn = Isbn.parse(request.args.get("isbn"))
 
     if not isbn:
         return jsonify({"status": "error", "message": "Invalid or missing ISBN"}), 400
 
+    # Fetch book metadata
     book = get_book(isbn)
 
     if not book:
@@ -28,8 +35,8 @@ def get_book_api_logic(request: Request) -> ResponseReturnValue:
 
 
 def get_book(isbn: Isbn) -> Book | None:  # TODO: check usages
-    """Fetch book data by normalized ISBN, first from local DB,
-    then from DNB if not found.
+    """Fetch book metadata by normalized ISBN, first from local DB,
+    then from DNB if not found in local DB. Store fetched data in local DB.
     """
 
     # 1. Try to get book from local DB

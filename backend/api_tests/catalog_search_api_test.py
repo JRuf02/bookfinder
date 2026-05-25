@@ -14,7 +14,7 @@ def assert_correct_test_book_entity_in_response_data(
     distance_meters: float | None = None,
 ) -> None:
     """Ensure the "data" field in the response JSON consists of only one BookEntity,
-    and that it is the test book in the test shelf.
+    and that it is the test book (Sprengstoff by Stephen King) in the test shelf.
 
     response: TestResponse (from werkzeug.test).
     No type annotation because default mime type for TestResponse is None.

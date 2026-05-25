@@ -1,4 +1,9 @@
-"""Flask backend for the book sharing web app."""
+"""Flask backend for the book sharing web app.
+
+This file sets up the Flask application, defines API routes,
+and initializes the database connection.
+It serves as the main entry point for the backend server.
+"""
 
 import logging
 from pathlib import Path
@@ -44,7 +49,7 @@ def create_app() -> Flask:  # noqa: C901
     def get_all_bookshelves_api() -> ResponseReturnValue:
         return get_all_bookshelves()
 
-    @app.route("/api/bookshelves/nearby", methods=["GET"])
+    @app.route("/api/bookshelves/nearby", methods=["GET"])  # TODO: Use this endpoint!
     def get_nearby_bookshelves_api() -> ResponseReturnValue:
         return get_nearby_bookshelves(request)
 
@@ -52,7 +57,7 @@ def create_app() -> Flask:  # noqa: C901
     def get_shelf_metadata_api() -> ResponseReturnValue:
         return get_shelf_metadata(request)
 
-    @app.route("/api/shelf/books", methods=["GET"])  # TODO: Use this endpoint!
+    @app.route("/api/shelf/books", methods=["GET"])
     def get_books_in_shelf_api() -> ResponseReturnValue:
         return get_books_in_shelf(request)
 

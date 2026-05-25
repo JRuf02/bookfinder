@@ -16,7 +16,11 @@ from app.utils.naming import as_json_dict
 
 
 def get_shelf_metadata(request: Request) -> ResponseReturnValue:
-    """Fetch metadata of the given shelf."""
+    """Fetch metadata of the given shelf.
+
+    Request parameters:
+    - osm_id: OSM ID of the shelf (required)
+    """
 
     osm_id = OsmId.parse(request.args.get("osm_id"))
     if not osm_id:
@@ -36,7 +40,11 @@ def get_shelf_metadata(request: Request) -> ResponseReturnValue:
 
 
 def get_books_in_shelf(request: Request) -> ResponseReturnValue:
-    """Fetch all books from the given shelf."""
+    """Fetch all books from the given shelf.
+
+    Request parameters:
+    - osm_id: OSM ID of the shelf (required)
+    """
 
     osm_id = OsmId.parse(request.args.get("osm_id"))
     if not osm_id:
@@ -51,7 +59,12 @@ def get_books_in_shelf(request: Request) -> ResponseReturnValue:
 
 
 def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
-    """Insert a book into the given shelf."""
+    """Insert a book into the given shelf.
+
+    Request body (JSON):
+    - osm_id: OSM ID of the shelf (required)
+    - isbn: ISBN of the book to insert (required)
+    """
 
     data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))
@@ -96,7 +109,12 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
 
 
 def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
-    """Remove a book from the given shelf."""
+    """Remove a book entity from the given shelf.
+
+    Request body (JSON):
+    - osm_id: OSM ID of the shelf (required)
+    - isbn: ISBN of the book to remove (required)
+    """
 
     data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))
