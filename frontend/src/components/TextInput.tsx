@@ -2,7 +2,7 @@ import { TextField, Button, Box } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 // TODO: rename component (not just ISBN input, but also title/author search)
-type ISBNInputProps = {
+type TextInputProps = {
   placeholder?: string;
   label?: string;
   value: string;
@@ -11,13 +11,13 @@ type ISBNInputProps = {
 };
 
 // More mui styling options for the input text field: https://mui.com/material-ui/react-text-field/
-export default function ISBNInput({
+export default function TextInput({
   placeholder = "Enter ISBN manually",
   label = "Enter ISBN manually",
   value,
   onChange,
   onSubmit,
-}: ISBNInputProps) {
+}: TextInputProps) {
   return (
     <Box
       component="form"

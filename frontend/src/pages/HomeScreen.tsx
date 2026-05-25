@@ -1,7 +1,7 @@
 import { useState, useCallback, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Card } from "@mui/material";
-import ISBNInput from "../components/ISBNInput";
+import TextInput from "../components/TextInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import ShelfMap from "../components/map/ShelfMap";
 import { Shelf } from "../types/Shelf";
@@ -104,7 +104,7 @@ export default function HomeScreen() {
         }}
       >
         {/* Search Input */}
-        <ISBNInput
+        <TextInput
           value={inputSearchTerm}
           placeholder="Search book by title, author, or ISBN"
           label="Search book by title, author, or ISBN"

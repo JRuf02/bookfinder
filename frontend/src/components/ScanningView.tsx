@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import Scanner from "../components/Scanner";
-import ISBNInput from "../components/ISBNInput";
+import TextInput from "./TextInput";
 import { Box, Container, Typography } from "@mui/material";
 
 type ScanningViewProps = {
@@ -70,7 +70,7 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
         />
       </Box>
       <Box className="input-overlay">
-        <ISBNInput
+        <TextInput
           value={inputIsbn}
           onChange={(e) => setInputIsbn(e.target.value)}
           onSubmit={handleInputSubmit}

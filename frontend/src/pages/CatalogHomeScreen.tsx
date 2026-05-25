@@ -1,5 +1,5 @@
 import { Box, Typography, Container, CircularProgress } from "@mui/material";
-import ISBNInput from "../components/ISBNInput";
+import TextInput from "../components/TextInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/ResultsList";
@@ -267,14 +267,14 @@ export default function CatalogHomeScreen() {
           gap: 0,
         }}
       >
-        <ISBNInput
+        <TextInput
           value={inputTitle}
           placeholder="Search books near you by title"
           label="Search books near you by title"
           onChange={(e) => setInputTitle(e.target.value)}
           onSubmit={handleInputSubmit}
         />
-        <ISBNInput
+        <TextInput
           value={inputAuthor}
           placeholder="Search books near you by author"
           label="Search books near you by author"
@@ -282,7 +282,7 @@ export default function CatalogHomeScreen() {
           onSubmit={handleInputSubmit}
         />
       </Box>
-      <ISBNInput
+      <TextInput
         value={inputISBN}
         placeholder="Search books near you by ISBN"
         label="Search books near you by ISBN"
