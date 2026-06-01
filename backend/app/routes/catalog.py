@@ -72,7 +72,26 @@ def single_term_search_in_catalog(request: Request) -> ResponseReturnValue:
     - lon: User longitude (optional, required if lat given)
     """
 
+    if request.args.get("author") or request.args.get("title"):
+        return jsonify(
+            {
+                "status": "error",
+                "message": "Author and title parameters are not allowed.",
+            }
+        ), HttpStatus.BAD_REQUEST.value
+
     search_term = request.args.get("q")
+
+    if not search_term or search_term.strip() == "":
+        return jsonify(
+            {
+                "status": "error",
+                "message": "Missing query parameter: 'q' (Search term).",
+            }
+        ), HttpStatus.BAD_REQUEST.value
+
+    search_term = search_term.strip()
+
     user_lat = request.args.get("lat", type=float)
     user_lon = request.args.get("lon", type=float)
     user_coords = GeoCoordinates.parse(raw_latitude=user_lat, raw_longitude=user_lon)
@@ -83,13 +102,6 @@ def single_term_search_in_catalog(request: Request) -> ResponseReturnValue:
                 "message": f"Invalid user coordinates: {user_coords.message}",
             }
         ), HttpStatus.BAD_REQUEST.value
-
-    if not search_term or search_term.strip() == "":
-        return jsonify(
-            {"status": "error", "message": "Search term must be given."}
-        ), HttpStatus.BAD_REQUEST.value
-
-    search_term = search_term.strip()
 
     isbn = Isbn.parse(search_term)
     if isbn:

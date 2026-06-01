@@ -238,4 +238,4 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - rent & use own domain/online server (e.g. from Hetzner)
 - Use my standard response format (status, data) for response of cover image as well
 - Python Backend
-  - Improve search (make more fuzzy / use sqlite MATCH)
+  - Improve search (make more fuzzy / use sqlite MATCH), check out [RapidFuzz](https://pypi.org/project/RapidFuzz/)
