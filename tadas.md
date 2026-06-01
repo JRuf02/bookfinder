@@ -21,6 +21,9 @@
 - HomeScreen
   - select button on homescreen map redirects to the catalog
 
+- top level Makefile
+  - make test
+    - Runs make test from frontend and backend makefiles
 - use state/AppContextProvider.tsx
   - move userCoords there
 - check if the book exists in shelf before removing (backend!)

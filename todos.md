@@ -6,9 +6,7 @@
   - Maybe add 'nearest shelves' to catalog page?
 
 - Code Quality:
-  - top level Makefile
-    - make test
-      - Runs make test from frontend and backend makefiles
+  - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
   - Unit tests
     - Backend test for when DNB is down
     - Unit tests for python (backend) only for complex logic functions
@@ -64,7 +62,7 @@
 - Scanning/InsertScreens
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
   - select button switches to "selected" when clicked on shelfActionScreen
-  - 'scan another' should compile a list of books that can be inserted/removed at once
+  - 'scan another' should compile a list of books that can be inserted/removed at once <============================================
   - rescan sinnvoll umbenennen (z.B. 'verwerfen' / 'not my book' / 'incorrect book')
 
 - InfoScreen
