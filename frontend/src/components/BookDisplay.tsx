@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Book } from "../types/Book";
 import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
   Box,
   Typography,
@@ -14,12 +15,14 @@ type BookDisplayProps = {
   book: Book;
   isbn: string;
   onScanMore: () => void;
+  onWrongBook: () => void;
 };
 
 export default function BookDisplay({
   book,
   isbn,
   onScanMore: onScanMore,
+  onWrongBook: onWrongBook,
 }: BookDisplayProps) {
   const [coverUrl, setCoverUrl] = useState<string>("");
   const [imageError, setImageError] = useState(false);
@@ -87,6 +90,15 @@ export default function BookDisplay({
           sx={{ mt: 2 }}
         >
           Scan More
+        </Button>
+        <Button
+          startIcon={<CancelIcon />}
+          variant="outlined"
+          color="secondary"
+          onClick={onWrongBook}
+          sx={{ mt: 2, ml: 2 }}
+        >
+          Wrong Book
         </Button>
       </CardContent>
     </Card>

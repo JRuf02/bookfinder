@@ -7,14 +7,18 @@ import { ShelfAction } from "../types/ShelfAction";
 
 export default function ScanningScreen() {
   const { dispatch } = useAppState();
-  const [isbn, setIsbn] = useState<string | null>(null);
+  const [isbn, setIsbn] = useState<string | null>(null); // TODO: remove this (duplicate with scannedIsbns[-1])
+  const [scannedIsbns, setScannedIsbns] = useState<string[]>([]);
   const [selectedShelfAction, setSelectedShelfAction] =
     useState<ShelfAction | null>(null);
 
   if (!isbn) {
     return (
       <ScanningView
-        onScanComplete={(scannedIsbn: string) => setIsbn(scannedIsbn)}
+        onScanComplete={(scannedIsbn: string) => {
+          setIsbn(scannedIsbn);
+          setScannedIsbns((prev) => [...prev, scannedIsbn]);
+        }}
       />
     );
   }
@@ -26,9 +30,17 @@ export default function ScanningScreen() {
         onActionSelected={(action: ShelfAction) => {
           setSelectedShelfAction(action);
         }}
-        onRescan={() => {
+        onCancel={() => {
           setIsbn(null);
           setSelectedShelfAction(null);
+        }}
+        onWrongBook={() => {
+          // TODO
+          alert("TODO");
+        }}
+        onScanMore={() => {
+          // TODO
+          alert("TODO");
         }}
       />
     );
@@ -42,7 +54,7 @@ export default function ScanningScreen() {
         setSelectedShelfAction(null);
         dispatch({ type: "RESET_PRESELECTED_SHELF_ACTION" });
       }}
-      onRescan={() => {
+      onRestart={() => {
         setIsbn(null);
         setSelectedShelfAction(null);
       }}

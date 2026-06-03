@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import BookDisplay from "./BookDisplay";
 import { fetchBookData } from "../services/fetchBookData";
 import { Button, Stack, Box, Container, Typography } from "@mui/material";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import { Book } from "../types/Book";
 import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
@@ -9,13 +11,17 @@ import { ShelfAction } from "../types/ShelfAction";
 type ScanningResultsProps = {
   isbn: string;
   onActionSelected: (action: ShelfAction) => void;
-  onRescan: () => void;
+  onCancel: () => void;
+  onWrongBook: () => void;
+  onScanMore: () => void;
 };
 
 export default function ScanningResults({
   isbn,
   onActionSelected,
-  onRescan,
+  onCancel: onCancel,
+  onWrongBook: onWrongBook,
+  onScanMore: onScanMore,
 }: ScanningResultsProps) {
   const { state } = useAppState();
   const [book, setBook] = useState<Book | null>(null);
@@ -43,35 +49,43 @@ export default function ScanningResults({
     });
   };
 
+  // TODO: Test multibook insert with error scans in between
   return (
     <Container className="app-container">
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
         {book && (
           <>
-            <BookDisplay book={book} isbn={isbn} onScanMore={onRescan} />
+            <BookDisplay
+              book={book}
+              isbn={isbn}
+              onScanMore={onScanMore}
+              onWrongBook={onWrongBook}
+            />
             <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
               {(state.preSelectedShelfAction === "insert" ||
                 state.preSelectedShelfAction === "both") && (
                 <Button
+                  startIcon={<PlaylistAddIcon />}
                   variant="contained"
                   color="primary"
                   onClick={() => handleActionSelected("insert")}
                 >
-                  Insert into bookshelf
+                  Insert x books into bookshelf
                 </Button>
               )}
               {(state.preSelectedShelfAction === "remove" ||
                 state.preSelectedShelfAction === "both") && (
                 <Button
+                  startIcon={<PlaylistRemoveIcon />}
                   variant="contained"
                   color="secondary"
                   onClick={() => handleActionSelected("remove")}
                 >
-                  Remove from bookshelf
+                  Remove x books from bookshelf
                 </Button>
               )}
-              <Button variant="outlined" onClick={onRescan}>
-                Rescan
+              <Button variant="outlined" onClick={onCancel}>
+                Cancel
               </Button>
             </Stack>
           </>
@@ -84,8 +98,8 @@ export default function ScanningResults({
             <Typography variant="body1" color="text.secondary">
               {backendError}
             </Typography>
-            <Button variant="outlined" onClick={onRescan} sx={{ mt: "1rem" }}>
-              Try Again
+            <Button variant="outlined" onClick={onCancel} sx={{ mt: "1rem" }}>
+              Try Again (= Cancel - TODO: add retry option)
             </Button>
           </Box>
         )}

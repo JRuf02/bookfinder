@@ -88,6 +88,7 @@
   - add makefile targets make run and make run dev
 
 - Finalization:
+  - make build o.ä. sollte die DB bauen falls noch nicht existiert
   - .vscode/tasks.json tasks löschen wenn makefile fertig
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
   - add svg icon
@@ -238,3 +239,4 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - Python Backend
   - Improve search (make more fuzzy / use sqlite MATCH), check out [RapidFuzz](https://pypi.org/project/RapidFuzz/)
 - Benachrichtigungsservice wenn gewünschtes Buch eingestellt wird
+- Unique barcodes for each shelf -> scan shelf code to select it

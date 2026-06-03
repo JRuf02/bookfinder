@@ -17,13 +17,13 @@ import { ShelfAction } from "../types/ShelfAction";
 type ShelfActionViewProps = {
   action: ShelfAction;
   onCancel: () => void;
-  onRescan: () => void;
+  onRestart: () => void;
 };
 
 export default function ShelfActionView({
   action,
   onCancel,
-  onRescan,
+  onRestart: onRestart,
 }: ShelfActionViewProps) {
   const { state, dispatch } = useAppState();
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
@@ -103,8 +103,8 @@ export default function ShelfActionView({
           </Stack>
         ) : (
           <Box sx={{ mt: "1.5rem" }}>
-            <Button variant="outlined" sx={{ mt: 2 }} onClick={onRescan}>
-              Scan Another
+            <Button variant="outlined" sx={{ mt: 2 }} onClick={onRestart}>
+              Restart Scanning
             </Button>
           </Box>
         )}
