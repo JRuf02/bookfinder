@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Book } from "../types/Book";
+import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
   Typography,
@@ -12,13 +13,13 @@ import {
 type BookDisplayProps = {
   book: Book;
   isbn: string;
-  onRescan: () => void;
+  onScanMore: () => void;
 };
 
 export default function BookDisplay({
   book,
   isbn,
-  onRescan,
+  onScanMore: onScanMore,
 }: BookDisplayProps) {
   const [coverUrl, setCoverUrl] = useState<string>("");
   const [imageError, setImageError] = useState(false);
@@ -79,12 +80,13 @@ export default function BookDisplay({
         )}
 
         <Button
+          startIcon={<AddIcon />}
           variant="contained"
           color="primary"
-          onClick={onRescan}
+          onClick={onScanMore}
           sx={{ mt: 2 }}
         >
-          Scan Another
+          Scan More
         </Button>
       </CardContent>
     </Card>

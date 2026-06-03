@@ -48,7 +48,7 @@ export default function ScanningResults({
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
         {book && (
           <>
-            <BookDisplay book={book} isbn={isbn} onRescan={onRescan} />
+            <BookDisplay book={book} isbn={isbn} onScanMore={onRescan} />
             <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
               {(state.preSelectedShelfAction === "insert" ||
                 state.preSelectedShelfAction === "both") && (
