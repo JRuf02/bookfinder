@@ -75,7 +75,7 @@ export default function ScanningResults({
 
   const handleActionSelected = (action: "insert" | "remove") => {
     onActionSelected({
-      book: currentBook as Book,
+      books: queuedBooks,
       action,
     });
   };

@@ -70,6 +70,11 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
 
+    # TODO: remove this error
+    return jsonify(
+        {"status": "error", "message": "just for testing frontend error handling"}
+    ), HttpStatus.BAD_REQUEST.value
+
     if not osm_id:
         return jsonify(
             {"status": "error", "message": "osm_id not provided or invalid"}

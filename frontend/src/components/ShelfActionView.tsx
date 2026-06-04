@@ -31,29 +31,101 @@ export default function ShelfActionView({
     success: boolean;
     message: string;
   } | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleShelfSubmit = async () => {
-    let shelfId = state.selectedShelf?.osmId;
+    const shelfId = state.selectedShelf?.osmId;
     if (!shelfId) {
       setResult({ success: false, message: "Shelf ID is required." });
       return;
     }
+
+    if (action.books.length === 0) {
+      setResult({
+        success: false,
+        message: "Please scan at least one book before submitting.",
+      });
+      return;
+    }
+
     dispatch({ type: "RESET_PRESELECTED_SHELF_ACTION" });
-    const res = await shelfAction(action.action, shelfId, action.book.isbn);
-    setResult(res);
+
+    let succeededCount = 0;
+    let errorCount = 0;
+
+    for (const book of action.books) {
+      const res = await shelfAction(action.action, shelfId, book.isbn);
+      if (res.success) {
+        succeededCount += 1;
+      } else {
+        setErrors((prev) => [
+          ...prev,
+          `Failed to ${action.action}\n${book.title ?? book.isbn} (${book.isbn}): ${res.message}`,
+        ]);
+        errorCount += 1;
+      }
+    }
+
+    const totalCount = action.books.length;
+    const actionVerb = action.action === "insert" ? "inserted" : "removed";
+
+    if (errorCount === 0) {
+      setResult({
+        success: true,
+        message: `Successfully ${actionVerb} ${totalCount} book${
+          totalCount === 1 ? "" : "s"
+        }.`,
+      });
+      return;
+    }
+
+    const failedCount = totalCount - succeededCount;
+    setResult({
+      success: false,
+      message:
+        succeededCount > 0
+          ? `${succeededCount} of ${totalCount} book${
+              totalCount === 1 ? "" : "s"
+            } ${actionVerb}. Failed to ${action.action} ${failedCount} book${
+              failedCount === 1 ? "" : "s"
+            }.`
+          : `Failed to ${action.action} ${totalCount} book${
+              totalCount === 1 ? "" : "s"
+            }.`,
+    });
   };
 
-  let shelfIdRepr = state.selectedShelf?.osmId || "Not set";
+  const shelfIdRepr = state.selectedShelf?.osmId || "Not set";
+
+  // TODO: Remove this block and show all books in a list instead of the summary when there are multiple books.
+  const firstBook = action.books[0];
+  const actionVerb = action.action === "insert" ? "inserted" : "removed";
+  const bookSummary =
+    action.books.length === 1
+      ? firstBook
+        ? (firstBook.title ?? firstBook.isbn)
+        : "Book"
+      : `${action.books.length} books`;
 
   // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (
     <Container className="app-container">
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
         <Card sx={{ mb: "1rem", p: 2 }}>
-          <Typography variant="h6">{action.book.title}</Typography>
-          <Typography variant="body2">by {action.book.author}</Typography>
-          <Typography variant="body2">ISBN: {action.book.isbn}</Typography>
+          <Typography variant="h6">{bookSummary}</Typography>
+          {action.books.length === 1 && firstBook && (
+            <>
+              <Typography variant="body2">by {firstBook.author}</Typography>
+              <Typography variant="body2">ISBN: {firstBook.isbn}</Typography>
+            </>
+          )}
+          {action.books.length > 1 && (
+            <Typography variant="body2">
+              {action.books.length} books will be {actionVerb} on this shelf.
+            </Typography>
+          )}
         </Card>
+
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="body2">
             Bookshelf OSM ID: {shelfIdRepr}
@@ -87,7 +159,7 @@ export default function ShelfActionView({
           </Box>
         </Dialog>
 
-        {result && <ActionResultAlert result={result} />}
+        {result && <ActionResultAlert result={result} errors={errors} />}
         {result === null || !result.success ? (
           <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
             <Button variant="outlined" onClick={onCancel}>
