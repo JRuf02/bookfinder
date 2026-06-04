@@ -4,20 +4,22 @@ import ScanningView from "../components/ScanningView";
 import ShelfActionView from "../components/ShelfActionView";
 import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
+import { Book } from "../types/Book";
 
 export default function ScanningScreen() {
   const { dispatch } = useAppState();
-  const [isbn, setIsbn] = useState<string | null>(null); // TODO: remove this (duplicate with scannedIsbns[-1])
-  const [scannedIsbns, setScannedIsbns] = useState<string[]>([]);
+  const [scannedIsbns, setScannedIsbns] = useState<string[]>([]); // ISBNs that will be inserted/removed, in scanned order
+  const [queuedBooks, setQueuedBooks] = useState<Book[]>([]); // Book data for all scanned ISBNs to be inserted/removed
   const [selectedShelfAction, setSelectedShelfAction] =
     useState<ShelfAction | null>(null);
+  const [scanning, setScanning] = useState(true);
 
-  if (!isbn) {
+  if (scanning) {
     return (
       <ScanningView
         onScanComplete={(scannedIsbn: string) => {
-          setIsbn(scannedIsbn);
           setScannedIsbns((prev) => [...prev, scannedIsbn]);
+          setScanning(false);
         }}
       />
     );
@@ -26,21 +28,34 @@ export default function ScanningScreen() {
   if (!selectedShelfAction) {
     return (
       <ScanningResults
-        isbn={isbn}
+        scannedIsbns={scannedIsbns}
+        queuedBooks={queuedBooks}
         onActionSelected={(action: ShelfAction) => {
           setSelectedShelfAction(action);
         }}
+        onBookFound={(book: Book) => {
+          setQueuedBooks((prev) => [...prev, book]);
+        }}
         onCancel={() => {
-          setIsbn(null);
+          // TODO: Add popup asking for confirmation
+          setScannedIsbns([]);
+          setQueuedBooks([]);
           setSelectedShelfAction(null);
+          setScanning(true);
         }}
         onWrongBook={() => {
-          // TODO
+          // TODO: add popup with options tryAgain, ManualAdd, Cancel
           alert("TODO");
+          setQueuedBooks((prev) =>
+            prev.length > 0 ? prev.slice(0, -1) : prev,
+          );
+          setScannedIsbns((prev) =>
+            prev.length > 0 ? prev.slice(0, -1) : prev,
+          );
+          setScanning(true);
         }}
         onScanMore={() => {
-          // TODO
-          alert("TODO");
+          setScanning(true);
         }}
       />
     );
@@ -50,13 +65,19 @@ export default function ScanningScreen() {
     <ShelfActionView
       action={selectedShelfAction}
       onCancel={() => {
-        setIsbn(null);
+        // TODO: Add popup asking for confirmation
+        setScannedIsbns([]);
+        setQueuedBooks([]);
         setSelectedShelfAction(null);
         dispatch({ type: "RESET_PRESELECTED_SHELF_ACTION" });
+        setScanning(true);
       }}
       onRestart={() => {
-        setIsbn(null);
+        setScannedIsbns([]);
+        setQueuedBooks([]);
         setSelectedShelfAction(null);
+        dispatch({ type: "RESET_PRESELECTED_SHELF_ACTION" });
+        setScanning(true);
       }}
     />
   );

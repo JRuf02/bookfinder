@@ -1,9 +1,18 @@
 import { Book } from "../types/Book";
 import { Result } from "../types/Result";
 
-export async function fetchBookData(isbn: string): Promise<Result<Book>> {
+type FetchBookDataOptions = {
+  signal?: AbortSignal;
+};
+
+export async function fetchBookData(
+  isbn: string,
+  options: FetchBookDataOptions = {},
+): Promise<Result<Book>> {
   // Use relative URL to ensure protocol matching (HTTP or HTTPS)
-  const response = await fetch(`/api/book?isbn=${isbn}`);
+  const response = await fetch(`/api/book?isbn=${isbn}`, {
+    signal: options.signal,
+  });
 
   let data: any;
   try {

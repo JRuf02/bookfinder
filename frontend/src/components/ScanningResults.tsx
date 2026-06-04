@@ -9,42 +9,73 @@ import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
 
 type ScanningResultsProps = {
-  isbn: string;
+  scannedIsbns: string[];
+  queuedBooks: Book[];
   onActionSelected: (action: ShelfAction) => void;
+  onBookFound: (book: Book) => void;
   onCancel: () => void;
   onWrongBook: () => void;
   onScanMore: () => void;
 };
 
 export default function ScanningResults({
-  isbn,
+  scannedIsbns: scannedIsbns,
+  queuedBooks: queuedBooks,
   onActionSelected,
+  onBookFound,
   onCancel: onCancel,
   onWrongBook: onWrongBook,
   onScanMore: onScanMore,
 }: ScanningResultsProps) {
   const { state } = useAppState();
-  const [book, setBook] = useState<Book | null>(null);
+  const [currentBook, setCurrentBook] = useState<Book | null>(null);
   const [backendError, setBackendError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Filter out duplicate runs caused by react strict mode
+    const controller = new AbortController();
+
     async function getBook() {
       setBackendError(null);
-      setBook(null);
-      await fetchBookData(isbn).then((data) => {
+      setCurrentBook(null);
+      const latestIsbn: string = scannedIsbns.at(-1) ?? "";
+      try {
+        const data = await fetchBookData(latestIsbn, {
+          signal: controller.signal,
+        });
+
         if (data.ok) {
-          setBook(data.data);
+          setCurrentBook(data.data);
+          onBookFound(data.data);
         } else {
           setBackendError(data.error);
         }
-      });
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          // Ignore abort errors as they are expected during cleanup
+          return;
+        }
+        setBackendError("Failed to fetch book data.");
+      }
     }
-    getBook();
-  }, [isbn]);
+
+    if (scannedIsbns.length > 0) {
+      getBook();
+    } else {
+      // This should not happen:
+      // ScanningResults should only be shown when there are scanned ISBNs, but just in case
+      setCurrentBook(null);
+      setBackendError("No ISBNs scanned");
+    }
+
+    return () => {
+      controller.abort();
+    };
+  }, [scannedIsbns]);
 
   const handleActionSelected = (action: "insert" | "remove") => {
     onActionSelected({
-      book: book as Book,
+      book: currentBook as Book,
       action,
     });
   };
@@ -53,14 +84,21 @@ export default function ScanningResults({
   return (
     <Container className="app-container">
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
-        {book && (
+        {currentBook && (
           <>
             <BookDisplay
-              book={book}
-              isbn={isbn}
+              book={currentBook}
+              isbn={scannedIsbns.at(-1) ?? ""}
               onScanMore={onScanMore}
               onWrongBook={onWrongBook}
             />
+
+            <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
+              <Typography variant="body1" color="text.secondary">
+                {queuedBooks.length} book(s) scanned so far
+              </Typography>
+            </Stack>
+
             <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
               {(state.preSelectedShelfAction === "insert" ||
                 state.preSelectedShelfAction === "both") && (
@@ -70,7 +108,7 @@ export default function ScanningResults({
                   color="primary"
                   onClick={() => handleActionSelected("insert")}
                 >
-                  Insert x books into bookshelf
+                  Insert {queuedBooks.length} books into bookshelf
                 </Button>
               )}
               {(state.preSelectedShelfAction === "remove" ||
@@ -81,7 +119,7 @@ export default function ScanningResults({
                   color="secondary"
                   onClick={() => handleActionSelected("remove")}
                 >
-                  Remove x books from bookshelf
+                  Remove {queuedBooks.length} books from bookshelf
                 </Button>
               )}
               <Button variant="outlined" onClick={onCancel}>
@@ -90,6 +128,7 @@ export default function ScanningResults({
             </Stack>
           </>
         )}
+
         {backendError && (
           <Box sx={{ mt: "2rem", textAlign: "center" }}>
             <Typography variant="h6" color="error">
@@ -99,7 +138,7 @@ export default function ScanningResults({
               {backendError}
             </Typography>
             <Button variant="outlined" onClick={onCancel} sx={{ mt: "1rem" }}>
-              Try Again (= Cancel - TODO: add retry option)
+              Cancel
             </Button>
           </Box>
         )}
