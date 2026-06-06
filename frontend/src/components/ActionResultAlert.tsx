@@ -28,17 +28,17 @@ export default function ActionResultAlert({ result, errors }: Props) {
         {result ? result.message : "Unknown Error"}
 
         {errors && errors.length > 0 && (
-          <Accordion sx={{ mt: 1 }}>
+          <Accordion sx={{ mt: 0.25 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="body2">
-                {errors.length} error
+                Show failure
                 {errors.length === 1 ? "" : "s"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <List dense disablePadding>
                 {errors.map((error, index) => (
-                  <ListItem key={`${index}-${error}`} disableGutters>
+                  <ListItem key={`${index}-${error}`} sx={{ py: 0, px: 0.25 }}>
                     <ListItemText primary={error} />
                   </ListItem>
                 ))}

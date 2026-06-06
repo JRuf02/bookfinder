@@ -32,11 +32,17 @@ export default function ShelfActionView({
     message: string;
   } | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  // Needed to ensure the successful actions are not repeated -> hide action buttons if true
+  const [partialSuccess, setPartialSuccess] = useState(false);
 
   const handleShelfSubmit = async () => {
+    setPartialSuccess(false);
+    setErrors([]);
+
+    // Input validation
     const shelfId = state.selectedShelf?.osmId;
     if (!shelfId) {
-      setResult({ success: false, message: "Shelf ID is required." });
+      setResult({ success: false, message: "Please select a shelf." });
       return;
     }
 
@@ -53,6 +59,7 @@ export default function ShelfActionView({
     let succeededCount = 0;
     let errorCount = 0;
 
+    // Fetch results for each book sequentially
     for (const book of action.books) {
       const res = await shelfAction(action.action, shelfId, book.isbn);
       if (res.success) {
@@ -60,7 +67,7 @@ export default function ShelfActionView({
       } else {
         setErrors((prev) => [
           ...prev,
-          `Failed to ${action.action}\n${book.title ?? book.isbn} (${book.isbn}): ${res.message}`,
+          `${book.title ?? book.isbn} (${book.isbn}): ${res.message}`,
         ]);
         errorCount += 1;
       }
@@ -69,6 +76,7 @@ export default function ShelfActionView({
     const totalCount = action.books.length;
     const actionVerb = action.action === "insert" ? "inserted" : "removed";
 
+    // Full success
     if (errorCount === 0) {
       setResult({
         success: true,
@@ -79,7 +87,11 @@ export default function ShelfActionView({
       return;
     }
 
+    // errorCount > 0
     const failedCount = totalCount - succeededCount;
+    if (failedCount != totalCount) {
+      setPartialSuccess(true);
+    }
     setResult({
       success: false,
       message:
@@ -160,7 +172,7 @@ export default function ShelfActionView({
         </Dialog>
 
         {result && <ActionResultAlert result={result} errors={errors} />}
-        {result === null || !result.success ? (
+        {(result === null || !result.success) && !partialSuccess ? (
           <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
             <Button variant="outlined" onClick={onCancel}>
               Cancel

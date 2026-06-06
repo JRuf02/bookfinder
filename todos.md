@@ -175,6 +175,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - Taschenlampe beim Scannen anschalten
 - 'Add bookshelf' Funktion für fehlende Regale
   - Z.B. mit [draggable Marker](https://react-leaflet.js.org/docs/example-draggable-marker/) auf map
+- Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
 
 ## Nice to have
 

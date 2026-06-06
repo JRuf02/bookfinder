@@ -14,6 +14,8 @@ from app.models.identifiers import Isbn, OsmId
 from app.routes.books import get_book
 from app.utils.naming import as_json_dict
 
+logger = __import__("logging").getLogger(__name__)
+
 
 def get_shelf_metadata(request: Request) -> ResponseReturnValue:
     """Fetch metadata of the given shelf.
@@ -71,9 +73,11 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     isbn = Isbn.parse(data.get("isbn"))
 
     # TODO: remove this error
-    return jsonify(
-        {"status": "error", "message": "just for testing frontend error handling"}
-    ), HttpStatus.BAD_REQUEST.value
+    if str(isbn) == "978-1-4454-0479-0":
+        logger.error("Simulating error for testing frontend error handling")
+        return jsonify(
+            {"status": "error", "message": "just for testing frontend error handling"}
+        ), HttpStatus.BAD_REQUEST.value
 
     if not osm_id:
         return jsonify(
