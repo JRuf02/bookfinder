@@ -10,6 +10,10 @@ export async function fetchShelfBooks(
       `/api/shelf/books?osm_id=${encodeURIComponent(shelf.osmId)}`,
     );
 
+    if (response.status == 500) {
+      return { ok: false, error: "Internal server error. Try again later." };
+    }
+
     let data: any;
     try {
       data = await response.json();

@@ -241,3 +241,6 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - Improve search (make more fuzzy / use sqlite MATCH), check out [RapidFuzz](https://pypi.org/project/RapidFuzz/)
 - Benachrichtigungsservice wenn gewünschtes Buch eingestellt wird
 - Unique barcodes for each shelf -> scan shelf code to select it
+- Link to dnb page in frontend catalog book info
+- Take/Leave book statt remove/insert
+- Use MUI dialog for shelf select map popup

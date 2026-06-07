@@ -43,9 +43,7 @@ export default function ScanningScreen() {
           setSelectedShelfAction(null);
           setScanning(true);
         }}
-        onWrongBook={() => {
-          // TODO: add popup with options tryAgain, ManualAdd, Cancel
-          alert("TODO");
+        onTryAgain={() => {
           setQueuedBooks((prev) =>
             prev.length > 0 ? prev.slice(0, -1) : prev,
           );
@@ -56,6 +54,19 @@ export default function ScanningScreen() {
         }}
         onScanMore={() => {
           setScanning(true);
+        }}
+        onManuallyAdd={() => {
+          // TODO: add full screen mui dialog for book data input
+          alert("TODO");
+        }}
+        onDontAdd={() => {
+          // TODO: Don't show "Error fetching book data" after removing the book (if 0 remaining)
+          setQueuedBooks((prev) =>
+            prev.length > 0 ? prev.slice(0, -1) : prev,
+          );
+          setScannedIsbns((prev) =>
+            prev.length > 0 ? prev.slice(0, -1) : prev,
+          );
         }}
       />
     );

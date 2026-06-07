@@ -108,19 +108,7 @@ export default function ShelfMapContent({
         ) : null,
       )}
 
-      {/* Selected shelf marker TODO: remove this, show "selected" on standard popup instead */}
-      {state.selectedShelf && (
-        <Marker
-          position={[
-            state.selectedShelf.latitude,
-            state.selectedShelf.longitude,
-          ]}
-        >
-          <Popup>
-            <span>Selected Shelf</span>
-          </Popup>
-        </Marker>
-      )}
+      {/* TODO: show "selected" on standard popup of selected shelf */}
 
       {/* User location marker */}
       {state.userCoordinates && (

@@ -269,23 +269,23 @@ export default function CatalogHomeScreen() {
       >
         <TextInput
           value={inputTitle}
-          placeholder="Search books near you by title"
-          label="Search books near you by title"
+          placeholder="Search books by title"
+          label="Search books by title"
           onChange={(e) => setInputTitle(e.target.value)}
           onSubmit={handleInputSubmit}
         />
         <TextInput
           value={inputAuthor}
-          placeholder="Search books near you by author"
-          label="Search books near you by author"
+          placeholder="Search books by author"
+          label="Search books by author"
           onChange={(e) => setInputAuthor(e.target.value)}
           onSubmit={handleInputSubmit}
         />
       </Box>
       <TextInput
         value={inputISBN}
-        placeholder="Search books near you by ISBN"
-        label="Search books near you by ISBN"
+        placeholder="Search books by ISBN"
+        label="Search books by ISBN"
         onChange={(e) => setInputISBN(e.target.value)}
         onSubmit={handleISBNSubmit}
       />

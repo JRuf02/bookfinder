@@ -2,7 +2,7 @@ import { Book } from "../types/Book";
 import { Result } from "../types/Result";
 
 type FetchBookDataOptions = {
-  signal?: AbortSignal;
+  signal?: AbortSignal; // Optional signal for aborting the fetch request
 };
 
 export async function fetchBookData(
@@ -13,6 +13,10 @@ export async function fetchBookData(
   const response = await fetch(`/api/book?isbn=${isbn}`, {
     signal: options.signal,
   });
+
+  if (response.status == 500) {
+    return { ok: false, error: "Internal server error. Try again later." };
+  }
 
   let data: any;
   try {

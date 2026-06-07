@@ -11,6 +11,10 @@ export async function singleTermCatalogSearch(
       `/api/catalog/search/single-term?q=${encodeURIComponent(searchTerm)}${userCoords ? `&lat=${userCoords.latitude}&lon=${userCoords.longitude}` : ""}`,
     );
 
+    if (response.status == 500) {
+      return { ok: false, error: "Internal server error. Try again later." };
+    }
+
     let data: { data?: CatalogResult[]; message?: string };
     try {
       data = (await response.json()) as {
