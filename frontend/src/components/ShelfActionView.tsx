@@ -13,6 +13,7 @@ import ActionResultAlert from "./ActionResultAlert";
 import ShelfMap from "./map/ShelfMap";
 import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
+import CancelDialog from "./CancelDialog";
 
 type ShelfActionViewProps = {
   action: ShelfAction;
@@ -26,6 +27,7 @@ export default function ShelfActionView({
   onRestart: onRestart,
 }: ShelfActionViewProps) {
   const { state, dispatch } = useAppState();
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -174,7 +176,10 @@ export default function ShelfActionView({
         {result && <ActionResultAlert result={result} errors={errors} />}
         {(result === null || !result.success) && !partialSuccess ? (
           <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-            <Button variant="outlined" onClick={onCancel}>
+            <Button
+              variant="outlined"
+              onClick={() => setCancelDialogOpen(true)}
+            >
               Cancel
             </Button>
             <Button
@@ -193,6 +198,16 @@ export default function ShelfActionView({
           </Box>
         )}
       </Box>
+      <CancelDialog
+        open={cancelDialogOpen}
+        onYes={() => {
+          setCancelDialogOpen(false);
+          onCancel();
+        }}
+        onNo={() => {
+          setCancelDialogOpen(false);
+        }}
+      />
     </Container>
   );
 }
