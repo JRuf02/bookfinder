@@ -121,7 +121,7 @@ export default function ShelfActionView({
 
   // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (
-    <Container className="app-container">
+    <Container className="app-container" maxWidth={false}>
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="h6">{bookSummary}</Typography>

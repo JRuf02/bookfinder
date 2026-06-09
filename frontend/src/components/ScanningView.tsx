@@ -54,7 +54,11 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
   );
 
   return (
-    <Container className="app-container">
+    <Container
+      className="app-container"
+      maxWidth={false}
+      sx={{ alignItems: "center", justifyContent: "center" }}
+    >
       <Typography
         variant="h4"
         className="scan-screen-title"

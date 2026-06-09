@@ -5,6 +5,7 @@ export default function NotFoundScreen() {
   return (
     <Container
       className="app-container"
+      maxWidth={false}
       sx={{
         display: "flex",
         flexDirection: "column",

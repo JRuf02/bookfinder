@@ -102,8 +102,19 @@ export default function ScanningResults({
   // TODO: move the three buttons into a separate component to avoid code duplication
   return (
     <div>
-      <Container className="app-container">
-        <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
+      <Container
+        className="app-container"
+        maxWidth={false}
+        sx={{ overflowY: "auto" }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "25rem",
+            mx: "auto",
+            my: "0.5rem",
+          }}
+        >
           {currentBook && (
             <>
               <BookDisplay

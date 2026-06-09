@@ -216,6 +216,7 @@ export default function CatalogHomeScreen() {
     // TODO: use uniform styling and layouting for all pages, move styles to css!
     <Container
       className="app-container"
+      maxWidth={false}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -223,6 +224,7 @@ export default function CatalogHomeScreen() {
         alignItems: "center",
         height: "100%",
         overflow: "hidden",
+        maxWidth: "100%",
       }}
     >
       <Box
