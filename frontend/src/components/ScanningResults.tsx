@@ -99,7 +99,7 @@ export default function ScanningResults({
   };
 
   // TODO: Test multibook insert with error scans in between
-  // TODO: move the three buttons into a separate component to avoid code duplication
+  // TODO: move the three lower buttons into a separate component to avoid code duplication for error case and standard case
   return (
     <div>
       <Container
@@ -153,7 +153,10 @@ export default function ScanningResults({
                     Remove {queuedBooks.length} books from bookshelf
                   </Button>
                 )}
-                <Button variant="outlined" onClick={onCancel}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setCancelDialogOpen(true)}
+                >
                   Cancel
                 </Button>
               </Stack>
@@ -179,7 +182,7 @@ export default function ScanningResults({
               >
                 <Button
                   variant="outlined"
-                  onClick={onCancel}
+                  onClick={() => setCancelDialogOpen(true)}
                   sx={{
                     mt: "1rem",
                   }}
@@ -237,7 +240,7 @@ export default function ScanningResults({
                 )}
                 <Button
                   variant="outlined"
-                  onClick={() => setWrongBookDialogOpen(true)}
+                  onClick={() => setCancelDialogOpen(true)}
                 >
                   Cancel
                 </Button>
