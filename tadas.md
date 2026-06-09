@@ -12,14 +12,29 @@
         - Add custom error data types instead (e.g. dataclass db_connection_error)
   - Authors like Rowling, J.K. are handeled correctly
 
+- CatalogSearch
+  - Add advanced search screen for search by author, title, isbn, ... seperately
+  - Add clever fuzzy search backend for advanced separate search by title, isbn etc separately
+  - Show fuzzy search results within given radius + complete matches even if outside the search radius
+
 - CatalogHomeScreen
   - hat Suchleiste
     - Suchfunktion Backend verbessern
     - Buchsuche soll auch ohne standort gehen
     - Schalter für near you vs Suche ohne Standort
+  - hat 2 Versionen (Version wird von parent Komponente festgelegt):
+    - Catalog Search Results (near you oder generell)
+    - Books at shelf xy: showing all books from one shelf
+  - Kann Bücher von auf Karte gewähltem Regal zeigen
 
 - HomeScreen
   - select button on homescreen map redirects to the catalog
+  - Search on home screen works and leads to CatalogSearchScreen
+
+- Scanning/InsertScreens
+  - 'scan another' should compile a list of books that can be inserted/removed at once
+  - rescan sinnvoll umbenennen (z.B. 'verwerfen' / 'not my book' / 'incorrect book')
+  - Manuelle eingabe/buch ohne barcode/ISBN eingabe screen (oder popup) wird bei error gezeigt
 
 - top level Makefile
   - make test
@@ -76,3 +91,11 @@
   - start-all.sh and postcreatecommands removed, all bundled in dockerfile
 - move venv to the python / server directory if possible
 - sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
+
+### nice that I have (nice to have, but done)
+
+- Mock dnb calls in tests with (from requests_mock.mocker import Mocker) so that tests dont fail if dnb offline?
+  - add to fixtures.py: def app(requests_mock: Mocker) ... requests_mock.get(url) ...
+  - Currently, I want tests to fail if dnb changes (because I want to see when the dnb changes)
+  - Maybe one extra test file for checking if dnb is up & responding as expectesd, rest with mocker?
+- add isbn (checksum) validation?

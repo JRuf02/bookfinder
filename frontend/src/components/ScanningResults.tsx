@@ -70,8 +70,7 @@ export default function ScanningResults({
     if (scannedIsbns.length > 0) {
       getBook();
     } else {
-      // This should not happen:
-      // ScanningResults should only be shown when there are scanned ISBNs, but just in case
+      // This should not happen, as the component should only be called when an ISBN is scanned
       setCurrentBook(null);
       setBackendError("No ISBNs scanned");
     }
@@ -79,7 +78,16 @@ export default function ScanningResults({
     return () => {
       controller.abort();
     };
-  }, [scannedIsbns]);
+  }, []);
+
+  useEffect(() => {
+    if (queuedBooks.length > 0) {
+      setCurrentBook(queuedBooks.at(-1) ?? null);
+    } else {
+      setCurrentBook(null);
+      setBackendError("No ISBNs scanned");
+    }
+  }, [queuedBooks]);
 
   const handleActionSelected = (action: "insert" | "remove") => {
     onActionSelected({
@@ -96,6 +104,11 @@ export default function ScanningResults({
 
   const onWrongBook = () => {
     setWrongBookDialogOpen(true);
+  };
+
+  const onDontAddClicked = () => {
+    setWrongBookDialogOpen(false);
+    onDontAdd();
   };
 
   // TODO: Test multibook insert with error scans in between
@@ -165,9 +178,11 @@ export default function ScanningResults({
 
           {backendError && (
             <Box sx={{ mt: "2rem", textAlign: "center" }}>
-              <Typography variant="h6" color="error">
-                Error fetching book data
-              </Typography>
+              {backendError != "No ISBNs scanned" ? (
+                <Typography variant="h6" color="error">
+                  Error fetching book data
+                </Typography>
+              ) : null}
               <Typography variant="body1" color="text.secondary">
                 {backendError}
               </Typography>
@@ -259,10 +274,7 @@ export default function ScanningResults({
           setWrongBookDialogOpen(false);
           onManuallyAdd();
         }}
-        onDontAdd={() => {
-          setWrongBookDialogOpen(false);
-          onDontAdd();
-        }}
+        onDontAdd={onDontAddClicked}
       />
       <CancelDialog
         open={cancelDialogOpen}

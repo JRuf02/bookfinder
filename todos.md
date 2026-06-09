@@ -2,25 +2,17 @@
 
 ## Main todos
 
-- Use api/bookshelves/nearby in frontend or revove from backend
-  - Maybe add 'nearest shelves' to catalog page?
+- Map muss schneller werden! <=============================================================
 
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
   - Unit tests
     - Backend test for when DNB is down
-    - Unit tests for python (backend) only for complex logic functions
+    - Unit tests for python (backend) most complex logic functions
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
       - API calls should be tested (-> done in python), user interface doesn't need to be tested
       - Only complex logic should be tested
   - sqlite: c.execute("sel"\n"from") vs. c.execute("""sel\nfrom""")? vereinheitlichen, u.a. in book_db.py
-
-- StaticMap component (or version of existing Map with other params)
-  - zu Anzeigezwecken: Soll zentriert auf current shelf sein
-  - statisch: kann nicht gescrollt/gezoomt etc werden
-  - hat methode onClick, die vom parent definiert wird
-    - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
-    - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - Logic & Documentation:
   - add docstring to AppReducer, AppState and provider files
@@ -35,45 +27,42 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogHomeScreen
-  - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
-    - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
-    - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
-  - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfScreen
-  - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
-
-- CatalogSearchScreen
-  - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)
-
-- CatalogResultsScreen
   - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum
-  - hat 2 Versionen (Version wird von parent Komponente festgelegt):
-    - Catalog Search Results (near you oder generell)
-    - Books at shelf xy: showing all books from one shelf
-  - Kann Bücher von auf Karte gewähltem Regal zeigen
+  - Layout?
+    - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
+      - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+      - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
+    - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfScreen
+    - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
+    - StaticMap component (or version of existing Map with other params)
+      - zu Anzeigezwecken: Soll zentriert auf current shelf sein
+      - statisch: kann nicht gescrollt/gezoomt etc werden
+      - hat methode onClick, die vom parent definiert wird
+        - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+        - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - CatalogResult Component (Used inside ResultsList component)
   - is a separate component
   - show how long book is in shelf already in result
   - ausleihen-Button der direkt zum shelfActionScreen leitet
+  - ggf button 'show on dnb'
 
-- HomeScreen
-  - Search on home screen works and leads to CatalogSearchScreen
-
-- Scanning/InsertScreens
+- Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
+
+- ShelfSelectMap
   - select button switches to "selected" when clicked on shelfActionScreen
-  - 'scan another' should compile a list of books that can be inserted/removed at once <============================================
-  - rescan sinnvoll umbenennen (z.B. 'verwerfen' / 'not my book' / 'incorrect book')
 
 - InfoScreen
   - add info page
   - dark mode toggle?
 
-- ManualInsertScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) existiert
+- ManualInsertScreen (oder Popup) (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) existiert
   - inserting old books / without isbn / foreign isbn possible
   - inserting incl. photo of cover possible
-  - ManualInsertScreen kann über button auf dem scanningscreen aufgerufen werden
-  - scannerresultserrorScreen (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) wird bei error gezeigt
+  - kann über button auf dem scanningscreen aufgerufen werden
+  - kann bei scanning / book data fetching error geöffnet werden
+  - kann bei klick auf wrong book button geöffnet werden
 
 - Resilience & Edge Cases:
   - dnb_api.py
@@ -87,7 +76,14 @@
   - Implement production setup (e.g. nginx + gunicorn)
   - add makefile targets make run and make run dev
 
+- Design:
+  - use clear css and uniform layouting, e.g. with MUI Stack with flexbox gap
+  - Nice design on mobile
+  - Make responsive, mobile first
+
 - Finalization:
+  - Use api/bookshelves/nearby in frontend or revove from backend
+    - Maybe add 'nearest shelves' to catalog page?
   - make build o.ä. sollte die DB bauen falls noch nicht existiert
   - .vscode/tasks.json tasks löschen wenn makefile fertig
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
@@ -153,6 +149,7 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
     - Generate text like 'Error Fetching Data' and 'Unknown Title/Author' in the UI component
   - ersatz für cover image if not available
   - let frontend send 5000m radius default, backend should require proper radius
+  - Don't show 'error fetching book data' after removing scanned book from queue via 'wrong book' button
 - save cover images as binary blob to books.db
 - SQL injection should not be possible -> use escape methods
 - json Message should be generated by frontend from the 200 code
@@ -168,10 +165,6 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - CatalogResult
   - In catalog results: Clicking a result shows it on map
   - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
-- CatalogSearch
-  - Add advanced search screen for search by author, title, isbn, ... seperately
-  - Add clever fuzzy search backend for advanced separate search by title, isbn etc separately
-  - Show fuzzy search results within given radius + complete matches even if outside the search radius
 - Taschenlampe beim Scannen anschalten
 - 'Add bookshelf' Funktion für fehlende Regale
   - Z.B. mit [draggable Marker](https://react-leaflet.js.org/docs/example-draggable-marker/) auf map
@@ -183,10 +176,6 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
   - oder zeigt die most recently inserted books deutschlandweit als start?
   - Results klickbar -> 'remove'/'take out' button
 - Use datetime and isoformat() in code and db for times? e.g. row["time_of_entry"].isoformat()
-- Mock dnb calls in tests with (from requests_mock.mocker import Mocker) so that tests dont fail if dnb offline?
-  - add to fixtures.py: def app(requests_mock: Mocker) ... requests_mock.get(url) ...
-  - Currently, I want tests to fail if dnb changes (because I want to see when the dnb changes)
-  - Maybe one extra test file for checking if dnb is up & responding as expectesd, rest with mocker?
 - human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen (react library verfügbar)
 - 'show nearest shelf' button auf ShelfMap -> zentriert darauf & öffnet popup
 - Ask 'are you sure' before reloading page on mobile (when book scanned, but not inserted yet)
@@ -197,7 +186,6 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - HomeScreen on desktop should show books of selected shelf next to the home screen on the white area
 - SQL execute command strings in eigenes file in app/db auslagern z.B. als Konstante GET_ALL_BOOKS_COMMAND, ...
 - support multiple languages?
-- add isbn checksum validation?
 - reverse-geocoded addresses in bookshelf data
   - e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests
   - or valhalla.openstreetmap.de -> Koords eingeben, checkmark drücken -> reverse-geocodes the address
@@ -244,3 +232,5 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - Link to dnb page in frontend catalog book info
 - Take/Leave book statt remove/insert
 - Use MUI dialog for shelf select map popup
+- CatalogSearchScreen
+  - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)
