@@ -47,6 +47,7 @@
 - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
 - (caching von) backend/.db verstehen + aufräumen
 - Suchfunktion Backend wieder verstehen + aufräumen + testen
+- show search results even when no location given
 - Move type definitions to /types in frontend
   - Only define type params in-file
 - Use combined ruff.toml in settings.json AND in Makefile (combined ruff config for docker ruff and devcontainer ruff)
