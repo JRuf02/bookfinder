@@ -16,6 +16,8 @@
   - Add advanced search screen for search by author, title, isbn, ... seperately
   - Add clever fuzzy search backend for advanced separate search by title, isbn etc separately
   - Show fuzzy search results within given radius + complete matches even if outside the search radius
+  - Search should handle oe = ö -> it does via fuzzy search
+  - Umlaut not in db, weird non-ascii (catalog search glücklich does not work) -> does work now thanks to fuzzy
 
 - CatalogHomeScreen
   - hat Suchleiste
@@ -35,6 +37,7 @@
   - 'scan another' should compile a list of books that can be inserted/removed at once
   - rescan sinnvoll umbenennen (z.B. 'verwerfen' / 'not my book' / 'incorrect book')
   - Manuelle eingabe/buch ohne barcode/ISBN eingabe screen (oder popup) wird bei error gezeigt
+  - Don't show 'error fetching book data' after removing scanned book from queue via 'wrong book' button
 
 - top level Makefile
   - make test
@@ -47,6 +50,7 @@
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map (?)
   - use react-leaflet-markercluster for rendering only necessary shelf markers
 - check if the book exists in shelf before removing (backend!)
+- backend for catalog search by location/author/isbn
 - Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
 - make sure the books normalized isbn with dashes and without spaces is stored in current_catalog and books db, not the isbn raw input!
 - dont insert 'error fetching data' or 'unknown title' into catalog (front- and backend!)
