@@ -2,8 +2,6 @@
 
 ## Main todos
 
-- Map muss schneller werden! <=============================================================
-
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
   - Unit tests

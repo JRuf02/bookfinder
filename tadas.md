@@ -42,6 +42,7 @@
 - use state/AppContextProvider.tsx
   - move userCoords there
 
+- Map muss schneller werden!
 - make map scrolling/zooming more responsive... e.g. by:
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map (?)
   - use react-leaflet-markercluster for rendering only necessary shelf markers
