@@ -78,7 +78,9 @@ export default function ShelfMapContent({
       });
     } catch {
       // TODO: show error to user / log
-      alert("Could not get your location.");
+      alert(
+        "Could not get your location.\nPlease activate GPS in your device settings and allow location access for this app.",
+      );
     }
   };
 

@@ -45,6 +45,7 @@
 - use state/AppContextProvider.tsx
   - move userCoords there
 
+- Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!
 - make map scrolling/zooming more responsive... e.g. by:
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map (?)

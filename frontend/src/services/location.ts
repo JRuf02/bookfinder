@@ -18,7 +18,7 @@ export function getUserLocation(): Promise<GeoCoordinates> {
         console.log(err);
         reject(
           new Error(
-            "Could not get your location.\nPlease allow location access in your browser settings.",
+            "Could not get your location.\nPlease activate GPS in your device settings and allow location access for this app.",
           ),
         );
       },
