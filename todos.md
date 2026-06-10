@@ -157,10 +157,6 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - visibly mark the selected shelf on ShelfMap if one is selected
 - smoothen permission handling for the camera
-- make map scrolling/zooming more responsive... e.g. by: <========================================================
-  - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
-  - use react-leaflet-markercluster for rendering only necessary shelf markers
-  - quadtree for tile / shelf loading
 - CatalogResult
   - In catalog results: Clicking a result shows it on map
   - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
@@ -233,3 +229,6 @@ Fetched book data from dnb: {'title': 'Error fetching data', 'author': '', 'dnbI
 - Use MUI dialog for shelf select map popup
 - CatalogSearchScreen
   - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)
+- Map responsiveness (not needed, clustering is enough):
+  - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
+  - quadtree for tile / shelf loading

@@ -131,7 +131,7 @@ export default function ShelfMapContent({
             pointerEvents: "none",
           }}
         >
-          <Typography variant="body2" color="error">
+          <Typography variant="body2" color="text.secondary">
             {loadError}
           </Typography>
         </Box>

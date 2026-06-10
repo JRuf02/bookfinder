@@ -41,6 +41,10 @@
     - Runs make test from frontend and backend makefiles
 - use state/AppContextProvider.tsx
   - move userCoords there
+
+- make map scrolling/zooming more responsive... e.g. by:
+  - fetch and render bookshelf/map data async, to keep site reactive while initializing the map (?)
+  - use react-leaflet-markercluster for rendering only necessary shelf markers
 - check if the book exists in shelf before removing (backend!)
 - Wenn bei remove ein shelf gewählt wird, der das buch nicht hat, zeige warnung
 - make sure the books normalized isbn with dashes and without spaces is stored in current_catalog and books db, not the isbn raw input!
