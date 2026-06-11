@@ -83,6 +83,7 @@ export default function ScanningResults({
   useEffect(() => {
     if (queuedBooks.length > 0) {
       setCurrentBook(queuedBooks.at(-1) ?? null);
+      setBackendError(null);
     } else {
       setCurrentBook(null);
       setBackendError("No ISBNs scanned");
@@ -113,6 +114,7 @@ export default function ScanningResults({
 
   // TODO: Test multibook insert with error scans in between
   // TODO: move the three lower buttons into a separate component to avoid code duplication for error case and standard case
+  // TODO: Handle the case where !currentBook but no backend error (should not happen, but add buttons just in case)
   return (
     <div>
       <Container
@@ -128,7 +130,7 @@ export default function ScanningResults({
             my: "0.5rem",
           }}
         >
-          {currentBook && (
+          {currentBook ? (
             <>
               <BookDisplay
                 book={currentBook}
@@ -174,9 +176,7 @@ export default function ScanningResults({
                 </Button>
               </Stack>
             </>
-          )}
-
-          {backendError && (
+          ) : backendError ? (
             <Box sx={{ mt: "2rem", textAlign: "center" }}>
               {backendError != "No ISBNs scanned" ? (
                 <Typography variant="h6" color="error">
@@ -261,7 +261,7 @@ export default function ScanningResults({
                 </Button>
               </Stack>
             </Box>
-          )}
+          ) : null}
         </Box>
       </Container>
       <WrongBookDialog

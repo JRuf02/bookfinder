@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
 // Applies globally to all MUI components (see main.tsx)
+// TODO: use e.g. https://coolors.co/848c8e-c82828-435058-76c93a-6d9c57-646e73-373737
 const theme = createTheme({
   palette: {
     primary: {
