@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { BrowserMultiFormatReader } from "@zxing/browser";
-import "@zxing/library"; // check if this import does anything
+import "@zxing/library"; // TODO: check if this import does anything
 
 type ScannerProps = {
   onResult: (isbn: string) => void;
@@ -182,9 +182,11 @@ function useBarcodeReader(
       const scanInterval = 200; // milliseconds between scans
 
       const controls = await readerRef.current.decodeFromVideoDevice(
-        undefined,
-        videoRef.current,
-        (result, err) => {
+        undefined, // default camera
+        videoRef.current, // video element where camera feed is shown
+        (result, _) => {
+          // we don't need the error, only the result
+
           const now = Date.now();
 
           // Skip processing if we're scanning too frequently
@@ -265,9 +267,10 @@ function useBarcodeReader(
 function Scanner({ onResult, active, onReady }: ScannerProps) {
   const mountCountRef = useRef(0);
   const { videoRef, error, startCamera, stopCamera, playVideo } = useCamera();
-  // TODO: Tackle warnings and problems in this file; split into subcomponents
-  const { isReading, startReading, stopReading, resetReader } =
-    useBarcodeReader(videoRef, onResult);
+  const { startReading, stopReading, resetReader } = useBarcodeReader(
+    videoRef as any,
+    onResult,
+  );
 
   // expose methods to parent component
   useEffect(() => {

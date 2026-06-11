@@ -11,6 +11,7 @@
       - API calls should be tested (-> done in python), user interface doesn't need to be tested
       - Only complex logic should be tested
   - sqlite: c.execute("sel"\n"from") vs. c.execute("""sel\nfrom""")? vereinheitlichen, u.a. in book_db.py
+  - Use subcomponents for ScanningResults
 
 - Logic & Documentation:
   - add docstring to AppReducer, AppState and provider files
@@ -47,9 +48,6 @@
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
-
-- ShelfSelectMap
-  - select button switches to "selected" when clicked on shelfActionScreen
 
 - InfoScreen
   - add info page
