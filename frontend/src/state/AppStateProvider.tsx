@@ -1,6 +1,4 @@
 // global app state management
-// TODO: currentShelfId, currentBook, preSelectedShelfAction, etc. should go here (search for useState and decide per case)
-//       Could also steer which screen should be shown (scanning, results, shelf action) based on state instead of passing props down from App.tsx
 
 import React, { createContext, useReducer, useContext } from "react";
 import { AppState, AppAction } from "./AppState";
@@ -30,5 +28,3 @@ export const useAppState = () => {
   }
   return context;
 };
-
-// TODO: bug: einmal auf karte insert drücken, inserten, dann zu catalog tab, dann wieder scan tab -> nur noch insert möglich

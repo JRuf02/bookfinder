@@ -1,3 +1,5 @@
+// Create global app state and define actions on the app state
+
 import { AppAction, AppState } from "./AppState";
 
 export const initialState: AppState = {
