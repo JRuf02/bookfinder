@@ -1,8 +1,12 @@
+import { useEffect, useRef } from "react";
+import CheckIcon from "@mui/icons-material/Check";
+import L from "leaflet";
 import { Button, Stack, Typography, Link } from "@mui/material";
 import { Shelf } from "../../types/Shelf";
 
 type MapPopupProps = {
   shelf: Shelf;
+  isSelected?: boolean;
   showInsert?: boolean;
   showRemove?: boolean;
   showSelect?: boolean;
@@ -15,6 +19,7 @@ type MapPopupProps = {
 
 export default function MapPopup({
   shelf,
+  isSelected,
   showInsert,
   showRemove,
   showSelect,
@@ -24,8 +29,26 @@ export default function MapPopup({
   onSelect,
   onShowBooks,
 }: MapPopupProps) {
+  // Ref to the root element of the popup content, used to disable event propagation to the map.
+  // Needed to prevent MapPopup from closing and reopening when clicking buttons inside the popup.
+  const popupContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!popupContentRef.current) {
+      return;
+    }
+
+    L.DomEvent.disableClickPropagation(popupContentRef.current);
+    L.DomEvent.disableScrollPropagation(popupContentRef.current);
+  }, []);
+
   return (
-    <Stack spacing={1} alignItems="flex-start" sx={{ minWidth: 200 }}>
+    <Stack
+      ref={popupContentRef}
+      spacing={1}
+      alignItems="flex-start"
+      sx={{ minWidth: 200 }}
+    >
       <Typography variant="subtitle1">{shelf.name || "Bookshelf"}</Typography>
       {shelf.address && (
         <Typography variant="body2">Address: {shelf.address}</Typography>
@@ -85,9 +108,10 @@ export default function MapPopup({
             size="small"
             variant="contained"
             color="primary"
+            startIcon={isSelected ? <CheckIcon /> : undefined}
             onClick={onSelect}
           >
-            Select{/*Todo: Change to "Selected" if already selected*/}
+            {isSelected ? "Selected" : "Select"}
           </Button>
         )}
         {showShowBooks && (

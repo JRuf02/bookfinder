@@ -161,6 +161,7 @@ export default function ShelfMapContent({
                 {/* TODO: remove extra Popup around MapPopup? */}
                 <MapPopup
                   shelf={shelf}
+                  isSelected={state.selectedShelf?.osmId === shelf.osmId}
                   showInsert={showInsert}
                   showRemove={showRemove}
                   showSelect={showSelect}
