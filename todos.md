@@ -2,6 +2,35 @@
 
 ## Main todos
 
+- Manual Insert
+  - Frontend:
+    - Send user inputted author, title and isbn to backend
+    - Handle all possible responses
+      - invalid ISBN -> backend returns error
+      - book with this ISBN already in db, but with other author/title -> backend returns warning and real title and author
+      - book not in db and not in dnb, ISBN valid -> backend inserts data to books table and returns success
+      - book already in db -> backend does nothing and returns success
+    - Success: Add returned book to scanned books queue and returned (=properly formatted) ISBN to scanned isbns
+    - Warning: Show warning: 'Found alternative title / author for this ISBN: ...' and add returned isbn and book to the books queue and to scanned isbns
+    - Error: Show error: 'Invalid ISBN: Input does not match any ISBN format.'
+  - Backend: ALWAYS returns status: str ('warning', 'success', 'error') and a Book object (if status not error)
+    - check if ISBN valid, transform to ISBN-13
+    - check if ISBN already in DB
+      - if yes: check if title and author in DB match those of the input
+        - match: Do nothing, return success and the book from DB
+        - not matching: return warning and book from DB with real title and author
+    - query dnb api with the isbn
+      - Book found in DNB?
+        - Title and author match the input?
+          - Add book to the books table, including coverurl and dnbid
+          - Return success and the book from the DB
+        - Title and author do not match the input?
+          - Add book with dnb data to the DB (books table), return warning and book from DB with real title and author
+      - Book not found in DB and not in DNB:
+        - Insert book with the given input data into books table, return success and the book
+        - // TODO: Only insert into db if ISBN not yet in there, otherwise just add the existing book to the list of scanned books
+          // TODO: Actually implement a backend endpoint that also handles title and author (currently the backend only accepts ISBN and tries to fetch the rest of the data itself)
+
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
   - Unit tests
@@ -134,7 +163,6 @@
 - SQL injection should not be possible -> use escape methods
 - ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
-- visibly mark the selected shelf on ShelfMap if one is selected
 - smoothen permission handling for the camera (and improve error message design)
 - CatalogResult
   - In catalog results: Clicking a result shows it on map ?
@@ -143,6 +171,7 @@
   - Add button for dnb link (d-nb.info/<dnb_id>) z.b. `https://d-nb.info/1027780482` to each result
 - Taschenlampe beim Scannen anschalten
 - Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
+- Search by ISBN should also accept ISBN-10 (and convert to ISBN-13 before searching in the DB)
 
 ## Nice to have
 

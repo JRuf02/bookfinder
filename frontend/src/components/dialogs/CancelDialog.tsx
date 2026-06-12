@@ -11,7 +11,7 @@ type CancelDialogProps = {
   onNo: () => void;
 };
 
-// TODO: Use better suited mui dialog, no list needed, just two buttons at the bottom
+// TODO: Use better suited mui dialog, no list needed, just two buttons at the bottom ('Alert dialog') https://mui.com/material-ui/react-dialog
 export default function CancelDialog({ open, onYes, onNo }: CancelDialogProps) {
   return (
     <Dialog open={open}>

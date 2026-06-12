@@ -7,8 +7,8 @@ import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import { Book } from "../types/Book";
 import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
-import WrongBookDialog from "./WrongBookDialog";
-import CancelDialog from "./CancelDialog";
+import WrongBookDialog from "./dialogs/WrongBookDialog";
+import CancelDialog from "./dialogs/CancelDialog";
 
 type ScanningResultsProps = {
   scannedIsbns: string[];
@@ -215,7 +215,7 @@ export default function ScanningResults({
                 </Button>
                 <Button
                   variant="outlined"
-                  onClick={() => alert("TODO: implement")}
+                  onClick={onManuallyAdd}
                   sx={{
                     mt: "1rem",
                   }}
