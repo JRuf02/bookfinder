@@ -1,4 +1,13 @@
-import { Box, Typography, Container, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import TextInput from "../components/TextInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -20,6 +29,25 @@ type CatalogNavigationState = {
   shelf?: Shelf; // Should only be used if initialView is "shelf-books"
   searchTerm?: string; // Should only be used if initialView is "single-term-search"
 };
+
+type SortMode = "relevance" | "distance" | "newest" | "oldest";
+
+function compareTimestampStrings(a?: string, b?: string) {
+  if (a === b) {
+    return 0;
+  }
+
+  // If one timestamp is missing, consider it older than the other
+  if (!a) {
+    return 1;
+  }
+
+  if (!b) {
+    return -1;
+  }
+
+  return a.localeCompare(b);
+}
 
 export default function CatalogHomeScreen() {
   // Optional parameters when navigating to the CatalogHomeScreen:
@@ -54,6 +82,7 @@ export default function CatalogHomeScreen() {
   const [useUserLocation, setUseUserLocation] = useState<boolean>(false);
   const [activeShelf, setActiveShelf] = useState<Shelf | null>(shelfFromState);
   const [results, setResults] = useState<CatalogResult[]>([]);
+  const [sortMode, setSortMode] = useState<SortMode>("relevance");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { state, dispatch } = useAppState();
@@ -84,6 +113,7 @@ export default function CatalogHomeScreen() {
     setError(null);
     setResults([]);
 
+    // TODO: check if working:
     // if userCoordinates is in AppState, pass them to the search function to prioritize nearby results
     let userCoords = state.userCoordinates ? state.userCoordinates : null;
 
@@ -210,8 +240,47 @@ export default function CatalogHomeScreen() {
     [inputTitle, inputAuthor, useUserLocation],
   );
 
+  const hasDistanceData = useMemo(
+    () => results.some((result) => result.locatedShelf?.distanceMeters != null),
+    [results],
+  );
+
+  const sortedResults = useMemo(() => {
+    if (sortMode === "relevance") {
+      return results;
+    }
+
+    return [...results].sort((left, right) => {
+      if (sortMode === "distance") {
+        const leftDistance = left.locatedShelf?.distanceMeters;
+        const rightDistance = right.locatedShelf?.distanceMeters;
+
+        if (leftDistance == null && rightDistance == null) {
+          return 0;
+        }
+
+        // If only one of the results has distance data, prioritize that one
+        // Should not happen (Backend will always return distance if user location is provided)
+        if (leftDistance == null) {
+          return 1;
+        }
+
+        if (rightDistance == null) {
+          return -1;
+        }
+
+        return leftDistance - rightDistance;
+      }
+
+      if (sortMode === "newest") {
+        return -compareTimestampStrings(left.inShelfSince, right.inShelfSince);
+      }
+
+      return compareTimestampStrings(left.inShelfSince, right.inShelfSince);
+    });
+  }, [results, sortMode]);
+
   return (
-    // TODO: sort results by Distance | Newest | Oldest | Relevance (fuzzy score)
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to css!
     <Container
@@ -247,20 +316,6 @@ export default function CatalogHomeScreen() {
           }}
         />
       </Box>
-      Sort by: Distance | Newest | Oldest | Relevance
-      <FormControlLabel
-        value="end"
-        control={
-          <Checkbox
-            checked={useUserLocation}
-            onChange={(e) => setUseUserLocation(e.target.checked)}
-            icon={<LocationOffIcon />}
-            checkedIcon={<LocationOnIcon />}
-          />
-        }
-        label="Search near me"
-        labelPlacement="end"
-      />
       <Box
         sx={{
           width: "100%",
@@ -291,6 +346,48 @@ export default function CatalogHomeScreen() {
         onChange={(e) => setInputISBN(e.target.value)}
         onSubmit={handleISBNSubmit}
       />
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "30rem",
+          mt: 1,
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <FormControl size="small">
+          <InputLabel id="catalog-sort-label">Sort by</InputLabel>
+          <Select
+            labelId="catalog-sort-label"
+            id="catalog-sort"
+            value={sortMode}
+            label="Sort by"
+            onChange={(event) => setSortMode(event.target.value as SortMode)}
+          >
+            <MenuItem value="relevance">Relevance</MenuItem>
+            <MenuItem value="distance" disabled={!hasDistanceData}>
+              Distance
+            </MenuItem>
+            <MenuItem value="newest">Newest</MenuItem>
+            <MenuItem value="oldest">Oldest</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControlLabel
+          value="end"
+          control={
+            <Checkbox
+              checked={useUserLocation}
+              onChange={(e) => setUseUserLocation(e.target.checked)}
+              icon={<LocationOffIcon />}
+              checkedIcon={<LocationOnIcon />}
+            />
+          }
+          label="Search near me"
+          labelPlacement="end"
+        />
+      </Box>
       {activeShelf && (
         <Typography
           variant="body2"
@@ -316,7 +413,7 @@ export default function CatalogHomeScreen() {
           pb: 2,
         }}
       >
-        <ResultsList results={results} />
+        <ResultsList results={sortedResults} />
       </Box>
     </Container>
   );
