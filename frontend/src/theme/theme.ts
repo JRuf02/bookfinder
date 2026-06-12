@@ -13,7 +13,7 @@ const theme = createTheme({
       main: "#f44336", // Red for destructive actions
     },
     background: {
-      default: "#fafafa",
+      default: "#dce4dd",
       paper: "#ffffff",
     },
   },

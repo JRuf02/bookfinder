@@ -282,7 +282,7 @@ export default function CatalogHomeScreen() {
 
   return (
     // TODO: use mui toggle switch instead of mui checkbox for location?
-    // TODO: use uniform styling and layouting for all pages, move styles to css!
+    // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
     <Container
       className="app-container"
       maxWidth={false}
@@ -293,7 +293,7 @@ export default function CatalogHomeScreen() {
         alignItems: "center",
         height: "100%",
         overflow: "hidden",
-        maxWidth: "100%",
+        maxWidth: "80%", // TODO: make responsive, e.g. max 80% on desktop, 95% on mobile
       }}
     >
       <Box

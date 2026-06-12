@@ -26,8 +26,8 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogHomeScreen
-  - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum <=============================================================
   - Layout?
+    - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
       - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
       - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt

@@ -20,6 +20,7 @@
   - Umlaut not in db, weird non-ascii (catalog search glücklich does not work) -> does work now thanks to fuzzy
 
 - CatalogHomeScreen
+  - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum
   - hat Suchleiste
     - Suchfunktion Backend verbessern
     - Buchsuche soll auch ohne standort gehen
