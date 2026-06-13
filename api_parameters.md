@@ -1,9 +1,0 @@
-- api/book: isbn(normalized)
-- api/cover: isbn(dnb formatted),size
-- api/bookshelves:
-- api/bookshelves/nearby: lat, lon, radius
-- api/shelf/metadata: osm_id
-- api/shelf/books: osm_id
-- api/shelf/insert: osm_id, isbn
-- api/shelf/remove: osm_id, isbn
-- api/catalog/search: title, lat, lon

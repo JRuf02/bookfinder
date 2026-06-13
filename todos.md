@@ -57,7 +57,7 @@
 
 - CatalogHomeScreen
   - Layout?
-    - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================
+    - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================(bitte erst bug beheben, s.u.)
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
       - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
       - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
@@ -82,13 +82,6 @@
 - InfoScreen
   - add info page
   - dark mode toggle?
-
-- ManualInsertScreen (oder Popup) (=Manuelle eingabe/buch ohne barcode/ISBN eingabe screen) existiert <=============================================================
-  - inserting old books / without isbn / foreign isbn possible
-  - inserting incl. photo of cover possible
-  - kann über button auf dem scanningscreen aufgerufen werden
-  - kann bei scanning / book data fetching error geöffnet werden
-  - kann bei klick auf wrong book button geöffnet werden
 
 - Resilience & Edge Cases:
   - dnb_api.py
@@ -154,7 +147,7 @@
 
 ## Bugs
 
-- bug: after clicking insert on homescreen map popup and scanning a book, the book and 'no isbn scanned' will both appear (and 2x insert button)
+- Scanning unknown ISBN after scanning a known isbn will lead to the last known book being shown instead of an error message (Error fetching Book data -> manually insert) <================================
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 
 ## Improvements
@@ -176,6 +169,9 @@
 
 ## Nice to have
 
+- Manual Add Book
+  - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
+  - Ensure Author name format is "Last, First Second"
 - save cover images as binary blob to books.db
 - reverse-geocoded addresses in bookshelf data OR just show a small map with 1 marker for selected shelf (!)
   - e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests
@@ -196,6 +192,10 @@
   - Hide browser address bar ([tipps on stack overflow](https://stackoverflow.com/questions/57023990/how-to-hide-the-address-bar-on-mobile-in-a-react-app))
   - Hide android bottom bar
   - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
+- ManualAdd Dialog
+  - inserting books that dont have an isbn possible
+  - inserting incl. photo of cover possible
+  - kann über button auf dem scanningscreen aufgerufen werden
 - CatalogHomeScreen
   - Hat button "select shelf to show books" und zeigt schon beim ersten öffnen die bücher des nähesten shelf?
   - oder zeigt die most recently inserted books deutschlandweit als start?

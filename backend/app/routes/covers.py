@@ -10,7 +10,7 @@ def get_cover_by_isbn(request: Request) -> ResponseReturnValue:
     """Get cover image for a book by its ISBN.
 
     Request parameters:
-    - isbn: ISBN of the book (required)
+    - isbn: ISBN of the book (required, either ISBN-10 or ISBN-13)
     - size: Size of the cover image, one of "s", "m", "l" (optional, default: "l")
     """
 

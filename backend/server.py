@@ -17,6 +17,7 @@ from app.routes.books import get_book_api_logic
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
 from app.routes.catalog import search_in_catalog, single_term_search_in_catalog
 from app.routes.covers import get_cover_by_isbn
+from app.routes.manual_add import manually_add_book
 from app.routes.shelf import (
     get_books_in_shelf,
     get_shelf_metadata,
@@ -77,6 +78,11 @@ def create_app() -> Flask:  # noqa: C901
     @app.route("/api/catalog/search/single-term", methods=["GET"])
     def single_term_search_in_catalog_api() -> ResponseReturnValue:
         return single_term_search_in_catalog(request)
+
+    # TODO: Tests for this endpoint
+    @app.route("/api/manual-add", methods=["POST"])
+    def manually_add_book_api() -> ResponseReturnValue:
+        return manually_add_book(request)
 
     return app
 

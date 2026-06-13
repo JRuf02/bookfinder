@@ -26,7 +26,10 @@ def get_book_from_database(isbn: Isbn) -> Book | None:
 
 
 def save_book_to_db(book: Book) -> None:
-    """Save book data to the local SQLite database."""
+    """Save book metadata to the local SQLite database, in the table 'books'.
+
+    If a book with the same ISBN already exists, old metadata will be overwritten.
+    """
 
     with db_cursor() as c:
         c.execute(

@@ -40,6 +40,11 @@
   - Manuelle eingabe/buch ohne barcode/ISBN eingabe screen (oder popup) wird bei error gezeigt
   - Don't show 'error fetching book data' after removing scanned book from queue via 'wrong book' button
 
+- ManualAdd Dialog
+  - inserting foreign (non-DNB) isbn possible (with isbn 10 or 13)
+  - kann bei scanning / book data fetching error geöffnet werden
+  - kann bei klick auf wrong book button geöffnet werden
+
 - ShelfSelectMap
   - select button switches to "selected" when clicked on shelfActionScreen
 

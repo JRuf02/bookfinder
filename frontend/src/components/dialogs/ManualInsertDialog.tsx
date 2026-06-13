@@ -45,7 +45,15 @@ export default function ManualInsertDialog({
         <DialogContentText>
           Please enter the book details here.
         </DialogContentText>
-        <form onSubmit={handleSubmit} id="subscription-form">
+        <form
+          onSubmit={handleSubmit}
+          id="subscription-form"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0",
+          }}
+        >
           <TextField
             autoFocus
             required
@@ -53,6 +61,7 @@ export default function ManualInsertDialog({
             id="name"
             name="isbn"
             label="ISBN"
+            placeholder="978-1-4447-2072-3"
             type="text"
             fullWidth
             variant="standard"
@@ -64,6 +73,7 @@ export default function ManualInsertDialog({
             id="name"
             name="title"
             label="Title"
+            placeholder="The Shining"
             type="text"
             fullWidth
             variant="standard"
@@ -75,6 +85,7 @@ export default function ManualInsertDialog({
             id="name"
             name="author"
             label="Author"
+            placeholder="King, Stephen"
             type="text"
             fullWidth
             variant="standard"
