@@ -130,7 +130,7 @@ export default function ScanningResults({
             my: "0.5rem",
           }}
         >
-          {currentBook ? (
+          {currentBook && !backendError ? (
             <>
               <BookDisplay
                 book={currentBook}
@@ -271,6 +271,7 @@ export default function ScanningResults({
           onTryAgain();
         }}
         onManuallyAdd={() => {
+          onDontAdd(); // Remove the wrong book from the queue
           setWrongBookDialogOpen(false);
           onManuallyAdd();
         }}

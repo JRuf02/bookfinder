@@ -2,36 +2,6 @@
 
 ## Main todos
 
-- Manual Insert
-  - Plan A:
-    - Frontend:
-      - Send user inputted author, title and isbn to backend
-      - Handle all possible responses
-        - invalid ISBN -> backend returns error
-        - book with this ISBN already in db, but with other author/title -> backend returns warning and real title and author
-        - book not in db and not in dnb, ISBN valid -> backend inserts data to books table and returns success
-        - book already in db -> backend does nothing and returns success
-      - Success: Add returned book to scanned books queue and returned (=properly formatted) ISBN to scanned isbns
-      - Warning: Show warning: 'Found alternative title / author for this ISBN: ...' and add returned isbn and book to the books queue and to scanned isbns
-      - Error: Show error: 'Invalid ISBN: Input does not match any ISBN format.'
-    - Backend: ALWAYS returns status: str ('warning', 'success', 'error') and a Book object (if status not error)
-      - check if ISBN valid, transform to ISBN-13
-      - check if ISBN already in DB
-        - if yes: check if title and author in DB match those of the input
-          - match: Do nothing, return success and the book from DB
-          - not matching: return warning and book from DB with real title and author
-      - query dnb api with the isbn
-        - Book found in DNB?
-          - Title and author match the input?
-            - Add book to the books table, including coverurl and dnbid
-            - Return success and the book from the DB
-          - Title and author do not match the input?
-            - Add book with dnb data to the DB (books table), return warning and book from DB with real title and author
-        - Book not found in DB and not in DNB:
-          - Insert book with the given input data into books table, return success and the book
-  - Plan B:
-    - Leave ManualInsert logic as is, but let the shelf/insert api do the checks (errors will then be shown later and wrong book could be inserted if in warning case)
-
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
   - Unit tests
@@ -57,7 +27,7 @@
 
 - CatalogHomeScreen
   - Layout?
-    - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================(bitte erst bug beheben, s.u.)
+    - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
       - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
       - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
@@ -78,6 +48,7 @@
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
+  - Components und Funktionen aufräumen <=============================================================
 
 - InfoScreen
   - add info page
@@ -147,7 +118,6 @@
 
 ## Bugs
 
-- Scanning unknown ISBN after scanning a known isbn will lead to the last known book being shown instead of an error message (Error fetching Book data -> manually insert) <================================
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 
 ## Improvements
@@ -188,6 +158,7 @@
   - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
   - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
   - Wenn Buch gescannt wurde bis zum insert/remove/abbruch seite neu laden deaktivieren oder CancelDialog zeigen
+  - Shelf Map neben den Catalog Results zeigen, shelves klickbar machen um inhalt bei klick auf marker direkt zu zeigen
 - Full screen:
   - Hide browser address bar ([tipps on stack overflow](https://stackoverflow.com/questions/57023990/how-to-hide-the-address-bar-on-mobile-in-a-react-app))
   - Hide android bottom bar
