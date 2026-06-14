@@ -7,6 +7,8 @@ type ScanningViewProps = {
   onScanComplete: (isbn: string) => void;
 };
 
+// Shows the Scanner component (video feed) and an input field for manual ISBN entry.
+// When a scan is successful or the form is submitted, call onScanComplete with the scanned/entered ISBN.
 export default function ScanningView({ onScanComplete }: ScanningViewProps) {
   const [inputIsbn, setInputIsbn] = useState<string>("");
   const [scanning, setScanning] = useState(true);
@@ -16,7 +18,6 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
     stopReading: () => void;
   } | null>(null);
 
-  // Callback when Scanner finds a result
   const handleScanResult = useCallback(async (scannedIsbn: string) => {
     // Stop camera explicitly
     if (scannerRef.current) {
@@ -25,11 +26,8 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
     }
     onScanComplete(scannedIsbn);
     setScanning(false);
-    // Fetch book data in ScanningResults
-    // setBook(await fetchBookData(scannedIsbn));
   }, []);
 
-  // Callback when ISBN input is submitted manually
   const handleInputSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // prevents page reload
 
@@ -42,8 +40,6 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
     // Now update state
     setScanning(false);
     onScanComplete(inputIsbn);
-    // Fetch book data in ScanningResults
-    // setBook(await fetchBookData(inputIsbn));
   };
 
   const handleScannerReady = useCallback(
