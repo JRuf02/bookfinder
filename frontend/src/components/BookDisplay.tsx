@@ -21,14 +21,13 @@ type BookDisplayProps = {
 export default function BookDisplay({
   book,
   isbn,
-  onScanMore: onScanMore,
-  onWrongBook: onWrongBook,
+  onScanMore,
+  onWrongBook,
 }: BookDisplayProps) {
   const [coverUrl, setCoverUrl] = useState<string>("");
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    // Use own server endpoint instead of DNB API directly
     // Use relative URL to ensure protocol matching (HTTP or HTTPS)
     // TODO: Consider caching cover images on backend or using book.coverUrl
     setCoverUrl(`/api/cover?isbn=${book.isbn}&size=l`);
@@ -39,6 +38,7 @@ export default function BookDisplay({
     setImageError(true);
   };
 
+  // TODO: Move styling to global CSS file or MUI theme file
   return (
     <Card sx={{ maxWidth: 400, textAlign: "center", p: 2 }}>
       <CardContent>

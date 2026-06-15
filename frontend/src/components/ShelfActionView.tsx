@@ -24,7 +24,7 @@ type ShelfActionViewProps = {
 export default function ShelfActionView({
   action,
   onCancel,
-  onRestart: onRestart,
+  onRestart,
 }: ShelfActionViewProps) {
   const { state, dispatch } = useAppState();
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import CheckIcon from "@mui/icons-material/Check";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import L from "leaflet";
 import { Button, Stack, Typography, Link } from "@mui/material";
 import { Shelf } from "../../types/Shelf";
@@ -108,7 +108,7 @@ export default function MapPopup({
             size="small"
             variant="contained"
             color="primary"
-            startIcon={isSelected ? <CheckIcon /> : undefined}
+            startIcon={isSelected ? <TaskAltIcon /> : undefined}
             onClick={onSelect}
           >
             {isSelected ? "Selected" : "Select"}

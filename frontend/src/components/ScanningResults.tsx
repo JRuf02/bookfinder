@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import BookDisplay from "./BookDisplay";
 import { fetchBookData } from "../services/fetchBookData";
-import { Button, Stack, Box, Container, Typography } from "@mui/material";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
+import { Box, Container } from "@mui/material";
 import { Book } from "../types/Book";
-import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
 import WrongBookDialog from "./dialogs/WrongBookDialog";
 import CancelDialog from "./dialogs/CancelDialog";
+import ScanningResultsButtons from "./ScanningResultsButtons";
+import ScanningResultsErrorView from "./ScanningResultsErrorView";
 
 type ScanningResultsProps = {
   scannedIsbns: string[];
@@ -23,17 +22,16 @@ type ScanningResultsProps = {
 };
 
 export default function ScanningResults({
-  scannedIsbns: scannedIsbns,
-  queuedBooks: queuedBooks,
+  scannedIsbns,
+  queuedBooks,
   onActionSelected,
   onBookFound,
-  onCancel: onCancel,
-  onTryAgain: onTryAgain,
-  onManuallyAdd: onManuallyAdd,
-  onDontAdd: onDontAdd,
-  onScanMore: onScanMore,
+  onCancel,
+  onTryAgain,
+  onManuallyAdd,
+  onDontAdd,
+  onScanMore,
 }: ScanningResultsProps) {
-  const { state } = useAppState();
   const [currentBook, setCurrentBook] = useState<Book | null>(null);
   const [backendError, setBackendError] = useState<string | null>(null);
   const [wrongBookDialogOpen, setWrongBookDialogOpen] = useState(false);
@@ -107,14 +105,23 @@ export default function ScanningResults({
     setWrongBookDialogOpen(true);
   };
 
-  const onDontAddClicked = () => {
+  const onDontAddButtonClicked = () => {
     setWrongBookDialogOpen(false);
     onDontAdd();
   };
 
-  // TODO: Test multibook insert with error scans in between
-  // TODO: move the three lower buttons into a separate component to avoid code duplication for error case and standard case
-  // TODO: Handle the case where !currentBook but no backend error (should not happen, but add buttons just in case)
+  const onInsert = () => {
+    handleActionSelected("insert");
+  };
+
+  const onRemove = () => {
+    handleActionSelected("remove");
+  };
+
+  const onCancelButtonClicked = () => {
+    setCancelDialogOpen(true);
+  };
+
   return (
     <div>
       <Container
@@ -131,139 +138,37 @@ export default function ScanningResults({
           }}
         >
           {currentBook && !backendError ? (
-            <>
-              <BookDisplay
-                book={currentBook}
-                isbn={scannedIsbns.at(-1) ?? ""}
-                onScanMore={onScanMore}
-                onWrongBook={onWrongBook}
-              />
-
-              <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-                <Typography variant="body1" color="text.secondary">
-                  {queuedBooks.length} book(s) scanned so far
-                </Typography>
-              </Stack>
-
-              <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-                {(state.preSelectedShelfAction === "insert" ||
-                  state.preSelectedShelfAction === "both") && (
-                  <Button
-                    startIcon={<PlaylistAddIcon />}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleActionSelected("insert")}
-                  >
-                    Insert {queuedBooks.length} books into bookshelf
-                  </Button>
-                )}
-                {(state.preSelectedShelfAction === "remove" ||
-                  state.preSelectedShelfAction === "both") && (
-                  <Button
-                    startIcon={<PlaylistRemoveIcon />}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleActionSelected("remove")}
-                  >
-                    Remove {queuedBooks.length} books from bookshelf
-                  </Button>
-                )}
-                <Button
-                  variant="outlined"
-                  onClick={() => setCancelDialogOpen(true)}
-                >
-                  Cancel
-                </Button>
-              </Stack>
-            </>
+            <BookDisplay
+              book={currentBook}
+              isbn={scannedIsbns.at(-1) ?? ""}
+              onScanMore={onScanMore}
+              onWrongBook={onWrongBook}
+            />
           ) : backendError ? (
-            <Box sx={{ mt: "2rem", textAlign: "center" }}>
-              {backendError != "No ISBNs scanned" ? (
-                <Typography variant="h6" color="error">
-                  Error fetching book data
-                </Typography>
-              ) : null}
-              <Typography variant="body1" color="text.secondary">
-                {backendError}
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{
-                  mt: "1.5rem",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  onClick={() => setCancelDialogOpen(true)}
-                  sx={{
-                    mt: "1rem",
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={onRetry}
-                  sx={{
-                    mt: "1rem",
-                  }}
-                >
-                  Retry
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={onManuallyAdd}
-                  sx={{
-                    mt: "1rem",
-                  }}
-                >
-                  Add manually
-                </Button>
-              </Stack>
-
-              <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-                <Typography variant="body1" color="text.secondary">
-                  {queuedBooks.length} book(s) scanned so far
-                </Typography>
-              </Stack>
-
-              <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-                {(state.preSelectedShelfAction === "insert" ||
-                  state.preSelectedShelfAction === "both") && (
-                  <Button
-                    startIcon={<PlaylistAddIcon />}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleActionSelected("insert")}
-                  >
-                    Insert {queuedBooks.length} books into bookshelf
-                  </Button>
-                )}
-                {(state.preSelectedShelfAction === "remove" ||
-                  state.preSelectedShelfAction === "both") && (
-                  <Button
-                    startIcon={<PlaylistRemoveIcon />}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleActionSelected("remove")}
-                  >
-                    Remove {queuedBooks.length} books from bookshelf
-                  </Button>
-                )}
-                <Button
-                  variant="outlined"
-                  onClick={() => setCancelDialogOpen(true)}
-                >
-                  Cancel
-                </Button>
-              </Stack>
-            </Box>
-          ) : null}
+            <ScanningResultsErrorView
+              errorMessage={backendError}
+              onRetry={onRetry}
+              onCancel={onCancelButtonClicked}
+              onManuallyAdd={onManuallyAdd}
+            />
+          ) : (
+            // This case should not happen, but show message just in case
+            <ScanningResultsErrorView
+              errorMessage={"No book selected"}
+              onRetry={onRetry}
+              onCancel={onCancelButtonClicked}
+              onManuallyAdd={onManuallyAdd}
+            />
+          )}
+          <ScanningResultsButtons
+            numberOfBooks={queuedBooks.length}
+            onInsert={onInsert}
+            onRemove={onRemove}
+            onCancel={onCancelButtonClicked}
+          />
         </Box>
       </Container>
+
       <WrongBookDialog
         open={wrongBookDialogOpen}
         onTryAgain={() => {
@@ -275,8 +180,9 @@ export default function ScanningResults({
           setWrongBookDialogOpen(false);
           onManuallyAdd();
         }}
-        onDontAdd={onDontAddClicked}
+        onDontAdd={onDontAddButtonClicked}
       />
+
       <CancelDialog
         open={cancelDialogOpen}
         onYes={() => {
