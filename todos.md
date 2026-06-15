@@ -26,6 +26,7 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogHomeScreen
+  - Components und Funktionen aufräumen <=============================================================
   - Layout?
     - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
@@ -48,7 +49,6 @@
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
-  - Components und Funktionen aufräumen <=============================================================
 
 - InfoScreen
   - add info page

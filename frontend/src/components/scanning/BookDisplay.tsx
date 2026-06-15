@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Book } from "../types/Book";
+import { Book } from "../../types/Book";
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {

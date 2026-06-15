@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import BookDisplay from "./BookDisplay";
-import { fetchBookData } from "../services/fetchBookData";
+import { fetchBookData } from "../../services/fetchBookData";
 import { Box, Container } from "@mui/material";
-import { Book } from "../types/Book";
-import { ShelfAction } from "../types/ShelfAction";
-import WrongBookDialog from "./dialogs/WrongBookDialog";
-import CancelDialog from "./dialogs/CancelDialog";
+import { Book } from "../../types/Book";
+import { ShelfAction } from "../../types/ShelfAction";
+import WrongBookDialog from "../dialogs/WrongBookDialog";
+import CancelDialog from "../dialogs/CancelDialog";
 import ScanningResultsButtons from "./ScanningResultsButtons";
 import ScanningResultsErrorView from "./ScanningResultsErrorView";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ScanningResults from "../components/ScanningResults";
-import ScanningView from "../components/ScanningView";
-import ShelfActionView from "../components/ShelfActionView";
+import ScanningResults from "../components/scanning/ScanningResults";
+import ScanningView from "../components/scanning/ScanningView";
+import ShelfActionView from "../components/shelfactions/ShelfActionView";
 import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
 import { Book } from "../types/Book";

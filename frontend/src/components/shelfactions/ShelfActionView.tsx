@@ -8,12 +8,12 @@ import {
   Stack,
   Container,
 } from "@mui/material";
-import { shelfAction } from "../services/shelfActions";
+import { shelfAction } from "../../services/shelfActions";
 import ActionResultAlert from "./ActionResultAlert";
-import ShelfMap from "./map/ShelfMap";
-import { useAppState } from "../state/AppStateProvider";
-import { ShelfAction } from "../types/ShelfAction";
-import CancelDialog from "./dialogs/CancelDialog";
+import ShelfMap from "../map/ShelfMap";
+import { useAppState } from "../../state/AppStateProvider";
+import { ShelfAction } from "../../types/ShelfAction";
+import CancelDialog from "../dialogs/CancelDialog";
 
 type ShelfActionViewProps = {
   action: ShelfAction;

@@ -6,8 +6,8 @@ import {
   Box,
   Stack,
 } from "@mui/material";
-import logo from "../../graphics/logo-long-no-bg.png";
-import { CatalogResult } from "../types/CatalogResult";
+import logo from "../../../graphics/logo-long-no-bg.png";
+import { CatalogResult } from "../../types/CatalogResult";
 
 type ResultsListProps = {
   results: CatalogResult[];

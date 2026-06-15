@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
-import Scanner from "../components/Scanner";
-import TextInput from "./TextInput";
+import Scanner from "./Scanner";
+import TextInput from "../TextInput";
 import { Box, Container, Typography } from "@mui/material";
 
 type ScanningViewProps = {

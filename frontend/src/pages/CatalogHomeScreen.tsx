@@ -11,7 +11,7 @@ import {
 import TextInput from "../components/TextInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import ResultsList from "../components/ResultsList";
+import ResultsList from "../components/catalog/ResultsList";
 import { getUserLocation } from "../services/location";
 import { singleTermCatalogSearch } from "../services/catalogSearch";
 import { fetchShelfBooks } from "../services/shelfBooks";
@@ -283,6 +283,7 @@ export default function CatalogHomeScreen() {
   return (
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
+    // TODO: split into multiple components and move some logic if possible
     <Container
       className="app-container"
       maxWidth={false}
