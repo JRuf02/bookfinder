@@ -23,6 +23,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
+import { compareTimestampStrings } from "../services/sorting";
 
 type CatalogNavigationState = {
   initialView?: "search" | "shelf-books" | "single-term-search";
@@ -32,28 +33,17 @@ type CatalogNavigationState = {
 
 type SortMode = "relevance" | "distance" | "newest" | "oldest";
 
-function compareTimestampStrings(a?: string, b?: string) {
-  if (a === b) {
-    return 0;
-  }
-
-  // If one timestamp is missing, consider it older than the other
-  if (!a) {
-    return 1;
-  }
-
-  if (!b) {
-    return -1;
-  }
-
-  return a.localeCompare(b);
-}
-
+/**
+ * Main catalog screen where users can search for books or view books on a specific shelf.
+ * Supports optional navigation state to immediately show search results or shelf books when navigating to this screen.
+ *
+ * Options for navigation state:
+ * - initialView: If set to "shelf-books", the screen will immediately load all books from the provided shelf.
+ *                If set to "single-term-search", the screen will immediately perform a search with the provided searchTerm.
+ * - shelf: The shelf to load books from if initialView is "shelf-books".
+ * - searchTerm: The search term to use if initialView is "single-term-search".
+ */
 export default function CatalogHomeScreen() {
-  // Optional parameters when navigating to the CatalogHomeScreen:
-  // - initialView: If set to "shelf-books", the screen will immediately load books from the provided shelf.
-  // - shelf: The shelf to load books from if initialView is "shelf-books".
-  // - searchTerm: The search term to use if initialView is "single-term-search".
   const location = useLocation(); // Access navigation state
   const navigationState =
     (location.state as CatalogNavigationState | null) ?? null;

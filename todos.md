@@ -123,11 +123,14 @@
 ## Improvements
 
 - Frontend:
+  - Use `/*_ This is a js doctstring _/` for docstrings
   - besserer ersatz für cover image if not available
 - SQL injection should not be possible -> use escape methods
 - ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - smoothen permission handling for the camera (and improve error message design)
+- Manual Add Dialog
+  - wenn isbn eingegeben wurde aber no book found, dann übertrage isbn direkt in das ISBN input field im ManualAddDialog
 - CatalogResult
   - In catalog results: Clicking a result shows it on map ?
   - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
@@ -142,6 +145,9 @@
 - Manual Add Book
   - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
   - Ensure Author name format is "Last, First Second"
+  - inserting books that dont have an isbn possible
+  - inserting incl. photo of cover possible
+  - Dialog kann über button auf dem scanningscreen aufgerufen werden
 - save cover images as binary blob to books.db
 - reverse-geocoded addresses in bookshelf data OR just show a small map with 1 marker for selected shelf (!)
   - e.g. with [nominatim](https://github.com/osm-search/Nominatim): ca. 5h for 15k requests
@@ -163,10 +169,6 @@
   - Hide browser address bar ([tipps on stack overflow](https://stackoverflow.com/questions/57023990/how-to-hide-the-address-bar-on-mobile-in-a-react-app))
   - Hide android bottom bar
   - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
-- ManualAdd Dialog
-  - inserting books that dont have an isbn possible
-  - inserting incl. photo of cover possible
-  - kann über button auf dem scanningscreen aufgerufen werden
 - CatalogHomeScreen
   - Hat button "select shelf to show books" und zeigt schon beim ersten öffnen die bücher des nähesten shelf?
   - oder zeigt die most recently inserted books deutschlandweit als start?

@@ -6,15 +6,13 @@ import "./styles/global.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import ScanningScreen from "./pages/ScanningScreen";
-/*import ManualAddScreen from "./pages/ManualAddScreen";
-import InfoScreen from "./pages/InfoScreen";*/
 import CatalogHomeScreen from "./pages/CatalogHomeScreen";
 import NotFoundScreen from "./pages/NotFoundScreen";
 import BottomNavBar from "./components/layout/BottomNavBar";
 
 function App() {
   /*
-        <Route path="/manual-add" element={<ManualAddScreen />} />
+        TODO: Add info screen with instructions for the app/scanning, data sources, contact info, etc.
         <Route path="/info" element={<InfoScreen />} />
   */
 
