@@ -25,13 +25,41 @@ import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
 import { compareTimestampStrings } from "../services/sorting";
 
+type SortMode = "relevance" | "distance" | "newest" | "oldest";
+
+/**
+ * Navigation state that can be passed when navigating to the CatalogHomeScreen.
+ * - initialView determines what the CatalogHomeScreen should show immediately upon navigation
+ * - shelf should only be provided if initialView is "shelf-books",
+ * - searchTerm should only be provided if initialView is "single-term-search"
+ */
 type CatalogNavigationState = {
   initialView?: "search" | "shelf-books" | "single-term-search";
-  shelf?: Shelf; // Should only be used if initialView is "shelf-books"
-  searchTerm?: string; // Should only be used if initialView is "single-term-search"
+  shelf?: Shelf;
+  searchTerm?: string;
 };
 
-type SortMode = "relevance" | "distance" | "newest" | "oldest";
+/** Extract navigation state information */
+function getCatalogNavigationTargets(locationState: unknown): {
+  shelfFromState: Shelf | null;
+  searchTermFromState: string | null;
+} {
+  const navigationState =
+    (locationState as CatalogNavigationState | null) ?? null;
+
+  const shelfFromState =
+    navigationState?.initialView === "shelf-books" && navigationState.shelf
+      ? navigationState.shelf
+      : null;
+
+  const searchTermFromState =
+    navigationState?.initialView === "single-term-search" &&
+    navigationState.searchTerm
+      ? navigationState.searchTerm
+      : null;
+
+  return { shelfFromState, searchTermFromState };
+}
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
@@ -45,26 +73,9 @@ type SortMode = "relevance" | "distance" | "newest" | "oldest";
  */
 export default function CatalogHomeScreen() {
   const location = useLocation(); // Access navigation state
-  const navigationState =
-    (location.state as CatalogNavigationState | null) ?? null;
-  const shelfFromState = useMemo(() => {
-    if (
-      navigationState?.initialView === "shelf-books" &&
-      navigationState.shelf
-    ) {
-      return navigationState.shelf;
-    }
-    return null;
-  }, [navigationState]);
-  const searchTermFromState = useMemo(() => {
-    if (
-      navigationState?.initialView === "single-term-search" &&
-      navigationState.searchTerm
-    ) {
-      return navigationState.searchTerm;
-    }
-    return null;
-  }, [navigationState]);
+  const { shelfFromState, searchTermFromState } = getCatalogNavigationTargets(
+    location.state,
+  );
 
   const [inputTitle, setInputTitle] = useState<string>("");
   const [inputAuthor, setInputAuthor] = useState<string>("");
