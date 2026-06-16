@@ -61,6 +61,22 @@ function getCatalogNavigationTargets(locationState: unknown): {
   return { shelfFromState, searchTermFromState };
 }
 
+/** Access the user's location and cache it to the global AppState */
+async function getAndCacheUserLocation(
+  dispatch: ReturnType<typeof useAppState>["dispatch"],
+) {
+  const location = await getUserLocation();
+
+  if (location) {
+    dispatch({
+      type: "SET_USER_COORDINATES",
+      payload: location,
+    });
+  }
+
+  return location;
+}
+
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
  * Supports optional navigation state to immediately show search results or shelf books when navigating to this screen.
@@ -166,16 +182,8 @@ export default function CatalogHomeScreen() {
         }
 
         const currentUserLocation = useUserLocation
-          ? await getUserLocation()
+          ? await getAndCacheUserLocation(dispatch)
           : null;
-
-        // cache user coordinates in global AppState
-        if (currentUserLocation) {
-          dispatch({
-            type: "SET_USER_COORDINATES",
-            payload: currentUserLocation,
-          });
-        }
 
         const result = await singleTermCatalogSearch(isbn, currentUserLocation);
 
@@ -212,15 +220,7 @@ export default function CatalogHomeScreen() {
 
         // only request & send location if toggle is enabled
         if (useUserLocation) {
-          const currentUserLocation = await getUserLocation();
-
-          // cache user coordinates in global AppState
-          if (currentUserLocation) {
-            dispatch({
-              type: "SET_USER_COORDINATES",
-              payload: currentUserLocation,
-            });
-          }
+          const currentUserLocation = await getAndCacheUserLocation(dispatch);
 
           params.append("lat", currentUserLocation.latitude.toString());
           params.append("lon", currentUserLocation.longitude.toString());
