@@ -24,6 +24,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
 import { compareTimestampStrings } from "../services/sorting";
+import { GeoCoordinates } from "../types/GeoCoordinates";
 
 type SortMode = "relevance" | "distance" | "newest" | "oldest";
 
@@ -77,6 +78,35 @@ async function getAndCacheUserLocation(
   return location;
 }
 
+/**
+ * Query the backend for books in the current catalog matching the given author and/or title.
+ * Throws an error ("Server error") if backend returns an HTTP code outside the 2xx range.
+ */
+async function searchCatalog(
+  title: string,
+  author: string,
+  location?: GeoCoordinates | null,
+): Promise<CatalogResult[]> {
+  // build query params safely
+  const params = new URLSearchParams({ title, author });
+
+  // only request & send location if toggle is enabled
+  if (location) {
+    params.append("lat", location.latitude.toString());
+    params.append("lon", location.longitude.toString());
+  }
+
+  const resp = await fetch(`/api/catalog/search?${params.toString()}`);
+
+  // TODO: Search without parameters should show that the user did wrong, not that there is a server error!
+  // TODO: => Use the error messages provided by the backend
+  if (!resp.ok)
+    throw new Error("Could not fetch results. Please try again later.");
+  const resp_json = await resp.json();
+  return resp_json.data as CatalogResult[];
+}
+
+// TODO: move to services/sorting.ts or other helper file
 /** Sort catalog results based on the given sort mode */
 function sortCatalogResults(
   results: CatalogResult[],
@@ -183,7 +213,9 @@ export default function CatalogHomeScreen() {
       setResults(result.data);
       setActiveShelf(null);
     } catch (err: any) {
-      setError(err.message || "Could not fetch results.");
+      setError(
+        err.message || "Could not fetch results. Please try again later.",
+      );
       console.error("Error during single-term search:", err);
     } finally {
       setLoading(false);
@@ -232,7 +264,9 @@ export default function CatalogHomeScreen() {
 
         setResults(result.data);
       } catch (err: any) {
-        setError(err.message || "Could not fetch results.");
+        setError(
+          err.message || "Could not fetch results. Please try again later.",
+        );
         console.error("Error during ISBN single-term search:", err);
       } finally {
         setLoading(false);
@@ -251,27 +285,21 @@ export default function CatalogHomeScreen() {
       setInputISBN("");
 
       try {
-        // build query params safely
-        const params = new URLSearchParams({
-          title: inputTitle,
-          author: inputAuthor,
-        });
-
         // only request & send location if toggle is enabled
-        if (useUserLocation) {
-          const currentUserLocation = await getAndCacheUserLocation(dispatch);
+        const currentUserLocation = useUserLocation
+          ? await getAndCacheUserLocation(dispatch)
+          : null;
 
-          params.append("lat", currentUserLocation.latitude.toString());
-          params.append("lon", currentUserLocation.longitude.toString());
-        }
-
-        const resp = await fetch(`/api/catalog/search?${params.toString()}`);
-
-        if (!resp.ok) throw new Error("Server error");
-        const resp_json = await resp.json();
-        setResults(resp_json.data);
+        const results = await searchCatalog(
+          inputTitle,
+          inputAuthor,
+          currentUserLocation,
+        );
+        setResults(results);
       } catch (err: any) {
-        setError(err.message || "Could not fetch results.");
+        setError(
+          err.message || "Could not fetch results. Please try again later.",
+        );
         console.error("Error during search:", err);
       } finally {
         setLoading(false);
