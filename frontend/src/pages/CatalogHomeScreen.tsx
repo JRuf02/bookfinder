@@ -28,40 +28,7 @@ import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
 import { sortCatalogResults, SortMode } from "../services/sorting";
 import { unwrapResult } from "../types/Result";
-
-/**
- * Navigation state that can be passed when navigating to the CatalogHomeScreen.
- * - initialView determines what the CatalogHomeScreen should show immediately upon navigation
- * - shelf should only be provided if initialView is "shelf-books",
- * - searchTerm should only be provided if initialView is "single-term-search"
- */
-type CatalogNavigationState = {
-  initialView?: "search" | "shelf-books" | "single-term-search";
-  shelf?: Shelf;
-  searchTerm?: string;
-};
-
-/** Extract website navigation state information */
-function getCatalogNavigationTargets(locationState: unknown): {
-  shelfFromState: Shelf | null;
-  searchTermFromState: string | null;
-} {
-  const navigationState =
-    (locationState as CatalogNavigationState | null) ?? null;
-
-  const shelfFromState =
-    navigationState?.initialView === "shelf-books" && navigationState.shelf
-      ? navigationState.shelf
-      : null;
-
-  const searchTermFromState =
-    navigationState?.initialView === "single-term-search" &&
-    navigationState.searchTerm
-      ? navigationState.searchTerm
-      : null;
-
-  return { shelfFromState, searchTermFromState };
-}
+import { getCatalogNavigationTargets } from "../services/catalogHomeScreenHelpers";
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
