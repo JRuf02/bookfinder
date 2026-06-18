@@ -26,10 +26,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
-import { compareTimestampStrings } from "../services/sorting";
+import { sortCatalogResults, SortMode } from "../services/sorting";
 import { unwrapResult } from "../types/Result";
-
-type SortMode = "relevance" | "distance" | "newest" | "oldest";
 
 /**
  * Navigation state that can be passed when navigating to the CatalogHomeScreen.
@@ -79,46 +77,6 @@ async function getAndCacheUserLocation(
   }
 
   return location;
-}
-
-// TODO: move to services/sorting.ts or other helper file
-/** Sort catalog results based on the given sort mode */
-function sortCatalogResults(
-  results: CatalogResult[],
-  sortMode: SortMode,
-): CatalogResult[] {
-  if (sortMode === "relevance") {
-    return results;
-  }
-
-  return [...results].sort((left, right) => {
-    if (sortMode === "distance") {
-      const leftDistance = left.locatedShelf?.distanceMeters;
-      const rightDistance = right.locatedShelf?.distanceMeters;
-
-      if (leftDistance == null && rightDistance == null) {
-        return 0;
-      }
-
-      // If only one of the results has distance data, prioritize that one
-      // Should not happen (Backend will always return distance if user location is provided)
-      if (leftDistance == null) {
-        return 1;
-      }
-
-      if (rightDistance == null) {
-        return -1;
-      }
-
-      return leftDistance - rightDistance;
-    }
-
-    if (sortMode === "newest") {
-      return -compareTimestampStrings(left.inShelfSince, right.inShelfSince);
-    }
-
-    return compareTimestampStrings(left.inShelfSince, right.inShelfSince);
-  });
 }
 
 /**
