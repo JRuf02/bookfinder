@@ -1,7 +1,7 @@
 // Communication with the api/manual-add endpoint for manually adding book metadata to the database
 
-import { Book } from "../types/Book";
-import { ManualAddResponse } from "../types/Result";
+import { Book } from "../../types/Book";
+import { ManualAddResponse } from "../../types/Result";
 
 // All of the parameters (isbn, title, author) are required by the backend.
 // We allow them to be optional here to get specific error messages from the backend.

@@ -1,5 +1,5 @@
-import { Book } from "../types/Book";
-import { Result } from "../types/Result";
+import { Book } from "../../types/Book";
+import { Result } from "../../types/Result";
 
 type FetchBookDataOptions = {
   signal?: AbortSignal; // Optional signal for aborting the fetch request

@@ -3,7 +3,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { getUserLocation } from "../../services/location";
-import { fetchAllBookshelves } from "../../services/bookshelves";
+import { fetchAllBookshelves } from "../../services/api/bookshelves";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
 import { Shelf } from "../../types/Shelf";

@@ -1,6 +1,6 @@
-import { CatalogResult } from "../types/CatalogResult";
-import { Result } from "../types/Result";
-import { Shelf } from "../types/Shelf";
+import { CatalogResult } from "../../types/CatalogResult";
+import { Result } from "../../types/Result";
+import { Shelf } from "../../types/Shelf";
 
 /** Fetch all books that are currently on the given shelf. */
 export async function fetchShelfBooks(

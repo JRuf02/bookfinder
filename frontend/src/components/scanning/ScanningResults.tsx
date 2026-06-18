@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import BookDisplay from "./BookDisplay";
-import { fetchBookData } from "../../services/fetchBookData";
+import { fetchBookData } from "../../services/api/fetchBookData";
 import { Box, Container } from "@mui/material";
 import { Book } from "../../types/Book";
 import { ShelfAction } from "../../types/ShelfAction";

@@ -1,6 +1,6 @@
-import { CatalogResult } from "../types/CatalogResult";
-import { GeoCoordinates } from "../types/GeoCoordinates";
-import { Result } from "../types/Result";
+import { CatalogResult } from "../../types/CatalogResult";
+import { GeoCoordinates } from "../../types/GeoCoordinates";
+import { Result } from "../../types/Result";
 
 /** Execute the catalog search request given by the url and return the results. */
 async function executeCatalogSearch(

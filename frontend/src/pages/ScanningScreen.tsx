@@ -6,7 +6,7 @@ import { useAppState } from "../state/AppStateProvider";
 import { ShelfAction } from "../types/ShelfAction";
 import { Book } from "../types/Book";
 import ManualInsertDialog from "../components/dialogs/ManualInsertDialog";
-import { manuallyAddBook } from "../services/manualAdd";
+import { manuallyAddBook } from "../services/api/manualAdd";
 
 /*
 This component manages the entire scanning and book insert/remove flow:

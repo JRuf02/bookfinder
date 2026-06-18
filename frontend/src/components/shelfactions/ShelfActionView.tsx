@@ -8,7 +8,7 @@ import {
   Stack,
   Container,
 } from "@mui/material";
-import { shelfAction } from "../../services/shelfActions";
+import { shelfAction } from "../../services/api/shelfActions";
 import ActionResultAlert from "./ActionResultAlert";
 import ShelfMap from "../map/ShelfMap";
 import { useAppState } from "../../state/AppStateProvider";

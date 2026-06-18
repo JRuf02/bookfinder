@@ -16,8 +16,8 @@ import { getAndCacheUserLocation } from "../services/location";
 import {
   singleTermCatalogSearch,
   titleAuthorCatalogSearch,
-} from "../services/catalogSearch";
-import { fetchShelfBooks } from "../services/shelfBooks";
+} from "../services/api/catalogSearch";
+import { fetchShelfBooks } from "../services/api/shelfBooks";
 import { CatalogResult } from "../types/CatalogResult";
 import { Shelf } from "../types/Shelf";
 import Checkbox from "@mui/material/Checkbox";
@@ -28,7 +28,7 @@ import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
 import { sortCatalogResults, SortMode } from "../services/sorting";
 import { unwrapResult } from "../types/Result";
-import { getCatalogNavigationTargets } from "../services/catalogHomeScreenHelpers";
+import { getCatalogNavigationTargets } from "../services/catalogNavigation";
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
