@@ -13,7 +13,10 @@ import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/catalog/ResultsList";
 import { getUserLocation } from "../services/location";
-import { singleTermCatalogSearch } from "../services/catalogSearch";
+import {
+  singleTermCatalogSearch,
+  titleAuthorCatalogSearch,
+} from "../services/catalogSearch";
 import { fetchShelfBooks } from "../services/shelfBooks";
 import { CatalogResult } from "../types/CatalogResult";
 import { Shelf } from "../types/Shelf";
@@ -24,7 +27,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
 import { compareTimestampStrings } from "../services/sorting";
-import { GeoCoordinates } from "../types/GeoCoordinates";
+import { unwrapResult } from "../types/Result";
 
 type SortMode = "relevance" | "distance" | "newest" | "oldest";
 
@@ -76,34 +79,6 @@ async function getAndCacheUserLocation(
   }
 
   return location;
-}
-
-/**
- * Query the backend for books in the current catalog matching the given author and/or title.
- * Throws an error ("Server error") if backend returns an HTTP code outside the 2xx range.
- */
-async function searchCatalog(
-  title: string,
-  author: string,
-  location?: GeoCoordinates | null,
-): Promise<CatalogResult[]> {
-  // build query params safely
-  const params = new URLSearchParams({ title, author });
-
-  // only request & send location if toggle is enabled
-  if (location) {
-    params.append("lat", location.latitude.toString());
-    params.append("lon", location.longitude.toString());
-  }
-
-  const resp = await fetch(`/api/catalog/search?${params.toString()}`);
-
-  // TODO: Search without parameters should show that the user did wrong, not that there is a server error!
-  // TODO: => Use the error messages provided by the backend
-  if (!resp.ok)
-    throw new Error("Could not fetch results. Please try again later.");
-  const resp_json = await resp.json();
-  return resp_json.data as CatalogResult[];
 }
 
 // TODO: move to services/sorting.ts or other helper file
@@ -179,13 +154,8 @@ export default function CatalogHomeScreen() {
     setResults([]);
 
     try {
-      const result = await fetchShelfBooks(shelf);
-
-      if (!result.ok) {
-        throw new Error(result.error);
-      }
-
-      setResults(result.data);
+      const data = unwrapResult(await fetchShelfBooks(shelf));
+      setResults(data);
     } catch (err: any) {
       setError(err.message || "Could not fetch shelf books.");
       console.error("Error fetching books from shelf:", err);
@@ -199,7 +169,6 @@ export default function CatalogHomeScreen() {
     setError(null);
     setResults([]);
 
-    // TODO: check if working:
     // if userCoordinates is in AppState, pass them to the search function to prioritize nearby results
     let userCoords = state.userCoordinates ? state.userCoordinates : null;
 
@@ -256,13 +225,11 @@ export default function CatalogHomeScreen() {
           ? await getAndCacheUserLocation(dispatch)
           : null;
 
-        const result = await singleTermCatalogSearch(isbn, currentUserLocation);
+        const data = unwrapResult(
+          await singleTermCatalogSearch(isbn, currentUserLocation),
+        );
 
-        if (!result.ok) {
-          throw new Error(result.error);
-        }
-
-        setResults(result.data);
+        setResults(data);
       } catch (err: any) {
         setError(
           err.message || "Could not fetch results. Please try again later.",
@@ -290,11 +257,14 @@ export default function CatalogHomeScreen() {
           ? await getAndCacheUserLocation(dispatch)
           : null;
 
-        const results = await searchCatalog(
-          inputTitle,
-          inputAuthor,
-          currentUserLocation,
+        const results = unwrapResult(
+          await titleAuthorCatalogSearch(
+            inputTitle,
+            inputAuthor,
+            currentUserLocation,
+          ),
         );
+
         setResults(results);
       } catch (err: any) {
         setError(
