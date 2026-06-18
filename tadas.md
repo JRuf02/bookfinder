@@ -19,7 +19,7 @@
   - Search should handle oe = ö -> it does via fuzzy search
   - Umlaut not in db, weird non-ascii (catalog search glücklich does not work) -> does work now thanks to fuzzy
 
-- CatalogHomeScreen
+- CatalogScreen
   - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum
   - hat Suchleiste
     - Suchfunktion Backend verbessern
@@ -130,7 +130,7 @@
 - backend for catalog search by title
 - use ShelfMap for selecting shelf after scanning (ShelfActionScreen.tsx)
 - map view
-- CatalogHomeScreen
+- CatalogScreen
 - Übersicht über catalog search screens und features erstellen
 - Code Quality:
   - linting and stylechecker on save einstellen und einschalten

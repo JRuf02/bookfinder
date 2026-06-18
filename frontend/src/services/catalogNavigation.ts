@@ -1,8 +1,8 @@
 import { Shelf } from "../types/Shelf";
 
 /**
- * Navigation state that can be passed when navigating to the CatalogHomeScreen.
- * - initialView determines what the CatalogHomeScreen should show immediately upon navigation
+ * Navigation state that can be passed when navigating to the CatalogScreen.
+ * - initialView determines what the CatalogScreen should show immediately upon navigation
  * - shelf should only be provided if initialView is "shelf-books",
  * - searchTerm should only be provided if initialView is "single-term-search"
  */

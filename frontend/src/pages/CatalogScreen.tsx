@@ -40,7 +40,7 @@ import { getCatalogNavigationTargets } from "../services/catalogNavigation";
  * - shelf: The shelf to load books from if initialView is "shelf-books".
  * - searchTerm: The search term to use if initialView is "single-term-search".
  */
-export default function CatalogHomeScreen() {
+export default function CatalogScreen() {
   const location = useLocation(); // Access navigation state
   const { shelfFromState, searchTermFromState } = getCatalogNavigationTargets(
     location.state,

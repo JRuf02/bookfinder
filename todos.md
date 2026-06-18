@@ -25,12 +25,12 @@
   - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
-- CatalogHomeScreen
+- CatalogScreen
   - Components und Funktionen aufräumen <=============================================================
   - Layout?
     - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
-      - Klick auf Karte(Kachel) auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+      - Klick auf Karte(Kachel) auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
       - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
     - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfScreen
     - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
@@ -38,7 +38,7 @@
       - zu Anzeigezwecken: Soll zentriert auf current shelf sein
       - statisch: kann nicht gescrollt/gezoomt etc werden
       - hat methode onClick, die vom parent definiert wird
-        - onClick auf dem CatalogHomeScreen führt zum CatalogResultsScreen für alle Bücher im gewählten Regal
+        - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
         - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - CatalogResult Component (Used inside ResultsList component)
@@ -124,7 +124,7 @@
 
 - Frontend:
   - Use `/*_ This is a js doctstring _/` for docstrings
-  - Use an import sorter on all files (esp. CatalogHomeScreen.tsx)
+  - Use an import sorter on all files (esp. CatalogScreen.tsx)
   - besserer ersatz für cover image if not available
 - SQL injection should not be possible -> use escape methods
 - ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)
@@ -170,7 +170,7 @@
   - Hide browser address bar ([tipps on stack overflow](https://stackoverflow.com/questions/57023990/how-to-hide-the-address-bar-on-mobile-in-a-react-app))
   - Hide android bottom bar
   - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
-- CatalogHomeScreen
+- CatalogScreen
   - Hat button "select shelf to show books" und zeigt schon beim ersten öffnen die bücher des nähesten shelf?
   - oder zeigt die most recently inserted books deutschlandweit als start?
   - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)

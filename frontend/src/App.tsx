@@ -6,7 +6,7 @@ import "./styles/global.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import ScanningScreen from "./pages/ScanningScreen";
-import CatalogHomeScreen from "./pages/CatalogHomeScreen";
+import CatalogScreen from "./pages/CatalogScreen";
 import NotFoundScreen from "./pages/NotFoundScreen";
 import BottomNavBar from "./components/layout/BottomNavBar";
 
@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeScreen />} />
-        <Route path="/catalog" element={<CatalogHomeScreen />} />
+        <Route path="/catalog" element={<CatalogScreen />} />
         <Route path="/scan" element={<ScanningScreen />} />
         {/* ...other routes */}
         <Route path="*" element={<NotFoundScreen />} />
