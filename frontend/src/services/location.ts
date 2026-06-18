@@ -1,3 +1,4 @@
+import { useAppState } from "../state/AppStateProvider";
 import { GeoCoordinates } from "../types/GeoCoordinates";
 
 export function getUserLocation(): Promise<GeoCoordinates> {
@@ -24,4 +25,20 @@ export function getUserLocation(): Promise<GeoCoordinates> {
       },
     );
   });
+}
+
+/** Access the user's geolocation and cache it to the global AppState */
+export async function getAndCacheUserLocation(
+  dispatch: ReturnType<typeof useAppState>["dispatch"],
+) {
+  const location = await getUserLocation();
+
+  if (location) {
+    dispatch({
+      type: "SET_USER_COORDINATES",
+      payload: location,
+    });
+  }
+
+  return location;
 }

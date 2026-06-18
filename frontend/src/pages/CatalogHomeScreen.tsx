@@ -12,7 +12,7 @@ import TextInput from "../components/TextInput";
 import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/catalog/ResultsList";
-import { getUserLocation } from "../services/location";
+import { getAndCacheUserLocation } from "../services/location";
 import {
   singleTermCatalogSearch,
   titleAuthorCatalogSearch,
@@ -61,22 +61,6 @@ function getCatalogNavigationTargets(locationState: unknown): {
       : null;
 
   return { shelfFromState, searchTermFromState };
-}
-
-/** Access the user's geolocation and cache it to the global AppState */
-async function getAndCacheUserLocation(
-  dispatch: ReturnType<typeof useAppState>["dispatch"],
-) {
-  const location = await getUserLocation();
-
-  if (location) {
-    dispatch({
-      type: "SET_USER_COORDINATES",
-      payload: location,
-    });
-  }
-
-  return location;
 }
 
 /**
