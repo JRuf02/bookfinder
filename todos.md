@@ -26,7 +26,7 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
-  - Components und Funktionen aufräumen <=============================================================
+  - Funktionen aufräumen, ggf custom hooks für logik <=============================================================
   - Layout?
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
       - Klick auf Karte(Kachel) auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
