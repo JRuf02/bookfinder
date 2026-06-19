@@ -13,7 +13,8 @@
   - Authors like Rowling, J.K. are handeled correctly
 
 - CatalogSearch
-  - Add advanced search screen for search by author, title, isbn, ... seperately
+  - Logo und Input fields (scrollen weg oder) sind via button ausblendbar
+  - Add (advanced search screen for) search by author, title, isbn, ... seperately
   - Add clever fuzzy search backend for advanced separate search by title, isbn etc separately
   - Show fuzzy search results within given radius + complete matches even if outside the search radius
   - Search should handle oe = ö -> it does via fuzzy search

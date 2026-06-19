@@ -1,4 +1,11 @@
-import { Box, Typography, Container, CircularProgress } from "@mui/material";
+import {
+  Typography,
+  Container,
+  CircularProgress,
+  IconButton,
+} from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/catalog/ResultsList";
 import { getAndCacheUserLocation } from "../services/location";
@@ -46,6 +53,7 @@ export default function CatalogScreen() {
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSearchForm, setShowSearchForm] = useState<boolean>(true);
   const { state, dispatch } = useAppState();
 
   const loadBooksFromShelf = useCallback(async (shelf: Shelf) => {
@@ -207,30 +215,26 @@ export default function CatalogScreen() {
   );
 
   return (
-    // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
-    <Container
-      className="app-container"
-      maxWidth={false}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        height: "100%",
-        overflow: "hidden",
-        maxWidth: "80%", // TODO: make responsive, e.g. max 80% on desktop, 95% on mobile
-      }}
-    >
+    <Container className="app-container" maxWidth={false}>
       <LogoBar />
 
-      <CatalogSearchForm
-        hasDistanceData={hasDistanceData}
-        searchFormState={searchFormState}
-        setSearchFormState={setSearchFormState}
-        handleTitleAuthorSubmit={handleTitleAuthorSubmit}
-        handleISBNSubmit={handleISBNSubmit}
-      />
+      {showSearchForm && (
+        <CatalogSearchForm
+          hasDistanceData={hasDistanceData}
+          searchFormState={searchFormState}
+          setSearchFormState={setSearchFormState}
+          handleTitleAuthorSubmit={handleTitleAuthorSubmit}
+          handleISBNSubmit={handleISBNSubmit}
+        />
+      )}
+
+      <IconButton
+        aria-label="Show / hide search form"
+        onClick={() => setShowSearchForm((prev) => !prev)}
+      >
+        {showSearchForm ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+      </IconButton>
 
       {activeShelf && (
         <Typography
@@ -247,18 +251,8 @@ export default function CatalogScreen() {
           {error}
         </Typography>
       )}
-      <Box
-        sx={{
-          flex: 1,
-          width: "100%",
-          maxWidth: "30rem",
-          overflowY: "auto",
-          mt: 2,
-          pb: 2,
-        }}
-      >
-        <ResultsList results={sortedResults} />
-      </Box>
+
+      <ResultsList results={sortedResults} />
     </Container>
   );
 }

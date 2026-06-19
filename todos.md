@@ -28,7 +28,6 @@
 - CatalogScreen
   - Components und Funktionen aufräumen <=============================================================
   - Layout?
-    - Logo und Input fields scrollen weg oder sind via button ausblendbar <=============================================================
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
       - Klick auf Karte(Kachel) auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
       - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
@@ -42,6 +41,7 @@
         - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - CatalogResult Component (Used inside ResultsList component)
+  - ResultList items sind auch auf mobile komplett sichtbar <=============================================================
   - is a separate component
   - show how long book is in shelf already in result
   - ausleihen-Button der direkt zum shelfActionScreen leitet
@@ -156,6 +156,7 @@
   - or valhalla.openstreetmap.de -> Koords eingeben, checkmark drücken -> reverse-geocodes the address
   - or project-osrm.org/docs -> nearest service -> 'name' -> outputs a street name
 - Design
+  - use [fab](https://mui.com/material-ui/react-floating-action-button/) or IconButton where it makes sense
   - style infos moved to css file(s)
   - Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
   - extend theme.ts, e.g. dark mode
@@ -218,6 +219,7 @@
 - Frontend functionalities
   - show catalog search results on a map
   - HomeScreen on desktop PC could show books of selected shelf next to the home screen on the white area (on desktop/laptop)
+  - CatalogSearchForm aus/einblenden ist animiert
   - 'show nearest shelf' button auf ShelfMap -> zentriert darauf & öffnet popup
   - 'Add bookshelf' Funktion für fehlende Regale
     - Z.B. mit [draggable Marker](https://react-leaflet.js.org/docs/example-draggable-marker/) auf map

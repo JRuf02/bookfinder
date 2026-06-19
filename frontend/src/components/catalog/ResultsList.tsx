@@ -15,7 +15,7 @@ type ResultsListProps = {
 
 export default function ResultsList({ results }: ResultsListProps) {
   return (
-    <>
+    <Box className="results-list">
       {results.map((result) => (
         <Card key={result.entityId} sx={{ mb: 2 }}>
           <CardContent>
@@ -105,6 +105,6 @@ export default function ResultsList({ results }: ResultsListProps) {
           No results yet. Search for a book title!
         </Typography>
       )}
-    </>
+    </Box>
   );
 }
