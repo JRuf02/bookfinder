@@ -1,5 +1,4 @@
 import { Box, Typography, Container, CircularProgress } from "@mui/material";
-import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/catalog/ResultsList";
 import { getAndCacheUserLocation } from "../services/location";
@@ -18,6 +17,7 @@ import { getCatalogNavigationTargets } from "../services/catalogNavigation";
 import CatalogSearchForm, {
   SearchFormState,
 } from "../components/catalog/CatalogSearchForm";
+import LogoBar from "../components/layout/LogoBar";
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
@@ -222,26 +222,7 @@ export default function CatalogScreen() {
         maxWidth: "80%", // TODO: make responsive, e.g. max 80% on desktop, 95% on mobile
       }}
     >
-      <Box
-        sx={{
-          mt: 2,
-          mb: 2,
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <img
-          src={logo}
-          alt="bookFinder logo"
-          style={{
-            maxWidth: "40%",
-            height: "auto",
-            maxHeight: 120,
-            objectFit: "contain",
-          }}
-        />
-      </Box>
+      <LogoBar />
 
       <CatalogSearchForm
         hasDistanceData={hasDistanceData}

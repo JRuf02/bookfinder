@@ -2,10 +2,10 @@ import { useState, useCallback, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Card } from "@mui/material";
 import TextInput from "../components/TextInput";
-import logo from "../../graphics/logo-long-no-bg.png";
 import ShelfMap from "../components/map/ShelfMap";
 import { Shelf } from "../types/Shelf";
 import { useAppState } from "../state/AppStateProvider";
+import LogoBar from "../components/layout/LogoBar";
 
 export default function HomeScreen() {
   const [inputSearchTerm, setInputSearchTerm] = useState("");
@@ -61,32 +61,12 @@ export default function HomeScreen() {
     });
   };
 
-  const LOGO_BAR_HEIGHT = "3.5rem";
   const CONTENT_MAX_WIDTH = "25rem";
 
   return (
     <Box className="app-container">
       {/* Logo Bar */}
-      <Box
-        sx={{
-          height: LOGO_BAR_HEIGHT,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}
-      >
-        <img
-          src={logo}
-          alt="bookFinder logo"
-          style={{
-            maxHeight: "3rem",
-            maxWidth: "50vw",
-            objectFit: "contain",
-          }}
-        />
-      </Box>
+      <LogoBar />
 
       {/* Main Content */}
       <Box
