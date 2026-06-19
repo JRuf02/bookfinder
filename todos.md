@@ -119,6 +119,7 @@
 ## Bugs
 
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
+- Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 
 ## Improvements
 

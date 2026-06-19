@@ -1,14 +1,4 @@
-import {
-  Box,
-  Typography,
-  Container,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
-import TextInput from "../components/TextInput";
+import { Box, Typography, Container, CircularProgress } from "@mui/material";
 import logo from "../../graphics/logo-long-no-bg.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResultsList from "../components/catalog/ResultsList";
@@ -20,15 +10,14 @@ import {
 import { fetchShelfBooks } from "../services/api/shelfBooks";
 import { CatalogResult } from "../types/CatalogResult";
 import { Shelf } from "../types/Shelf";
-import Checkbox from "@mui/material/Checkbox";
-import LocationOffIcon from "@mui/icons-material/LocationOff";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { useLocation } from "react-router-dom";
 import { useAppState } from "../state/AppStateProvider";
-import { sortCatalogResults, SortMode } from "../services/sorting";
+import { sortCatalogResults } from "../services/sorting";
 import { unwrapResult } from "../types/Result";
 import { getCatalogNavigationTargets } from "../services/catalogNavigation";
+import CatalogSearchForm, {
+  SearchFormState,
+} from "../components/catalog/CatalogSearchForm";
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
@@ -46,13 +35,15 @@ export default function CatalogScreen() {
     location.state,
   );
 
-  const [inputTitle, setInputTitle] = useState<string>("");
-  const [inputAuthor, setInputAuthor] = useState<string>("");
-  const [inputISBN, setInputISBN] = useState<string>("");
-  const [useUserLocation, setUseUserLocation] = useState<boolean>(false);
+  const [searchFormState, setSearchFormState] = useState<SearchFormState>({
+    title: "",
+    author: "",
+    isbn: "",
+    sortMode: "relevance",
+    useUserLocation: false,
+  });
   const [activeShelf, setActiveShelf] = useState<Shelf | null>(shelfFromState);
   const [results, setResults] = useState<CatalogResult[]>([]);
-  const [sortMode, setSortMode] = useState<SortMode>("relevance");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { state, dispatch } = useAppState();
@@ -114,93 +105,110 @@ export default function CatalogScreen() {
     shelfFromState,
   ]);
 
+  /** Programmatically start a single-term search for the content of the ISBN input field */
+  const performSingleTermSearch = useCallback(async () => {
+    setActiveShelf(null);
+    setLoading(true);
+    setError(null);
+    setResults([]);
+    setSearchFormState((prev) => ({ ...prev, title: "" }));
+    setSearchFormState((prev) => ({ ...prev, author: "" }));
+
+    try {
+      const isbn = searchFormState.isbn.trim();
+      if (!isbn) {
+        return;
+      }
+
+      const currentUserLocation = searchFormState.useUserLocation
+        ? await getAndCacheUserLocation(dispatch)
+        : null;
+
+      const data = unwrapResult(
+        await singleTermCatalogSearch(isbn, currentUserLocation),
+      );
+
+      setResults(data);
+    } catch (err: any) {
+      setError(
+        err.message || "Could not fetch results. Please try again later.",
+      );
+      console.error("Error during ISBN single-term search:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [searchFormState.isbn, searchFormState.useUserLocation]);
+
+  /** Start a single-term search when the ISBN form is submitted */
   const handleISBNSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setActiveShelf(null);
-      setLoading(true);
-      setError(null);
-      setResults([]);
-      setInputTitle("");
-      setInputAuthor("");
-
-      try {
-        const isbn = inputISBN.trim();
-        if (!isbn) {
-          return;
-        }
-
-        const currentUserLocation = useUserLocation
-          ? await getAndCacheUserLocation(dispatch)
-          : null;
-
-        const data = unwrapResult(
-          await singleTermCatalogSearch(isbn, currentUserLocation),
-        );
-
-        setResults(data);
-      } catch (err: any) {
-        setError(
-          err.message || "Could not fetch results. Please try again later.",
-        );
-        console.error("Error during ISBN single-term search:", err);
-      } finally {
-        setLoading(false);
-      }
+      await performSingleTermSearch();
     },
-    [inputISBN, useUserLocation],
+    [performSingleTermSearch],
   );
 
-  const handleInputSubmit = useCallback(
+  /** Programmatically start a standard search */
+  const performTitleAuthorSearch = useCallback(async () => {
+    setActiveShelf(null);
+    setLoading(true);
+    setError(null);
+    setResults([]);
+    setSearchFormState((prev) => ({ ...prev, isbn: "" }));
+
+    // TODO: Remove code duplication with performSingleTermSearch
+    try {
+      // only request & send location if toggle is enabled
+      const currentUserLocation = searchFormState.useUserLocation
+        ? await getAndCacheUserLocation(dispatch)
+        : null;
+
+      const results = unwrapResult(
+        await titleAuthorCatalogSearch(
+          searchFormState.title,
+          searchFormState.author,
+          currentUserLocation,
+        ),
+      );
+
+      setResults(results);
+    } catch (err: any) {
+      setError(
+        err.message || "Could not fetch results. Please try again later.",
+      );
+      console.error("Error during search:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    searchFormState.title,
+    searchFormState.author,
+    searchFormState.useUserLocation,
+  ]);
+
+  /** Start a title and author search when the form is submitted */
+  const handleTitleAuthorSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setActiveShelf(null);
-      setLoading(true);
-      setError(null);
-      setResults([]);
-      setInputISBN("");
-
-      try {
-        // only request & send location if toggle is enabled
-        const currentUserLocation = useUserLocation
-          ? await getAndCacheUserLocation(dispatch)
-          : null;
-
-        const results = unwrapResult(
-          await titleAuthorCatalogSearch(
-            inputTitle,
-            inputAuthor,
-            currentUserLocation,
-          ),
-        );
-
-        setResults(results);
-      } catch (err: any) {
-        setError(
-          err.message || "Could not fetch results. Please try again later.",
-        );
-        console.error("Error during search:", err);
-      } finally {
-        setLoading(false);
-      }
+      await performTitleAuthorSearch();
     },
-    [inputTitle, inputAuthor, useUserLocation],
+    [performTitleAuthorSearch],
   );
 
-  const hasDistanceData = useMemo(
+  /** Check if (any of) the results have distance data */
+  const hasDistanceData: boolean = useMemo(
     () => results.some((result) => result.locatedShelf?.distanceMeters != null),
     [results],
   );
 
-  const sortedResults = useMemo(
-    () => sortCatalogResults(results, sortMode),
-    [results, sortMode],
+  const sortedResults: CatalogResult[] = useMemo(
+    () => sortCatalogResults(results, searchFormState.sortMode),
+    [results, searchFormState.sortMode],
   );
 
   return (
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
-    // TODO: split into multiple components and move some logic if possible
     <Container
       className="app-container"
       maxWidth={false}
@@ -234,78 +242,15 @@ export default function CatalogScreen() {
           }}
         />
       </Box>
-      <Box
-        sx={{
-          width: "100%",
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-          gap: 0,
-        }}
-      >
-        <TextInput
-          value={inputTitle}
-          placeholder="Search books by title"
-          label="Search books by title"
-          onChange={(e) => setInputTitle(e.target.value)}
-          onSubmit={handleInputSubmit}
-        />
-        <TextInput
-          value={inputAuthor}
-          placeholder="Search books by author"
-          label="Search books by author"
-          onChange={(e) => setInputAuthor(e.target.value)}
-          onSubmit={handleInputSubmit}
-        />
-      </Box>
-      <TextInput
-        value={inputISBN}
-        placeholder="Search books by ISBN"
-        label="Search books by ISBN"
-        onChange={(e) => setInputISBN(e.target.value)}
-        onSubmit={handleISBNSubmit}
-      />
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: "30rem",
-          mt: 1,
-          display: "flex",
-          justifyContent: "center",
-          gap: 2,
-        }}
-      >
-        <FormControl size="small">
-          <InputLabel id="catalog-sort-label">Sort by</InputLabel>
-          <Select
-            labelId="catalog-sort-label"
-            id="catalog-sort"
-            value={sortMode}
-            label="Sort by"
-            onChange={(event) => setSortMode(event.target.value as SortMode)}
-          >
-            <MenuItem value="relevance">Relevance</MenuItem>
-            <MenuItem value="distance" disabled={!hasDistanceData}>
-              Distance
-            </MenuItem>
-            <MenuItem value="newest">Newest</MenuItem>
-            <MenuItem value="oldest">Oldest</MenuItem>
-          </Select>
-        </FormControl>
 
-        <FormControlLabel
-          value="end"
-          control={
-            <Checkbox
-              checked={useUserLocation}
-              onChange={(e) => setUseUserLocation(e.target.checked)}
-              icon={<LocationOffIcon />}
-              checkedIcon={<LocationOnIcon />}
-            />
-          }
-          label="Search near me"
-          labelPlacement="end"
-        />
-      </Box>
+      <CatalogSearchForm
+        hasDistanceData={hasDistanceData}
+        searchFormState={searchFormState}
+        setSearchFormState={setSearchFormState}
+        handleTitleAuthorSubmit={handleTitleAuthorSubmit}
+        handleISBNSubmit={handleISBNSubmit}
+      />
+
       {activeShelf && (
         <Typography
           variant="body2"
