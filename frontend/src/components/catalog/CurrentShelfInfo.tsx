@@ -5,6 +5,7 @@ type CurrentShelfInfoProps = {
   activeShelf: Shelf;
 };
 
+/** Renders information about the currently active shelf */
 export default function CurrentShelfInfo({
   activeShelf,
 }: CurrentShelfInfoProps) {

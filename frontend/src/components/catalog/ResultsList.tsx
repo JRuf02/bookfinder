@@ -13,6 +13,7 @@ type ResultsListProps = {
   results: CatalogResult[];
 };
 
+/** Renders a list of catalog results */
 export default function ResultsList({ results }: ResultsListProps) {
   return (
     <Box className="results-list">
