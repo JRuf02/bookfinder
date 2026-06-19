@@ -25,6 +25,7 @@ import CatalogSearchForm, {
   SearchFormState,
 } from "../components/catalog/CatalogSearchForm";
 import LogoBar from "../components/layout/LogoBar";
+import CurrentShelfInfo from "../components/catalog/CurrentShelfInfo";
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
@@ -236,15 +237,8 @@ export default function CatalogScreen() {
         {showSearchForm ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </IconButton>
 
-      {activeShelf && (
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mt: 0.5, mb: 0.5 }}
-        >
-          Showing books for shelf: {activeShelf.name || activeShelf.osmId}
-        </Typography>
-      )}
+      {activeShelf && <CurrentShelfInfo activeShelf={activeShelf} />}
+
       {loading && <CircularProgress sx={{ mt: 2 }} />}
       {error && (
         <Typography color="error" sx={{ mt: 2 }}>
