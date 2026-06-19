@@ -231,6 +231,7 @@ export default function CatalogScreen() {
       )}
 
       <IconButton
+        sx={{ py: 0 }}
         aria-label="Show / hide search form"
         onClick={() => setShowSearchForm((prev) => !prev)}
       >
