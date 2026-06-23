@@ -16,8 +16,8 @@ class Shelf:
     operator: str | None
     website: str | None
     opening_hours: str | None
-    osm_check_date: str  # TODO: use datetime.date
-    osm_last_updated: str | None  # TODO: use datetime.date
+    osm_check_date: str | None  # TODO: use datetime.date
+    osm_last_updated: str  # TODO: use datetime.date
 
 
 @dataclass

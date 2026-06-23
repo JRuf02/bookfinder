@@ -36,7 +36,7 @@ export default function CatalogSearchForm({
   return (
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
-    <>
+    <div>
       <Box
         sx={{
           width: "100%",
@@ -125,6 +125,6 @@ export default function CatalogSearchForm({
           labelPlacement="end"
         />
       </Box>
-    </>
+    </div>
   );
 }
