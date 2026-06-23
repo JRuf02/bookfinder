@@ -135,7 +135,7 @@
 - CatalogResult
   - In catalog results: Clicking a result shows it on map ?
   - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
-  - Results klickbar -> 'remove'/'take out' button
+  - Results klickbar -> 'remove'/'take out' button <===============================================================
   - Add button for dnb link (d-nb.info/<dnb_id>) z.b. `https://d-nb.info/1027780482` to each result
 - Taschenlampe beim Scannen anschalten
 - Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
