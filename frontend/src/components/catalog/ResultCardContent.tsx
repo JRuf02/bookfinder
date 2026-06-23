@@ -19,11 +19,11 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
   const website = result.locatedShelf?.shelf.website;
   const osmId = result.locatedShelf?.shelf.osmId;
 
-  const attributeMarginBottom = 0.75;
+  const attributeMarginBottom = 0.9;
   const attributeLineHeight = "1em";
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center">
+    <Stack direction="row" spacing={2} alignItems="stretch">
       <Stack direction="column" spacing={0.5} alignItems="center">
         <CardMedia
           component="img"
@@ -91,73 +91,101 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
           Navigate
         </Button>
       </Stack>
-      <Box>
-        <Typography variant="h6">{result.book.title}</Typography>
-        {result.book.author?.trim() && (
-          <Typography variant="body2" color="text.secondary">
-            by {result.book.author}
+      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ flexGrow: 0 }}>
+          <Typography variant="h6" sx={{ lineHeight: "1.2em", pb: 0.5 }}>
+            {result.book.title}
           </Typography>
-        )}
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          {result.book.isbn || "ISBN unknown"}
-        </Typography>
-
-        {result.locatedShelf?.shelf.name?.trim() && (
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            Shelf: {result.locatedShelf?.shelf.name}
+          {result.book.author?.trim() && (
+            <Typography variant="body2" color="text.secondary">
+              by {result.book.author}
+            </Typography>
+          )}
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            {result.book.isbn || "ISBN unknown"}
           </Typography>
-        )}
-        {result.locatedShelf?.distanceMeters && (
-          <Typography
-            variant="body2"
-            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
-          >
-            Distance: {result.locatedShelf.distanceMeters.toFixed(2)} m
-          </Typography>
-        )}
-        {result.locatedShelf?.shelf.type && (
-          <Typography
-            variant="body2"
-            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
-          >
-            Type: {result.locatedShelf.shelf.type}
-          </Typography>
-        )}
-        {result.locatedShelf?.shelf.address && (
-          <Typography
-            variant="body2"
-            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
-          >
-            Address: {result.locatedShelf.shelf.address}
-          </Typography>
-        )}
-        {result.locatedShelf?.shelf.operator && (
-          <Typography
-            variant="body2"
-            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
-          >
-            Operator: {result.locatedShelf.shelf.operator}
-          </Typography>
-        )}
-        {result.locatedShelf?.shelf.openingHours && (
-          <Typography
-            variant="body2"
-            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
-          >
-            Opening Hours: {result.locatedShelf.shelf.openingHours}
-          </Typography>
-        )}
-        {result.locatedShelf?.shelf.osmId && (
-          <Typography
-            variant="body2"
-            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
-          >
-            Shelf ID: {removeOsmIdPrefix(result.locatedShelf.shelf.osmId)}
-          </Typography>
-        )}
-
-        <Typography variant="body2" color="text.secondary">
-          Added: <Moment fromNow>{result.inShelfSince}</Moment>
+        </div>
+        <div style={{ flexGrow: 1 }}>
+          {result.locatedShelf?.shelf.name?.trim() && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Shelf: {result.locatedShelf?.shelf.name}
+            </Typography>
+          )}
+          {result.locatedShelf?.distanceMeters && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Distance: {result.locatedShelf.distanceMeters.toFixed(2)} m
+            </Typography>
+          )}
+          {result.locatedShelf?.shelf.type && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Type: {result.locatedShelf.shelf.type.replaceAll("_", " ")}
+            </Typography>
+          )}
+          {result.locatedShelf?.shelf.address && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Address: {result.locatedShelf.shelf.address}
+            </Typography>
+          )}
+          {result.locatedShelf?.shelf.operator && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Operator: {result.locatedShelf.shelf.operator}
+            </Typography>
+          )}
+          {result.locatedShelf?.shelf.openingHours && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Opening Hours: {result.locatedShelf.shelf.openingHours}
+            </Typography>
+          )}
+          {result.locatedShelf?.shelf.osmId && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: attributeMarginBottom,
+                lineHeight: attributeLineHeight,
+              }}
+            >
+              Shelf ID: {removeOsmIdPrefix(result.locatedShelf.shelf.osmId)}
+            </Typography>
+          )}
+        </div>
+        <Typography variant="body2" color="text.secondary" align="right">
+          added <Moment fromNow>{result.inShelfSince}</Moment>
         </Typography>
       </Box>
     </Stack>
