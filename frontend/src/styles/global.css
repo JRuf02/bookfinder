@@ -88,10 +88,6 @@ input[type="text"] {
     overflow: hidden;
   }
 
-  .scan-screen-title {
-    display: none !important;
-  }
-
   .scanner-container {
     position: fixed;
     top: 0;

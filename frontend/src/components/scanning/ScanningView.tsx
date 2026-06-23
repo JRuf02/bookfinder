@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useCallback, useRef, useState } from "react";
 
 import TextInput from "../TextInput";
@@ -56,13 +56,6 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
       maxWidth={false}
       sx={{ alignItems: "center", justifyContent: "center" }}
     >
-      <Typography
-        variant="h4"
-        className="scan-screen-title"
-        sx={{ mb: "0.5rem" }}
-      >
-        Scan your book's barcode
-      </Typography>
       <Box sx={{ width: "100%", maxWidth: "100%" }}>
         <Scanner
           onResult={handleScanResult}
