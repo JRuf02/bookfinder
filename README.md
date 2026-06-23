@@ -119,6 +119,10 @@ see `todos.md`
 ### Persisting library versions and vscode extensions
 
 - Installed VSCode extension? -> add it to `.devcontainer/devcontainer.json` to persist it
+- Install via npm install?
+  1. cd frontend
+  2. run npm install
+  3. version should now have been automatically added to frontend/package.json
 - Install and persist Python libraries
   1. Start the venv: `source /workspaces/isbn-scanner-venv/.venv/bin/activate`
   2. Install via pip: `pip install [package-name]`
