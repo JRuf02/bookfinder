@@ -1,12 +1,13 @@
 import { useState } from "react";
+
+import ManualInsertDialog from "../components/dialogs/ManualInsertDialog";
 import ScanningResults from "../components/scanning/ScanningResults";
 import ScanningView from "../components/scanning/ScanningView";
 import ShelfActionView from "../components/shelfactions/ShelfActionView";
-import { useAppState } from "../state/AppStateProvider";
-import { ShelfAction } from "../types/ShelfAction";
-import { Book } from "../types/Book";
-import ManualInsertDialog from "../components/dialogs/ManualInsertDialog";
 import { manuallyAddBook } from "../services/api/manualAdd";
+import { useAppState } from "../state/AppStateProvider";
+import { Book } from "../types/Book";
+import { ShelfAction } from "../types/ShelfAction";
 
 /*
 This component manages the entire scanning and book insert/remove flow:
