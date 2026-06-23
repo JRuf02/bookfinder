@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { defineConfig } from "vite";
 
 // Define __dirname equivalent for ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +21,7 @@ export default defineConfig({
     watch: {
       ignored: ["**/node_modules/**", "**/.venv/**", "../backend/**"],
       usePolling: true, // Needed for hot module reload on alpine linux
-      interval: 100, // Optional: check every 100ms
+      interval: 500, // Optional: check every 500ms
     },
     proxy: {
       "/api": {

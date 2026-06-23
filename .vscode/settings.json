@@ -26,14 +26,24 @@
     "/workspaces/isbn-scanner-venv/.venv/bin/python"
   ],
   "mypy-type-checker.reportingScope": "workspace",
-  "typescript.tsserver.maxTsServerMemory": 4096,
-  "typescript.tsserver.watchOptions": {
+  "js/ts.tsserver.maxMemory": 4096,
+  "js/ts.tsserver.watchOptions": {
     "watchFile": "useFsEvents",
     "watchDirectory": "useFsEvents",
-    "fallbackPolling": "dynamicPriorityPolling"
+    "fallbackPolling": "dynamicPriorityPolling",
+    "excludeDirectories": [
+      "**/node_modules",
+      "**/.venv",
+      "**/backend",
+      "**/.git",
+      "**/documentation",
+      "**/.mypy_cache",
+      "**/__pycache__",
+      "**/.ruff_cache"
+    ]
   },
-  "typescript.disableAutomaticTypeAcquisition": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.tsserver.automaticTypeAcquisition.enabled": false,
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
