@@ -125,7 +125,6 @@
 
 - Frontend:
   - Use `/*_ This is a js doctstring _/` for docstrings
-  - Use an import sorter on all files (esp. CatalogScreen.tsx)
   - besserer ersatz für cover image if not available
 - SQL injection should not be possible -> use escape methods
 - ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)

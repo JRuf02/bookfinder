@@ -1,9 +1,9 @@
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import InfoIcon from "@mui/icons-material/Info";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import { useNavigate, useLocation } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
+import InfoIcon from "@mui/icons-material/Info";
+import SearchIcon from "@mui/icons-material/Search";
+import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function BottomNavBar() {
   const navigate = useNavigate();

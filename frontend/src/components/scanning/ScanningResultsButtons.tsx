@@ -1,6 +1,7 @@
-import { Button, Stack, Typography } from "@mui/material";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
+import { Button, Stack, Typography } from "@mui/material";
+
 import { useAppState } from "../../state/AppStateProvider";
 
 type ScanningResultsButtonsProps = {

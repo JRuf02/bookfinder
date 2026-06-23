@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { Button, Link, Stack, Typography } from "@mui/material";
 import L from "leaflet";
-import { Button, Stack, Typography, Link } from "@mui/material";
+import { useEffect, useRef } from "react";
+
 import { Shelf } from "../../types/Shelf";
 
 type MapPopupProps = {

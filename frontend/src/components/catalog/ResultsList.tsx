@@ -1,11 +1,12 @@
 import {
+  Box,
   Card,
   CardContent,
   CardMedia,
-  Typography,
-  Box,
   Stack,
+  Typography,
 } from "@mui/material";
+
 import logo from "../../../graphics/logo-long-no-bg.png";
 import { CatalogResult } from "../../types/CatalogResult";
 

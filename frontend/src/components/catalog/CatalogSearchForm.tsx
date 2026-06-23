@@ -1,10 +1,11 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import TextInput from "../TextInput";
-import Checkbox from "@mui/material/Checkbox";
 import LocationOffIcon from "@mui/icons-material/LocationOff";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+
 import { SortMode } from "../../services/sorting";
+import TextInput from "../TextInput";
 
 export type SearchFormState = {
   title: string;

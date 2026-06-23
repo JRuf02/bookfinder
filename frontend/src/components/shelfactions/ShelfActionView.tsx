@@ -1,19 +1,20 @@
-import { useState } from "react";
 import {
   Box,
-  Card,
-  Typography,
   Button,
+  Card,
+  Container,
   Dialog,
   Stack,
-  Container,
+  Typography,
 } from "@mui/material";
+import { useState } from "react";
+
 import { shelfAction } from "../../services/api/shelfActions";
-import ActionResultAlert from "./ActionResultAlert";
-import ShelfMap from "../map/ShelfMap";
 import { useAppState } from "../../state/AppStateProvider";
 import { ShelfAction } from "../../types/ShelfAction";
 import CancelDialog from "../dialogs/CancelDialog";
+import ShelfMap from "../map/ShelfMap";
+import ActionResultAlert from "./ActionResultAlert";
 
 type ShelfActionViewProps = {
   action: ShelfAction;

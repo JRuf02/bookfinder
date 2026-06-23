@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer } from "react-leaflet";
+
 import { Shelf } from "../../types/Shelf";
 import ShelfMapContent from "./ShelfMapContent";
 

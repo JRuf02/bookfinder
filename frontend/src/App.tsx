@@ -3,12 +3,13 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "./styles/global.css";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomeScreen from "./pages/HomeScreen";
-import ScanningScreen from "./pages/ScanningScreen";
-import CatalogScreen from "./pages/CatalogScreen";
-import NotFoundScreen from "./pages/NotFoundScreen";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import BottomNavBar from "./components/layout/BottomNavBar";
+import CatalogScreen from "./pages/CatalogScreen";
+import HomeScreen from "./pages/HomeScreen";
+import NotFoundScreen from "./pages/NotFoundScreen";
+import ScanningScreen from "./pages/ScanningScreen";
 
 function App() {
   /*

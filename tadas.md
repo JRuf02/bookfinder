@@ -82,6 +82,14 @@
 - use state/AppContextProvider.tsx
   - move userCoords there
 
+- Code Quality:
+  - linting and stylechecker on save einstellen und einschalten
+  - use typechecker for python (e.g. mypy)
+  - Use an import sorter on all files (esp. CatalogScreen.tsx)
+  - start-all.sh and postcreatecommands removed, all bundled in dockerfile
+  - move venv to the python / server directory if possible
+  - sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
+
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!
@@ -134,12 +142,6 @@
 - map view
 - CatalogScreen
 - Übersicht über catalog search screens und features erstellen
-- Code Quality:
-  - linting and stylechecker on save einstellen und einschalten
-  - use typechecker for python (e.g. mypy)
-  - start-all.sh and postcreatecommands removed, all bundled in dockerfile
-- move venv to the python / server directory if possible
-- sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
 
 ### nice that I have (nice to have, but done)
 

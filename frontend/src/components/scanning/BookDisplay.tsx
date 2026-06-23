@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
-import { Book } from "../../types/Book";
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
   Box,
-  Typography,
   Button,
   Card,
-  CardMedia,
   CardContent,
+  CardMedia,
+  Typography,
 } from "@mui/material";
+import { useEffect, useState } from "react";
+
+import { Book } from "../../types/Book";
 
 type BookDisplayProps = {
   book: Book;

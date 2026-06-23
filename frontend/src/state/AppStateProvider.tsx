@@ -1,8 +1,9 @@
 // global app state management
 
-import React, { createContext, useReducer, useContext } from "react";
-import { AppState, AppAction } from "./AppState";
+import React, { createContext, useContext, useReducer } from "react";
+
 import { appReducer, initialState } from "./AppReducer";
+import { AppAction, AppState } from "./AppState";
 
 const AppStateContext = createContext<
   { state: AppState; dispatch: React.Dispatch<AppAction> } | undefined

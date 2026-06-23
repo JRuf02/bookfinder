@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback } from "react";
-import Scanner from "./Scanner";
-import TextInput from "../TextInput";
 import { Box, Container, Typography } from "@mui/material";
+import { useCallback, useRef, useState } from "react";
+
+import TextInput from "../TextInput";
+import Scanner from "./Scanner";
 
 type ScanningViewProps = {
   onScanComplete: (isbn: string) => void;

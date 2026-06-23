@@ -1,4 +1,5 @@
 import { Typography } from "@mui/material";
+
 import { Shelf } from "../../types/Shelf";
 
 type CurrentShelfInfoProps = {

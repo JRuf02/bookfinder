@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { getUserLocation } from "../../services/location";
+
 import { fetchAllBookshelves } from "../../services/api/bookshelves";
+import { getUserLocation } from "../../services/location";
+import { useAppState } from "../../state/AppStateProvider";
+import { Shelf } from "../../types/Shelf";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
-import { Shelf } from "../../types/Shelf";
-import { useAppState } from "../../state/AppStateProvider";
 
 const DEFAULT_CENTER_COORDS: [number, number] = [48.0126, 7.835];
 

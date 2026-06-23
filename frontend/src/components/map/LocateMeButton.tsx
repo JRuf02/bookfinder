@@ -1,9 +1,9 @@
-import { useMap } from "react-leaflet";
-import { useEffect } from "react";
-import L from "leaflet";
-import { IconButton, Paper, Tooltip } from "@mui/material";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
+import { IconButton, Paper, Tooltip } from "@mui/material";
+import L from "leaflet";
+import { useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { useMap } from "react-leaflet";
 
 export const LocateMeButton = ({ onClick }: { onClick: () => void }) => {
   const map = useMap();
@@ -23,7 +23,7 @@ export const LocateMeButton = ({ onClick }: { onClick: () => void }) => {
               <MyLocationIcon />
             </IconButton>
           </Tooltip>
-        </Paper>
+        </Paper>,
       );
 
       return container;

@@ -1,15 +1,15 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-  Alert,
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Box,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type Props = {
   result: {
