@@ -141,12 +141,19 @@ see `todos.md`
 #### If nothing helps
 
 1. Add `"ruff.nativeServer": "off"` to `.vscode/settings.json`
-2. Open `ctrl + p`
+2. Open `ctrl + shift + p`
 3. `Developer: Reload Window`
 4. Test on a python file
 5. Remove `"ruff.nativeServer": "off"` from `.vscode/settings.json`
 
-### Test a single file, with detailed diffs
+### ESLint / Frontend import sorter not working?
+
+1. Open `ctrl + shift + p`
+2. `ESLint: Restart ESLint Server`
+3. If that does not help, ESLint might be stalling because tsserver has a problem
+4. Restart container and check if typescript server is working
+
+## Test a single file, with detailed diffs
 
 ```
 cd backend
