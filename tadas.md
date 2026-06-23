@@ -82,6 +82,7 @@
 - use state/AppContextProvider.tsx
   - move userCoords there
 
+- Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!
 - make map scrolling/zooming more responsive... e.g. by:

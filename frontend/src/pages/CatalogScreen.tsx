@@ -1,31 +1,32 @@
-import {
-  Typography,
-  Container,
-  CircularProgress,
-  IconButton,
-} from "@mui/material";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {
+  CircularProgress,
+  Container,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+
+import CatalogSearchForm, {
+  SearchFormState,
+} from "../components/catalog/CatalogSearchForm";
+import CurrentShelfInfo from "../components/catalog/CurrentShelfInfo";
 import ResultsList from "../components/catalog/ResultsList";
-import { getAndCacheUserLocation } from "../services/location";
+import LogoBar from "../components/layout/LogoBar";
 import {
   singleTermCatalogSearch,
   titleAuthorCatalogSearch,
 } from "../services/api/catalogSearch";
 import { fetchShelfBooks } from "../services/api/shelfBooks";
-import { CatalogResult } from "../types/CatalogResult";
-import { Shelf } from "../types/Shelf";
-import { useLocation } from "react-router-dom";
-import { useAppState } from "../state/AppStateProvider";
-import { sortCatalogResults } from "../services/sorting";
-import { unwrapResult } from "../types/Result";
 import { getCatalogNavigationTargets } from "../services/catalogNavigation";
-import CatalogSearchForm, {
-  SearchFormState,
-} from "../components/catalog/CatalogSearchForm";
-import LogoBar from "../components/layout/LogoBar";
-import CurrentShelfInfo from "../components/catalog/CurrentShelfInfo";
+import { getAndCacheUserLocation } from "../services/location";
+import { sortCatalogResults } from "../services/sorting";
+import { useAppState } from "../state/AppStateProvider";
+import { CatalogResult } from "../types/CatalogResult";
+import { unwrapResult } from "../types/Result";
+import { Shelf } from "../types/Shelf";
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
@@ -79,7 +80,7 @@ export default function CatalogScreen() {
     setResults([]);
 
     // if userCoordinates is in AppState, pass them to the search function to prioritize nearby results
-    let userCoords = state.userCoordinates ? state.userCoordinates : null;
+    const userCoords = state.userCoordinates ? state.userCoordinates : null;
 
     try {
       const result = await singleTermCatalogSearch(searchTerm, userCoords);

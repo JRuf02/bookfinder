@@ -31,6 +31,9 @@ fuzzysearch==0.8.1
 
 
 WORKDIR /workspaces/isbn-scanner
+# Copy package files from cached layer (tsserver would be slow if package were within the bind mount)
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm install
 
 # copy files
 # run npm install and other post create commands

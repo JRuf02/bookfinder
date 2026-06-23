@@ -15,7 +15,9 @@
       "onAutoForward": "notify"
     }
   },
-  "mounts": [],
+  "mounts": [
+    "source=isbn-scanner-nodemodules,target=/workspaces/isbn-scanner/frontend/node_modules,type=volume"
+  ], // Mount the node_modules folder as a volume to avoid tsserver loading for ages
   "customizations": {
     "vscode": {
       "extensions": [

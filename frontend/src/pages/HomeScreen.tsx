@@ -1,11 +1,12 @@
-import { useState, useCallback, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Button, Card } from "@mui/material";
-import TextInput from "../components/TextInput";
-import ShelfMap from "../components/map/ShelfMap";
-import { Shelf } from "../types/Shelf";
-import { useAppState } from "../state/AppStateProvider";
+import { type FormEvent, useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import LogoBar from "../components/layout/LogoBar";
+import ShelfMap from "../components/map/ShelfMap";
+import TextInput from "../components/TextInput";
+import { useAppState } from "../state/AppStateProvider";
+import { Shelf } from "../types/Shelf";
 
 export default function HomeScreen() {
   const [inputSearchTerm, setInputSearchTerm] = useState("");
