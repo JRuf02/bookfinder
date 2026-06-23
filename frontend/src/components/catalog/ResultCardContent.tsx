@@ -1,9 +1,12 @@
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LanguageIcon from "@mui/icons-material/Language";
 import NavigationIcon from "@mui/icons-material/Navigation";
+import PlaceIcon from "@mui/icons-material/Place";
 import { Box, Button, CardMedia, Stack, Typography } from "@mui/material";
+import Moment from "react-moment";
 
 import logo from "../../../graphics/logo-long-no-bg.png";
+import { removeOsmIdPrefix } from "../../services/prefix";
 import { CatalogResult } from "../../types/CatalogResult";
 // import ResultMetadataTable from "./ResultMetadataTable"; TODO
 
@@ -16,8 +19,8 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
   const website = result.locatedShelf?.shelf.website;
   const osmId = result.locatedShelf?.shelf.osmId;
 
-  const websiteHref = website ?? osmId ?? "";
-  const hasWebsite = !!(website || osmId);
+  const attributeMarginBottom = 0.75;
+  const attributeLineHeight = "1em";
 
   return (
     <Stack direction="row" spacing={2} alignItems="center">
@@ -44,7 +47,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
             (e.target as HTMLImageElement).src = logo;
           }}
         />
-
+        <div style={{ height: 1 }}></div>
         <Button
           startIcon={<AddShoppingCartIcon />}
           variant="outlined"
@@ -52,19 +55,30 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
         >
           Take out
         </Button>
-
+        {website && (
+          <Button
+            startIcon={<LanguageIcon />}
+            variant="outlined"
+            href={website ?? ""}
+            target="_blank"
+            rel="noopener noreferrer"
+            disabled={!website}
+            onClick={(e) => !website && e.preventDefault()}
+          >
+            Website
+          </Button>
+        )}
         <Button
-          startIcon={<LanguageIcon />}
+          startIcon={<PlaceIcon />}
           variant="outlined"
-          href={websiteHref}
+          href={osmId ?? ""}
           target="_blank"
           rel="noopener noreferrer"
-          disabled={!hasWebsite}
-          onClick={(e) => !hasWebsite && e.preventDefault()}
+          disabled={!osmId}
+          onClick={(e) => !osmId && e.preventDefault()}
         >
-          Website
+          Location
         </Button>
-
         <Button
           startIcon={<NavigationIcon />}
           variant="outlined"
@@ -89,54 +103,61 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
         </Typography>
 
         {result.locatedShelf?.shelf.name?.trim() && (
-          <Typography variant="body2">
+          <Typography variant="body2" sx={{ mb: 1 }}>
             Shelf: {result.locatedShelf?.shelf.name}
           </Typography>
         )}
         {result.locatedShelf?.distanceMeters && (
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
+          >
             Distance: {result.locatedShelf.distanceMeters.toFixed(2)} m
           </Typography>
         )}
         {result.locatedShelf?.shelf.type && (
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
+          >
             Type: {result.locatedShelf.shelf.type}
           </Typography>
         )}
         {result.locatedShelf?.shelf.address && (
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
+          >
             Address: {result.locatedShelf.shelf.address}
           </Typography>
         )}
         {result.locatedShelf?.shelf.operator && (
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
+          >
             Operator: {result.locatedShelf.shelf.operator}
           </Typography>
         )}
         {result.locatedShelf?.shelf.openingHours && (
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
+          >
             Opening Hours: {result.locatedShelf.shelf.openingHours}
           </Typography>
         )}
-        {result.locatedShelf?.shelf.website && (
-          <Typography variant="body2">
-            Website: {result.locatedShelf.shelf.website}
-          </Typography>
-        )}
         {result.locatedShelf?.shelf.osmId && (
-          <Typography variant="body2">
-            Shelf ID: {result.locatedShelf.shelf.osmId}
+          <Typography
+            variant="body2"
+            sx={{ mb: attributeMarginBottom, lineHeight: attributeLineHeight }}
+          >
+            Shelf ID: {removeOsmIdPrefix(result.locatedShelf.shelf.osmId)}
           </Typography>
         )}
-        {result.locatedShelf && (
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Shelf information last updated:{" "}
-            {result.locatedShelf.shelf.osmCheckDate ||
-              result.locatedShelf.shelf.osmLastUpdated}
-          </Typography>
-        )}
+
         <Typography variant="body2" color="text.secondary">
-          In shelf since: {result.inShelfSince}
+          Added: <Moment fromNow>{result.inShelfSince}</Moment>
         </Typography>
       </Box>
     </Stack>
