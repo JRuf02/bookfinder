@@ -149,7 +149,6 @@ input[type="text"] {
   .input-overlay button,
   .input-overlay .MuiButton-root {
     font-size: 1.1rem;
-    padding: 0.7rem 1.2rem;
   }
 
   /* Adjust catalog results list for mobile */

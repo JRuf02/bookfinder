@@ -8,7 +8,6 @@ import Moment from "react-moment";
 import logo from "../../../graphics/logo-long-no-bg.png";
 import { removeOsmIdPrefix } from "../../services/prefix";
 import { CatalogResult } from "../../types/CatalogResult";
-// import ResultMetadataTable from "./ResultMetadataTable"; TODO
 
 type ResultCardContentProps = {
   result: CatalogResult;

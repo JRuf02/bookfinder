@@ -1,6 +1,7 @@
 import "@zxing/library"; // TODO: check if this import does anything
 
-import { Box, Paper, Typography } from "@mui/material";
+import ErrorIcon from "@mui/icons-material/Error";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 
@@ -75,7 +76,7 @@ function useCamera() {
     } catch (err: any) {
       if (isMountedRef.current) {
         console.error("Camera access error:", err);
-        setError(`Camera access denied: ${err.message}`);
+        setError(`Camera access denied`);
       }
       return false;
     }
@@ -432,19 +433,23 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
         <Paper
           elevation={3}
           sx={{
-            color: "error.main",
             p: 2,
             position: "absolute",
             top: "50%",
             left: "50%",
             zIndex: 3,
             transform: "translate(-50%, -50%)",
-            maxWidth: "80%",
+            width: 250,
             backgroundColor: "rgba(255, 255, 255, 0.9)",
           }}
         >
-          <Typography variant="body1">{error}</Typography>
-          <Typography variant="body2">
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <ErrorIcon color="error" sx={{ mt: 1 }} />
+            <Typography variant="body1" color="error.main">
+              {error}
+            </Typography>
+          </Stack>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Please allow camera access. Close all other applications and tabs
             using the camera and reload the page or try on another device.
           </Typography>
