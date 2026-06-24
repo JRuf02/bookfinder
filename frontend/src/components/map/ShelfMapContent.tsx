@@ -7,10 +7,16 @@ import { fetchAllBookshelves } from "../../services/api/bookshelves";
 import { getUserLocation } from "../../services/location";
 import { useAppState } from "../../state/AppStateProvider";
 import { Shelf } from "../../types/Shelf";
+import ErrorDialog from "../dialogs/ErrorDialog";
 import { LocateMeButton } from "./LocateMeButton";
 import MapPopup from "./MapPopup";
 
 const DEFAULT_CENTER_COORDS: [number, number] = [48.0126, 7.835];
+
+type LocationError = {
+  title: string;
+  text: string;
+};
 
 type ShelfMapContentProps = {
   showSelect?: boolean;
@@ -35,6 +41,9 @@ export default function ShelfMapContent({
   const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<LocationError | null>(
+    null,
+  );
   const map = useMap();
 
   useEffect(() => {
@@ -78,10 +87,10 @@ export default function ShelfMapContent({
         payload: userCoords,
       });
     } catch {
-      // TODO: show error to user / log
-      alert(
-        "Could not get your location.\nPlease activate GPS in your device settings and allow location access for this app.",
-      );
+      setLocationError({
+        title: "Could not get your location",
+        text: "Please activate GPS in your device settings and allow location access for this app.",
+      });
     }
   };
 
@@ -216,6 +225,15 @@ export default function ShelfMapContent({
 
       {/* Locate Me button */}
       <LocateMeButton onClick={handleLocateMeClick} />
+
+      {locationError && (
+        <ErrorDialog
+          open={!!locationError}
+          title={locationError.title}
+          text={locationError.text}
+          onClose={() => setLocationError(null)}
+        />
+      )}
     </>
   );
 }

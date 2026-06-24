@@ -96,6 +96,9 @@
   - move venv to the python / server directory if possible
   - sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
 
+- Design:
+  - Replace all uses of alert() with the ErrorDialog
+
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!

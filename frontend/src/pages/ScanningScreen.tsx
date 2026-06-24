@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import ErrorDialog from "../components/dialogs/ErrorDialog";
 import ManualInsertDialog from "../components/dialogs/ManualInsertDialog";
 import ScanningResults from "../components/scanning/ScanningResults";
 import ScanningView from "../components/scanning/ScanningView";
@@ -8,6 +9,11 @@ import { manuallyAddBook } from "../services/api/manualAdd";
 import { useAppState } from "../state/AppStateProvider";
 import { Book } from "../types/Book";
 import { ShelfAction } from "../types/ShelfAction";
+
+type ScanningError = {
+  title: string;
+  text: string;
+};
 
 /*
 This component manages the entire scanning and book insert/remove flow:
@@ -25,6 +31,9 @@ export default function ScanningScreen() {
     useState<ShelfAction | null>(null);
   const [scanning, setScanning] = useState(true);
   const [manualInsertDialogOpen, setManualInsertDialogOpen] = useState(false);
+  const [scanningError, setScanningError] = useState<ScanningError | null>(
+    null,
+  );
 
   const onBookFound = (book: Book) => {
     setQueuedBooks((prev) => [...prev, book]);
@@ -60,18 +69,22 @@ export default function ScanningScreen() {
       book.author,
     );
     if (manualAddResponse.status === "error") {
-      alert(`Something went wrong: ${manualAddResponse.message}`);
+      setScanningError({
+        title: "Something went wrong",
+        text: `${manualAddResponse.message}`,
+      });
       return;
     }
     if (manualAddResponse.status === "warning") {
-      alert(`${manualAddResponse.message}`);
+      setScanningError({
+        title: "Conflict detected",
+        text: `${manualAddResponse.message}`,
+      });
     }
     const addedBook = manualAddResponse.data;
     setQueuedBooks((prev) => [...prev, addedBook]);
     setScannedIsbns((prev) => [...prev, addedBook.isbn]);
-    alert(
-      `Book "${addedBook.title}" by ${addedBook.author} added successfully!`,
-    );
+
     setManualInsertDialogOpen(false);
   };
 
@@ -111,6 +124,12 @@ export default function ScanningScreen() {
           open={manualInsertDialogOpen}
           onClose={() => setManualInsertDialogOpen(false)}
           onSubmit={onSubmitManuallyAddData}
+        />
+        <ErrorDialog
+          open={!!scanningError}
+          title={scanningError?.title ?? ""}
+          text={scanningError?.text ?? ""}
+          onClose={() => setScanningError(null)}
         />
       </div>
     );
