@@ -59,6 +59,16 @@ input[type="text"] {
   padding: 0.5rem;
 }
 
+.shelf-metadata-table td {
+  line-height: 0.75rem;
+}
+
+.shelf-metadata-table {
+  max-height: 25vh;
+  overflow-y: auto;
+  display: block !important;
+}
+
 /* Scanner styles common to all devices */
 .scanner-container {
   position: relative;

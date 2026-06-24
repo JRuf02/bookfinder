@@ -1,10 +1,11 @@
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { Button, Link, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import L from "leaflet";
 import { useEffect, useRef } from "react";
+import Moment from "react-moment";
 
-// import ResultMetadataTable from "./ResultMetadataTable"; TODO <===================================
 import { Shelf } from "../../types/Shelf";
+import ShelfMetadataTable from "./ShelfMetadataTable";
 
 type MapPopupProps = {
   shelf: Shelf;
@@ -52,38 +53,16 @@ export default function MapPopup({
       sx={{ minWidth: 200 }}
     >
       <Typography variant="subtitle1">{shelf.name || "Bookshelf"}</Typography>
-      {shelf.address && (
-        <Typography variant="body2">Address: {shelf.address}</Typography>
-      )}
-      {shelf.type && (
-        <Typography variant="body2">Type: {shelf.type}</Typography>
-      )}
-      {shelf.operator && (
-        <Typography variant="body2">Operator: {shelf.operator}</Typography>
-      )}
-      {shelf.website && (
-        <Typography variant="body2">
-          Website:{" "}
-          <Link href={shelf.website} target="_blank" rel="noopener">
-            {shelf.website}
-          </Link>
+
+      <ShelfMetadataTable shelf={shelf} />
+
+      {(shelf.osmCheckDate || shelf.osmLastUpdated) && (
+        <Typography variant="body2" color="text.secondary" align="right">
+          shelf info updated{" "}
+          <Moment fromNow>{shelf.osmCheckDate || shelf.osmLastUpdated}</Moment>
         </Typography>
       )}
-      {shelf.openingHours && (
-        <Typography variant="body2">
-          Opening hours: {shelf.openingHours}
-        </Typography>
-      )}
-      {shelf.osmCheckDate && (
-        <Typography variant="body2">
-          OSM check date: {shelf.osmCheckDate}
-        </Typography>
-      )}
-      {shelf.osmLastUpdated && (
-        <Typography variant="body2">
-          OSM last updated: {shelf.osmLastUpdated}
-        </Typography>
-      )}
+
       <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
         {showInsert && (
           <Button
