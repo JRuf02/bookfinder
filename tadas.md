@@ -31,6 +31,11 @@
     - Books at shelf xy: showing all books from one shelf
   - Kann Bücher von auf Karte gewähltem Regal zeigen
 
+- ResultCardContent Component (Used inside ResultsList component)
+  - ResultList items sind auch auf mobile komplett sichtbar
+  - is a separate component
+  - show how long book is in shelf already in result
+
 - HomeScreen
   - select button on homescreen map redirects to the catalog
   - Search on home screen works and leads to CatalogSearchScreen

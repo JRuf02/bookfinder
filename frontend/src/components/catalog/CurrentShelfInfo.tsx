@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 
+import { removeOsmIdPrefix } from "../../services/prefix";
 import { Shelf } from "../../types/Shelf";
 
 type CurrentShelfInfoProps = {
@@ -16,11 +17,11 @@ export default function CurrentShelfInfo({
       color="text.secondary"
       sx={{ mt: 0.5, mb: 0.5 }}
     >
-      Showing books for shelf:{" "}
+      Showing books in shelf:{" "}
       {activeShelf.name ||
-        activeShelf.address ||
         activeShelf.operator ||
-        activeShelf.osmId}
+        activeShelf.address ||
+        removeOsmIdPrefix(activeShelf.osmId)}
     </Typography>
   );
 }

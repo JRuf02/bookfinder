@@ -17,6 +17,10 @@ type ResultCardContentProps = {
 export default function ResultCardContent({ result }: ResultCardContentProps) {
   const website = result.locatedShelf?.shelf.website;
   const osmId = result.locatedShelf?.shelf.osmId;
+  const navigationURL =
+    result.locatedShelf?.shelf.latitude && result.locatedShelf?.shelf.longitude
+      ? `https://www.google.com/maps/dir/?api=1&destination=${result.locatedShelf?.shelf.latitude},${result.locatedShelf?.shelf.longitude}`
+      : undefined;
 
   const attributeMarginBottom = 0.9;
   const attributeLineHeight = "1em";
@@ -81,15 +85,16 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
         <Button
           startIcon={<NavigationIcon />}
           variant="outlined"
-          href={osmId ?? ""}
+          href={navigationURL ?? ""}
           target="_blank"
           rel="noopener noreferrer"
-          disabled={!osmId}
-          onClick={(e) => !osmId && e.preventDefault()}
+          disabled={!navigationURL}
+          onClick={(e) => !navigationURL && e.preventDefault()}
         >
           Navigate
         </Button>
       </Stack>
+
       <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ flexGrow: 0 }}>
           <Typography variant="h6" sx={{ lineHeight: "1.2em", pb: 0.5 }}>

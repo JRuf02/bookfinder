@@ -26,7 +26,7 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
-  - Funktionen aufräumen, ggf custom hooks für logik <=============================================================
+  - Funktionen aufräumen, ggf custom hooks für logik
   - Layout?
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
       - Klick auf Karte(Kachel) auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
@@ -40,12 +40,12 @@
         - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
         - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
-- CatalogResult Component (Used inside ResultsList component)
-  - ResultList items sind auch auf mobile komplett sichtbar <=============================================================
-  - is a separate component
-  - show how long book is in shelf already in result
-  - ausleihen-Button der direkt zum shelfActionScreen leitet
-  - ggf button 'show on dnb'
+- ResultCardContent Component (Used inside ResultsList component)
+  - ausleihen-Button der direkt remove ausführt <=============================================================
+
+- MapPopup
+  - ResultMetadataTable umbenennen und benutzen
+  - ggf. Buttons ähnlich zu catalog results
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
@@ -71,6 +71,10 @@
   - Nice design on mobile
   - Make responsive, mobile first
 
+- SSH / HTTPS:
+  - handle certs/key.pem safely (maybe not on github?)
+  - browser sollte nicht "unsicher" anzeigen <=============================================================
+
 - Finalization:
   - Use api/bookshelves/nearby in frontend or revove from backend
     - Maybe add 'show books from x nearest shelves' to catalog?
@@ -78,7 +82,6 @@
   - .vscode/tasks.json tasks löschen wenn makefile fertig
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
   - add svg icon
-  - handle certs/key.pem safely (maybe not on github?)
   - search code for TODOs
   - search local desktop for todos
   - final readme
@@ -118,6 +121,7 @@
 
 ## Bugs
 
+- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 
@@ -143,6 +147,8 @@
 
 ## Nice to have
 
+- ResultCardContent Component
+  - ggf button 'show on dnb' oder cover img klickbar
 - Manual Add Book
   - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
   - Ensure Author name format is "Last, First Second"

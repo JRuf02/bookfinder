@@ -3,6 +3,7 @@ import { Button, Link, Stack, Typography } from "@mui/material";
 import L from "leaflet";
 import { useEffect, useRef } from "react";
 
+// import ResultMetadataTable from "./ResultMetadataTable"; TODO <===================================
 import { Shelf } from "../../types/Shelf";
 
 type MapPopupProps = {
