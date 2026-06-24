@@ -12,7 +12,7 @@ import { useState } from "react";
 import { shelfAction } from "../../services/api/shelfActions";
 import { useAppState } from "../../state/AppStateProvider";
 import { ShelfAction } from "../../types/ShelfAction";
-import CancelDialog from "../dialogs/CancelDialog";
+import ConfirmDialog from "../dialogs/ConfirmDialog";
 import ShelfMap from "../map/ShelfMap";
 import ActionResultAlert from "./ActionResultAlert";
 
@@ -199,7 +199,9 @@ export default function ShelfActionView({
           </Box>
         )}
       </Box>
-      <CancelDialog
+      <ConfirmDialog
+        title="Discard all scanned books?"
+        text="Discard all scanned books without inserting or taking them from a shelf?"
         open={cancelDialogOpen}
         onYes={() => {
           setCancelDialogOpen(false);

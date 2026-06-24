@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchBookData } from "../../services/api/fetchBookData";
 import { Book } from "../../types/Book";
 import { ShelfAction } from "../../types/ShelfAction";
-import CancelDialog from "../dialogs/CancelDialog";
+import ConfirmDialog from "../dialogs/ConfirmDialog";
 import WrongBookDialog from "../dialogs/WrongBookDialog";
 import BookDisplay from "./BookDisplay";
 import ScanningResultsButtons from "./ScanningResultsButtons";
@@ -184,7 +184,9 @@ export default function ScanningResults({
         onDontAdd={onDontAddButtonClicked}
       />
 
-      <CancelDialog
+      <ConfirmDialog
+        title="Discard all scanned books?"
+        text="Discard all scanned books without inserting or taking them from a shelf?"
         open={cancelDialogOpen}
         onYes={() => {
           setCancelDialogOpen(false);

@@ -59,7 +59,9 @@ def remove_book_from_shelf_in_db(
 
         if c.rowcount != 1:
             logger.error(f"Expected to delete 1 row, but deleted {c.rowcount} rows.")
-            return DatabaseQueryError(message="Error removing book from shelf.")
+            return DatabaseQueryError(
+                message="An error occurred while removing the book from the shelf."
+            )
 
         return None
 

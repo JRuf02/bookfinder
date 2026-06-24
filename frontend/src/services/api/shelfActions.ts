@@ -1,4 +1,4 @@
-// Send POST to insert or remove book from shelf
+/** Send a POST request to insert or remove a book from a shelf */
 export async function shelfAction(
   action: "insert" | "remove",
   osmId: string,
