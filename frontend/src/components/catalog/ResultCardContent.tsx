@@ -241,7 +241,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
 
       <ConfirmDialog
         title="Remove book from shelf?"
-        text="Take this book from the shelf? This action cannot be undone."
+        text="Take this book from the shelf?"
         open={removeDialogOpen}
         onYes={() => {
           removeFromShelf();

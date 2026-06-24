@@ -120,7 +120,11 @@ export default function ScanningResults({
   };
 
   const onCancelButtonClicked = () => {
-    setCancelDialogOpen(true);
+    if (queuedBooks.length > 0) {
+      setCancelDialogOpen(true);
+    } else {
+      onCancel();
+    }
   };
 
   return (

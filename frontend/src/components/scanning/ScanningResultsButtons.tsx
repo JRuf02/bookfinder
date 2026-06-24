@@ -27,33 +27,35 @@ export default function ScanningResultsButtons({
         </Typography>
       </Stack>
 
-      <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-        {(state.preSelectedShelfAction === "insert" ||
-          state.preSelectedShelfAction === "both") && (
-          <Button
-            startIcon={<PlaylistAddIcon />}
-            variant="contained"
-            color="primary"
-            onClick={onInsert}
-          >
-            Insert {numberOfBooks} books into bookshelf
+      {numberOfBooks > 0 && (
+        <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
+          {(state.preSelectedShelfAction === "insert" ||
+            state.preSelectedShelfAction === "both") && (
+            <Button
+              startIcon={<PlaylistAddIcon />}
+              variant="contained"
+              color="primary"
+              onClick={onInsert}
+            >
+              Insert {numberOfBooks} books into bookshelf
+            </Button>
+          )}
+          {(state.preSelectedShelfAction === "remove" ||
+            state.preSelectedShelfAction === "both") && (
+            <Button
+              startIcon={<PlaylistRemoveIcon />}
+              variant="contained"
+              color="secondary"
+              onClick={onRemove}
+            >
+              Remove {numberOfBooks} books from bookshelf
+            </Button>
+          )}
+          <Button variant="outlined" onClick={onCancel}>
+            Cancel
           </Button>
-        )}
-        {(state.preSelectedShelfAction === "remove" ||
-          state.preSelectedShelfAction === "both") && (
-          <Button
-            startIcon={<PlaylistRemoveIcon />}
-            variant="contained"
-            color="secondary"
-            onClick={onRemove}
-          >
-            Remove {numberOfBooks} books from bookshelf
-          </Button>
-        )}
-        <Button variant="outlined" onClick={onCancel}>
-          Cancel
-        </Button>
-      </Stack>
+        </Stack>
+      )}
     </div>
   );
 }
