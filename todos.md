@@ -40,11 +40,8 @@
         - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
         - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
-- ResultCardContent Component (Used inside ResultsList component)
-  - ausleihen-Button der direkt remove ausführt <=============================================================
-
 - MapPopup
-  - ResultMetadataTable umbenennen und benutzen
+  - ResultMetadataTable umbenennen und benutzen <=============================================================
   - ggf. Buttons ähnlich zu catalog results
 
 - Scanning-/ScanningResults-/ShelfAction-Screen

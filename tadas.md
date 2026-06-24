@@ -35,6 +35,7 @@
   - ResultList items sind auch auf mobile komplett sichtbar
   - is a separate component
   - show how long book is in shelf already in result
+  - ausleihen-Button der direkt remove ausführt
 
 - HomeScreen
   - select button on homescreen map redirects to the catalog
