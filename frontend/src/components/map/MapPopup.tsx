@@ -1,5 +1,11 @@
+import LanguageIcon from "@mui/icons-material/Language";
+import ListIcon from "@mui/icons-material/List";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import PlaceIcon from "@mui/icons-material/Place";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { Button, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import L from "leaflet";
 import { useEffect, useRef } from "react";
 import Moment from "react-moment";
@@ -14,6 +20,8 @@ type MapPopupProps = {
   showRemove?: boolean;
   showSelect?: boolean;
   showShowBooks?: boolean;
+  maxWidth?: number;
+  maxHeight?: number;
   onInsert?: () => void;
   onRemove?: () => void;
   onSelect?: () => void;
@@ -27,6 +35,8 @@ export default function MapPopup({
   showRemove,
   showSelect,
   showShowBooks,
+  maxWidth,
+  maxHeight,
   onInsert,
   onRemove,
   onSelect,
@@ -35,6 +45,11 @@ export default function MapPopup({
   // Ref to the root element of the popup content, used to disable event propagation to the map.
   // Needed to prevent MapPopup from closing and reopening when clicking buttons inside the popup.
   const popupContentRef = useRef<HTMLDivElement>(null);
+
+  const navigationURL =
+    shelf.latitude && shelf.longitude
+      ? `https://www.google.com/maps/dir/?api=1&destination=${shelf.latitude},${shelf.longitude}`
+      : undefined;
 
   useEffect(() => {
     if (!popupContentRef.current) {
@@ -50,7 +65,16 @@ export default function MapPopup({
       ref={popupContentRef}
       spacing={1}
       alignItems="flex-start"
-      sx={{ minWidth: 200 }}
+      sx={{
+        minWidth: 0,
+        maxWidth:
+          maxWidth !== undefined ? `${maxWidth}px` : "min(90vw, 24rem)",
+        maxHeight:
+          maxHeight !== undefined ? `${maxHeight}px` : "min(70vh, 32rem)",
+        overflowX: "hidden",
+        overflowY: "auto",
+        boxSizing: "border-box",
+      }}
     >
       <Typography variant="subtitle1">{shelf.name || "Bookshelf"}</Typography>
 
@@ -62,50 +86,96 @@ export default function MapPopup({
           <Moment fromNow>{shelf.osmCheckDate || shelf.osmLastUpdated}</Moment>
         </Typography>
       )}
-
-      <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-        {showInsert && (
+      <Box>
+        <Stack
+          direction="row"
+          spacing={0.5}
+          alignItems="center"
+          sx={{ flexWrap: "wrap", maxWidth: "100%" }}
+        >
           <Button
-            size="small"
-            variant="contained"
-            color="primary"
-            onClick={onInsert}
+            startIcon={<PlaceIcon />}
+            variant="outlined"
+            href={shelf.osmId ?? ""}
+            target="_blank"
+            rel="noopener noreferrer"
+            disabled={!shelf.osmId}
+            onClick={(e) => !shelf.osmId && e.preventDefault()}
           >
-            Insert
+            Location
           </Button>
-        )}
-        {showRemove && (
           <Button
-            size="small"
-            variant="contained"
-            color="secondary"
-            onClick={onRemove}
+            startIcon={<NavigationIcon />}
+            variant="outlined"
+            href={navigationURL ?? ""}
+            target="_blank"
+            rel="noopener noreferrer"
+            disabled={!navigationURL}
+            onClick={(e) => !navigationURL && e.preventDefault()}
           >
-            Remove
+            Navigate
           </Button>
-        )}
-        {showSelect && (
-          <Button
-            size="small"
-            variant="contained"
-            color="primary"
-            startIcon={isSelected ? <TaskAltIcon /> : undefined}
-            onClick={onSelect}
-          >
-            {isSelected ? "Selected" : "Select"}
-          </Button>
-        )}
-        {showShowBooks && (
-          <Button
-            size="small"
-            variant="contained"
-            color="primary"
-            onClick={onShowBooks}
-          >
-            Show Books{/*Todo: use mui icons?*/}
-          </Button>
-        )}
-      </Stack>
+          {shelf.website && (
+            <IconButton
+              color="primary"
+              aria-label="website"
+              href={shelf.website ?? ""}
+              target="_blank"
+              rel="noopener noreferrer"
+              disabled={!shelf.website}
+              onClick={(e) => !shelf.website && e.preventDefault()}
+            >
+              <LanguageIcon />
+            </IconButton>
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: "wrap" }}>
+          {showInsert && (
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              startIcon={<PlaylistAddIcon />}
+              onClick={onInsert}
+            >
+              Insert
+            </Button>
+          )}
+          {showRemove && (
+            <Button
+              size="small"
+              variant="contained"
+              color="secondary"
+              startIcon={<PlaylistRemoveIcon />}
+              onClick={onRemove}
+            >
+              Remove
+            </Button>
+          )}
+          {showSelect && (
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              startIcon={isSelected ? <TaskAltIcon /> : undefined}
+              onClick={onSelect}
+            >
+              {isSelected ? "Selected" : "Select"}
+            </Button>
+          )}
+          {showShowBooks && (
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              startIcon={<ListIcon />}
+              onClick={onShowBooks}
+            >
+              Show Books{/*Todo: use mui icons?*/}
+            </Button>
+          )}
+        </Stack>
+      </Box>
     </Stack>
   );
 }

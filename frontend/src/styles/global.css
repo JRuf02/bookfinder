@@ -61,12 +61,15 @@ input[type="text"] {
 
 .shelf-metadata-table td {
   line-height: 0.75rem;
+  overflow-wrap: anywhere;
 }
 
 .shelf-metadata-table {
   max-height: 25vh;
   overflow-y: auto;
   display: block !important;
+  width: 100%;
+  table-layout: fixed;
 }
 
 /* Scanner styles common to all devices */

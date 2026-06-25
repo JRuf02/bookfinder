@@ -82,6 +82,9 @@
 - ShelfSelectMap
   - select button switches to "selected" when clicked on shelfActionScreen
 
+- MapPopup
+  - ResultMetadataTable umbenennen und benutzen
+
 - top level Makefile
   - make test
     - Runs make test from frontend and backend makefiles

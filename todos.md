@@ -41,14 +41,17 @@
         - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - MapPopup
-  - ResultMetadataTable umbenennen und benutzen <=============================================================
-  - ggf. Buttons ähnlich zu catalog results
+  - ggf. Buttons ähnlich zu catalog results <=============================================================
+  - z-index ist höher als die zoom buttons auf der Karte
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
 - InfoScreen
   - add info page
+    - data sources
+    - scanning advice
+    - tutorial? MUI process?
   - dark mode toggle?
 
 - Resilience & Edge Cases:
@@ -60,7 +63,7 @@
   - if cover in size=l not available, try different sizes!
 
 - Production Setup:
-  - Implement production setup (e.g. nginx + gunicorn)
+  - Implement production setup (e.g. nginx + gunicorn) <=============================================================
   - add makefile targets make run and make run dev
 
 - Design:
@@ -70,7 +73,7 @@
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
-  - browser sollte nicht "unsicher" anzeigen <=============================================================
+  - browser sollte nicht "unsicher" anzeigen
 
 - Finalization:
   - Use api/bookshelves/nearby in frontend or revove from backend
@@ -95,7 +98,6 @@
     - remove unused inputs (tsx and py)
     - Configure and run frontend formatter (e.g. Prettier)
     - Run linter (ESLint and Ruff)
-  - blog post
 
   - Automation
     - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
@@ -113,6 +115,7 @@
     - tested on Desktop
 
 - Blog Post
+  - write preliminary version/structure <===================================================================
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Include used Hilfsmittel like copilot autocompletion
 

@@ -45,6 +45,20 @@ export default function ShelfMapContent({
     null,
   );
   const map = useMap();
+  const [mapSize, setMapSize] = useState(() => map.getSize()); // Needed for MapPopup
+
+  useEffect(() => {
+    const updateMapSize = () => {
+      setMapSize(map.getSize());
+    };
+
+    updateMapSize();
+    map.on("resize", updateMapSize);
+
+    return () => {
+      map.off("resize", updateMapSize);
+    };
+  }, [map]);
 
   useEffect(() => {
     let isMounted = true;
@@ -176,6 +190,8 @@ export default function ShelfMapContent({
                   showRemove={showRemove}
                   showSelect={showSelect}
                   showShowBooks={showShowBooks}
+                  maxWidth={Math.max(1, mapSize.x - 40)}
+                  maxHeight={Math.max(1, mapSize.y - 60)}
                   onInsert={
                     onInsert
                       ? () => onInsert(shelf)
