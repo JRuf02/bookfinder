@@ -47,6 +47,9 @@
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
+- ShelfActionView.tsx
+  - Nützlichere Infos zeigen
+
 - InfoScreen
   - add info page
     - data sources
@@ -147,6 +150,9 @@
 
 ## Nice to have
 
+- ScanningResults.tsx:
+  - Show scanned book covers (with x on top right) instead of '3 books scanned'
+    - Clicking the cover removes the book from the queue
 - ResultCardContent Component
   - ggf button 'show on dnb' oder cover img klickbar
 - Manual Add Book

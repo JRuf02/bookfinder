@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 
 import { shelfAction } from "../../services/api/shelfActions";
+import { removeOsmIdPrefix } from "../../services/prefix";
 import { useAppState } from "../../state/AppStateProvider";
 import { ShelfAction } from "../../types/ShelfAction";
 import ConfirmDialog from "../dialogs/ConfirmDialog";
@@ -110,7 +111,9 @@ export default function ShelfActionView({
     });
   };
 
-  const shelfIdRepr = state.selectedShelf?.osmId || "Not set";
+  // TODO: Use user friendly shelf representation if available (e.g. name, operator, address)
+  const shelfIdRepr =
+    removeOsmIdPrefix(state.selectedShelf?.osmId) || "Not set";
 
   // TODO: Remove this block and show all books in a list instead of the summary when there are multiple books.
   const firstBook = action.books[0];
