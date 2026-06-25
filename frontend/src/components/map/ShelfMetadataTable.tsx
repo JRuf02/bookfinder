@@ -30,12 +30,6 @@ export default function ShelfMetadataTable({ shelf }: ShelfMetadataTableProps) {
               </TableCell>
             </TableRow>
           )}
-          {shelf.website && (
-            <TableRow key={"website"}>
-              <TableCell align="left">{"Website"}</TableCell>
-              <TableCell align="right">{shelf.website}</TableCell>
-            </TableRow>
-          )}
           {shelf.address && (
             <TableRow key={"address"}>
               <TableCell align="left">{"Address"}</TableCell>

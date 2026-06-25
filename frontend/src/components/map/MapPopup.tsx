@@ -6,6 +6,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import L from "leaflet";
 import { useEffect, useRef } from "react";
 import Moment from "react-moment";
@@ -67,8 +68,7 @@ export default function MapPopup({
       alignItems="flex-start"
       sx={{
         minWidth: 0,
-        maxWidth:
-          maxWidth !== undefined ? `${maxWidth}px` : "min(90vw, 24rem)",
+        maxWidth: maxWidth !== undefined ? `${maxWidth}px` : "min(90vw, 24rem)",
         maxHeight:
           maxHeight !== undefined ? `${maxHeight}px` : "min(70vh, 32rem)",
         overflowX: "hidden",
@@ -91,9 +91,10 @@ export default function MapPopup({
           direction="row"
           spacing={0.5}
           alignItems="center"
-          sx={{ flexWrap: "wrap", maxWidth: "100%" }}
+          sx={{ flexWrap: "nowrap", maxWidth: "100%" }}
         >
           <Button
+            size="small"
             startIcon={<PlaceIcon />}
             variant="outlined"
             href={shelf.osmId ?? ""}
@@ -105,6 +106,7 @@ export default function MapPopup({
             Location
           </Button>
           <Button
+            size="small"
             startIcon={<NavigationIcon />}
             variant="outlined"
             href={navigationURL ?? ""}
@@ -115,21 +117,30 @@ export default function MapPopup({
           >
             Navigate
           </Button>
+
           {shelf.website && (
-            <IconButton
-              color="primary"
-              aria-label="website"
-              href={shelf.website ?? ""}
-              target="_blank"
-              rel="noopener noreferrer"
-              disabled={!shelf.website}
-              onClick={(e) => !shelf.website && e.preventDefault()}
-            >
-              <LanguageIcon />
-            </IconButton>
+            <Tooltip title="Website" placement="right" arrow>
+              <IconButton
+                size="small"
+                color="primary"
+                aria-label="website"
+                href={shelf.website ?? ""}
+                target="_blank"
+                rel="noopener noreferrer"
+                disabled={!shelf.website}
+                onClick={(e) => !shelf.website && e.preventDefault()}
+              >
+                <LanguageIcon />
+              </IconButton>
+            </Tooltip>
           )}
         </Stack>
-        <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: "wrap" }}>
+        <Stack
+          direction="row"
+          spacing={0.5}
+          alignItems="center"
+          sx={{ flexWrap: "nowrap", maxWidth: "100%", pt: 0.5 }}
+        >
           {showInsert && (
             <Button
               size="small"
@@ -167,11 +178,11 @@ export default function MapPopup({
             <Button
               size="small"
               variant="contained"
-              color="primary"
+              color="info"
               startIcon={<ListIcon />}
               onClick={onShowBooks}
             >
-              Show Books{/*Todo: use mui icons?*/}
+              Books
             </Button>
           )}
         </Stack>
