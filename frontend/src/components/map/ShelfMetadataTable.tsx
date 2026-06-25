@@ -30,16 +30,16 @@ export default function ShelfMetadataTable({ shelf }: ShelfMetadataTableProps) {
               </TableCell>
             </TableRow>
           )}
-          {shelf.address && (
-            <TableRow key={"address"}>
-              <TableCell align="left">{"Address"}</TableCell>
-              <TableCell align="right">{shelf.address}</TableCell>
-            </TableRow>
-          )}
           {shelf.operator && (
             <TableRow key={"operator"}>
               <TableCell align="left">{"Operator"}</TableCell>
               <TableCell align="right">{shelf.operator}</TableCell>
+            </TableRow>
+          )}
+          {shelf.address && (
+            <TableRow key={"address"}>
+              <TableCell align="left">{"Address"}</TableCell>
+              <TableCell align="right">{shelf.address}</TableCell>
             </TableRow>
           )}
           {shelf.openingHours && (
