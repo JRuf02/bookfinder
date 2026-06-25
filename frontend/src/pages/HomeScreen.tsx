@@ -79,9 +79,9 @@ export default function HomeScreen() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-evenly",
-          px: "1rem",
-          gap: "0.5rem",
-          pb: "0.5rem",
+          px: "0.5rem",
+          gap: "0.1rem",
+          pb: "0.35rem",
         }}
       >
         {/* Search Input */}
@@ -97,7 +97,7 @@ export default function HomeScreen() {
         <Card
           sx={{
             flex: 1,
-            minHeight: "60%",
+            minHeight: "72%",
             width: "100%",
             display: "flex",
             alignItems: "center",
@@ -129,8 +129,9 @@ export default function HomeScreen() {
             flex: 1,
             minHeight: "1.75rem",
             width: "100%",
-            fontSize: "1.25rem",
-            borderRadius: 3,
+            fontSize: "1rem",
+            borderRadius: 1,
+            mt: "0.25rem",
           }}
           onClick={navigateToInsert}
         >
@@ -145,8 +146,9 @@ export default function HomeScreen() {
             flex: 1,
             minHeight: "1.75rem",
             width: "100%",
-            fontSize: "1.25rem",
-            borderRadius: 3,
+            fontSize: "1rem",
+            borderRadius: 1,
+            mt: "0.25rem",
           }}
           onClick={navigateToRemove}
         >

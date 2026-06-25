@@ -190,7 +190,7 @@ export default function ShelfMapContent({
                   showRemove={showRemove}
                   showSelect={showSelect}
                   showShowBooks={showShowBooks}
-                  maxWidth={Math.max(1, mapSize.x - 40)}
+                  maxWidth={Math.max(1, mapSize.x - 55)}
                   maxHeight={Math.max(1, mapSize.y - 60)}
                   onInsert={
                     onInsert
