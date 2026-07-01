@@ -34,6 +34,8 @@ def init_db(db_path: Path) -> None:
                 author TEXT,
                 dnb_id TEXT,
                 cover_url TEXT,
+                total_insertions INTEGER DEFAULT 0,
+                avg_days_until_takeout INTEGER DEFAULT NULL,
                 time_of_entry DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         """)

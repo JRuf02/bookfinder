@@ -159,7 +159,7 @@
   - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
   - Ensure Author name format is "Last, First Second"
   - inserting books that dont have an isbn possible
-  - inserting incl. photo of cover possible
+  - inserting incl. photo of cover possible: api/manual-add/cover
   - Dialog kann über button auf dem scanningscreen aufgerufen werden
 - save cover images as binary blob to books.db
 - reverse-geocoded addresses in bookshelf data OR just show a small map with 1 marker for selected shelf (!)

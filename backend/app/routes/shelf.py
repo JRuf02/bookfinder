@@ -68,11 +68,13 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     - isbn: ISBN of the book to insert (required)
     """
 
+    # TODO: Update total_insertions in db when a book is inserted into a shelf
+
     data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
 
-    # TODO: remove this error
+    # TODO: remove this error!
     if str(isbn) == "978-1-4454-0479-0":
         logger.error("Simulating error for testing frontend error handling")
         return jsonify(
@@ -127,6 +129,8 @@ def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     - osm_id: OSM ID of the shelf (required)
     - isbn: ISBN of the book to remove (required)
     """
+
+    # TODO: Update avg_days_until_takeout in db when a book is taken out of a shelf
 
     data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))

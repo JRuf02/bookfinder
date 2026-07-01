@@ -13,7 +13,7 @@ from flask.typing import ResponseReturnValue
 from flask_cors import CORS
 
 from app.db.database import init_db
-from app.routes.books import get_book_api_logic
+from app.routes.books import get_book_api_logic, get_book_popularity
 from app.routes.bookshelves import get_all_bookshelves, get_nearby_bookshelves
 from app.routes.catalog import search_in_catalog, single_term_search_in_catalog
 from app.routes.covers import get_cover_by_isbn
@@ -41,6 +41,11 @@ def create_app() -> Flask:  # noqa: C901
     @app.route("/api/book", methods=["GET"])
     def get_book_api() -> ResponseReturnValue:
         return get_book_api_logic(request)
+
+    # TODO: Tests for this endpoint, show on frontend, add to documentation
+    @app.route("/api/book/popularity", methods=["GET"])
+    def get_book_popularity_api() -> ResponseReturnValue:
+        return get_book_popularity(request)
 
     @app.route("/api/cover", methods=["GET"])
     def get_cover_api() -> ResponseReturnValue:
@@ -92,7 +97,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.DEBUG,
         format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
-        datefmt="%H:%M:%S",  # remove to also log date and ms
+        datefmt="%H:%M:%S",  # remove this to also log date and ms
     )
 
     app = create_app()

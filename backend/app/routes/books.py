@@ -3,7 +3,11 @@ import logging
 from flask import Request, jsonify
 from flask.typing import ResponseReturnValue
 
-from app.db.book_db import get_book_from_database, save_book_to_db
+from app.db.book_db import (
+    get_book_from_database,
+    get_book_popularity_from_db,
+    save_book_to_db,
+)
 from app.dnb_api import fetch_book_from_dnb
 from app.models.book import Book
 from app.models.identifiers import Isbn
@@ -60,3 +64,28 @@ def get_book(isbn: Isbn) -> Book | None:  # TODO: check usages
     save_book_to_db(book)
 
     return book
+
+
+def get_book_popularity(request: Request) -> ResponseReturnValue:
+    """Return the average time books with the given ISBN remained on a shelf before
+    being taken out, the current number of books with that ISBN on shelves,
+    the total number of books with that ISBN since the beginning of the project, and
+    the average time the books with this ISBN that are still on shelves have been on it.
+
+    Request parameters:
+    - isbn: ISBN of the book to fetch average shelf time for (required)
+
+    Returns:
+    - JSON response with shelf times and other related data as a BookPopularity object.
+
+    """
+    # Validate and parse input
+    isbn = Isbn.parse(request.args.get("isbn"))
+
+    if not isbn:
+        return jsonify({"status": "error", "message": "Invalid or missing ISBN"}), 400
+
+    # Get average value from database
+    popularity = get_book_popularity_from_db(isbn)
+
+    return jsonify({"status": "success", "data": as_json_dict(popularity)}), 200
