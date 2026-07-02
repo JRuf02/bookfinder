@@ -2,6 +2,7 @@
 
 Drops the existing bookshelves table and recreates it.
 Fills the new table with data from a CSV file containing bookshelf information.
+Can be run via make reset-bookshelves.
 """
 
 import csv

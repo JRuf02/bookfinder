@@ -38,6 +38,12 @@ checkstyle-strict:
 	ruff check --no-fix --select ALL --ignore D211,D213,TD,COM /workspaces/isbn-scanner/backend && \
 	deactivate
 
+reset-bookshelves:
+	@echo "Resetting bookshelves table in database..."
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	python3 -m scripts.reset_bookshelves && \
+	deactivate
+
 clean:
 	rm -f *.pyc
 	rm -rf __pycache__
