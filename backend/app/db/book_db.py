@@ -1,3 +1,4 @@
+from app.db.catalog_db import get_number_of_books_with_isbn
 from app.db.database import db_cursor
 from app.models.book import Book, BookPopularity
 from app.models.identifiers import Isbn
@@ -86,3 +87,60 @@ def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
         total_books_seen=total_books_seen,
         avg_days_on_shelf_for_current_books=avg_days_on_shelf_for_current_books,
     )
+
+
+def log_book_insertion_in_db(isbn: Isbn) -> None:
+    """Increment the total_insertions counter for the given ISBN in the local db."""
+
+    with db_cursor() as c:
+        c.execute(
+            """
+            UPDATE books
+            SET total_insertions = total_insertions + 1
+            WHERE isbn = ?
+        """,
+            (str(isbn),),
+        )
+
+
+def _update_avg_days_until_takeout_in_db(isbn: Isbn, new_avg_days: int) -> None:
+    """Update the avg_days_until_takeout for the given ISBN in the local db."""
+
+    with db_cursor() as c:
+        c.execute(
+            """
+            UPDATE books
+            SET avg_days_until_takeout = ?
+            WHERE isbn = ?
+        """,
+            (new_avg_days, str(isbn)),
+        )
+
+
+def log_book_takeout_in_db(isbn: Isbn, days_until_takeout: int) -> None:
+    """Update the avg_days_until_takeout for the given ISBN in the local db,
+    based on the new data point of a book with this ISBN being taken out after
+    'days_until_takeout' days.
+    """
+
+    # Fetch current average and total insertions
+    with db_cursor() as c:
+        c.execute(
+            "SELECT avg_days_until_takeout FROM books WHERE isbn = ?",
+            (str(isbn),),
+        )
+        row = c.fetchone()
+
+    current_avg = row["avg_days_until_takeout"] or 0
+    avg_based_on_insertions = get_number_of_books_with_isbn(isbn)
+
+    # Calculate new average
+    new_avg = (
+        (current_avg * avg_based_on_insertions + days_until_takeout)
+        / (avg_based_on_insertions + 1)
+        if avg_based_on_insertions > 0
+        else days_until_takeout
+    )
+
+    # Update the database with the new average
+    _update_avg_days_until_takeout_in_db(isbn, round(new_avg))

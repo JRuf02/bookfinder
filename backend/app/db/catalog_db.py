@@ -366,3 +366,15 @@ def search_in_catalog_by_isbn(
         results.sort(key=lambda x: x.located_shelf.distance_meters)
 
     return results
+
+
+def get_number_of_books_with_isbn(isbn: Isbn) -> int:
+    """Return the number of books with the given ISBN that are currently on shelves."""
+
+    with db_cursor() as c:
+        c.execute(
+            "SELECT COUNT(*) AS count FROM current_catalog WHERE isbn = ?",
+            (str(isbn),),
+        )
+        row = c.fetchone()
+    return row["count"] if row else 0

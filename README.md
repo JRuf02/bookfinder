@@ -92,6 +92,8 @@ sqlite3 books.db
 SELECT * FROM current_catalog;
 ```
 
+Or open the db file in vscode
+
 Show number of entries:
 
 ```
