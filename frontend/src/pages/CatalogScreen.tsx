@@ -6,6 +6,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import Collapse from "@mui/material/Collapse";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -55,7 +56,10 @@ export default function CatalogScreen() {
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [showSearchForm, setShowSearchForm] = useState<boolean>(true);
+  const [showSearchForm, setShowSearchForm] = useState<boolean>(
+    activeShelf === null,
+  );
+  const [showShelfInfo, setShowShelfInfo] = useState<boolean>(true);
   const { state, dispatch } = useAppState();
 
   const loadBooksFromShelf = useCallback(async (shelf: Shelf) => {
@@ -221,7 +225,7 @@ export default function CatalogScreen() {
     <Container className="app-container" maxWidth={false}>
       <LogoBar />
 
-      {showSearchForm && (
+      <Collapse in={showSearchForm}>
         <CatalogSearchForm
           hasDistanceData={hasDistanceData}
           searchFormState={searchFormState}
@@ -229,7 +233,7 @@ export default function CatalogScreen() {
           handleTitleAuthorSubmit={handleTitleAuthorSubmit}
           handleISBNSubmit={handleISBNSubmit}
         />
-      )}
+      </Collapse>
 
       <IconButton
         sx={{ py: 0 }}
@@ -239,7 +243,14 @@ export default function CatalogScreen() {
         {showSearchForm ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </IconButton>
 
-      {activeShelf && <CurrentShelfInfo activeShelf={activeShelf} />}
+      <Collapse in={showShelfInfo && activeShelf !== null}>
+        {activeShelf && (
+          <CurrentShelfInfo
+            activeShelf={activeShelf}
+            onClose={() => setShowShelfInfo(false)}
+          />
+        )}
+      </Collapse>
 
       {loading && <CircularProgress sx={{ mt: 2 }} />}
       {error && (
