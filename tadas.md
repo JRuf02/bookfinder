@@ -83,6 +83,7 @@
   - select button switches to "selected" when clicked on shelfActionScreen
 
 - MapPopup
+  - ggf. Buttons ähnlich zu catalog results
   - ResultMetadataTable umbenennen und benutzen
 
 - top level Makefile

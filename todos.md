@@ -26,6 +26,9 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
+  - Popularity Chips in eigene Component auslagern <===================================
+    - Auch im ScanningResultsView zeigen
+    - ggf Farbe ändern oder flame icon adden wenn populär
   - Funktionen aufräumen, ggf custom hooks für logik
   - Layout?
     - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
@@ -41,7 +44,6 @@
         - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - MapPopup
-  - ggf. Buttons ähnlich zu catalog results <=============================================================
   - z-index ist höher als die zoom buttons auf der Karte
 
 - Scanning-/ScanningResults-/ShelfAction-Screen

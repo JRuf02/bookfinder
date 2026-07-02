@@ -3,12 +3,15 @@ import LanguageIcon from "@mui/icons-material/Language";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Box, Button, CardMedia, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import Chip from "@mui/material/Chip";
+import { useEffect, useState } from "react";
 import Moment from "react-moment";
 
 import logo from "../../../graphics/logo-long-no-bg.png";
+import { fetchBookPopularity } from "../../services/api/fetchBookData";
 import { shelfAction } from "../../services/api/shelfActions";
 import { removeOsmIdPrefix } from "../../services/prefix";
+import { BookPopularity } from "../../types/Book";
 import { CatalogResult } from "../../types/CatalogResult";
 import ConfirmDialog from "../dialogs/ConfirmDialog";
 import ErrorDialog from "../dialogs/ErrorDialog";
@@ -30,6 +33,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
     result.locatedShelf?.shelf.latitude && result.locatedShelf?.shelf.longitude
       ? `https://www.google.com/maps/dir/?api=1&destination=${result.locatedShelf?.shelf.latitude},${result.locatedShelf?.shelf.longitude}`
       : undefined;
+  const [popularity, setPopularity] = useState<null | BookPopularity>(null);
 
   const [removedFromShelf, setRemovedFromShelf] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
@@ -37,6 +41,21 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
 
   const attributeMarginBottom = 0.9;
   const attributeLineHeight = "1em";
+
+  // Fetch book popularity data once when the component mounts
+  useEffect(() => {
+    async function fetchPopularity() {
+      const fetchedPopularity = await fetchBookPopularity(result.book.isbn);
+      if (fetchedPopularity.ok) {
+        setPopularity(fetchedPopularity.data);
+      } else {
+        console.error(
+          `Error fetching popularity for ISBN ${result.book.isbn}: ${fetchedPopularity.error}`,
+        );
+      }
+    }
+    fetchPopularity();
+  }, []);
 
   const onRemoveFromShelf = async () => {
     setRemoveDialogOpen(true);
@@ -153,6 +172,37 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               {result.book.isbn || "ISBN unknown"}
             </Typography>
+            {popularity && (
+              <Stack direction="row" sx={{ mb: 1, flexWrap: "wrap", gap: 0.5 }}>
+                {popularity?.currentlyOnShelves !== null &&
+                  popularity?.currentlyOnShelves !== undefined && (
+                    <Chip
+                      label={`On shelves: ${popularity.currentlyOnShelves}`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+                {popularity?.totalBooksSeen !== null &&
+                  popularity?.totalBooksSeen !== undefined && (
+                    <Chip
+                      label={`Copies seen: ${popularity.totalBooksSeen}`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+                {popularity?.avgDaysUntilTakeout !== null &&
+                  popularity?.avgDaysUntilTakeout !== undefined && (
+                    <Chip
+                      label={`Avg. days until takeout: ${popularity.avgDaysUntilTakeout ?? "N/A"}`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+              </Stack>
+            )}
           </div>
           <div style={{ flexGrow: 1 }}>
             {result.locatedShelf?.shelf.name?.trim() && (

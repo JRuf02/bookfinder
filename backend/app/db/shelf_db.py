@@ -1,12 +1,14 @@
 # TODO: Move all api logic to app/routes/shelf.py
 import logging
 
+from app.db.book_db import log_book_takeout_in_db
 from app.db.database import db_cursor
 from app.db.database_utils import check_if_shelf_exists
 from app.models.book import Book, BookEntity
 from app.models.errors import DatabaseQueryError
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import Shelf
+from app.utils.time import compute_avg_num_of_days_until_now
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,7 @@ def remove_book_from_shelf_in_db(
         # Find the entry_id of the oldest matching entry
         c.execute(
             """
-            SELECT entry_id FROM current_catalog
+            SELECT entry_id, time_of_entry FROM current_catalog
             WHERE osm_id = ? AND isbn = ?
             ORDER BY time_of_entry ASC, entry_id ASC
             LIMIT 1
@@ -54,7 +56,8 @@ def remove_book_from_shelf_in_db(
                 message=f"Book with ISBN {isbn} not found in shelf {osm_id}."
             )
 
-        entry_id = row[0]
+        entry_id = row["entry_id"]
+        time_of_entry = row["time_of_entry"]
         c.execute("DELETE FROM current_catalog WHERE entry_id = ?", (entry_id,))
 
         if c.rowcount != 1:
@@ -63,7 +66,12 @@ def remove_book_from_shelf_in_db(
                 message="An error occurred while removing the book from the shelf."
             )
 
-        return None
+    # Update avg_days_until_takeout in db
+    days_remained_on_shelf = compute_avg_num_of_days_until_now([time_of_entry])
+    if days_remained_on_shelf is not None:
+        log_book_takeout_in_db(isbn, days_remained_on_shelf)
+
+    return None
 
 
 def get_books_in_shelf_from_db(

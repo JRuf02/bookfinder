@@ -134,8 +134,6 @@ def remove_book_from_shelf(request: Request) -> ResponseReturnValue:
     - isbn: ISBN of the book to remove (required)
     """
 
-    # TODO: Update avg_days_until_takeout in db when a book is taken out of a shelf
-
     data = request.get_json(silent=True) or {}
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))

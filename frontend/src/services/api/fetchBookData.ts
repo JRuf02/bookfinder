@@ -1,4 +1,4 @@
-import { Book } from "../../types/Book";
+import { Book, BookPopularity } from "../../types/Book";
 import { Result } from "../../types/Result";
 
 type FetchBookDataOptions = {
@@ -33,4 +33,32 @@ export async function fetchBookData(
   }
 
   return { ok: true, data: data.data as Book };
+}
+
+export async function fetchBookPopularity(
+  isbn: string,
+): Promise<Result<BookPopularity>> {
+  const response = await fetch(`/api/book/popularity?isbn=${isbn}`);
+
+  if (response.status == 500) {
+    return { ok: false, error: "Internal server error. Try again later." };
+  }
+
+  let data: any;
+  try {
+    data = await response.json();
+  } catch {
+    return { ok: false, error: "Invalid JSON response." };
+  }
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      error: data?.message || `Request failed (${response.status})`,
+    };
+  }
+
+  console.log("Fetched book popularity data:", data.data);
+
+  return { ok: true, data: data.data as BookPopularity };
 }

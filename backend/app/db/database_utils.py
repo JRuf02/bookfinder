@@ -1,6 +1,6 @@
 from app.db.database import db_cursor
 from app.models.book import Book
-from app.models.identifiers import OsmId
+from app.models.identifiers import Isbn, OsmId
 
 
 def check_if_shelf_exists(osm_id: OsmId) -> bool:
@@ -33,5 +33,17 @@ def book_already_in_database(book: Book) -> bool:
                 book.dnb_id,
                 book.cover_url,
             ),
+        )
+        return c.fetchone() is not None
+
+
+def isbn_already_in_database(isbn: Isbn) -> bool:
+    """Check if a book with the given ISBN exists in the 'books' table
+    of the database.
+    """
+    with db_cursor() as c:
+        c.execute(
+            "SELECT 1 FROM books WHERE isbn = ? LIMIT 1",
+            (str(isbn),),
         )
         return c.fetchone() is not None

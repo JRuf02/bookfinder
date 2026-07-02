@@ -51,10 +51,14 @@ def save_book_to_db(book: Book) -> None:
 
 
 def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
-    """Fetch popularity data for a book from the local database."""
+    """Fetch popularity data for a book from the local database.
 
-    avg_days_until_takeout = 0
-    total_books_seen = 0
+    Raises a ValueError if no data for the given ISBN is found in the database.
+    """
+
+    # TODO: Error handling when isbn not in db
+
+    avg_days_until_takeout = None
 
     # Fetch the (historical) average of days until takeout for the given ISBN
     with db_cursor() as c:
@@ -63,10 +67,22 @@ def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
             (str(isbn),),
         )
         row = c.fetchone()
-    if row and row["avg_days_until_takeout"] is not None:
-        avg_days_until_takeout = int(row["avg_days_until_takeout"])
-    if row and row["total_insertions"] is not None:
-        total_books_seen = int(row["total_insertions"])
+
+    if row is None:
+        msg = f"Book with ISBN {isbn} not found in database."
+        raise ValueError(msg)
+
+    if row["total_insertions"] is None:
+        # This can only happen if the db is corrupted, so raise an error if it does
+        msg = f"Popularity data for book with ISBN {isbn} is incomplete in database."
+        raise KeyError(msg)
+    total_books_seen = int(row["total_insertions"])
+
+    avg_days_until_takeout = (
+        int(row["avg_days_until_takeout"])
+        if row["avg_days_until_takeout"] is not None
+        else None
+    )
 
     # Compute average on-shelf time of matching books that are still on shelves
     with db_cursor() as c:
@@ -75,7 +91,9 @@ def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
             (str(isbn),),
         )
         entry_times = c.fetchall()
+
     currently_on_shelves = len(entry_times) if entry_times else 0
+
     avg_days_on_shelf_for_current_books = compute_avg_num_of_days_until_now(
         [entry_time["time_of_entry"] for entry_time in entry_times]
     )

@@ -8,6 +8,7 @@ from app.db.book_db import (
     get_book_popularity_from_db,
     save_book_to_db,
 )
+from app.db.database_utils import isbn_already_in_database
 from app.dnb_api import fetch_book_from_dnb
 from app.models.book import Book
 from app.models.identifiers import Isbn
@@ -84,6 +85,11 @@ def get_book_popularity(request: Request) -> ResponseReturnValue:
 
     if not isbn:
         return jsonify({"status": "error", "message": "Invalid or missing ISBN"}), 400
+
+    if not isbn_already_in_database(isbn):
+        return jsonify(
+            {"status": "error", "message": "Book not found in database"}
+        ), 404
 
     # Get average value from database
     popularity = get_book_popularity_from_db(isbn)
