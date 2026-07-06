@@ -27,6 +27,8 @@
 
 - CatalogScreen
   - Popularity Chips in eigene Component auslagern <===================================
+    - An frontend ints liefern, aber in DB floats speichern -> Präzisere avgs!!!
+    - Unit tests für backend!
     - Auch im ScanningResultsView zeigen
     - ggf Farbe ändern oder flame icon adden wenn populär
   - Funktionen aufräumen, ggf custom hooks für logik
@@ -157,6 +159,7 @@
     - Clicking the cover removes the book from the queue
 - ResultCardContent Component
   - ggf button 'show on dnb' oder cover img klickbar
+  - 'on shelves' popularity chip clickable, opens isbn search for the book
 - Manual Add Book
   - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
   - Ensure Author name format is "Last, First Second"

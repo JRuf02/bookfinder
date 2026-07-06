@@ -87,6 +87,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
   };
 
   // TODO: Unify button widths, e.g. using full-width
+  // TODO: split into subcomponents
   return (
     <>
       <Stack direction="row" spacing={2} alignItems="stretch">
@@ -172,38 +173,8 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               {result.book.isbn || "ISBN unknown"}
             </Typography>
-            {popularity && (
-              <Stack direction="row" sx={{ mb: 1, flexWrap: "wrap", gap: 0.5 }}>
-                {popularity?.currentlyOnShelves !== null &&
-                  popularity?.currentlyOnShelves !== undefined && (
-                    <Chip
-                      label={`On shelves: ${popularity.currentlyOnShelves}`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-                {popularity?.totalBooksSeen !== null &&
-                  popularity?.totalBooksSeen !== undefined && (
-                    <Chip
-                      label={`Copies seen: ${popularity.totalBooksSeen}`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-                {popularity?.avgDaysUntilTakeout !== null &&
-                  popularity?.avgDaysUntilTakeout !== undefined && (
-                    <Chip
-                      label={`Avg. days until takeout: ${popularity.avgDaysUntilTakeout ?? "N/A"}`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-              </Stack>
-            )}
           </div>
+
           <div style={{ flexGrow: 1 }}>
             {result.locatedShelf?.shelf.name?.trim() && (
               <Typography
@@ -281,6 +252,38 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
               >
                 Shelf ID: {removeOsmIdPrefix(result.locatedShelf.shelf.osmId)}
               </Typography>
+            )}
+
+            {popularity && (
+              <Stack direction="row" sx={{ mb: 1, flexWrap: "wrap", gap: 0.5 }}>
+                {popularity?.currentlyOnShelves !== null &&
+                  popularity?.currentlyOnShelves !== undefined && (
+                    <Chip
+                      label={`On shelves: ${popularity.currentlyOnShelves}`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+                {popularity?.totalBooksSeen !== null &&
+                  popularity?.totalBooksSeen !== undefined && (
+                    <Chip
+                      label={`Copies seen: ${popularity.totalBooksSeen}`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+                {popularity?.avgDaysUntilTakeout !== null &&
+                  popularity?.avgDaysUntilTakeout !== undefined && (
+                    <Chip
+                      label={`Avg. days until takeout: ${popularity.avgDaysUntilTakeout ?? "N/A"}`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+              </Stack>
             )}
           </div>
           <Typography variant="body2" color="text.secondary" align="right">
