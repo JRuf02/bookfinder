@@ -3,7 +3,7 @@ TEST_CMD = pytest -q --doctest-modules --verbose
 help:
 	@echo "Not implemented yet"
 
-all: compile test checkstyle-flake8 run
+all: test checkstyle-flake8 run
 
 run:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
@@ -15,8 +15,8 @@ run-prod:
 	gunicorn -w 4 -b 0.0.0.0:5001 'server:create_app()' && \
 	deactivate
 
-compile:
-	@echo "Nothing to compile for Python"
+build:
+	@echo "Nothing to build for Python"
 
 test:
 	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \

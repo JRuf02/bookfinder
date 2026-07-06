@@ -8,6 +8,10 @@ help:
 	@echo "https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility"
 	@echo "Todo: add lint, clean, run targets"
 
+build:
+	make -C frontend build
+	make -C backend build
+
 run:
 	@echo "TODO: start the whole application by running the backend and frontend - in parallel!"
 
