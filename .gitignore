@@ -2,6 +2,9 @@
 node_modules/
 *Zone.Identifier
 
+# Ignore build files
+/frontend/dist
+
 # Ignore Python virtual environments and cache files
 .venv/
 */__pycache__/
