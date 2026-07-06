@@ -26,7 +26,14 @@ from app.routes.shelf import (
 )
 
 
-def create_app() -> Flask:  # noqa: C901
+def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
+
+    # Set up root logger
+    logging.basicConfig(
+        level=logging_level,
+        format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
+        datefmt="%H:%M:%S",  # remove this to also log date and ms
+    )
 
     app = Flask(__name__)
 
@@ -89,19 +96,13 @@ def create_app() -> Flask:  # noqa: C901
     def manually_add_book_api() -> ResponseReturnValue:
         return manually_add_book(request)
 
+    # Initialize the database
+    init_db(app.config["DB_PATH"])
+
     return app
 
 
 if __name__ == "__main__":
-    # Set up root logger
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
-        datefmt="%H:%M:%S",  # remove this to also log date and ms
-    )
-
-    app = create_app()
-    # Initialize the database
-    init_db(app.config["DB_PATH"])
-    # Start the server
+    # Start dev server with debug logging
+    app = create_app(logging_level=logging.DEBUG)
     app.run(host="0.0.0.0", port=5000, debug=True)

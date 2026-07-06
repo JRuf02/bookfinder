@@ -2,8 +2,10 @@ FROM node:23-alpine3.20
 
 LABEL maintainer="Julian Gabriel Ruf <rufju@informatik.uni-freiburg.de>"
 
-RUN apk add git openssh python3 py3-pip make sqlite curl
+RUN apk update
+RUN apk add git openssh python3 py3-pip make sqlite curl caddy
 RUN npm install -g npm@11.1.0
+
 
 # setup python
 RUN mkdir -p /workspaces/isbn-scanner-venv
@@ -27,13 +29,16 @@ http-constants==0.5.0 \
 pillow==12.2.0 \
 fixtures==4.3.2 \
 requests-mock==1.12.1 \
-fuzzysearch==0.8.1
+fuzzysearch==0.8.1 \
+gunicorn==26.0.0
 
 
 WORKDIR /workspaces/isbn-scanner
 # Copy package files from cached layer (tsserver would be slow if package were within the bind mount)
 COPY frontend/package*.json ./frontend/
 RUN cd frontend && npm install
+
+
 
 # copy files
 # run npm install and other post create commands

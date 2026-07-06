@@ -10,6 +10,11 @@ run:
 	python server.py && \
 	deactivate
 
+run-prod:
+	source /workspaces/isbn-scanner-venv/.venv/bin/activate && \
+	gunicorn -w 4 -b 0.0.0.0:5001 'server:create_app()' && \
+	deactivate
+
 compile:
 	@echo "Nothing to compile for Python"
 
