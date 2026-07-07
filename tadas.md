@@ -30,6 +30,7 @@
     - Catalog Search Results (near you oder generell)
     - Books at shelf xy: showing all books from one shelf
   - Kann Bücher von auf Karte gewähltem Regal zeigen
+  - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - ResultCardContent Component (Used inside ResultsList component)
   - ResultList items sind auch auf mobile komplett sichtbar
@@ -99,6 +100,11 @@
   - start-all.sh and postcreatecommands removed, all bundled in dockerfile
   - move venv to the python / server directory if possible
   - sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
+  - (Unit) tests
+    - Backend test for when DNB is down -> make test / make test-dnb
+
+- Production Setup:
+  - Implement production setup (caddy + gunicorn)
 
 - Design:
   - Replace all uses of alert() with the ErrorDialog

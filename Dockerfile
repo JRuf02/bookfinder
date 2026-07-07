@@ -57,3 +57,7 @@ RUN make build
 # docker build -t julian-ruf-project .
 # docker run -it -p 80:80 --name julian-ruf-project julian-ruf-project sh
 # make run-prod
+
+# EXIT THE CONTAINER
+# ctrl + c
+# ctrl + ad

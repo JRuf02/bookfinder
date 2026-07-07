@@ -1,4 +1,10 @@
-:80 {
+{
+	debug
+}
+
+:443 {
+	tls /workspaces/isbn-scanner/frontend/certs/cert.pem /workspaces/isbn-scanner/frontend/certs/key.pem
+
 	handle /api/* {
 		reverse_proxy localhost:5001
 	}

@@ -92,7 +92,13 @@ sqlite3 books.db
 SELECT * FROM current_catalog;
 ```
 
-Or open the db file in vscode
+Or quickly (not as nicely formatted):
+
+```
+sqlite3 backend/books.db "SELECT * FROM current_catalog;"
+```
+
+Or open the db file in vscode with the `qwtel.sqlite-viewer` extension (preinstalled if you run this project via the devcontainer).
 
 Show number of entries:
 

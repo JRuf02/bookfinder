@@ -4,12 +4,11 @@
 
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
-  - Unit tests
-    - Backend test for when DNB is down
+  - Unit tests (Only complex logic should be tested)
     - Unit tests for python (backend) most complex logic functions
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
-      - API calls should be tested (-> done in python), user interface doesn't need to be tested
-      - Only complex logic should be tested
+  - API calls should be tested (-> done in python), user interface doesn't need to be tested
+    - add api tests for new endpoints
   - sqlite: c.execute("sel"\n"from") vs. c.execute("""sel\nfrom""")? vereinheitlichen, u.a. in book_db.py
   - Use subcomponents for ScanningResults
 
@@ -26,24 +25,12 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
-  - Popularity Chips in eigene Component auslagern <===================================
-    - An frontend ints liefern, aber in DB floats speichern -> Präzisere avgs!!!
+  - Popularity Chips in eigene Component auslagern <============================================================= 2
+    - An frontend ints liefern, aber in DB floats speichern -> Präzisere avgs!!! <============================================================= 1
     - Unit tests für backend!
-    - Auch im ScanningResultsView zeigen
+    - Auch im ScanningResultsView zeigen <============================================================= 3
     - ggf Farbe ändern oder flame icon adden wenn populär
   - Funktionen aufräumen, ggf custom hooks für logik
-  - Layout?
-    - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
-      - Klick auf Karte(Kachel) auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
-      - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
-    - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfScreen
-    - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
-    - StaticMap component (or version of existing Map with other params)
-      - zu Anzeigezwecken: Soll zentriert auf current shelf sein
-      - statisch: kann nicht gescrollt/gezoomt etc werden
-      - hat methode onClick, die vom parent definiert wird
-        - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
-        - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
@@ -52,7 +39,7 @@
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
 - ShelfActionView.tsx
-  - Nützlichere Infos zeigen
+  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher
 
 - InfoScreen
   - add info page
@@ -70,23 +57,37 @@
   - if cover in size=l not available, try different sizes!
 
 - Production Setup:
-  - Implement production setup (e.g. nginx + gunicorn) <=============================================================
-  - add makefile targets make run and make run dev
+  - BUG: On container restart, DB is reset to previous local repo state if run Docker-only <=============================================================
 
 - Design:
-  - use clear css and uniform layouting, e.g. with MUI Stack with flexbox gap
-  - Nice design on mobile
-  - Make responsive, mobile first
+  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
+    - catalog search form
+    - scanningResults / BookDisplay
+    - shelfActionView
+    - MapPopup
+  - mobile version looking good
+  - desktop version looking acceptable
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
-  - browser sollte nicht "unsicher" anzeigen
+
+  - Automation
+    - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
+    - implement and test final makefiles
+      - makefile has 'help' target and documentation
+    - make project docker-compatible as wished
+      - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+      - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
+      - and [here](https://docs.docker.com/build/building/best-practices/)
+      - and [here](https://docs.docker.com/build/building/multi-stage/)
+    - do not require vs-code & devcontainer, only docker!
 
 - Finalization:
   - Use api/bookshelves/nearby in frontend or revove from backend
     - Maybe add 'show books from x nearest shelves' to catalog?
   - make build o.ä. sollte die DB bauen falls noch nicht existiert
-  - .vscode/tasks.json tasks löschen wenn makefile fertig
+  - makefile targets make run and make run-dev
+  - .vscode/tasks.json tasks löschen wenn makefile fertig oder in readme / documentation aufnehmen
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
   - add svg icon
   - search code for TODOs
@@ -106,25 +107,23 @@
     - Configure and run frontend formatter (e.g. Prettier)
     - Run linter (ESLint and Ruff)
 
-  - Automation
-    - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
-    - implement and test final makefiles
-    - makefile has 'help' target and documentation
-    - make project docker-compatible as wished
-      - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
-      - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
-      - and [here](https://docs.docker.com/build/building/best-practices/)
-      - and [here](https://docs.docker.com/build/building/multi-stage/)
-    - do not require vs-code & devcontainer, only docker!
-  - Testing
-    - tested on android/mobile
-    - tested on iPad/iPhone
-    - tested on Desktop
-
 - Blog Post
   - write preliminary version/structure <===================================================================
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Include used Hilfsmittel like copilot autocompletion
+
+- Testing
+  - Client
+    - tested on android/mobile
+    - tested on iPad/iPhone
+    - tested on Desktop
+  - Server
+    - tested using plain Docker container
+      - dev mode
+      - prod mode
+    - tested using devcontainer
+      - dev mode
+      - prod mode
 
 ## Bugs
 
@@ -172,13 +171,17 @@
   - or valhalla.openstreetmap.de -> Koords eingeben, checkmark drücken -> reverse-geocodes the address
   - or project-osrm.org/docs -> nearest service -> 'name' -> outputs a street name
 - Design
+  - use clear css and uniform layouting, e.g. with MUI Stack with flexbox gap
   - use [fab](https://mui.com/material-ui/react-floating-action-button/) or IconButton where it makes sense
+  - use mui [stepper](https://mui.com/material-ui/react-stepper/) for scanning progress
   - style infos moved to css file(s)
   - Use [react link styling](https://reactrouter.com/6.30.1/start/tutorial#active-link-styling) for highlighting current 'tab' on bottomNavBar (done?)
   - extend theme.ts, e.g. dark mode
   - MUI icons for insert/remove buttons: PlaylistAdd
   - map styling examples: maplibre.org, protomaps.com, transit.land
   - Use MUI dialog for shelf select map popup
+  - make responsive (mobile first)
+    - desktop version uses its additional x axis space
 - Usability
   - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
   - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
@@ -193,6 +196,17 @@
   - oder zeigt die most recently inserted books deutschlandweit als start?
   - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)
   - fuzzy autocomplete vorschläge bei catalog search while typing
+  - Layout?
+    - hat eine StaticMap (Kachel, die die Map anzeigt, zentriert auf aktuelles Regal, aber keine Interaktion mit map möglich)
+      - Klick auf Karte(Kachel) auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
+      - Wenn noch kein shelf selected, wird bei Klick auf die statische Karte der ShelfScreen geöffnet und dann die Results gezeigt
+    - hat einen Button 'select other shelf' bei der Karte; öffnet ShelfScreen
+    - Neuste 10 Bücher werden unten in seitlicher slidebar angezeigt (als klickbare cover) (im 10km Radius/inkl.Datum+Distanz?!)
+    - StaticMap component (or version of existing Map with other params)
+      - zu Anzeigezwecken: Soll zentriert auf current shelf sein
+      - statisch: kann nicht gescrollt/gezoomt etc werden
+      - hat methode onClick, die vom parent definiert wird
+        - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
 - Map / MapPopup
   - human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen (react library verfügbar)
 - Map responsiveness (not needed, clustering is enough):
@@ -217,6 +231,8 @@
   - fastAPI statt flask ([discussion](https://www.reddit.com/r/flask/comments/13pyxie/flask_vs_fastapi/))
   - Nginx / Apache + Gunicorn (create production setup) (see /documentation)
   - rent & use own domain/online server (e.g. from Hetzner)
+  - SSH / HTTPS:
+    - browser sollte nicht "unsicher" anzeigen (nur möglich mit fester domain)
 - Python Backend
   - Improve search (make more fuzzy / use sqlite MATCH), check out [RapidFuzz](https://pypi.org/project/RapidFuzz/)
   - api for non-dnb books (e.g. via google books api/internet archive OpenLibrary api/wikipedia isbn-Suche)
@@ -228,6 +244,7 @@
   - Bookmarks/Wishlist
   - Mail/Push Notification when bookmarked book becomes available within set radius
 - Gamification - Punktesammeln für shelf checks a la "book still there?" & buch scan
+  - Je nach book popularity gibt es mehr Punkte für einstellen / entnehmen
 - Create unique barcodes for each shelf -> scan shelf code to select it
 - Usability
   - Wortwahl klarer machen, z.B. Take/Leave book statt remove/insert
