@@ -2,7 +2,7 @@
 	debug
 }
 
-:443 {
+:443, :5173 {
 	tls /workspaces/isbn-scanner/frontend/certs/cert.pem /workspaces/isbn-scanner/frontend/certs/key.pem
 
 	handle /api/* {

@@ -1,6 +1,18 @@
 # bookFinder
 
-### Setup VS-Code Devcontainer
+## There are two ways to install and run this app
+
+First, you need to clone this repository onto your machine. Then you can open it either within a VS Code Devcontainer or within a standard Docker Container.
+
+### A) VS Code Devcontainer
+
+- Recommended if you want to open this project in VS Code
+- Installs all the extensions you might need and configures the VS Code settings for this project
+- Your local VS Code installation remains unchanged
+- Isolation similar to a standard Docker container
+- You can run the production setup in here, but this is best suited for development
+
+#### Setup VS Code Devcontainer
 
 Use the provided Devcontainer to make the usage as easy as possible:
 
@@ -9,31 +21,56 @@ Use the provided Devcontainer to make the usage as easy as possible:
 - Open this repository
 - Press `F1` (or `CTRL + SHIFT + P`) and select `Dev Containers: Rebuild and Reopen Container`
 
-### Shortcut: Run all dev servers with one command in vscode
+#### Run dev servers
+
+##### Shortcut: Run all dev servers with one command in vs code
 
 - Press `ctrl + P`
 - Type `task Run All Servers`
 
-### Run servers manually
+##### Run dev servers manually
 
-- Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the Devcontainer to start vite (react dev server)
-- Run `make run` in directory `\workspaces\isbn-scanner\backend` inside the Devcontainer to start the book data api server (flask) (might need 'make install' first!)
+- Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the container to start vite (react dev server)
+- Run `make run` in directory `\workspaces\isbn-scanner\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
 
-### Show the website
+#### Run production servers
+
+- Run `make run-prod` in the main directory `\workspaces\isbn-scanner`
+
+### B) Within a standalone Docker container
+
+If you simply want to run this app without looking much at the code or if you want to use it in an production setting (e.g. in a multi-container setting), you can run it within a standard Docker container.
+This is optimized for the production setup, but you can also run the development servers in here.
+
+#### Setup the container
+
+Please follow the instructions given in the comments at the end of the `Dockerfile`.
+
+#### Run dev servers
+
+- Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the container to start vite (react dev server)
+- Run `make run` in directory `\workspaces\isbn-scanner\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
+
+#### Run production servers
+
+- Run `make run-prod` in the main directory `\workspaces\isbn-scanner`
+
+## Show the website
 
 - Click on the popup by VS code to open the website in the browser after starting the server
 - Or go to https://127.0.0.1:5173/
+- If you are running the production setup inside a standalone Docker container, https://localhost/ and https://localhost:443/ will work as well
+  - If using the VS Code devcontainer, only port 5173 will work (for both, prod and dev setup)
 
 ### Show the website on another device
 
-- Start vite and flask servers in the container
+- Start both servers in the container
 - Connect host and the device to the same network (no eduroam!)
 - Run ipconfig on the host (outside the docker container) to find its IPv4 address
 - Open `https://[host-ip]:5173/` on your device's browser
 - Accept self-signed certificate
-- Accept camera permission popup
 
-## show on mobile
+### show on mobile
 
 - connect to same network / router
 - find ipv4 address of host via ipconfig
@@ -43,7 +80,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - Check that you used the right ipv4 address from ipconfig (wireless-LAN, not ethernet)
 - Add firewall rule (allow inbound TCP on 5137 and 5000) on host if it does not exist
-- Use another wifi (public wifis like eduroam can have client isolation)
+- Use another wifi (public wifis like eduroam may have client isolation)
 
 ### easy open on mobile (experimental, doesn't work on Windows host yet)
 
@@ -60,7 +97,7 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 
 ## Sqlite3 DB & Python API
 
-### SQLite tables and their columns:
+### SQLite database schema:
 
 **table books:**
 isbn dnb-isbn title author (link-to)-cover-image ...<br>
@@ -69,19 +106,11 @@ osm-id name (location)<br>
 **table current-catalog:**
 entry-id osm-id isbn time-of-entry
 
-### Insert or remove books into/from the db via the api
+### Show the tables
 
-Change the table:
+Example commands, please alter as needed.
 
-```
-curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
-```
-
-```
-curl -X POST http://localhost:5000/api/shelf/remove -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
-```
-
-Show the table:
+#### In a standalone Docker container
 
 ```
 cd backend
@@ -98,15 +127,23 @@ Or quickly (not as nicely formatted):
 sqlite3 backend/books.db "SELECT * FROM current_catalog;"
 ```
 
-Or open the db file in vscode with the `qwtel.sqlite-viewer` extension (preinstalled if you run this project via the devcontainer).
+#### In VS Code
 
-Show number of entries:
+Open the db file in vs code with the `qwtel.sqlite-viewer` extension (preinstalled if you run this project via the devcontainer).
+
+### Insert or remove books into/from the db via the api
+
+Change the table:
 
 ```
-SELECT COUNT(*) FROM bookshelves;
+curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
 ```
 
-## Other sample api requests
+```
+curl -X POST http://localhost:5000/api/shelf/remove -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
+```
+
+### Other sample api requests
 
 ```
 http://127.0.0.1:5000/api/shelf/metadata?osm_id=https://www.openstreetmap.org/node/6073946680
@@ -122,11 +159,11 @@ http://127.0.0.1:5000/api/catalog/search?lat=48.05&lon=7.90&title=Informatik
 
 see `todos.md`
 
-## Note to me
+## Notes to me
 
-### Persisting library versions and vscode extensions
+### Persisting library versions and vs code extensions
 
-- Installed VSCode extension? -> add it to `.devcontainer/devcontainer.json` to persist it
+- Installed VS Code extension? -> add it to `.devcontainer/devcontainer.json` to persist it
 - Install via npm install?
   1. cd frontend
   2. run npm install
@@ -136,7 +173,7 @@ see `todos.md`
   2. Install via pip: `pip install [package-name]`
   3. Find the version number in the success message
   4. Add the library with its version number to the pip install command in the Dockerfile
-- Want to enforce a VSCode setting for this project? -> add it to `.vscode/settings.json` to persist it
+- Want to enforce a VS Code setting for this project? -> add it to `.vscode/settings.json` to persist it
 
 ### Ruff not formatting and linting?
 
