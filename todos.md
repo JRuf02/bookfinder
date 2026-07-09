@@ -89,7 +89,6 @@
   - makefile targets make run and make run-dev
   - .vscode/tasks.json tasks löschen wenn makefile fertig oder in readme / documentation aufnehmen
   - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
-  - add svg icon
   - search code for TODOs
   - search local desktop for todos
   - final readme

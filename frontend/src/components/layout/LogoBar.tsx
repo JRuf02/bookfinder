@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-import logo from "../../../graphics/logo-long-no-bg.png";
+import logo from "../../../images/logo-long-no-bg.png";
 
 /** A bar that shows the app's logo */
 export default function LogoBar() {

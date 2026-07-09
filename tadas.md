@@ -108,6 +108,7 @@
 
 - Design:
   - Replace all uses of alert() with the ErrorDialog
+  - add favicon
 
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'

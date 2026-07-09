@@ -7,7 +7,7 @@ import Chip from "@mui/material/Chip";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
 
-import logo from "../../../graphics/logo-long-no-bg.png";
+import logo from "../../../images/logo-long-no-bg.png";
 import { fetchBookPopularity } from "../../services/api/fetchBookData";
 import { shelfAction } from "../../services/api/shelfActions";
 import { removeOsmIdPrefix } from "../../services/prefix";

@@ -95,6 +95,16 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
 "$BROWSER" "https://${HOST_IP}:5173"
 ```
 
+## Making changes in the frontend
+
+- When running the dev server (Vite)
+  - Vite will hot update the website once a change is saved
+  - no restart needed
+- When running the prod server (Caddy)
+  - stop the server (`ctrl + c`)
+  - rebuild the frontend files via `make build`
+  - restart the server (`make run-prod`)
+
 ## Sqlite3 DB & Python API
 
 ### SQLite database schema:
