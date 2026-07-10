@@ -67,12 +67,11 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 ### Production Setup (Caddy + Gunicorn)
 
 - Start the prod servers: `make run-prod`
-- Open https://localhost:5173/
-- If you are using a standalone Docker container, https://localhost/ and https://localhost:443/ will work as well.
-  - If using the VS Code devcontainer, only port 5173 will work
+- Open https://localhost/
+  - https://localhost:5173/ and https://localhost:443/ will work as well
 - Accept self-signed certificate
-- Backend: https://localhost:5173/api/health
-- If you are using a standalone Docker container, https://localhost/api/health and https://localhost:443/api/health will work as well
+- Backend: https://localhost/api/health
+  - https://localhost:5173/api/health and https://localhost:443/api/health will work as well
 
 ### Show the website on another device
 

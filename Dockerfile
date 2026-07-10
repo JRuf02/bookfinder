@@ -42,24 +42,20 @@ RUN cd frontend && npm install
 # copy files
 COPY . /workspaces/isbn-scanner
 
-RUN make build
-
 # run npm install and other post create commands
+RUN make build
 
 # specify entrypoint or command
 # WORKDIR /app
 # CMD ["npm", "start"]
 
 
-# TODO: change to -p 443:443 ???
-#       Then also in devcontainer.json ???
-#       Warning: Forwarding 443 in devcontainer makes vscode and docker crash!
-
+# TODO: bind mount books.db?
 # BUILD INSTRUCTIONS
 # git clone https://github.com/JRuf02/bookfinder.git (If prompted, enter Personal Access Token: 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)
 # cd bookfinder
 # docker build -t julian-ruf-project .
-# docker run -it -p 5173:5173 -p 443:443 --name julian-ruf-project julian-ruf-project sh
+# docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project julian-ruf-project sh
 # make run-prod
 
 # EXIT THE CONTAINER
