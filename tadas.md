@@ -37,6 +37,9 @@
   - is a separate component
   - show how long book is in shelf already in result
   - ausleihen-Button der direkt remove ausführt
+  - In catalog results: Clicking a result shows it on map ?
+  - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
+  - Results klickbar -> 'remove'/'take out' button
 
 - HomeScreen
   - select button on homescreen map redirects to the catalog

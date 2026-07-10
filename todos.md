@@ -56,9 +56,6 @@
     - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
   - if cover in size=l not available, try different sizes!
 
-- Production Setup:
-  - BUG: On container restart, DB is reset to previous local repo state if run Docker-only <============================================================= 0
-
 - Design:
   - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
     - catalog search form
@@ -142,9 +139,7 @@
 - Manual Add Dialog
   - wenn isbn eingegeben wurde aber no book found, dann übertrage isbn direkt in das ISBN input field im ManualAddDialog
 - CatalogResult
-  - In catalog results: Clicking a result shows it on map ?
-  - In catalog results: 'Navigate'-button on each result opens google maps navigation to the shelf
-  - Results klickbar -> 'remove'/'take out' button <===============================================================
+  - Add button for 'show shelf on shelfMap'
   - Add button for dnb link (d-nb.info/<dnb_id>) z.b. `https://d-nb.info/1027780482` to each result
 - Taschenlampe beim Scannen anschalten
 - Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
