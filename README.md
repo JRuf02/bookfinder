@@ -116,17 +116,20 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
   - rebuild the frontend files via `make build`
   - restart the server (`make run-prod`)
 
-### Changes made locally will only be copied into the container on rebuild!
+## Synchronizing files between host and container
 
-- If you are using VS Code devcontainer, changes made to the repo locally will conveniently be synched into the container via a bind mount.
+- If you are using VS Code devcontainer, any changes made to the repo on the host will automatically be synched into the container and vice versa via a bind mount.
   - No need to do anything
-  - Via devcontainer, the changes made inside the container will also be synced to your local repo
+  - Changes made inside the container will also be synced back to your host
 
-- If you are using a standalone container, the state of the repo will be copied into the container once, at creation.
-  - You need to rebuild the image if you want to sync changes from the local repo into your container: `docker build -t julian-ruf-project .`
-  - This will reset changes made inside the container
-  - Changes made to the project files inside the container will never be synched to the local repo
-    - If you want this (e.g. for persisting changes in the DB), define bind mounts for the files or folders you want to sync, when starting the container (docker run `-v`)
+- If you are using a standalone container via the instructions in the Dockerfile, all files of the repo will be copied into the container once, at creation.
+  - Nothing you do inside the container will affect the original files on your host
+  - Nothing you do to the files on your host will affect the files in your container
+  - This means: the database on your host will also remain in its original state
+  - If you want to copy changes made on the host into your container, you need to rebuild the image
+    - This will reset any changes made inside the container
+  - If you want to automatically synchronize parts of or the entire repo, you need to define bind mounts (`-v`) for the files or folders you want to sync, when starting the container
+    - Example (bind mounting just the database): `docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project -v ${PWD}\backend\books.db:/workspaces/isbn-scanner/backend/books.db julian-ruf-project sh`
 
 ## Sqlite3 DB & Python API
 

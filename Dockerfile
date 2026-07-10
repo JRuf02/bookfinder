@@ -50,7 +50,6 @@ RUN make build
 # CMD ["npm", "start"]
 
 
-# TODO: bind mount books.db?
 # BUILD INSTRUCTIONS
 # git clone https://github.com/JRuf02/bookfinder.git (If prompted, enter Personal Access Token: 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)
 # cd bookfinder
@@ -61,3 +60,7 @@ RUN make build
 # EXIT THE CONTAINER
 # ctrl + c
 # ctrl + ad
+
+# ADDITIONAL COMMANDS
+# Start without rebuilding (if docker build and docker run have already been executed):
+# docker start -ai julian-ruf-project
