@@ -57,7 +57,7 @@
   - if cover in size=l not available, try different sizes!
 
 - Production Setup:
-  - BUG: On container restart, DB is reset to previous local repo state if run Docker-only <=============================================================
+  - BUG: On container restart, DB is reset to previous local repo state if run Docker-only <============================================================= 0
 
 - Design:
   - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
@@ -255,6 +255,9 @@
   - 'show nearest shelf' button auf ShelfMap -> zentriert darauf & öffnet popup
   - 'Add bookshelf' Funktion für fehlende Regale
     - Z.B. mit [draggable Marker](https://react-leaflet.js.org/docs/example-draggable-marker/) auf map
+- Frontend responsiveness
+  - don't fetch cover for same isbn multiple times if multiple books in catalog
+  - fetch small size thumbnails only (should already be medium, maybe small enough already)
 - Map responsiveness (not needed, clustering is enough):
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
   - quadtree for tile / shelf loading

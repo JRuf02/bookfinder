@@ -57,14 +57,26 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 
 ## Show the website
 
-- Click on the popup by VS code to open the website in the browser after starting the server
-- Or go to https://127.0.0.1:5173/
-- If you are running the production setup inside a standalone Docker container, https://localhost/ and https://localhost:443/ will work as well
-  - If using the VS Code devcontainer, only port 5173 will work (for both, prod and dev setup)
+### Development Setup (Vite + Flask)
+
+- Start the dev servers: See above
+- Open https://localhost:5173/
+- Accept self-signed certificate
+- Backend: `https://localhost:5173/api/health` (or directly https://localhost:5000/api/health)
+
+### Production Setup (Caddy + Gunicorn)
+
+- Start the prod servers: `make run-prod`
+- Open https://localhost:5173/
+- If you are using a standalone Docker container, https://localhost/ and https://localhost:443/ will work as well.
+  - If using the VS Code devcontainer, only port 5173 will work
+- Accept self-signed certificate
+- Backend: https://localhost:5173/api/health
+- If you are using a standalone Docker container, https://localhost/api/health and https://localhost:443/api/health will work as well
 
 ### Show the website on another device
 
-- Start both servers in the container
+- Start backend and frontend servers in the container
 - Connect host and the device to the same network (no eduroam!)
 - Run ipconfig on the host (outside the docker container) to find its IPv4 address
 - Open `https://[host-ip]:5173/` on your device's browser
@@ -104,6 +116,18 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
   - stop the server (`ctrl + c`)
   - rebuild the frontend files via `make build`
   - restart the server (`make run-prod`)
+
+### Changes made locally will only be copied into the container on rebuild!
+
+- If you are using VS Code devcontainer, changes made to the repo locally will conveniently be synched into the container via a bind mount.
+  - No need to do anything
+  - Via devcontainer, the changes made inside the container will also be synced to your local repo
+
+- If you are using a standalone container, the state of the repo will be copied into the container once, at creation.
+  - You need to rebuild the image if you want to sync changes from the local repo into your container: `docker build -t julian-ruf-project .`
+  - This will reset changes made inside the container
+  - Changes made to the project files inside the container will never be synched to the local repo
+    - If you want this (e.g. for persisting changes in the DB), define bind mounts for the files or folders you want to sync, when starting the container (docker run `-v`)
 
 ## Sqlite3 DB & Python API
 
