@@ -81,7 +81,7 @@ export default function MapPopup({
       <ShelfMetadataTable shelf={shelf} />
 
       {(shelf.osmCheckDate || shelf.osmLastUpdated) && (
-        <Typography variant="body2" color="text.secondary" align="right">
+        <Typography variant="caption" color="text.secondary" align="right">
           shelf info updated{" "}
           <Moment fromNow>{shelf.osmCheckDate || shelf.osmLastUpdated}</Moment>
         </Typography>
