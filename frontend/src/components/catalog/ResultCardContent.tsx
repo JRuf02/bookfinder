@@ -1,8 +1,4 @@
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import LanguageIcon from "@mui/icons-material/Language";
-import NavigationIcon from "@mui/icons-material/Navigation";
-import PlaceIcon from "@mui/icons-material/Place";
-import { Box, Button, CardMedia, Stack, Typography } from "@mui/material";
+import { Box, CardMedia, Stack, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
@@ -15,6 +11,7 @@ import { BookPopularity } from "../../types/Book";
 import { CatalogResult } from "../../types/CatalogResult";
 import ConfirmDialog from "../dialogs/ConfirmDialog";
 import ErrorDialog from "../dialogs/ErrorDialog";
+import ResultCardButtons from "./ResultCardButtons";
 
 type RemoveError = {
   title: string;
@@ -27,12 +24,6 @@ type ResultCardContentProps = {
 
 /** Renders a single catalog result (one book instance) */
 export default function ResultCardContent({ result }: ResultCardContentProps) {
-  const website = result.locatedShelf?.shelf.website;
-  const osmId = result.locatedShelf?.shelf.osmId;
-  const navigationURL =
-    result.locatedShelf?.shelf.latitude && result.locatedShelf?.shelf.longitude
-      ? `https://www.google.com/maps/dir/?api=1&destination=${result.locatedShelf?.shelf.latitude},${result.locatedShelf?.shelf.longitude}`
-      : undefined;
   const [popularity, setPopularity] = useState<null | BookPopularity>(null);
 
   const [removedFromShelf, setRemovedFromShelf] = useState(false);
@@ -86,7 +77,6 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
     }
   };
 
-  // TODO: Unify button widths, e.g. using full-width
   // TODO: split into subcomponents
   return (
     <>
@@ -99,7 +89,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
                 ? `/api/cover?isbn=${result.book.isbn}&size=m`
                 : logo
             }
-            alt={`Cover of ${result.book.title}`}
+            alt={`${result.book.title}`}
             sx={{
               width: 80,
               height: 120,
@@ -115,49 +105,11 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
             }}
           />
           <div style={{ height: 1 }}></div>
-          <Button
-            startIcon={<AddShoppingCartIcon />}
-            variant="outlined"
-            onClick={onRemoveFromShelf}
-            disabled={removedFromShelf}
-          >
-            {removedFromShelf ? "Removed" : "Take out"}
-          </Button>
-          {website && (
-            <Button
-              startIcon={<LanguageIcon />}
-              variant="outlined"
-              href={website ?? ""}
-              target="_blank"
-              rel="noopener noreferrer"
-              disabled={!website}
-              onClick={(e) => !website && e.preventDefault()}
-            >
-              Website
-            </Button>
-          )}
-          <Button
-            startIcon={<PlaceIcon />}
-            variant="outlined"
-            href={osmId ?? ""}
-            target="_blank"
-            rel="noopener noreferrer"
-            disabled={!osmId}
-            onClick={(e) => !osmId && e.preventDefault()}
-          >
-            Location
-          </Button>
-          <Button
-            startIcon={<NavigationIcon />}
-            variant="outlined"
-            href={navigationURL ?? ""}
-            target="_blank"
-            rel="noopener noreferrer"
-            disabled={!navigationURL}
-            onClick={(e) => !navigationURL && e.preventDefault()}
-          >
-            Navigate
-          </Button>
+          <ResultCardButtons
+            result={result}
+            removedFromShelf={removedFromShelf}
+            onRemoveFromShelf={onRemoveFromShelf}
+          />
         </Stack>
 
         <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
