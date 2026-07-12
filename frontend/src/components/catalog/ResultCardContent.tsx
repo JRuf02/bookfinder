@@ -1,16 +1,14 @@
 import { Box, CardMedia, Stack, Typography } from "@mui/material";
-import Chip from "@mui/material/Chip";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Moment from "react-moment";
 
 import logo from "../../../images/logo-long-no-bg.png";
-import { fetchBookPopularity } from "../../services/api/fetchBookData";
 import { shelfAction } from "../../services/api/shelfActions";
 import { removeOsmIdPrefix } from "../../services/prefix";
-import { BookPopularity } from "../../types/Book";
 import { CatalogResult } from "../../types/CatalogResult";
 import ConfirmDialog from "../dialogs/ConfirmDialog";
 import ErrorDialog from "../dialogs/ErrorDialog";
+import PopularityChips from "./PopularityChips";
 import ResultCardButtons from "./ResultCardButtons";
 
 type RemoveError = {
@@ -24,29 +22,12 @@ type ResultCardContentProps = {
 
 /** Renders a single catalog result (one book instance) */
 export default function ResultCardContent({ result }: ResultCardContentProps) {
-  const [popularity, setPopularity] = useState<null | BookPopularity>(null);
-
   const [removedFromShelf, setRemovedFromShelf] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [removeError, setRemoveError] = useState<RemoveError | null>(null);
 
   const attributeMarginBottom = 0.9;
   const attributeLineHeight = "1em";
-
-  // Fetch book popularity data once when the component mounts
-  useEffect(() => {
-    async function fetchPopularity() {
-      const fetchedPopularity = await fetchBookPopularity(result.book.isbn);
-      if (fetchedPopularity.ok) {
-        setPopularity(fetchedPopularity.data);
-      } else {
-        console.error(
-          `Error fetching popularity for ISBN ${result.book.isbn}: ${fetchedPopularity.error}`,
-        );
-      }
-    }
-    fetchPopularity();
-  }, []);
 
   const onRemoveFromShelf = async () => {
     setRemoveDialogOpen(true);
@@ -77,7 +58,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
     }
   };
 
-  // TODO: split into subcomponents
+  // TODO: move shelf information into child component
   return (
     <>
       <Stack direction="row" spacing={2} alignItems="stretch">
@@ -105,6 +86,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
             }}
           />
           <div style={{ height: 1 }}></div>
+
           <ResultCardButtons
             result={result}
             removedFromShelf={removedFromShelf}
@@ -206,37 +188,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
               </Typography>
             )}
 
-            {popularity && (
-              <Stack direction="row" sx={{ mb: 1, flexWrap: "wrap", gap: 0.5 }}>
-                {popularity?.currentlyOnShelves !== null &&
-                  popularity?.currentlyOnShelves !== undefined && (
-                    <Chip
-                      label={`On shelves: ${popularity.currentlyOnShelves}`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-                {popularity?.totalBooksSeen !== null &&
-                  popularity?.totalBooksSeen !== undefined && (
-                    <Chip
-                      label={`Copies seen: ${popularity.totalBooksSeen}`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-                {popularity?.avgDaysUntilTakeout !== null &&
-                  popularity?.avgDaysUntilTakeout !== undefined && (
-                    <Chip
-                      label={`Avg. days until takeout: ${popularity.avgDaysUntilTakeout.toFixed(0) ?? "N/A"}`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-              </Stack>
-            )}
+            <PopularityChips isbn={result.book.isbn} />
           </div>
           <Typography variant="body2" color="text.secondary" align="right">
             added <Moment fromNow>{result.inShelfSince}</Moment>

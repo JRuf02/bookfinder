@@ -32,7 +32,8 @@
   - Kann Bücher von auf Karte gewähltem Regal zeigen
   - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
-- BookPopularity / PopularityChips
+- PopularityChips
+  - in eigene Component auslagern
   - Im frontend ints zeigen, aber in DB floats speichern -> Präzisere avgs!!!
 
 - ResultCardContent Component (Used inside ResultsList component)

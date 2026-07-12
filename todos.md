@@ -25,11 +25,14 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
-  - Popularity Chips in eigene Component auslagern <============================================================= 1
-    - Unit tests für backend!
-    - Auch im ScanningResultsView zeigen <============================================================= 2
-    - ggf Farbe ändern oder flame icon adden wenn populär
+  - Show books of selected shelf from app state
   - Funktionen aufräumen, ggf custom hooks für logik
+
+- PopularityChips
+  - in eigene Component auslagern
+  - Unit tests für backend!
+  - Auch im ScanningResultsView zeigen <============================================================= 1
+  - ggf Farbe ändern oder flame icon adden wenn populär
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
@@ -56,13 +59,14 @@
   - if cover in size=l not available, try different sizes!
 
 - Design:
-  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt) <============================================================= 3
+  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt) <============================================================= 2
     - catalog search form (incl. near me button)
     - scanningResults / BookDisplay
     - shelfActionView
     - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
+  - Besseres color scheme entwickeln und anwenden <============================================================= 3
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
@@ -153,7 +157,7 @@
     - Clicking the cover removes the book from the queue
 - ResultCardContent Component
   - ggf button 'show on dnb' oder cover img klickbar
-  - 'on shelves' popularity chip clickable, opens isbn search for the book
+- 'on shelves' popularity chip clickable, opens isbn search for the book
 - Manual Add Book
   - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
   - Ensure Author name format is "Last, First Second"
@@ -202,8 +206,9 @@
       - statisch: kann nicht gescrollt/gezoomt etc werden
       - hat methode onClick, die vom parent definiert wird
         - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
-- BookPopularity
+- PopularityChips / BookPopularity
   - Add median time on shelf (not just the average)
+  - Farbe ändern oder flame icon adden wenn populär
 - Map responsiveness (not needed, clustering is enough):
   - Save bookshelves in local storage instead of refetching every time the map is shown
 - Code Quality
