@@ -31,10 +31,10 @@ class BookPopularity:
 
     isbn: Isbn
     # historical average of days between insertion and takeout for books with this ISBN
-    avg_days_until_takeout: int | None
+    avg_days_until_takeout: float | None
     # number of books with this ISBN that are currently on shelves
     currently_on_shelves: int
     # number of books with this ISBN that have ever been inserted to a shelf
     total_books_seen: int
     # average number of days the currently shelved copies have been on their shelf
-    avg_days_on_shelf_for_current_books: int | None
+    avg_days_on_shelf_for_current_books: float | None

@@ -277,7 +277,7 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
                 {popularity?.avgDaysUntilTakeout !== null &&
                   popularity?.avgDaysUntilTakeout !== undefined && (
                     <Chip
-                      label={`Avg. days until takeout: ${popularity.avgDaysUntilTakeout ?? "N/A"}`}
+                      label={`Avg. days until takeout: ${popularity.avgDaysUntilTakeout.toFixed(0) ?? "N/A"}`}
                       size="small"
                       color="primary"
                       variant="outlined"

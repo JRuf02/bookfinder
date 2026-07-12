@@ -25,10 +25,9 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
-  - Popularity Chips in eigene Component auslagern <============================================================= 2
-    - An frontend ints liefern, aber in DB floats speichern -> Präzisere avgs!!! <============================================================= 1
+  - Popularity Chips in eigene Component auslagern <============================================================= 1
     - Unit tests für backend!
-    - Auch im ScanningResultsView zeigen <============================================================= 3
+    - Auch im ScanningResultsView zeigen <============================================================= 2
     - ggf Farbe ändern oder flame icon adden wenn populär
   - Funktionen aufräumen, ggf custom hooks für logik
 
@@ -57,8 +56,8 @@
   - if cover in size=l not available, try different sizes!
 
 - Design:
-  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
-    - catalog search form
+  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt) <============================================================= 3
+    - catalog search form (incl. near me button)
     - scanningResults / BookDisplay
     - shelfActionView
     - MapPopup
@@ -106,20 +105,22 @@
 - Blog Post
   - write preliminary version/structure <===================================================================
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
+  - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion
 
-- Testing
-  - Client
-    - tested on android/mobile
-    - tested on iPad/iPhone
-    - tested on Desktop
-  - Server
-    - tested using plain Docker container
-      - dev mode
-      - prod mode
-    - tested using devcontainer
-      - dev mode
-      - prod mode
+## Testing
+
+- Client
+  - tested on android/mobile
+  - tested on iPad/iPhone
+  - tested on Desktop
+- Server
+  - tested using plain Docker container
+    - dev mode
+    - prod mode
+  - tested using devcontainer
+    - dev mode
+    - prod mode
 
 ## Bugs
 
@@ -201,8 +202,8 @@
       - statisch: kann nicht gescrollt/gezoomt etc werden
       - hat methode onClick, die vom parent definiert wird
         - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
-- Map / MapPopup
-  - human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen (react library verfügbar)
+- BookPopularity
+  - Add median time on shelf (not just the average)
 - Map responsiveness (not needed, clustering is enough):
   - Save bookshelves in local storage instead of refetching every time the map is shown
 - Code Quality

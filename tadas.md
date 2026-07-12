@@ -32,6 +32,9 @@
   - Kann Bücher von auf Karte gewähltem Regal zeigen
   - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
 
+- BookPopularity / PopularityChips
+  - Im frontend ints zeigen, aber in DB floats speichern -> Präzisere avgs!!!
+
 - ResultCardContent Component (Used inside ResultsList component)
   - ResultList items sind auch auf mobile komplett sichtbar
   - is a separate component
@@ -89,6 +92,7 @@
 - MapPopup
   - ggf. Buttons ähnlich zu catalog results
   - ResultMetadataTable umbenennen und benutzen
+  - human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen
 
 - top level Makefile
   - make test

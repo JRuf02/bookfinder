@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 SECONDS_PER_DAY = 86400
 
 
-def compute_avg_num_of_days_until_now(timepoints: list[str]) -> int | None:
+def compute_avg_num_of_days_until_now(timepoints: list[str]) -> float | None:
     """Compute the average number of days passed from each time point until now.
     If no timezone is specified in the timepoints, UTC will be assumed.
 
@@ -13,7 +13,7 @@ def compute_avg_num_of_days_until_now(timepoints: list[str]) -> int | None:
         timepoints (list[str]): A list of timepoint strings in ISO 8601 format.
 
     Returns:
-        int | None: The average number of days, or None if the list is empty.
+        float | None: The average number of days, or None if the list is empty.
 
     """
 
@@ -28,4 +28,4 @@ def compute_avg_num_of_days_until_now(timepoints: list[str]) -> int | None:
         / SECONDS_PER_DAY
         for timepoint in timepoints
     )
-    return round(total_days / len(timepoints))
+    return total_days / len(timepoints)

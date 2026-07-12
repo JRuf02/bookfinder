@@ -4,8 +4,6 @@ from app.models.book import Book, BookPopularity
 from app.models.identifiers import Isbn
 from app.utils.time import compute_avg_num_of_days_until_now
 
-ISBN_10_LENGTH = 10
-
 
 def get_book_from_database(isbn: Isbn) -> Book | None:
     """Fetch book data from the local SQLite database using the ISBN."""
@@ -79,7 +77,7 @@ def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
     total_books_seen = int(row["total_insertions"])
 
     avg_days_until_takeout = (
-        int(row["avg_days_until_takeout"])
+        float(row["avg_days_until_takeout"])
         if row["avg_days_until_takeout"] is not None
         else None
     )
@@ -121,7 +119,7 @@ def log_book_insertion_in_db(isbn: Isbn) -> None:
         )
 
 
-def _update_avg_days_until_takeout_in_db(isbn: Isbn, new_avg_days: int) -> None:
+def _update_avg_days_until_takeout_in_db(isbn: Isbn, new_avg_days: float) -> None:
     """Update the avg_days_until_takeout for the given ISBN in the local db."""
 
     with db_cursor() as c:
@@ -135,7 +133,7 @@ def _update_avg_days_until_takeout_in_db(isbn: Isbn, new_avg_days: int) -> None:
         )
 
 
-def log_book_takeout_in_db(isbn: Isbn, days_until_takeout: int) -> None:
+def log_book_takeout_in_db(isbn: Isbn, days_until_takeout: float) -> None:
     """Update the avg_days_until_takeout for the given ISBN in the local db,
     based on the new data point of a book with this ISBN being taken out after
     'days_until_takeout' days.
@@ -149,16 +147,20 @@ def log_book_takeout_in_db(isbn: Isbn, days_until_takeout: int) -> None:
         )
         row = c.fetchone()
 
-    current_avg = row["avg_days_until_takeout"] or 0
-    avg_based_on_insertions = get_number_of_books_with_isbn(isbn)
+    current_avg = (
+        float(row["avg_days_until_takeout"])
+        if row["avg_days_until_takeout"] is not None
+        else 0
+    )
+    num_elements_in_avg = get_number_of_books_with_isbn(isbn)
 
     # Calculate new average
     new_avg = (
-        (current_avg * avg_based_on_insertions + days_until_takeout)
-        / (avg_based_on_insertions + 1)
-        if avg_based_on_insertions > 0
+        (current_avg * num_elements_in_avg + days_until_takeout)
+        / (num_elements_in_avg + 1)
+        if num_elements_in_avg > 0
         else days_until_takeout
     )
 
     # Update the database with the new average
-    _update_avg_days_until_takeout_in_db(isbn, round(new_avg))
+    _update_avg_days_until_takeout_in_db(isbn, new_avg)

@@ -20,7 +20,7 @@ export default function ResultsList({ results }: ResultsListProps) {
       ))}
       {results.length === 0 && (
         <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
-          No results yet. Search for a book title!
+          No results yet. Search for a book!
         </Typography>
       )}
     </Box>
