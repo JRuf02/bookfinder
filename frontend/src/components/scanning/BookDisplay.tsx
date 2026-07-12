@@ -52,10 +52,7 @@ export default function BookDisplay({
     >
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          Query: <strong>{isbn}</strong>
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          ISBN: <strong>{book.isbn}</strong>
+          {book.isbn}
         </Typography>
         <Typography variant="h5" component="h2">
           {book.title}
