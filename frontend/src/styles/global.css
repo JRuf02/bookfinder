@@ -97,8 +97,8 @@ input[type="text"] {
   .app-container {
     padding: 0;
     height: calc(100dvh - 56px); /* Adjust for nav bar height */
-    justify-content: center;
     overflow: hidden;
+    /* Do not add "justify-content: center"! This would hide some lines of ScanningResults! */
   }
 
   .scanner-container {
