@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Stack,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -15,14 +16,12 @@ import PopularityChips from "../catalog/PopularityChips";
 
 type BookDisplayProps = {
   book: Book;
-  isbn: string;
   onScanMore: () => void;
   onWrongBook: () => void;
 };
 
 export default function BookDisplay({
   book,
-  isbn,
   onScanMore,
   onWrongBook,
 }: BookDisplayProps) {
@@ -40,7 +39,6 @@ export default function BookDisplay({
     setImageError(true);
   };
 
-  // TODO: Move styling to global CSS file or MUI theme file
   return (
     <Card
       sx={{
@@ -90,24 +88,34 @@ export default function BookDisplay({
           </Box>
         )}
 
-        <Button
-          startIcon={<AddIcon />}
-          variant="contained"
-          color="primary"
-          onClick={onScanMore}
-          sx={{ mt: 2 }}
+        <Stack
+          direction="row"
+          sx={{
+            mt: 1,
+            flexWrap: "wrap",
+            gap: 1,
+            justifyContent: "center",
+          }}
         >
-          Scan More
-        </Button>
-        <Button
-          startIcon={<CancelIcon />}
-          variant="outlined"
-          color="secondary"
-          onClick={onWrongBook}
-          sx={{ mt: 2, ml: 2 }}
-        >
-          Wrong Book
-        </Button>
+          <Button
+            startIcon={<AddIcon />}
+            variant="contained"
+            color="primary"
+            onClick={onScanMore}
+            fullWidth
+          >
+            Scan More
+          </Button>
+          <Button
+            startIcon={<CancelIcon />}
+            variant="outlined"
+            color="secondary"
+            onClick={onWrongBook}
+            fullWidth
+          >
+            Wrong Book
+          </Button>
+        </Stack>
       </CardContent>
     </Card>
   );

@@ -145,7 +145,6 @@ export default function ScanningResults({
           {currentBook && !backendError ? (
             <BookDisplay
               book={currentBook}
-              isbn={scannedIsbns.at(-1) ?? ""}
               onScanMore={onScanMore}
               onWrongBook={onWrongBook}
             />

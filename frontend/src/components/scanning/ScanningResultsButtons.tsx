@@ -21,40 +21,47 @@ export default function ScanningResultsButtons({
 
   return (
     <div>
-      <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
+      <Stack direction="row" sx={{ my: 0.5 }}>
         <Typography variant="body1" color="text.secondary">
           {numberOfBooks} book(s) scanned so far
         </Typography>
       </Stack>
 
       {numberOfBooks > 0 && (
-        <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
-          {(state.preSelectedShelfAction === "insert" ||
-            state.preSelectedShelfAction === "both") && (
-            <Button
-              startIcon={<PlaylistAddIcon />}
-              variant="contained"
-              color="primary"
-              onClick={onInsert}
-            >
-              Insert {numberOfBooks} books into bookshelf
-            </Button>
-          )}
-          {(state.preSelectedShelfAction === "remove" ||
-            state.preSelectedShelfAction === "both") && (
-            <Button
-              startIcon={<PlaylistRemoveIcon />}
-              variant="contained"
-              color="secondary"
-              onClick={onRemove}
-            >
-              Remove {numberOfBooks} books from bookshelf
-            </Button>
-          )}
-          <Button variant="outlined" onClick={onCancel}>
+        <>
+          <Stack direction="row" sx={{ gap: 1 }}>
+            {(state.preSelectedShelfAction === "insert" ||
+              state.preSelectedShelfAction === "both") && (
+              <Button
+                startIcon={<PlaylistAddIcon />}
+                variant="contained"
+                color="primary"
+                onClick={onInsert}
+              >
+                Insert {numberOfBooks} books into bookshelf
+              </Button>
+            )}
+            {(state.preSelectedShelfAction === "remove" ||
+              state.preSelectedShelfAction === "both") && (
+              <Button
+                startIcon={<PlaylistRemoveIcon />}
+                variant="contained"
+                color="secondary"
+                onClick={onRemove}
+              >
+                Remove {numberOfBooks} books from bookshelf
+              </Button>
+            )}
+          </Stack>
+          <Button
+            variant="outlined"
+            onClick={onCancel}
+            fullWidth
+            sx={{ mt: 1 }}
+          >
             Cancel
           </Button>
-        </Stack>
+        </>
       )}
     </div>
   );
