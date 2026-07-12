@@ -1,7 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -49,44 +48,42 @@ export default function BookDisplay({
       }}
     >
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {book.isbn}
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {book.title}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          by {book.author}
-        </Typography>
-
-        <PopularityChips isbn={book.isbn} justifyContent="center" />
-
-        {!imageError && coverUrl && (
-          <CardMedia
-            component="img"
-            image={coverUrl}
-            alt={`Cover of ${book.title}`}
-            sx={{
-              maxWidth: 200,
-              margin: "0 auto",
-              border: "1px solid #ddd",
-              borderRadius: 1,
-              p: 0,
-            }}
-            onError={handleImageError}
-          />
-        )}
-
-        {imageError && (
-          <Box sx={{ my: 2 }}>
-            <Typography
-              variant="body2"
-              sx={{ fontStyle: "italic", color: "#666" }}
-            >
-              Cover image not available
+        <Stack direction="row" sx={{ mb: 1 }}>
+          {!imageError && coverUrl && (
+            <CardMedia
+              component="img"
+              image={coverUrl}
+              alt={`Cover of ${book.title}`}
+              sx={{
+                maxWidth: 100,
+                margin: "0 auto",
+                border: "1px solid #ddd",
+                borderRadius: 1,
+                p: 0,
+                boxSizing: "content-box",
+              }}
+              onError={handleImageError}
+            />
+          )}
+          <Stack
+            direction="column"
+            textAlign="left"
+            width="100%"
+            sx={{ mb: 1, ml: 2 }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              {book.isbn}
             </Typography>
-          </Box>
-        )}
+            <Typography variant="h5" component="h2">
+              {book.title}
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+              by {book.author}
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <PopularityChips isbn={book.isbn} justifyContent="left" />
 
         <Stack
           direction="row"

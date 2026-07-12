@@ -127,12 +127,18 @@ export default function ScanningResults({
     }
   };
 
+  // TODO: Add loading state (spinner) while fetching book data?
+  // TODO: Pin the ScanningResultsButtons to the bottom of the screen
   return (
     <div>
       <Container
         className="app-container"
         maxWidth={false}
-        sx={{ overflowY: "auto" }}
+        sx={{
+          overflowY: "auto",
+          // Do not add justifyContent: "center" here, otherwise the top of the card will be hidden when content is taller than viewport
+          alignItems: "center",
+        }}
       >
         <Box
           sx={{
