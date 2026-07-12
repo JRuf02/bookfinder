@@ -1,16 +1,21 @@
 import { Stack } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { useEffect, useState } from "react";
+import { CSSProperties } from "react";
 
 import { fetchBookPopularity } from "../../services/api/fetchBookData";
 import { BookPopularity } from "../../types/Book";
 
 type PopularityChipsProps = {
   isbn: string;
+  justifyContent?: CSSProperties["justifyContent"];
 };
 
 /** Renders chips showing popularity measurements for books with a given ISBN */
-export default function PopularityChips({ isbn }: PopularityChipsProps) {
+export default function PopularityChips({
+  isbn,
+  justifyContent = "baseline",
+}: PopularityChipsProps) {
   const [popularity, setPopularity] = useState<null | BookPopularity>(null);
 
   // Fetch book popularity data once when the component mounts and whenever the ISBN changes
@@ -32,7 +37,15 @@ export default function PopularityChips({ isbn }: PopularityChipsProps) {
   return (
     <>
       {popularity && (
-        <Stack direction="row" sx={{ mb: 1, flexWrap: "wrap", gap: 0.5 }}>
+        <Stack
+          direction="row"
+          sx={{
+            mb: 1,
+            flexWrap: "wrap",
+            gap: 0.5,
+            justifyContent: justifyContent,
+          }}
+        >
           {popularity?.currentlyOnShelves !== null &&
             popularity?.currentlyOnShelves !== undefined && (
               <Chip

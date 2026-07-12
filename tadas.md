@@ -34,6 +34,7 @@
 
 - PopularityChips
   - in eigene Component auslagern
+  - Auch in ScanningResults zeigen
   - Im frontend ints zeigen, aber in DB floats speichern -> Präzisere avgs!!!
 
 - ResultCardContent Component (Used inside ResultsList component)

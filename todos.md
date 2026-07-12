@@ -31,8 +31,6 @@
 - PopularityChips
   - in eigene Component auslagern
   - Unit tests für backend!
-  - Auch im ScanningResultsView zeigen <============================================================= 1
-  - ggf Farbe ändern oder flame icon adden wenn populär
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
@@ -41,7 +39,7 @@
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
 - ShelfActionView.tsx
-  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher
+  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 2
 
 - InfoScreen
   - add info page
@@ -59,14 +57,14 @@
   - if cover in size=l not available, try different sizes!
 
 - Design:
-  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt) <============================================================= 2
+  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt) <============================================================= 1
     - catalog search form (incl. near me button)
     - scanningResults / BookDisplay
     - shelfActionView
     - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
-  - Besseres color scheme entwickeln und anwenden <============================================================= 3
+  - Besseres color scheme entwickeln und anwenden <============================================================= 4
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
@@ -118,6 +116,7 @@
   - tested on android/mobile
   - tested on iPad/iPhone
   - tested on Desktop
+  - Firefox, Chrome, Safari
 - Server
   - tested using plain Docker container
     - dev mode
@@ -128,7 +127,7 @@
 
 ## Bugs
 
-- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher
+- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 3
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 

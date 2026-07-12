@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { Book } from "../../types/Book";
+import PopularityChips from "../catalog/PopularityChips";
 
 type BookDisplayProps = {
   book: Book;
@@ -41,7 +42,14 @@ export default function BookDisplay({
 
   // TODO: Move styling to global CSS file or MUI theme file
   return (
-    <Card sx={{ maxWidth: 400, textAlign: "center", p: 2 }}>
+    <Card
+      sx={{
+        maxWidth: 400,
+        textAlign: "center",
+        p: 1.5,
+        justifyContent: "center",
+      }}
+    >
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           Query: <strong>{isbn}</strong>
@@ -49,12 +57,14 @@ export default function BookDisplay({
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           ISBN: <strong>{book.isbn}</strong>
         </Typography>
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h5" component="h2">
           {book.title}
         </Typography>
         <Typography variant="subtitle1" color="text.secondary" gutterBottom>
           by {book.author}
         </Typography>
+
+        <PopularityChips isbn={book.isbn} justifyContent="center" />
 
         {!imageError && coverUrl && (
           <CardMedia
@@ -66,7 +76,7 @@ export default function BookDisplay({
               margin: "0 auto",
               border: "1px solid #ddd",
               borderRadius: 1,
-              p: 0.5,
+              p: 0,
             }}
             onError={handleImageError}
           />
