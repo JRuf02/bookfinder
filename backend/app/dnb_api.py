@@ -16,7 +16,7 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn!s}"&recordSchema=MARC21-xml&maximumRecords=1'
     # TODO: fallback query={isbn.canonical} if no book found
 
-    response = requests.get(url, timeout=10)
+    response = requests.get(url, timeout=5)
     if response.status_code != HttpStatus.OK.value:
         logger.error(f"Failed to fetch data from DNB: {response.status_code}")
         return None
