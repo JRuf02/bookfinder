@@ -18,7 +18,8 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 - Install [Docker](https://www.docker.com/) and [VS Code](https://code.visualstudio.com/)
 - Install VS Code Devcontainer extension `ms-vscode-remote.remote-containers`
-- Open this repository
+- Clone this repository onto your machine (Into the linux file system if using WSL)
+- Open this repository with VS Code
 - Press `F1` (or `CTRL + SHIFT + P`) and select `Dev Containers: Rebuild and Reopen Container`
 
 #### Run dev servers
