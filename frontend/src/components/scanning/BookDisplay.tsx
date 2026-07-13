@@ -1,6 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -39,81 +40,95 @@ export default function BookDisplay({
   };
 
   return (
-    <Card
+    <Box
       sx={{
-        maxWidth: 400,
-        textAlign: "center",
-        p: 1.5,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         justifyContent: "center",
+        height: "100%",
       }}
     >
-      <CardContent>
-        <Stack direction="row" sx={{ mb: 1 }}>
-          {!imageError && coverUrl && (
-            <CardMedia
-              component="img"
-              image={coverUrl}
-              alt={`Cover of ${book.title}`}
-              sx={{
-                maxWidth: 100,
-                margin: "0 auto",
-                border: "1px solid #ddd",
-                borderRadius: 1,
-                p: 0,
-                boxSizing: "content-box",
-              }}
-              onError={handleImageError}
-            />
-          )}
-          <Stack
-            direction="column"
-            textAlign="left"
-            width="100%"
-            sx={{ mb: 1, ml: 2 }}
-          >
-            <Typography variant="body2" color="text.secondary">
-              {book.isbn}
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {book.title}
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              by {book.author}
-            </Typography>
+      <Card
+        sx={{
+          maxWidth: 400,
+          textAlign: "center",
+          p: 1.5,
+          justifyContent: "center",
+        }}
+      >
+        <CardContent>
+          <Stack direction="row" sx={{ mb: 1 }}>
+            {!imageError && coverUrl && (
+              <CardMedia
+                component="img"
+                image={coverUrl}
+                alt={`Cover of ${book.title}`}
+                sx={{
+                  maxWidth: 100,
+                  margin: "0 auto",
+                  border: "1px solid #ddd",
+                  borderRadius: 1,
+                  p: 0,
+                  boxSizing: "content-box",
+                }}
+                onError={handleImageError}
+              />
+            )}
+            <Stack
+              direction="column"
+              textAlign="left"
+              width="100%"
+              sx={{ mb: 1, ml: 2 }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                {book.isbn}
+              </Typography>
+              <Typography variant="h5" component="h2">
+                {book.title}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                color="text.secondary"
+                gutterBottom
+              >
+                by {book.author}
+              </Typography>
+            </Stack>
           </Stack>
-        </Stack>
 
-        <PopularityChips isbn={book.isbn} justifyContent="left" />
+          <PopularityChips isbn={book.isbn} justifyContent="left" />
 
-        <Stack
-          direction="row"
-          sx={{
-            mt: 1,
-            flexWrap: "wrap",
-            gap: 1,
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            startIcon={<AddIcon />}
-            variant="contained"
-            color="primary"
-            onClick={onScanMore}
-            fullWidth
+          <Stack
+            direction="row"
+            sx={{
+              mt: 1,
+              flexWrap: "wrap",
+              gap: 1,
+              justifyContent: "center",
+            }}
           >
-            Scan More
-          </Button>
-          <Button
-            startIcon={<CancelIcon />}
-            variant="outlined"
-            color="secondary"
-            onClick={onWrongBook}
-            fullWidth
-          >
-            Wrong Book
-          </Button>
-        </Stack>
-      </CardContent>
-    </Card>
+            <Button
+              startIcon={<AddIcon />}
+              variant="contained"
+              color="primary"
+              onClick={onScanMore}
+              fullWidth
+            >
+              Scan More
+            </Button>
+            <Button
+              startIcon={<CancelIcon />}
+              variant="outlined"
+              color="secondary"
+              onClick={onWrongBook}
+              fullWidth
+            >
+              Wrong Book
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

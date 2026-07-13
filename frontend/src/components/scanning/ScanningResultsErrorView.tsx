@@ -14,7 +14,16 @@ export default function ScanningResultsErrorView({
   onManuallyAdd,
 }: ScanningResultsErrorViewProps) {
   return (
-    <Box sx={{ mt: "2rem", textAlign: "center" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        height: "100%",
+      }}
+    >
       {errorMessage != "No ISBNs scanned" ? (
         <Typography variant="h6" color="error">
           Error fetching book data

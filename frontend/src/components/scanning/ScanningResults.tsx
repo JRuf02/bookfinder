@@ -135,17 +135,20 @@ export default function ScanningResults({
         className="app-container"
         maxWidth={false}
         sx={{
-          overflowY: "auto",
-          // Do not add justifyContent: "center" here, otherwise the top of the card will be hidden when content is taller than viewport
+          display: "flex",
+          flexDirection: "column",
           alignItems: "center",
+          // Do not add justifyContent: "center" here, otherwise the top of the card will be hidden when content is taller than viewport
         }}
       >
         <Box
           sx={{
+            height: "100%",
             width: "100%",
             maxWidth: "25rem",
             mx: "auto",
-            my: "0.5rem",
+            mt: "0.5rem",
+            overflowY: "auto",
           }}
         >
           {currentBook && !backendError ? (
@@ -170,6 +173,17 @@ export default function ScanningResults({
               onManuallyAdd={onManuallyAdd}
             />
           )}
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "25rem",
+            mx: "auto",
+            mb: "0.5rem",
+            mt: 0,
+            flexShrink: 0,
+          }}
+        >
           <ScanningResultsButtons
             numberOfBooks={queuedBooks.length}
             onInsert={onInsert}
