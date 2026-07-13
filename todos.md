@@ -39,7 +39,7 @@
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
 - ShelfActionView.tsx
-  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 2
+  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 3
 
 - InfoScreen
   - add info page
@@ -51,17 +51,17 @@
 - Resilience & Edge Cases:
   - dnb_api.py
     - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
-    - ctb (contributor) und andere data field synonyme für author adden
+    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 1
     - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
     - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
   - if cover in size=l not available, try different sizes!
 
 - Design:
   - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
-    - MapPopup <============================================================= 1
+    - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
-  - Besseres color scheme entwickeln und anwenden <============================================================= 4
+  - Besseres color scheme entwickeln und anwenden <============================================================= 5
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
@@ -102,7 +102,7 @@
     - Run linter (ESLint and Ruff)
 
 - Blog Post
-  - write preliminary version/structure <===================================================================
+  - write preliminary version/structure <============================================================= 4
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion
@@ -124,7 +124,7 @@
 
 ## Bugs
 
-- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 3
+- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 2
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 - Locate Me Tooltip bleibt manchmal hängen
