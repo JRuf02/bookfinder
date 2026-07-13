@@ -118,6 +118,10 @@
 - Design:
   - Replace all uses of alert() with the ErrorDialog
   - add favicon
+  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
+    - catalog search form (incl. near me button)
+    - scanningResults / BookDisplay
+    - shelfActionView
 
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'

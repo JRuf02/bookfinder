@@ -87,7 +87,7 @@ input[type="text"] {
   width: 100%;
   max-width: 600px;
   aspect-ratio: 4 / 3;
-  background: #000;
+  background: #dce4dd;
   object-fit: cover;
   border: none;
 }
@@ -125,7 +125,6 @@ input[type="text"] {
     aspect-ratio: unset !important;
     border: none;
     object-fit: cover;
-    background: #000;
     z-index: 1;
   }
 

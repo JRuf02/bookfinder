@@ -13,7 +13,7 @@ const theme = createTheme({
       main: "#f44336", // Red for destructive actions
     },
     background: {
-      default: "#dce4dd",
+      default: "#dce4dd", // should be the same in global.css for .scanner-video
       paper: "#ffffff",
     },
   },

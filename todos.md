@@ -57,11 +57,8 @@
   - if cover in size=l not available, try different sizes!
 
 - Design:
-  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt) <============================================================= 1
-    - catalog search form (incl. near me button)
-    - scanningResults / BookDisplay
-    - shelfActionView
-    - MapPopup
+  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
+    - MapPopup <============================================================= 1
   - mobile version looking good
   - desktop version looking acceptable
   - Besseres color scheme entwickeln und anwenden <============================================================= 4
@@ -130,6 +127,7 @@
 - Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 3
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
+- Locate Me Tooltip bleibt manchmal hängen
 
 ## Improvements
 

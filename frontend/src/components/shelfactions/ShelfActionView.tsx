@@ -111,9 +111,14 @@ export default function ShelfActionView({
     });
   };
 
-  // TODO: Use user friendly shelf representation if available (e.g. name, operator, address)
+  // User friendly shelf representation for the UI, based on available shelf metadata
+  // TODO: Move representation creation into types/shelf.ts and use it in CurrentShelfInfo.tsx as well
   const shelfIdRepr =
-    removeOsmIdPrefix(state.selectedShelf?.osmId) || "Not set";
+    state.selectedShelf?.name ||
+    state.selectedShelf?.operator ||
+    state.selectedShelf?.address ||
+    removeOsmIdPrefix(state.selectedShelf?.osmId) ||
+    "No shelf selected";
 
   // TODO: Remove this block and show all books in a list instead of the summary when there are multiple books.
   const firstBook = action.books[0];
@@ -127,30 +132,57 @@ export default function ShelfActionView({
 
   // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (
-    <Container className="app-container" maxWidth={false}>
+    <Container
+      className="app-container"
+      maxWidth={false}
+      sx={{ justifyContent: "center" }}
+    >
       <Box sx={{ width: "100%", maxWidth: "25rem", mx: "auto", mt: "2rem" }}>
         <Card sx={{ mb: "1rem", p: 2 }}>
           <Typography variant="h6">{bookSummary}</Typography>
           {action.books.length === 1 && firstBook && (
             <>
-              <Typography variant="body2">by {firstBook.author}</Typography>
+              {firstBook.author && (
+                <Typography variant="body2">by {firstBook.author}</Typography>
+              )}
               <Typography variant="body2">ISBN: {firstBook.isbn}</Typography>
             </>
           )}
           {action.books.length > 1 && (
             <Typography variant="body2">
-              {action.books.length} books will be {actionVerb} on this shelf.
+              {action.books.length} books will be {actionVerb}.
             </Typography>
           )}
         </Card>
 
-        <Card sx={{ mb: "1rem", p: 2 }}>
-          <Typography variant="body2">
-            Bookshelf OSM ID: {shelfIdRepr}
-          </Typography>
-          <Button variant="outlined" onClick={() => setMapDialogOpen(true)}>
-            Change
+        <Card
+          sx={{
+            mb: "1rem",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "left",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6">{shelfIdRepr}</Typography>
+          {state.selectedShelf?.osmId && (
+            <Typography variant="body2" color="text.secondary">
+              ID: {removeOsmIdPrefix(state.selectedShelf?.osmId)}
+            </Typography>
+          )}
+          <Button
+            variant="outlined"
+            onClick={() => setMapDialogOpen(true)}
+            sx={{ mt: 1, mb: 1 }}
+          >
+            Change Shelf
           </Button>
+          <Typography variant="body2">
+            {action.action === "insert"
+              ? "Books will be inserted on this shelf."
+              : "Books will be removed from this shelf."}
+          </Typography>
         </Card>
 
         {/* Map Dialog for selecting shelf */}
@@ -179,10 +211,20 @@ export default function ShelfActionView({
 
         {result && <ActionResultAlert result={result} errors={errors} />}
         {(result === null || !result.success) && !partialSuccess ? (
-          <Stack direction="row" spacing={2} sx={{ mt: "1.5rem" }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              mt: 2,
+              justifyContent: "center",
+              flexGrow: 1,
+              flexWrap: "wrap",
+            }}
+          >
             <Button
               variant="outlined"
               onClick={() => setCancelDialogOpen(true)}
+              sx={{ flexGrow: 1 }}
             >
               Cancel
             </Button>
@@ -190,13 +232,25 @@ export default function ShelfActionView({
               variant="contained"
               color="primary"
               onClick={handleShelfSubmit}
+              sx={{ flexGrow: 1 }}
             >
               {action.action === "insert" ? "Insert" : "Remove"}
             </Button>
           </Stack>
         ) : (
-          <Box sx={{ mt: "1.5rem" }}>
-            <Button variant="outlined" sx={{ mt: 2 }} onClick={onRestart}>
+          <Box
+            sx={{
+              mt: "1.5rem",
+              justifyContent: "center",
+              textAlign: "center",
+              flexGrow: 1,
+            }}
+          >
+            <Button
+              variant="outlined"
+              sx={{ flexGrow: 1, width: "100%" }}
+              onClick={onRestart}
+            >
               Restart Scanning
             </Button>
           </Box>

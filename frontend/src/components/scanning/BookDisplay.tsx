@@ -87,13 +87,16 @@ export default function BookDisplay({
               <Typography variant="h5" component="h2">
                 {book.title}
               </Typography>
-              <Typography
-                variant="subtitle1"
-                color="text.secondary"
-                gutterBottom
-              >
-                by {book.author}
-              </Typography>
+
+              {book.author && (
+                <Typography
+                  variant="subtitle1"
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  by {book.author}
+                </Typography>
+              )}
             </Stack>
           </Stack>
 
