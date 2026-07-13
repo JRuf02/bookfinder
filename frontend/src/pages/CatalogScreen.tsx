@@ -236,7 +236,7 @@ export default function CatalogScreen() {
       </Collapse>
 
       <IconButton
-        sx={{ py: 0 }}
+        sx={{ p: 0.25, my: "0.1rem" }}
         aria-label="Show / hide search form"
         onClick={() => setShowSearchForm((prev) => !prev)}
       >

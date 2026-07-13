@@ -1,6 +1,13 @@
 import LocationOffIcon from "@mui/icons-material/LocationOff";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
@@ -36,34 +43,33 @@ export default function CatalogSearchForm({
   return (
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
-    <div>
-      <Box
-        sx={{
-          width: "100%",
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-          gap: 0,
-        }}
-      >
-        <TextInput
-          value={searchFormState.title}
-          placeholder="Search books by title"
-          label="Search books by title"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSearchFormState((prev) => ({ ...prev, title: e.target.value }))
-          }
-          onSubmit={handleTitleAuthorSubmit}
-        />
-        <TextInput
-          value={searchFormState.author}
-          placeholder="Search books by author"
-          label="Search books by author"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSearchFormState((prev) => ({ ...prev, author: e.target.value }))
-          }
-          onSubmit={handleTitleAuthorSubmit}
-        />
-      </Box>
+
+    <Stack
+      direction="row"
+      sx={{
+        flexWrap: "wrap",
+        gap: "0rem",
+        justifyContent: "center",
+      }}
+    >
+      <TextInput
+        value={searchFormState.title}
+        placeholder="Search books by title"
+        label="Search books by title"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchFormState((prev) => ({ ...prev, title: e.target.value }))
+        }
+        onSubmit={handleTitleAuthorSubmit}
+      />
+      <TextInput
+        value={searchFormState.author}
+        placeholder="Search books by author"
+        label="Search books by author"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchFormState((prev) => ({ ...prev, author: e.target.value }))
+        }
+        onSubmit={handleTitleAuthorSubmit}
+      />
       <TextInput
         value={searchFormState.isbn}
         placeholder="Search books by ISBN"
@@ -73,15 +79,10 @@ export default function CatalogSearchForm({
         }
         onSubmit={handleISBNSubmit}
       />
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: "30rem",
-          mt: 1,
-          display: "flex",
-          justifyContent: "center",
-          gap: 2,
-        }}
+
+      <Stack
+        direction="row"
+        sx={{ gap: 1, alignItems: "center", mt: 0.5, mb: 0, pb: 0 }}
       >
         <FormControl size="small">
           <InputLabel id="catalog-sort-label">Sort by</InputLabel>
@@ -107,7 +108,6 @@ export default function CatalogSearchForm({
         </FormControl>
 
         <FormControlLabel
-          value="end"
           control={
             <Checkbox
               checked={searchFormState.useUserLocation}
@@ -121,10 +121,14 @@ export default function CatalogSearchForm({
               checkedIcon={<LocationOnIcon />}
             />
           }
-          label="Search near me"
-          labelPlacement="end"
+          label={
+            <Typography variant="body1" color="text.secondary">
+              Search near me
+            </Typography>
+          }
+          labelPlacement="start"
         />
-      </Box>
-    </div>
+      </Stack>
+    </Stack>
   );
 }
