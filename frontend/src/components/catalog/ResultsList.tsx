@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Alert, Box, Card, CardContent } from "@mui/material";
 
 import { CatalogResult } from "../../types/CatalogResult";
 import ResultCardContent from "./ResultCardContent";
@@ -19,9 +19,16 @@ export default function ResultsList({ results }: ResultsListProps) {
         </Card>
       ))}
       {results.length === 0 && (
-        <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
-          No results yet. Search for a book!
-        </Typography>
+        <Alert
+          severity="info"
+          color="success"
+          variant="outlined"
+          sx={{
+            bgcolor: "background.paper",
+          }}
+        >
+          No results.
+        </Alert>
       )}
     </Box>
   );

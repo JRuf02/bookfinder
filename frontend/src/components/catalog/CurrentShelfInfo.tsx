@@ -38,7 +38,7 @@ export default function CurrentShelfInfo({
         },
       }}
     >
-      Showing books in shelf:{" "}
+      Showing books on shelf:{" "}
       {activeShelf.name ||
         activeShelf.operator ||
         activeShelf.address ||

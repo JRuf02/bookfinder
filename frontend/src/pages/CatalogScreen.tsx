@@ -15,6 +15,7 @@ import CatalogSearchForm, {
 } from "../components/catalog/CatalogSearchForm";
 import CurrentShelfInfo from "../components/catalog/CurrentShelfInfo";
 import ResultsList from "../components/catalog/ResultsList";
+import ErrorDialog from "../components/dialogs/ErrorDialog";
 import LogoBar from "../components/layout/LogoBar";
 import {
   singleTermCatalogSearch,
@@ -254,9 +255,12 @@ export default function CatalogScreen() {
 
       {loading && <CircularProgress sx={{ mt: 2 }} />}
       {error && (
-        <Typography color="error" sx={{ mt: 2 }}>
-          {error}
-        </Typography>
+        <ErrorDialog
+          title="Oops!"
+          text={error}
+          open={!!error}
+          onClose={() => setError(null)}
+        />
       )}
 
       <ResultsList results={sortedResults} />
