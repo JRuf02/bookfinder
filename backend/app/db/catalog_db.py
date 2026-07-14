@@ -7,6 +7,7 @@ from app.models.book import Book, BookEntity
 from app.models.coordinates import GeoCoordinateError, GeoCoordinates
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import LocatedShelf, Shelf
+from app.models.time_strings import TimezonedDatetimeString
 from app.utils.geo_utils import haversine
 
 logger = logging.getLogger(__name__)
@@ -228,6 +229,14 @@ def _fetch_all_books_from_catalog(
             logger.error(f"Entity without entry_id in current_catalog. ISBN: {isbn}")
             continue
 
+        in_shelf_since = TimezonedDatetimeString.parse(row["time_of_entry"])
+        if not in_shelf_since:
+            logger.warning(
+                f"Invalid time_of_entry {row['time_of_entry']} in database "
+                f"for shelf {osm_id}. Skipping."
+            )
+            continue
+
         results.append(
             BookEntity(
                 entity_id=entry_id,
@@ -254,7 +263,7 @@ def _fetch_all_books_from_catalog(
                     ),
                     distance_meters=dist_m,
                 ),
-                in_shelf_since=row["time_of_entry"],
+                in_shelf_since=in_shelf_since,
             )
         )
 
@@ -332,6 +341,14 @@ def search_in_catalog_by_isbn(
         else:
             dist_m = None
 
+        in_shelf_since = TimezonedDatetimeString.parse(row["time_of_entry"])
+        if not in_shelf_since:
+            logger.warning(
+                f"Invalid time_of_entry {row['time_of_entry']} in database "
+                f"for shelf {osm_id}. Skipping."
+            )
+            continue
+
         results.append(
             BookEntity(
                 entity_id=entry_id,
@@ -358,7 +375,7 @@ def search_in_catalog_by_isbn(
                     ),
                     distance_meters=dist_m,
                 ),
-                in_shelf_since=row["time_of_entry"],
+                in_shelf_since=in_shelf_since,
             )
         )
 

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from app.models.identifiers import Isbn
 from app.models.shelf import LocatedShelf
+from app.models.time_strings import TimezonedDatetimeString
 
 
 @dataclass
@@ -22,7 +23,7 @@ class BookEntity:
     entity_id: int
     book: Book
     located_shelf: LocatedShelf | None
-    in_shelf_since: str
+    in_shelf_since: TimezonedDatetimeString
 
 
 @dataclass

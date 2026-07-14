@@ -83,7 +83,7 @@ export default function MapPopup({
       {(shelf.osmCheckDate || shelf.osmLastUpdated) && (
         <Typography variant="caption" color="text.secondary" align="right">
           shelf info updated{" "}
-          <Moment fromNow>{shelf.osmCheckDate || shelf.osmLastUpdated}</Moment>
+          <Moment utc fromNow>{shelf.osmCheckDate || shelf.osmLastUpdated}</Moment>
         </Typography>
       )}
       <Box>

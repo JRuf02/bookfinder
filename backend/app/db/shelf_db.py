@@ -8,6 +8,7 @@ from app.models.book import Book, BookEntity
 from app.models.errors import DatabaseQueryError
 from app.models.identifiers import Isbn, OsmId
 from app.models.shelf import Shelf
+from app.models.time_strings import TimezonedDatetimeString
 from app.utils.time import compute_avg_num_of_days_until_now
 
 logger = logging.getLogger(__name__)
@@ -108,6 +109,14 @@ def get_books_in_shelf_from_db(
             )
             continue
 
+        in_shelf_since = TimezonedDatetimeString.parse(row["time_of_entry"])
+        if not in_shelf_since:
+            logger.warning(
+                f"Invalid time_of_entry {row['time_of_entry']} in database "
+                f"for shelf {osm_id}. Skipping."
+            )
+            continue
+
         books.append(
             BookEntity(
                 entity_id=row["entry_id"],
@@ -119,7 +128,7 @@ def get_books_in_shelf_from_db(
                     cover_url=row["cover_url"],
                 ),
                 located_shelf=None,
-                in_shelf_since=row["time_of_entry"],
+                in_shelf_since=in_shelf_since,
             )
         )
 

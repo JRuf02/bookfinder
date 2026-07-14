@@ -51,7 +51,7 @@
 - Resilience & Edge Cases:
   - dnb_api.py
     - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
-    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 1
+    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 2
     - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
     - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
   - if cover in size=l not available, try different sizes!
@@ -125,7 +125,7 @@
 
 ## Bugs
 
-- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 2
+- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 1
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 - Locate Me Tooltip bleibt manchmal hängen

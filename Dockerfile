@@ -30,7 +30,11 @@ pillow==12.2.0 \
 fixtures==4.3.2 \
 requests-mock==1.12.1 \
 fuzzysearch==0.8.1 \
-gunicorn==26.0.0
+gunicorn==26.0.0 \
+pendulum==3.2.0 \
+python-dateutil==2.9.0.post0 \
+six==1.17.0 \
+tzdata==2026.3
 
 
 WORKDIR /workspaces/bookfinder
