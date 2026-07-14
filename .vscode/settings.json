@@ -20,10 +20,10 @@
   },
   "eslint.workingDirectories": ["frontend"],
   "python.analysis.extraPaths": ["./backend"],
-  "python.defaultInterpreterPath": "/workspaces/isbn-scanner-venv/.venv/bin/python",
+  "python.defaultInterpreterPath": "/workspaces/bookfinder-venv/.venv/bin/python",
   "mypy-type-checker.importStrategy": "fromEnvironment",
   "mypy-type-checker.interpreter": [
-    "/workspaces/isbn-scanner-venv/.venv/bin/python"
+    "/workspaces/bookfinder-venv/.venv/bin/python"
   ],
   "mypy-type-checker.reportingScope": "workspace",
   "js/ts.tsserver.maxMemory": 4096,
@@ -55,5 +55,5 @@
   "ruff.configuration": "${workspaceFolder}/.ruff.toml",
   "ruff.nativeServer": "on",
   "ruff.configurationPreference": "filesystemFirst",
-  "ruff.path": ["/workspaces/isbn-scanner-venv/.venv/bin/ruff"]
+  "ruff.path": ["/workspaces/bookfinder-venv/.venv/bin/ruff"]
 }

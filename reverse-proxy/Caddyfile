@@ -3,14 +3,14 @@
 }
 
 :443, :5173 {
-	tls /workspaces/isbn-scanner/frontend/certs/cert.pem /workspaces/isbn-scanner/frontend/certs/key.pem
+	tls /workspaces/bookfinder/frontend/certs/cert.pem /workspaces/bookfinder/frontend/certs/key.pem
 
 	handle /api/* {
 		reverse_proxy localhost:5001
 	}
 
 	handle {
-		root * /workspaces/isbn-scanner/frontend/dist
+		root * /workspaces/bookfinder/frontend/dist
 		try_files {path} /index.html
 		file_server
 	}

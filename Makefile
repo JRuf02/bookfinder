@@ -17,7 +17,7 @@ run:
 
 run-prod:
 	make -C backend run-prod & \
-	caddy run --config /workspaces/isbn-scanner/reverse-proxy/Caddyfile
+	caddy run --config /workspaces/bookfinder/reverse-proxy/Caddyfile
 
 test:
 	@for dir in $(SUBDIRS); do \

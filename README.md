@@ -31,12 +31,12 @@ Use the provided Devcontainer to make the usage as easy as possible:
 
 ##### Run dev servers manually
 
-- Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the container to start vite (react dev server)
-- Run `make run` in directory `\workspaces\isbn-scanner\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
+- Run `npm run dev` in directory `\workspaces\bookfinder\frontend` inside the container to start vite (react dev server)
+- Run `make run` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
 
 #### Run production servers
 
-- Run `make run-prod` in the main directory `\workspaces\isbn-scanner`
+- Run `make run-prod` in the main directory `\workspaces\bookfinder`
 
 ### B) Within a standalone Docker container
 
@@ -49,12 +49,12 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 
 #### Run dev servers
 
-- Run `npm run dev` in directory `\workspaces\isbn-scanner\frontend` inside the container to start vite (react dev server)
-- Run `make run` in directory `\workspaces\isbn-scanner\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
+- Run `npm run dev` in directory `\workspaces\bookfinder\frontend` inside the container to start vite (react dev server)
+- Run `make run` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
 
 #### Run production servers
 
-- Run `make run-prod` in the main directory `\workspaces\isbn-scanner`
+- Run `make run-prod` in the main directory `\workspaces\bookfinder`
 
 ## Show the website
 
@@ -130,7 +130,7 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
   - If you want to copy changes made on the host into your container, you need to rebuild the image
     - This will reset any changes made inside the container
   - If you want to automatically synchronize parts of or the entire repo, you need to define bind mounts (`-v`) for the files or folders you want to sync, when starting the container
-    - Example (bind mounting just the database): `docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project -v ${PWD}\backend\books.db:/workspaces/isbn-scanner/backend/books.db julian-ruf-project sh`
+    - Example (bind mounting just the database): `docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project -v ${PWD}\backend\books.db:/workspaces/bookfinder/backend/books.db julian-ruf-project sh`
 
 ## Sqlite3 DB & Python API
 
@@ -206,7 +206,7 @@ see `todos.md`
   2. run npm install
   3. version should now have been automatically added to frontend/package.json
 - Install and persist Python libraries
-  1. Start the venv: `source /workspaces/isbn-scanner-venv/.venv/bin/activate`
+  1. Start the venv: `source /workspaces/bookfinder-venv/.venv/bin/activate`
   2. Install via pip: `pip install [package-name]`
   3. Find the version number in the success message
   4. Add the library with its version number to the pip install command in the Dockerfile
@@ -239,6 +239,6 @@ see `todos.md`
 
 ```
 cd backend
-source /workspaces/isbn-scanner-venv/.venv/bin/activate
-PYTHONPATH=/workspaces/isbn-scanner/backend pytest -vv api_tests/cover_api_test.py
+source /workspaces/bookfinder-venv/.venv/bin/activate
+PYTHONPATH=/workspaces/bookfinder/backend pytest -vv api_tests/cover_api_test.py
 ```

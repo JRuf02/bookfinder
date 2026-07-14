@@ -8,8 +8,8 @@ RUN npm install -g npm@11.1.0
 
 
 # setup python
-RUN mkdir -p /workspaces/isbn-scanner-venv
-WORKDIR /workspaces/isbn-scanner-venv
+RUN mkdir -p /workspaces/bookfinder-venv
+WORKDIR /workspaces/bookfinder-venv
 RUN python3 -m venv .venv && \
 source .venv/bin/activate && \
 pip install \
@@ -33,14 +33,14 @@ fuzzysearch==0.8.1 \
 gunicorn==26.0.0
 
 
-WORKDIR /workspaces/isbn-scanner
+WORKDIR /workspaces/bookfinder
 # Copy package files from cached layer (tsserver would be slow if package were within the bind mount)
 COPY frontend/package*.json ./frontend/
 RUN cd frontend && npm install
 
 
 # copy files
-COPY . /workspaces/isbn-scanner
+COPY . /workspaces/bookfinder
 
 # run npm install and other post create commands
 RUN make build

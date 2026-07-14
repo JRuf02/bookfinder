@@ -1,4 +1,4 @@
-src = ["/workspaces/isbn-scanner/backend/"]
+src = ["/workspaces/bookfinder/backend/"]
 
 lint.select = ["ALL"] # Use very strict style checking
 lint.ignore = [
