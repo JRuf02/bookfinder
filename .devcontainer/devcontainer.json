@@ -3,17 +3,11 @@
     "dockerfile": "../Dockerfile",
     "context": ".."
   },
-  "runArgs": ["-p", "5173:5173", "-p", "5000:5000", "-p", "443:443"],
   "forwardPorts": [5173, 5000, 443],
   "portsAttributes": {
-    "5173": {
-      "label": "Vite Dev Server",
-      "onAutoForward": "notify"
-    },
-    "5000": {
-      "label": "Flask API Server",
-      "onAutoForward": "notify"
-    }
+    "5173": { "label": "Vite Dev Server", "onAutoForward": "notify" },
+    "5000": { "label": "Flask API Server", "onAutoForward": "notify" },
+    "443": { "label": "HTTPS", "onAutoForward": "notify", "elevateIfNeeded": true }
   },
   "mounts": [
     "source=bookfinder-nodemodules,target=/workspaces/bookfinder/frontend/node_modules,type=volume"
