@@ -121,6 +121,7 @@
   - tested using devcontainer
     - dev mode
     - prod mode
+- Git clone und Server starten von Null
 
 ## Bugs
 

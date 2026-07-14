@@ -5,6 +5,7 @@ Fills the new table with data from a CSV file containing bookshelf information.
 Can be run via make reset-bookshelves.
 """
 
+import argparse
 import csv
 import re
 from pathlib import Path
@@ -84,13 +85,30 @@ def _reset_bookshelves() -> None:
                     ),
                 )
 
-    print("bookshelves table reset and filled from CSV.")  # noqa: T201
+    print("Table bookshelves dropped and regenerated from CSV:")
+    print(f"|--- CSV path:      {CSV_PATH}\n|--- Database path: {DB_PATH}")
 
 
 if __name__ == "__main__":
-    inp = input(
-        "This will drop and recreate the bookshelves table. Are you sure? (yes/no): "
+    parser = argparse.ArgumentParser(
+        description="Reset the bookshelves table in the SQLite database."
     )
-    if inp.strip().lower() == "yes":
-        print("Resetting bookshelves table...")  # noqa: T201
+    parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="Skip the confirmation prompt.",
+    )
+    args = parser.parse_args()
+
+    if args.force:
+        print("Resetting bookshelves table...")
         _reset_bookshelves()
+    else:
+        inp = input(
+            f"This will drop and recreate the bookshelves table (from {CSV_PATH}). "
+            "Are you sure? (yes/no): "
+        )
+        if inp.strip().lower() == "yes":
+            print("Resetting bookshelves table...")
+            _reset_bookshelves()

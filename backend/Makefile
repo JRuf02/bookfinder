@@ -15,8 +15,8 @@ run-prod:
 	gunicorn -w 4 -b 0.0.0.0:5001 'server:create_app()' && \
 	deactivate
 
-build:
-	@echo "Nothing to build for Python"
+build: reset-bookshelves
+	@echo "Nothing to build for Python."
 
 test:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
@@ -46,7 +46,7 @@ checkstyle-strict:
 reset-bookshelves:
 	@echo "Resetting bookshelves table in database..."
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
-	python3 -m scripts.reset_bookshelves && \
+	python3 -m scripts.reset_bookshelves -f && \
 	deactivate
 
 clean:
