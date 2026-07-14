@@ -29,7 +29,10 @@ export default function ScanningResultsButtons({
 
       {numberOfBooks > 0 && (
         <>
-          <Stack direction="row" sx={{ gap: 1 }}>
+          <Stack
+            direction="row"
+            sx={{ gap: 1, display: "flex", flexDirection: "row" }}
+          >
             {(state.preSelectedShelfAction === "insert" ||
               state.preSelectedShelfAction === "both") && (
               <Button
@@ -37,6 +40,7 @@ export default function ScanningResultsButtons({
                 variant="contained"
                 color="primary"
                 onClick={onInsert}
+                sx={{ flexGrow: 1 }}
               >
                 Insert {numberOfBooks} books into bookshelf
               </Button>
@@ -48,6 +52,7 @@ export default function ScanningResultsButtons({
                 variant="contained"
                 color="secondary"
                 onClick={onRemove}
+                sx={{ flexGrow: 1 }}
               >
                 Remove {numberOfBooks} books from bookshelf
               </Button>
