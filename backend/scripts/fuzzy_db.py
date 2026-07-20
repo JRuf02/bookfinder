@@ -227,6 +227,8 @@ def _search(
     return isbn_scores
 
 
+# TODO: Replace old catalog serach api endpoint with this new fuzzy logic
+#       (This file is still not used anywhere in the backend code)
 def search_authors(query: str, min_similarity: float = 0.5) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for author names fuzzy-matching query,
     best matches first.
@@ -238,6 +240,8 @@ def search_authors(query: str, min_similarity: float = 0.5) -> list[tuple[str, f
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
+# TODO: Replace old catalog serach api endpoint with this new fuzzy logic
+#       (This file is still not used anywhere in the backend code)
 def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for book titles fuzzy-matching query,
     best matches first.
@@ -249,8 +253,9 @@ def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, fl
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
-# TODO: search by author AND title together, and search by a single
+# TODO: implement search by author AND title together, and search by a single
 #       unspecified term that could be either an author or a title word.
+#       And use the new search in the API endpoints instead of the old catalog search.
 
 
 # TODO: Unclutter this script & CLI and check whether reset / standalone script
