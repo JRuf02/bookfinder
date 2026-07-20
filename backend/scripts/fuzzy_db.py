@@ -9,6 +9,7 @@ https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/
 """
 
 import argparse
+import json
 import re
 import sqlite3
 from pathlib import Path
@@ -54,9 +55,6 @@ def _reset_tables() -> None:
             "CREATE INDEX idx_author_name_tokens_token_id "
             "ON author_name_tokens(token_id)"
         )
-        c.execute(
-            "CREATE INDEX idx_author_name_tokens_isbn ON author_name_tokens(isbn)"
-        )
 
         c.execute("""
             CREATE TABLE book_title_tokens (
@@ -67,7 +65,6 @@ def _reset_tables() -> None:
         c.execute(
             "CREATE INDEX idx_book_title_tokens_token_id ON book_title_tokens(token_id)"
         )
-        c.execute("CREATE INDEX idx_book_title_tokens_isbn ON book_title_tokens(isbn)")
 
         c.execute("""
             CREATE TABLE threegrams (
@@ -76,7 +73,6 @@ def _reset_tables() -> None:
             )
         """)
         c.execute("CREATE INDEX idx_threegrams_threegram ON threegrams(threegram)")
-        c.execute("CREATE INDEX idx_threegrams_token_id ON threegrams(token_id)")
 
 
 def optimize_database() -> None:
@@ -188,13 +184,98 @@ def add_author_name(name: str, isbn: str) -> None:
             _add_token(c, token, isbn, "author_name_tokens")
 
 
-# TODO: lookup functions for fuzzy search (by author, by title, by author and title,
-#       and by single term that's either author or title, but unspecified)
+def _find_similar_tokens(
+    c: sqlite3.Cursor, query_token: str, min_similarity: float = 0.5
+) -> list[tuple[int, str, float]]:
+    """Find tokens that have at least the given threegram overlap with query_token.
+    Minimum overlap is given by min_similarity = (shared grams / grams in query_token).
+
+    Returns (token_id, token, similarity) tuples, best matches first.
+    """
+
+    query_grams = _generate_threegrams(query_token)
+
+    rows = c.execute(
+        """
+        SELECT t.token_id, t.token, COUNT(*) AS overlap
+        FROM threegrams tg
+        JOIN tokens t ON t.token_id = tg.token_id
+        JOIN json_each(?) AS qg ON qg.value = tg.threegram
+        GROUP BY tg.token_id
+        ORDER BY overlap DESC
+        """,
+        (json.dumps(query_grams),),
+    ).fetchall()
+
+    results = []
+    for token_id, token, overlap in rows:
+        similarity = overlap / len(query_grams)
+        if similarity >= min_similarity:
+            results.append((token_id, token, similarity))
+    return results
+
+
+_SEARCH_ISBN_QUERIES: dict[TokenTable, str] = {
+    "book_title_tokens": "SELECT isbn FROM book_title_tokens WHERE token_id = ?",
+    "author_name_tokens": "SELECT isbn FROM author_name_tokens WHERE token_id = ?",
+}
+
+
+def _search(
+    c: sqlite3.Cursor, query: str, token_table: TokenTable, min_similarity: float
+) -> dict[str, float]:
+    """Fuzzy-match each query token against all tokens in the token_table.
+    Accumulate fuzzy scores (threegram-overlap) per isbn, for each query token.
+    Sum up the scores of all query tokens, so a book matching more of them ranks higher.
+
+    Returns
+    -------
+    - dict[str, float]: A dictionary mapping isbn -> total score
+
+    """
+
+    isbn_scores: dict[str, float] = {}
+
+    for q_token in _tokenize(query):
+        for token_id, _token, similarity in _find_similar_tokens(
+            c, q_token, min_similarity
+        ):
+            rows = c.execute(_SEARCH_ISBN_QUERIES[token_table], (token_id,)).fetchall()
+            for (isbn,) in rows:
+                isbn_scores[isbn] = isbn_scores.get(isbn, 0.0) + similarity
+
+    return isbn_scores
+
+
+def search_authors(query: str, min_similarity: float = 0.5) -> list[tuple[str, float]]:
+    """Return (isbn, score) pairs for author names fuzzy-matching query,
+    best matches first.
+    """
+
+    with db_cursor(DB_PATH) as c:
+        isbn_scores = _search(c, query, "author_name_tokens", min_similarity)
+
+    return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
+
+
+def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, float]]:
+    """Return (isbn, score) pairs for book titles fuzzy-matching query,
+    best matches first.
+    """
+
+    with db_cursor(DB_PATH) as c:
+        isbn_scores = _search(c, query, "book_title_tokens", min_similarity)
+
+    return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
+
+
+# TODO: search by author AND title together, and search by a single
+#       unspecified term that could be either an author or a title word.
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Set up or reset the SQLite database for fuzzy prefix search."
+        description="Set up / reset the fuzzy search database, or try out a search."
     )
     parser.add_argument(
         "-fr",
@@ -202,7 +283,29 @@ if __name__ == "__main__":
         action="store_true",
         help="Reset the database without confirmation.",
     )
+    parser.add_argument(
+        "-a",
+        "--author",
+        metavar="QUERY",
+        help="Fuzzy-search authors for QUERY and print matching isbns.",
+    )
+    parser.add_argument(
+        "-t",
+        "--title",
+        metavar="QUERY",
+        help="Fuzzy-search titles for QUERY and print matching isbns.",
+    )
     args = parser.parse_args()
+
+    if args.author:
+        for isbn, score in search_authors(args.author):
+            print(f"{score:.2f}  {isbn}")
+        raise SystemExit(0)
+
+    if args.title:
+        for isbn, score in search_titles(args.title):
+            print(f"{score:.2f}  {isbn}")
+        raise SystemExit(0)
 
     if not args.force_reset:
         confirm = input(
