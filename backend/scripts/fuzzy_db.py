@@ -28,9 +28,9 @@ def _reset_tables() -> None:
     with db_cursor(DB_PATH) as c:
         c.execute("PRAGMA foreign_keys = ON")
 
-        # For concurrent catalog searches and inserts,
-        # allow database reading while a write is in progress.
-        # Setting will be persisted in the database file.
+        # For concurrent catalog searches and inserts:
+        # Allow database reading while a write is in progress.
+        # Setting will be persisted in the database file, no need to set it again.
         c.execute("PRAGMA journal_mode = WAL")
 
         c.execute("DROP TABLE IF EXISTS threegrams")
@@ -73,30 +73,6 @@ def _reset_tables() -> None:
             )
         """)
         c.execute("CREATE INDEX idx_threegrams_threegram ON threegrams(threegram)")
-
-
-def optimize_database() -> None:
-    """Improve query performance by refreshing SQLite query planner statistics.
-
-    Statistics are used by the query planner for deciding whether
-    and how to use an index.
-    Only updates statistics on tables that have changed a lot since the last run.
-    Lightweight, safe to call periodically or on every connection close.
-    """
-
-    with db_cursor(DB_PATH) as c:
-        c.execute("PRAGMA optimize")
-
-
-def analyze_database() -> None:
-    """Run a full ANALYZE, refreshing planner statistics for every table.
-
-    More thorough (and more expensive) than optimize_database().
-    Not intended to be run frequently, but can be useful after a large batch of inserts.
-    """
-
-    with db_cursor(DB_PATH) as c:
-        c.execute("ANALYZE")
 
 
 def _tokenize(text: str) -> list[str]:
@@ -170,6 +146,8 @@ def _add_token(
         )
 
 
+# TODO: Use this function in the backend code whenever inserting something
+#       into the table 'books'.
 def add_book_title(title: str, isbn: str) -> None:
     """Parse a book title into tokens (and threegrams) and link them to the isbn."""
     with db_cursor(DB_PATH) as c:
@@ -177,6 +155,8 @@ def add_book_title(title: str, isbn: str) -> None:
             _add_token(c, token, isbn, "book_title_tokens")
 
 
+# TODO: Use this function in the backend code whenever inserting something
+#       into the table 'books'.
 def add_author_name(name: str, isbn: str) -> None:
     """Parse an author name into tokens (and threegrams) and link them to the isbn."""
     with db_cursor(DB_PATH) as c:
@@ -273,6 +253,9 @@ def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, fl
 #       unspecified term that could be either an author or a title word.
 
 
+# TODO: Unclutter this script & CLI and check whether reset / standalone script
+#       for fuzzy is even needed or if reset_bookshelves.py is enough.
+#       Maybe just keep the search CLI for testing / debugging?
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Set up / reset the fuzzy search database, or try out a search."
