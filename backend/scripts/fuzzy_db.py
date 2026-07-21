@@ -12,6 +12,7 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Literal
 
@@ -245,6 +246,12 @@ if __name__ == "__main__":
         help="Fuzzy-search titles for QUERY and print matching isbns.",
     )
     parser.add_argument(
+        "-i",
+        "--interactive",
+        action="store_true",
+        help="Run in interactive mode, manually inserting queries.",
+    )
+    parser.add_argument(
         "-ms",
         "--min-similarity",
         type=float,
@@ -261,6 +268,31 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    if args.interactive:
+        print("Entering interactive mode. Type 'exit' to quit.")
+        while True:
+            query = input("Enter search query (author or title): ")
+            if query.lower() == "exit":
+                break
+            print(f"Searching for '{query}'...")
+            print("Author matches:")
+            num_matches = 0
+            for isbn, score in search_authors(
+                query, min_similarity=args.min_similarity, db_path=args.db_path
+            ):
+                print(f"{score:.2f}  {isbn}")
+                num_matches += 1
+            print(f"Found {num_matches} books with matching authors.")
+            print("Title matches:")
+            num_matches = 0
+            for isbn, score in search_titles(
+                query, min_similarity=args.min_similarity, db_path=args.db_path
+            ):
+                print(f"{score:.2f}  {isbn}")
+                num_matches += 1
+            print(f"Found {num_matches} books with matching titles.")
+        sys.exit(0)  # Exit the script after interactive mode
+
     if args.author:
         print(f"Searching books with author '{args.author}'...")
         num_matches = 0
@@ -269,7 +301,7 @@ if __name__ == "__main__":
         ):
             print(f"{score:.2f}  {isbn}")
             num_matches += 1
-        print(f"Found {num_matches} matching authors.")
+        print(f"Found {num_matches} books with matching authors.")
 
     if args.title:
         print(f"Searching books with title '{args.title}'...")
@@ -279,7 +311,8 @@ if __name__ == "__main__":
         ):
             print(f"{score:.2f}  {isbn}")
             num_matches += 1
-        print(f"Found {num_matches} matching titles.")
+        print(f"Found {num_matches} books with matching titles.")
 
     if not args.author and not args.title:
         print("No search query provided. Use --author or --title to search.")
+        sys.exit(1)

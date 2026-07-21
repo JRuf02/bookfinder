@@ -96,7 +96,7 @@ def init_db(db_path: Path) -> None:
                 token_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 token TEXT UNIQUE NOT NULL
             )
-        """)
+        """)  # Creates indexes on token_id and token (primary key / unique)
 
         c.execute("""
             CREATE TABLE IF NOT EXISTS author_name_tokens (

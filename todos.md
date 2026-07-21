@@ -221,6 +221,7 @@
 
 ## Maybe if I find the time for it (aka ideas I'll never realize)
 
+- Make insertions into books table atomic with the corresponding insertions of qgrams, tokens etc.
 - Tech stack changes
   - 1 Docker-Compose (ggf. mit caddy reverse-proxy & auto-restart nach crash) mit 2 Containern:
     - frontend (vite server or pre-built files from frontend/dist/)

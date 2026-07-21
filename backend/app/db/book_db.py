@@ -1,8 +1,13 @@
+import logging
+
 from app.db.catalog_db import get_number_of_books_with_isbn
 from app.db.database import db_cursor
 from app.models.book import Book, BookPopularity
 from app.models.identifiers import Isbn
 from app.utils.time import compute_avg_num_of_days_until_now
+from scripts.fuzzy_db import add_author_name, add_book_title
+
+logger = logging.getLogger(__name__)
 
 
 def get_book_from_database(isbn: Isbn) -> Book | None:
@@ -28,13 +33,13 @@ def get_book_from_database(isbn: Isbn) -> Book | None:
 def save_book_to_db(book: Book) -> None:
     """Save book metadata to the local SQLite database, in the table 'books'.
 
-    If a book with the same ISBN already exists, old metadata will be overwritten.
+    If a book with the same ISBN already exists, old metadata will be kept.
     """
 
     with db_cursor() as c:
         c.execute(
             """
-            INSERT OR REPLACE INTO books (isbn, title, author, dnb_id,
+            INSERT OR IGNORE INTO books (isbn, title, author, dnb_id,
             cover_url)
             VALUES (?, ?, ?, ?, ?)
         """,
@@ -46,6 +51,18 @@ def save_book_to_db(book: Book) -> None:
                 book.cover_url,
             ),
         )  # TODO test what happens if coverUrl = None
+
+        is_new_book = c.rowcount == 1
+
+    if is_new_book:
+        # Generate and store tokens and threegrams for the book title and author name
+        logger.debug(
+            f"Generating tokens and threegrams for book: {book.title} ({book.isbn})"
+        )
+        if book.title:
+            add_book_title(book.title, str(book.isbn))
+        if book.author:
+            add_author_name(book.author, str(book.isbn))
 
 
 def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
