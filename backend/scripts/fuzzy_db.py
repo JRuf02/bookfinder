@@ -23,58 +23,6 @@ DB_PATH = Path(__file__).parent.parent / "fuzzysearch.db"
 PADDING = "$$"  # "$" * (q - 1) for q-grams, we use q == 3
 
 
-def _reset_tables() -> None:
-
-    with db_cursor(DB_PATH) as c:
-        c.execute("PRAGMA foreign_keys = ON")
-
-        # For concurrent catalog searches and inserts:
-        # Allow database reading while a write is in progress.
-        # Setting will be persisted in the database file, no need to set it again.
-        c.execute("PRAGMA journal_mode = WAL")
-
-        c.execute("DROP TABLE IF EXISTS threegrams")
-        c.execute("DROP TABLE IF EXISTS author_name_tokens")
-        c.execute("DROP TABLE IF EXISTS book_title_tokens")
-        c.execute("DROP TABLE IF EXISTS tokens")
-
-        c.execute("""
-            CREATE TABLE tokens (
-                token_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                token TEXT UNIQUE NOT NULL
-            )
-        """)
-
-        c.execute("""
-            CREATE TABLE author_name_tokens (
-                token_id INTEGER NOT NULL REFERENCES tokens(token_id),
-                isbn TEXT NOT NULL
-            )
-        """)
-        c.execute(
-            "CREATE INDEX idx_author_name_tokens_token_id "
-            "ON author_name_tokens(token_id)"
-        )
-
-        c.execute("""
-            CREATE TABLE book_title_tokens (
-                token_id INTEGER NOT NULL REFERENCES tokens(token_id),
-                isbn TEXT NOT NULL
-            )
-        """)
-        c.execute(
-            "CREATE INDEX idx_book_title_tokens_token_id ON book_title_tokens(token_id)"
-        )
-
-        c.execute("""
-            CREATE TABLE threegrams (
-                threegram TEXT NOT NULL,
-                token_id INTEGER NOT NULL REFERENCES tokens(token_id)
-            )
-        """)
-        c.execute("CREATE INDEX idx_threegrams_threegram ON threegrams(threegram)")
-
-
 def _tokenize(text: str) -> list[str]:
     """Lowercase and split text into word tokens, stripping punctuation.
 
@@ -260,17 +208,12 @@ def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, fl
 
 # TODO: Unclutter this script & CLI and check whether reset / standalone script
 #       for fuzzy is even needed or if reset_bookshelves.py is enough.
-#       Maybe just keep the search CLI for testing / debugging?
+#       -> Just keep the search CLI for testing / debugging!
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Set up / reset the fuzzy search database, or try out a search."
+        description="Perform fuzzy search on the database locally."
     )
-    parser.add_argument(
-        "-fr",
-        "--force-reset",
-        action="store_true",
-        help="Reset the database without confirmation.",
-    )
+
     parser.add_argument(
         "-a",
         "--author",
@@ -283,26 +226,31 @@ if __name__ == "__main__":
         metavar="QUERY",
         help="Fuzzy-search titles for QUERY and print matching isbns.",
     )
+    parser.add_argument(
+        "-ms",
+        "--min-similarity",
+        type=float,
+        default=0.5,
+        help="Minimum similarity threshold for fuzzy search matches (default: 0.5).",
+    )
     args = parser.parse_args()
 
     if args.author:
-        for isbn, score in search_authors(args.author):
+        print(f"Searching books with author '{args.author}'...")
+        num_matches = 0
+        for isbn, score in search_authors(
+            args.author, min_similarity=args.min_similarity
+        ):
             print(f"{score:.2f}  {isbn}")
-        raise SystemExit(0)
+            num_matches += 1
+        print(f"Found {num_matches} matching authors.")
 
     if args.title:
-        for isbn, score in search_titles(args.title):
+        print(f"Searching books with title '{args.title}'...")
+        num_matches = 0
+        for isbn, score in search_titles(
+            args.title, min_similarity=args.min_similarity
+        ):
             print(f"{score:.2f}  {isbn}")
-        raise SystemExit(0)
-
-    if not args.force_reset:
-        confirm = input(
-            f"This will drop and recreate all tables in {DB_PATH}.\n"
-            "Any data currently in the database will be lost. Continue? [y/N] "
-        )
-        if confirm.lower() != "y":
-            print("Aborted.")
-            raise SystemExit(0)
-
-    _reset_tables()
-    print("Tables reset.")
+            num_matches += 1
+        print(f"Found {num_matches} matching titles.")

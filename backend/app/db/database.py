@@ -53,7 +53,7 @@ def init_db(db_path: Path) -> None:
                 avg_days_until_takeout INTEGER DEFAULT NULL,
                 time_of_entry DATETIME DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """)  # Creates index on isbn automatically (primary key)
 
         c.execute("""
             CREATE TABLE IF NOT EXISTS bookshelves (
@@ -70,7 +70,7 @@ def init_db(db_path: Path) -> None:
                 osm_last_updated DATETIME,
                 time_of_entry DATETIME DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """)  # Creates index on osm_id automatically (primary key)
 
         c.execute("""
             CREATE TABLE IF NOT EXISTS current_catalog (
