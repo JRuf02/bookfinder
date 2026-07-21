@@ -1,8 +1,8 @@
-"""Helper functions for the fuzzy prefix search database.
+"""Helper functions and CLI for the fuzzy prefix search database.
 
 Provides functions to add book titles and author names to the database,
 tokenizing them into single words and generating threegrams for each token.
-Can be imported as a module, or run as a script to setup / reset the database.
+Can be imported as a module, or run as a script to search the database locally.
 
 Modeled after the q-gram approach from:
 https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/lecture-07.pdf
@@ -19,7 +19,6 @@ from app.db.database import db_cursor
 
 TokenTable = Literal["book_title_tokens", "author_name_tokens"]
 
-DB_PATH = Path(__file__).parent.parent / "fuzzysearch.db"
 PADDING = "$$"  # "$" * (q - 1) for q-grams, we use q == 3
 
 
@@ -97,8 +96,13 @@ def _add_token(
 # TODO: Use this function in the backend code whenever inserting something
 #       into the table 'books'.
 def add_book_title(title: str, isbn: str) -> None:
-    """Parse a book title into tokens (and threegrams) and link them to the isbn."""
-    with db_cursor(DB_PATH) as c:
+    """Parse a book title into tokens (and threegrams) and link them to the isbn.
+
+    Isbn must already exist in the 'books' table (as book_title_tokens.isbn is
+    a foreign key from books.isbn).
+    Call this after inserting the book, within the same transaction if possible.
+    """
+    with db_cursor() as c:
         for token in _tokenize(title):
             _add_token(c, token, isbn, "book_title_tokens")
 
@@ -106,8 +110,13 @@ def add_book_title(title: str, isbn: str) -> None:
 # TODO: Use this function in the backend code whenever inserting something
 #       into the table 'books'.
 def add_author_name(name: str, isbn: str) -> None:
-    """Parse an author name into tokens (and threegrams) and link them to the isbn."""
-    with db_cursor(DB_PATH) as c:
+    """Parse an author name into tokens (and threegrams) and link them to the isbn.
+
+    Isbn must already exist in the 'books' table (author_name_tokens.isbn is
+    a foreign key from books.isbn).
+    Call this after inserting the book, within the same transaction if possible.
+    """
+    with db_cursor() as c:
         for token in _tokenize(name):
             _add_token(c, token, isbn, "author_name_tokens")
 
@@ -175,27 +184,39 @@ def _search(
     return isbn_scores
 
 
-# TODO: Replace old catalog serach api endpoint with this new fuzzy logic
+# TODO: Replace old catalog search api endpoint with this new fuzzy logic
 #       (This file is still not used anywhere in the backend code)
-def search_authors(query: str, min_similarity: float = 0.5) -> list[tuple[str, float]]:
+def search_authors(
+    query: str, min_similarity: float = 0.5, db_path: Path | None = None
+) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for author names fuzzy-matching query,
     best matches first.
+
+    db_path is only needed when running outside of a Flask app context, e.g.
+    in a standalone CLI script. Otherwise, db_cursor() will use the default
+    database path from current_app.config['DB_PATH'].
     """
 
-    with db_cursor(DB_PATH) as c:
+    with db_cursor(db_path) as c:
         isbn_scores = _search(c, query, "author_name_tokens", min_similarity)
 
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
-# TODO: Replace old catalog serach api endpoint with this new fuzzy logic
+# TODO: Replace old catalog search api endpoint with this new fuzzy logic
 #       (This file is still not used anywhere in the backend code)
-def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, float]]:
+def search_titles(
+    query: str, min_similarity: float = 0.5, db_path: Path | None = None
+) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for book titles fuzzy-matching query,
     best matches first.
+
+    db_path is only needed when running outside of a Flask app context, e.g.
+    in a standalone CLI script. Otherwise, db_cursor() will use the default
+    database path from current_app.config['DB_PATH'].
     """
 
-    with db_cursor(DB_PATH) as c:
+    with db_cursor(db_path) as c:
         isbn_scores = _search(c, query, "book_title_tokens", min_similarity)
 
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
@@ -206,9 +227,6 @@ def search_titles(query: str, min_similarity: float = 0.5) -> list[tuple[str, fl
 #       And use the new search in the API endpoints instead of the old catalog search.
 
 
-# TODO: Unclutter this script & CLI and check whether reset / standalone script
-#       for fuzzy is even needed or if reset_bookshelves.py is enough.
-#       -> Just keep the search CLI for testing / debugging!
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Perform fuzzy search on the database locally."
@@ -233,13 +251,21 @@ if __name__ == "__main__":
         default=0.5,
         help="Minimum similarity threshold for fuzzy search matches (default: 0.5).",
     )
+    # db_path is needed because the CLI can't access current_app.config['DB_PATH']
+    parser.add_argument(
+        "-db",
+        "--db-path",
+        type=Path,
+        required=True,
+        help=("Path to the SQLite database file."),
+    )
     args = parser.parse_args()
 
     if args.author:
         print(f"Searching books with author '{args.author}'...")
         num_matches = 0
         for isbn, score in search_authors(
-            args.author, min_similarity=args.min_similarity
+            args.author, min_similarity=args.min_similarity, db_path=args.db_path
         ):
             print(f"{score:.2f}  {isbn}")
             num_matches += 1
@@ -249,8 +275,11 @@ if __name__ == "__main__":
         print(f"Searching books with title '{args.title}'...")
         num_matches = 0
         for isbn, score in search_titles(
-            args.title, min_similarity=args.min_similarity
+            args.title, min_similarity=args.min_similarity, db_path=args.db_path
         ):
             print(f"{score:.2f}  {isbn}")
             num_matches += 1
         print(f"Found {num_matches} matching titles.")
+
+    if not args.author and not args.title:
+        print("No search query provided. Use --author or --title to search.")

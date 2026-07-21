@@ -78,6 +78,8 @@
     - do not require vs-code & devcontainer, only docker!
 
 - Finalization:
+  - Update bookshelves via qlever
+  - Add dummy data & include db in git
   - Use api/bookshelves/nearby in frontend or revove from backend
     - Maybe add 'show books from x nearest shelves' to catalog?
   - make build o.ä. sollte die DB bauen falls noch nicht existiert

@@ -132,6 +132,7 @@ def init_db(db_path: Path) -> None:
         )
 
 
+# TODO: Move to database_utils.py?
 # TODO: Use this in a standalone cli script
 def optimize_database(db_path: Path) -> None:
     """Improve query performance by refreshing SQLite query planner statistics.
@@ -146,6 +147,7 @@ def optimize_database(db_path: Path) -> None:
         c.execute("PRAGMA optimize")
 
 
+# TODO: Move to database_utils.py?
 # TODO: Use this in a standalone cli script
 def analyze_database(db_path: Path) -> None:
     """Run a full ANALYZE, refreshing query planner statistics for every table.
