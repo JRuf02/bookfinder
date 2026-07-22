@@ -1,4 +1,4 @@
-"""Command line interface for the fuzzy prefix search database.
+"""Command line interface for the fuzzy search database.
 
 Can be used to try out fuzzy search on the database locally,
 without needing a web server.
@@ -39,11 +39,11 @@ if __name__ == "__main__":
         help="Run in interactive mode, to manually enter search queries.",
     )
     parser.add_argument(
-        "-ms",
-        "--min-similarity",
-        type=float,
-        default=0.5,
-        help="Minimum similarity threshold for fuzzy search matches (default: 0.5).",
+        "-med",
+        "--max-edit-dist",
+        type=int,
+        default=2,
+        help="Maximum edit distance for fuzzy search matches (default: 2).",
     )
     # db_path is needed because the CLI can't access current_app.config['DB_PATH']
     parser.add_argument(
@@ -67,31 +67,31 @@ if __name__ == "__main__":
             print("\nAuthor matches:")
             num_matches = 0
             for isbn, score in search_authors(
-                query, min_similarity=args.min_similarity, db_path=args.db_path
+                query, max_edit_dist=args.max_edit_dist, db_path=args.db_path
             ):
                 parsed_isbn = Isbn.parse(isbn)
                 if parsed_isbn is None:
                     print(f"Warning: Invalid ISBN '{isbn}' found in database.")
                     continue
                 book = get_book_from_database(parsed_isbn, db_path=args.db_path)
-                print(
-                    f"{score:.2f}  {isbn}  {book.author if book else None} ({book.title if book else None})"
-                )
+                author = book.author if book else None
+                title = book.title if book else None
+                print(f"{score:.2f}  {isbn}  {author} ({title})")
                 num_matches += 1
             print(f"Found {num_matches} books with matching authors.")
             print("\nTitle matches:")
             num_matches = 0
             for isbn, score in search_titles(
-                query, min_similarity=args.min_similarity, db_path=args.db_path
+                query, max_edit_dist=args.max_edit_dist, db_path=args.db_path
             ):
                 parsed_isbn = Isbn.parse(isbn)
                 if parsed_isbn is None:
                     print(f"Warning: Invalid ISBN '{isbn}' found in database.")
                     continue
                 book = get_book_from_database(parsed_isbn, db_path=args.db_path)
-                print(
-                    f"{score:.2f}  {isbn}  {book.title if book else None} ({book.author if book else None})"
-                )
+                title = book.title if book else None
+                author = book.author if book else None
+                print(f"{score:.2f}  {isbn}  {title} ({author})")
                 num_matches += 1
             print(f"Found {num_matches} books with matching titles.\n")
         sys.exit(0)  # Exit the script after interactive mode
@@ -100,16 +100,16 @@ if __name__ == "__main__":
         print(f"Searching books with author '{args.author}'...")
         num_matches = 0
         for isbn, score in search_authors(
-            args.author, min_similarity=args.min_similarity, db_path=args.db_path
+            args.author, max_edit_dist=args.max_edit_dist, db_path=args.db_path
         ):
             parsed_isbn = Isbn.parse(isbn)
             if parsed_isbn is None:
                 print(f"Warning: Invalid ISBN '{isbn}' found in database.")
                 continue
             book = get_book_from_database(parsed_isbn, db_path=args.db_path)
-            print(
-                f"{score:.2f}  {isbn}  {book.author if book else None} ({book.title if book else None})"
-            )
+            author = book.author if book else None
+            title = book.title if book else None
+            print(f"{score:.2f}  {isbn}  {author} ({title})")
             num_matches += 1
         print(f"Found {num_matches} books with matching authors.")
 
@@ -117,16 +117,16 @@ if __name__ == "__main__":
         print(f"Searching books with title '{args.title}'...")
         num_matches = 0
         for isbn, score in search_titles(
-            args.title, min_similarity=args.min_similarity, db_path=args.db_path
+            args.title, max_edit_dist=args.max_edit_dist, db_path=args.db_path
         ):
             parsed_isbn = Isbn.parse(isbn)
             if parsed_isbn is None:
                 print(f"Warning: Invalid ISBN '{isbn}' found in database.")
                 continue
             book = get_book_from_database(parsed_isbn, db_path=args.db_path)
-            print(
-                f"{score:.2f}  {isbn}  {book.title if book else None} ({book.author if book else None})"
-            )
+            title = book.title if book else None
+            author = book.author if book else None
+            print(f"{score:.2f}  {isbn}  {title} ({author})")
             num_matches += 1
         print(f"Found {num_matches} books with matching titles.")
 

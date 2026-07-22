@@ -1,9 +1,9 @@
-"""Functions for the fuzzy prefix search database.
+"""Functions for the fuzzy search database.
 
 Provides functions to add book titles and author names to the search tables of the
 database, tokenizing them into single words and generating threegrams for each token.
 Also provides functions to fuzzy-search books by title or author name,
-using threegram overlap to filter and rank results.
+using threegram overlap and edit distance to filter and rank results.
 
 Modeled after the q-gram approach from:
 https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/lecture-07.pdf
@@ -44,12 +44,42 @@ def _generate_threegrams(token: str) -> list[str]:
     # For fuzzy PREFIX search, the lecture suggests padding left side only,
     # but we pad both sides to improve match quality for short tokens.
     # TODO: implement fuzzy prefix search for autocomplete suggestions,
-    #       and standard fuzzy search for catalog search. Untangle.
+    #       use standard fuzzy search for catalog search. Untangle.
     #       Differences: query token padding and similarity computation.
     #       Prefix:  sim = (shared grams / grams in query_token)
     #       Standard:sim = (shared grams / max(grams in query_token, grams in db_token))
     padded = f"{PADDING}{token}{PADDING}"
     return [padded[i : i + 3] for i in range(len(padded) - 2)]
+
+
+def _edit_distance(a: str, b: str) -> int:
+    """Return the Levenshtein edit distance between two strings.
+
+    Based on the algorithm presented in the lecture slides:
+    https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/lecture-07.pdf
+    """
+
+    if a == b:
+        return 0
+    if len(a) == 0:
+        return len(b)
+    if len(b) == 0:
+        return len(a)
+
+    if len(a) > len(b):
+        a, b = b, a
+
+    previous_row = list(range(len(b) + 1))  # add column for empty word
+    for i, char_a in enumerate(a, start=1):
+        current_row = [i]
+        for j, char_b in enumerate(b, start=1):
+            insertion_cost = current_row[j - 1] + 1
+            deletion_cost = previous_row[j] + 1
+            substitution_cost = previous_row[j - 1] + (char_a != char_b)
+            current_row.append(min(insertion_cost, deletion_cost, substitution_cost))
+        previous_row = current_row
+
+    return previous_row[-1]
 
 
 def _get_or_create_token_id(c: sqlite3.Cursor, token: str) -> int:
@@ -128,16 +158,19 @@ def add_author_name(name: str, isbn: str) -> None:
             _add_token(c, token, isbn, "author_name_tokens")
 
 
-def _find_similar_tokens(
-    c: sqlite3.Cursor, query_token: str, min_similarity: float = 0.5
-) -> list[tuple[int, str, float]]:
-    """Find tokens that have at least the given threegram overlap with query_token.
-    Minimum overlap is given by min_similarity = (shared grams / grams in query_token).
+def _find_matching_tokens(
+    c: sqlite3.Cursor, query_token: str, max_edit_dist: int = 2
+) -> list[tuple[int, str, int]]:
+    """Find tokens with maximum edit distance of max_edit_dist from query_token.
 
-    Returns (token_id, token, similarity) tuples, best matches first.
+    Filter by q-gram overlap first, then compute the actual
+    edit distance only for the remaining candidates.
+
+    Returns (token_id, token, edit_distance) tuples, best matches first.
     """
 
     query_grams = _generate_threegrams(query_token)
+    query_gram_count = len(query_grams)
 
     rows = c.execute(
         """
@@ -153,9 +186,19 @@ def _find_similar_tokens(
 
     results = []
     for token_id, token, overlap in rows:
-        similarity = overlap / len(query_grams)
-        if similarity >= min_similarity:
-            results.append((token_id, token, similarity))
+        if abs(len(token) - len(query_token)) > max_edit_dist:
+            continue
+
+        db_token_threegram_count = len(token) - 2  # len(token) - q + 1 for q-grams
+        min_required_overlap = (
+            max(query_gram_count, db_token_threegram_count) - 3 * max_edit_dist
+        )
+        if overlap < min_required_overlap:
+            continue
+
+        edit_distance = _edit_distance(query_token, token)
+        if edit_distance <= max_edit_dist:
+            results.append((token_id, token, edit_distance))
     return results
 
 
@@ -166,11 +209,12 @@ _SEARCH_ISBN_QUERIES: dict[TokenTable, str] = {
 
 
 def _search(
-    c: sqlite3.Cursor, query: str, token_table: TokenTable, min_similarity: float
+    c: sqlite3.Cursor, query: str, token_table: TokenTable, max_edit_dist: int
 ) -> dict[str, float]:
     """Fuzzy-match each query token against all tokens in the token_table.
-    Accumulate fuzzy scores (threegram-overlap) per isbn, for each query token.
+    Accumulate edit-distance-based scores per isbn, for each query token.
     Sum up the scores of all query tokens, so a book matching more of them ranks higher.
+    Higher scores indicate better matches.
 
     Returns
     -------
@@ -180,21 +224,27 @@ def _search(
 
     isbn_scores: dict[str, float] = {}
 
-    for q_token in _tokenize(query):
-        for token_id, _token, similarity in _find_similar_tokens(
-            c, q_token, min_similarity
+    for query_token in _tokenize(query):
+        for token_id, _token, edit_distance in _find_matching_tokens(
+            c, query_token, max_edit_dist
         ):
             rows = c.execute(_SEARCH_ISBN_QUERIES[token_table], (token_id,)).fetchall()
             for (isbn,) in rows:
-                isbn_scores[isbn] = isbn_scores.get(isbn, 0.0) + similarity
+                # Arbitrary scoring function, accumulating scores for each query token
+                isbn_scores[isbn] = isbn_scores.get(isbn, 0.0) + (
+                    1 / (1 + edit_distance)
+                )
 
+    # TODO: Get 3gram overlap from _find_matching_tokens and also return it,
+    #       as ED score tie braker
     return isbn_scores
 
 
 # TODO: Replace old catalog search api endpoint with this new fuzzy logic
 #       (This file is still not used anywhere in the backend code)
+# TODO: Set max_edit_dist based on query length
 def search_authors(
-    query: str, min_similarity: float = 0.5, db_path: Path | None = None
+    query: str, max_edit_dist: int = 2, db_path: Path | None = None
 ) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for author names fuzzy-matching query,
     best matches first.
@@ -205,15 +255,16 @@ def search_authors(
     """
 
     with db_cursor(db_path) as c:
-        isbn_scores = _search(c, query, "author_name_tokens", min_similarity)
+        isbn_scores = _search(c, query, "author_name_tokens", max_edit_dist)
 
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
 # TODO: Replace old catalog search api endpoint with this new fuzzy logic
 #       (This file is still not used anywhere in the backend code)
+# TODO: Set max_edit_dist based on query length
 def search_titles(
-    query: str, min_similarity: float = 0.5, db_path: Path | None = None
+    query: str, max_edit_dist: int = 2, db_path: Path | None = None
 ) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for book titles fuzzy-matching query,
     best matches first.
@@ -224,14 +275,15 @@ def search_titles(
     """
 
     with db_cursor(db_path) as c:
-        isbn_scores = _search(c, query, "book_title_tokens", min_similarity)
+        isbn_scores = _search(c, query, "book_title_tokens", max_edit_dist)
 
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
-# TODO: Fuzzysearch results should be post-processed by filtering by ED/PED
+# TODO: Fuzzysearch results should be post-processed by filtering by edit distance
 #       and by existance in current_catalog, then compute and add distances.
 #       Efficient PED computations and list merging: pip install ad-freiburg-qgram-utils
+#       Sorting could be done by edit distance, then by 3gram overlap and by popularity.
 
 # TODO: implement search by author AND title together, and search by a single
 #       unspecified term that could be either an author or a title word.
