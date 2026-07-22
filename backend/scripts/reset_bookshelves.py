@@ -1,8 +1,9 @@
 """Standalone script to reset the bookshelves table in the SQLite database.
 
 Drops the existing bookshelves table and recreates it.
-Fills the new table with data from a CSV file containing bookshelf information.
-Can be run via make reset-bookshelves.
+Repopulates the new table with data from a CSV file containing bookshelf information.
+
+Can be run from the backend directory via 'make reset-bookshelves'.
 """
 
 import argparse

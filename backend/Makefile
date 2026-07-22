@@ -52,7 +52,7 @@ reset-bookshelves:
 fuzzysearch:
 	@echo "Starting local fuzzy search CLI..."
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
-	python3 -m scripts.fuzzy_db -db /workspaces/bookfinder/backend/books.db -i && \
+	python3 -m scripts.fuzzysearch_cli -db /workspaces/bookfinder/backend/books.db -i && \
 	deactivate
 
 clean:

@@ -1,18 +1,17 @@
-"""Helper functions and CLI for the fuzzy prefix search database.
+"""Functions for the fuzzy prefix search database.
 
-Provides functions to add book titles and author names to the database,
-tokenizing them into single words and generating threegrams for each token.
-Can be imported as a module, or run as a script to search the database locally.
+Provides functions to add book titles and author names to the search tables of the
+database, tokenizing them into single words and generating threegrams for each token.
+Also provides functions to fuzzy-search books by title or author name,
+using threegram overlap to filter and rank results.
 
 Modeled after the q-gram approach from:
 https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/lecture-07.pdf
 """
 
-import argparse
 import json
 import re
 import sqlite3
-import sys
 from pathlib import Path
 from typing import Literal
 
@@ -42,6 +41,13 @@ def _generate_threegrams(token: str) -> list[str]:
     The padding encodes "starts with" / "ends with", improving match quality.
     """
 
+    # For fuzzy PREFIX search, the lecture suggests padding left side only,
+    # but we pad both sides to improve match quality for short tokens.
+    # TODO: implement fuzzy prefix search for autocomplete suggestions,
+    #       and standard fuzzy search for catalog search. Untangle.
+    #       Differences: query token padding and similarity computation.
+    #       Prefix:  sim = (shared grams / grams in query_token)
+    #       Standard:sim = (shared grams / max(grams in query_token, grams in db_token))
     padded = f"{PADDING}{token}{PADDING}"
     return [padded[i : i + 3] for i in range(len(padded) - 2)]
 
@@ -223,96 +229,10 @@ def search_titles(
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
+# TODO: Fuzzysearch results should be post-processed by filtering by ED/PED
+#       and by existance in current_catalog, then compute and add distances.
+#       Efficient PED computations and list merging: pip install ad-freiburg-qgram-utils
+
 # TODO: implement search by author AND title together, and search by a single
 #       unspecified term that could be either an author or a title word.
 #       And use the new search in the API endpoints instead of the old catalog search.
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Perform fuzzy search on the database locally."
-    )
-
-    parser.add_argument(
-        "-a",
-        "--author",
-        metavar="QUERY",
-        help="Fuzzy-search authors for QUERY and print matching isbns.",
-    )
-    parser.add_argument(
-        "-t",
-        "--title",
-        metavar="QUERY",
-        help="Fuzzy-search titles for QUERY and print matching isbns.",
-    )
-    parser.add_argument(
-        "-i",
-        "--interactive",
-        action="store_true",
-        help="Run in interactive mode, manually inserting queries.",
-    )
-    parser.add_argument(
-        "-ms",
-        "--min-similarity",
-        type=float,
-        default=0.5,
-        help="Minimum similarity threshold for fuzzy search matches (default: 0.5).",
-    )
-    # db_path is needed because the CLI can't access current_app.config['DB_PATH']
-    parser.add_argument(
-        "-db",
-        "--db-path",
-        type=Path,
-        required=True,
-        help=("Path to the SQLite database file."),
-    )
-    args = parser.parse_args()
-
-    if args.interactive:
-        print("Entering interactive mode. Type 'exit' to quit.")
-        while True:
-            query = input("Enter search query (author or title): ")
-            if query.lower() == "exit":
-                break
-            print(f"Searching for '{query}'...")
-            print("Author matches:")
-            num_matches = 0
-            for isbn, score in search_authors(
-                query, min_similarity=args.min_similarity, db_path=args.db_path
-            ):
-                print(f"{score:.2f}  {isbn}")
-                num_matches += 1
-            print(f"Found {num_matches} books with matching authors.")
-            print("Title matches:")
-            num_matches = 0
-            for isbn, score in search_titles(
-                query, min_similarity=args.min_similarity, db_path=args.db_path
-            ):
-                print(f"{score:.2f}  {isbn}")
-                num_matches += 1
-            print(f"Found {num_matches} books with matching titles.")
-        sys.exit(0)  # Exit the script after interactive mode
-
-    if args.author:
-        print(f"Searching books with author '{args.author}'...")
-        num_matches = 0
-        for isbn, score in search_authors(
-            args.author, min_similarity=args.min_similarity, db_path=args.db_path
-        ):
-            print(f"{score:.2f}  {isbn}")
-            num_matches += 1
-        print(f"Found {num_matches} books with matching authors.")
-
-    if args.title:
-        print(f"Searching books with title '{args.title}'...")
-        num_matches = 0
-        for isbn, score in search_titles(
-            args.title, min_similarity=args.min_similarity, db_path=args.db_path
-        ):
-            print(f"{score:.2f}  {isbn}")
-            num_matches += 1
-        print(f"Found {num_matches} books with matching titles.")
-
-    if not args.author and not args.title:
-        print("No search query provided. Use --author or --title to search.")
-        sys.exit(1)

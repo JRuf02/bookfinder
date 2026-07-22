@@ -1,19 +1,25 @@
 import logging
+from pathlib import Path
 
 from app.db.catalog_db import get_number_of_books_with_isbn
 from app.db.database import db_cursor
+from app.db.database_fuzzy_utils import add_author_name, add_book_title
 from app.models.book import Book, BookPopularity
 from app.models.identifiers import Isbn
 from app.utils.time import compute_avg_num_of_days_until_now
-from scripts.fuzzy_db import add_author_name, add_book_title
 
 logger = logging.getLogger(__name__)
 
 
-def get_book_from_database(isbn: Isbn) -> Book | None:
-    """Fetch book data from the local SQLite database using the ISBN."""
+def get_book_from_database(isbn: Isbn, db_path: Path | None = None) -> Book | None:
+    """Fetch book data from the local SQLite database using the ISBN.
 
-    with db_cursor() as c:
+    db_path is only needed when running outside of a Flask app context, e.g.
+    in a standalone CLI script. Otherwise, db_cursor() will use the default
+    database path from current_app.config['DB_PATH'].
+    """
+
+    with db_cursor(db_path) as c:
         c.execute(
             "SELECT isbn, title, author, dnb_id, cover_url FROM books WHERE isbn = ?",
             (str(isbn),),
