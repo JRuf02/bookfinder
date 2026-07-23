@@ -240,8 +240,6 @@ def _search(
     return isbn_scores
 
 
-# TODO: Replace old catalog search api endpoint with this new fuzzy logic
-#       (This file is still not used anywhere in the backend code)
 # TODO: Set max_edit_dist based on query length
 def search_authors(
     query: str, max_edit_dist: int = 2, db_path: Path | None = None
@@ -260,8 +258,6 @@ def search_authors(
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
-# TODO: Replace old catalog search api endpoint with this new fuzzy logic
-#       (This file is still not used anywhere in the backend code)
 # TODO: Set max_edit_dist based on query length
 def search_titles(
     query: str, max_edit_dist: int = 2, db_path: Path | None = None

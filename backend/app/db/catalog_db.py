@@ -1,8 +1,9 @@
+import itertools
+import json
 import logging
 
-from fuzzysearch import find_near_matches
-
 from app.db.database import db_cursor
+from app.db.database_fuzzy_utils import search_authors, search_titles
 from app.models.book import Book, BookEntity
 from app.models.coordinates import GeoCoordinateError, GeoCoordinates
 from app.models.identifiers import Isbn, OsmId
@@ -13,13 +14,40 @@ from app.utils.geo_utils import haversine
 logger = logging.getLogger(__name__)
 
 
+def merge_book_entity_lists(
+    list1: list[tuple[BookEntity, float]],
+    list2: list[tuple[BookEntity, float]],
+) -> list[tuple[BookEntity, float]]:
+    """Merge two lists of (BookEntity, score) tuples, keeping only the best score
+    for each unique BookEntity (identified by entity_id).
+
+    Assumes that there are no duplicate entity_ids within each list,
+    but the same entity_id may appear in both lists.
+    """
+
+    if len(list1) == 0:
+        return list2
+
+    if len(list2) == 0:
+        return list1
+
+    best: dict[int, tuple[BookEntity, float]] = {}
+
+    for entity, score in itertools.chain(list1, list2):
+        current = best.get(entity.entity_id)
+        if current is None or score > current[1]:
+            best[entity.entity_id] = (entity, score)
+
+    return list(best.values())
+
+
 def search_in_catalog_db(
     title: str | None = None,
     author: str | None = None,
     user_coordinates: GeoCoordinates | None = None,
 ) -> list[BookEntity]:
     """Search for books by title and / or author and return entries
-    with shelf info and distance.
+    with shelf info and distance, sorted by fuzzy search scores.
 
     If user coordinates are None, distance will be returned as None.
     """
@@ -37,131 +65,91 @@ def search_in_catalog_db(
         msg = "Title or author must be given."
         raise ValueError(msg)
 
-    # TODO: ask Patrick if this is fast enough:
-    # This returns all books, pre-sorted by distance from the user
-    all_book_entities = _fetch_all_books_from_catalog(user_coordinates)
+    author_results: list[tuple[BookEntity, float]] = []
+    title_results: list[tuple[BookEntity, float]] = []
 
-    # Sort by fuzzy scores, filter out non-matching entries
-    return rank_and_filter_book_entities(title, author, all_book_entities)
-
-
-def rank_and_filter_book_entities(
-    title: str | None,
-    author: str | None,
-    all_book_entities: list[BookEntity],
-) -> list[BookEntity]:
-    """Rank and filter the given book entities based on how well they match
-    the given title and author.
-    The returned list is sorted by relevance (best matches first).
-    """
-
-    max_l_distance_author = 3
-
-    title_given = title is not None and title != ""
-    author_given = author is not None and author != ""
-
-    title = title if title is not None else ""
-    author = author if author is not None else ""
-
-    author_parts = author.lower().replace(",", " ").split(" ")
-    author_parts = [part.strip() for part in author_parts]
-    author_parts = [part for part in author_parts if len(part) >= max_l_distance_author]
-
-    scored_entities: list[tuple[BookEntity, tuple[float, float, float, float]]] = []
-    # Compute fuzzy scores for all books and filter out non-matching ones
-    for entity in all_book_entities:
-        # Compute fuzzy scores that measure how well the queried title / author matches
-        # this book's title / author
-        if not entity.book.author:
-            logger.warning(f"Book without author in db: {entity.book}")
-            author_parts_matched, author_parts_score = (0, 0)
-        else:
-            author_parts_matched, author_parts_score = (
-                calculate_author_score(author_parts, entity.book.author.lower())
-                if author_given
-                else (0, 0)
-            )
-        if not entity.book.title:
-            logger.warning(f"Book without title in db: {entity.book}")
-            title_matched, title_score = (0, 0)
-        else:
-            title_matched, title_score = (
-                calculate_title_score(title, entity.book.title.lower())
-                if title_given
-                else (0, 0)
-            )
-
-        # Filter out the book if it doesn't match the queried title / author at all.
-        if title_given and title_matched == 0:
-            continue
-
-        if author_given and author_parts_matched == 0:
-            continue
-
-        # combine title and author scores into one tuple
-        combined_score = (
-            title_matched,
-            title_score,
-            author_parts_matched,
-            author_parts_score,
+    if author:
+        # Fuzzy search for matching books in the database (contains all books ever seen)
+        matching_author_isbns = search_authors(query=author, max_edit_dist=3)
+        # Filter out books that are not on any shelf currently
+        author_matching_books_on_shelves: list[tuple[Isbn, float]] = []
+        for isbn, score in matching_author_isbns:
+            parsed_isbn = Isbn.parse(isbn)
+            if parsed_isbn is None:
+                logger.warning(f"Invalid ISBN '{isbn}' found in database.")
+                continue
+            author_matching_books_on_shelves.append((parsed_isbn, score))
+        # Fetch metadata for the matching books that are currently on shelves
+        author_results = _fetch_books_from_catalog(
+            author_matching_books_on_shelves, user_coordinates=user_coordinates
         )
 
-        scored_entities.append((entity, combined_score))
-
-    scored_entities.sort(key=lambda x: x[1], reverse=True)
-
-    return [entity for entity, _ in scored_entities]
-
-
-def calculate_title_score(query_title: str, db_title: str) -> tuple[float, float]:
-    """Calculate a fuzzy score for how well the query_title matches the db_title.
-    Returns (0, 0) for no match and (1, -distance) for a match,
-    where distance is the Levenshtein distance.
-    """
-
-    matches = find_near_matches(
-        query_title, db_title, max_l_dist=min(int(len(query_title) * 0.5), 3)
-    )
-    if len(matches) > 0:
-        minimum_distance = min(match.dist for match in matches)
-        return 1, -minimum_distance
-    return 0, 0
-
-
-def calculate_author_score(
-    author_parts: list[str], book_author: str
-) -> tuple[float, float]:
-    """Calculate a fuzzy score for how well the query author matches the book author.
-
-    Each part of the author's name is matched against book_author.
-    The score is based on how many parts match,
-    and the Levenshtein distance of the matches.
-    Returns (0, 0) for no match and (num_parts_matched, -distance) for a match, where
-    distance is the sum of the minimum Levenshtein distances of each author_part that
-    matches the book_author, and num_parts_matched is the number of parts that match.
-
-    Example:
-    author_parts: ["stephen", "erwin", "kong"]
-    book_author: "king, stephen"
-
-    calculate_author_score(author_parts, book_author) -> (2, -1)
-
-    """
-
-    minimum_distances = []
-    for author_part in author_parts:
-        matches = find_near_matches(
-            author_part, book_author, max_l_dist=min(int(len(author_part) * 0.5), 3)
+    if title:
+        # Fuzzy search for matching books in the database
+        matching_title_isbns = search_titles(query=title, max_edit_dist=3)
+        # Filter out books that are not on any shelf currently
+        title_matching_books_on_shelves: list[tuple[Isbn, float]] = []
+        for isbn, score in matching_title_isbns:
+            parsed_isbn = Isbn.parse(isbn)
+            if parsed_isbn is None:
+                logger.warning(f"Invalid ISBN '{isbn}' found in database.")
+                continue
+            title_matching_books_on_shelves.append((parsed_isbn, score))
+        # Fetch metadata for the matching books that are currently on shelves
+        title_results = _fetch_books_from_catalog(
+            title_matching_books_on_shelves, user_coordinates=user_coordinates
         )
-        if len(matches) > 0:
-            minimum_distance = min(match.dist for match in matches)
-            minimum_distances.append(minimum_distance)
-    return len(minimum_distances), -sum(minimum_distances)
+
+    # Combine results from title and author searches
+    # TODO: Consider weighting title and author scores differently,
+    #       e.g. by multiplying one of them by a factor
+    #       If title has more words than author, it can reach way higher scores
+    #       than author, even if the author is a perfect match and title is not.
+    # TODO: Consider requiring at least one match for title and author if both are given
+    # TODO: Dynamically adjust max_edit_dist based on the length of the query string
+    #       e.g.: max_edit_dist = max(1, len(query) // 4)
+    #       currently: max_edit_dist=3 -> query="Horry" matches "Homo Faber"
+    combined_results = merge_book_entity_lists(author_results, title_results)
+
+    # Sort by fuzzy scores, highest first (with lowest distance as tie-breaker)
+    def sort_key(item: tuple[BookEntity, float]) -> tuple[float, float]:
+        book_entity, score = item
+        shelf = book_entity.located_shelf
+        if shelf is not None and shelf.distance_meters is not None:
+            return (score, -shelf.distance_meters)
+        return (score, float("-inf"))
+
+    combined_results.sort(key=sort_key, reverse=True)
+
+    return [entity for entity, _ in combined_results]
 
 
-def _fetch_all_books_from_catalog(
+def _fetch_books_from_catalog(
+    scored_book_isbns: list[tuple[Isbn, float]],
     user_coordinates: GeoCoordinates | None = None,
-) -> list[BookEntity]:
+) -> list[tuple[BookEntity, float]]:
+    """Fetch book entities from the catalog for the given list of ISBNs.
+    If user_coordinates is given, compute the distance to each shelf.
+
+    Only books that are currently listed in current_catalog AND whose ISBN
+    matches one of the given scored_book_isbns are returned. Books in the
+    input list that are not currently on any shelf are silently omitted.
+
+    Does not guarantee any sort order of the returned list, but returns
+    (BookEntity, fuzzy_score) tuples for each matching book entity found
+    in the catalog.
+    """
+
+    if not scored_book_isbns:
+        return []
+
+    # Map isbn string to fuzzy score, so we can attach the right score
+    # to each row after the join.
+    # TODO: Take dict as input instead (fuzzy search already has the
+    #       before returning sorted list)
+    score_by_isbn = {str(isbn): score for isbn, score in scored_book_isbns}
+
+    # Fetch all books from the catalog that match the given ISBNs
     with db_cursor() as c:
         c.execute(
             """
@@ -177,7 +165,9 @@ def _fetch_all_books_from_catalog(
             FROM current_catalog cc
             JOIN books b ON cc.isbn = b.isbn
             JOIN bookshelves bs ON cc.osm_id = bs.osm_id
-        """,  # TODO: LIMIT and OFFSET for pagination?
+            WHERE cc.isbn IN (SELECT value FROM json_each(?))
+        """,
+            (json.dumps(list(score_by_isbn.keys())),),
         )
         rows = c.fetchall()
 
@@ -212,6 +202,8 @@ def _fetch_all_books_from_catalog(
             logger.warning(f"Invalid ISBN in database: {row['isbn']}")
             continue  # Skip invalid ISBNs in the database
 
+        score = score_by_isbn.get(str(isbn))
+
         osm_id = OsmId.parse(row["osm_id"])
         if osm_id is None:
             logger.warning(f"Missing osm_id for shelf of book with ISBN {isbn}")
@@ -237,40 +229,35 @@ def _fetch_all_books_from_catalog(
             )
             continue
 
-        results.append(
-            BookEntity(
-                entity_id=entry_id,
-                book=Book(
-                    isbn=isbn,
-                    title=row["title"],
-                    author=row["author"],
-                    dnb_id=row["dnb_id"],
-                    cover_url=row["cover_url"],
+        book_entity = BookEntity(
+            entity_id=entry_id,
+            book=Book(
+                isbn=isbn,
+                title=row["title"],
+                author=row["author"],
+                dnb_id=row["dnb_id"],
+                cover_url=row["cover_url"],
+            ),
+            located_shelf=LocatedShelf(
+                shelf=Shelf(
+                    osm_id=osm_id,
+                    name=row["shelf_name"],
+                    latitude=shelf_coordinates.latitude,
+                    longitude=shelf_coordinates.longitude,
+                    address=row["address"],
+                    type=row["shelf_type"],
+                    operator=row["operator"],
+                    website=row["website"],
+                    opening_hours=row["opening_hours"],
+                    osm_check_date=row["osm_check_date"],
+                    osm_last_updated=row["osm_last_updated"],
                 ),
-                located_shelf=LocatedShelf(
-                    shelf=Shelf(
-                        osm_id=osm_id,
-                        name=row["shelf_name"],
-                        latitude=shelf_coordinates.latitude,
-                        longitude=shelf_coordinates.longitude,
-                        address=row["address"],
-                        type=row["shelf_type"],
-                        operator=row["operator"],
-                        website=row["website"],
-                        opening_hours=row["opening_hours"],
-                        osm_check_date=row["osm_check_date"],
-                        osm_last_updated=row["osm_last_updated"],
-                    ),
-                    distance_meters=dist_m,
-                ),
-                in_shelf_since=in_shelf_since,
-            )
+                distance_meters=dist_m,
+            ),
+            in_shelf_since=in_shelf_since,
         )
 
-    if user_coordinates is not None:
-        results.sort(key=lambda x: x.located_shelf.distance_meters)
-    # This pre-sorting can be overwritten by fuzzysearch (in the calling function),
-    # but entities with the same fuzzy score will remain sorted by distance.
+        results.append((book_entity, score))
 
     return results
 

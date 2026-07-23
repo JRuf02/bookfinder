@@ -17,7 +17,7 @@
   - Only readme and blog post are very important
   - System diagrams for blog post
     - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
-    - Diagram with file overview and main files (e.g. App.tsx, server.py, reset_bookshelves.py)
+    - Diagram with file overview and main files (e.g. App.tsx, server.py, update_bookshelves.py)
   - Database tables diagram and/or section with table structure in readme
   - Backend/api documentation -> 1-2 diagrams (optional)
   - Sequenzdiagramm für 'Buch einstellen' Aktion (optional)
@@ -131,6 +131,8 @@
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 - Locate Me Tooltip bleibt manchmal hängen
+- Frontend:
+  - single term search input field is slow on each keystroke (re-rendering the map?! - locate me button is blinking on each keystroke)
 
 ## Improvements
 

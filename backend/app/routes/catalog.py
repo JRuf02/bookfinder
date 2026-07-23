@@ -108,6 +108,8 @@ def single_term_search_in_catalog(request: Request) -> ResponseReturnValue:
         # Search term is a valid ISBN
         search_results = search_in_catalog_by_isbn(isbn, user_coords)
     else:
+        # TODO: Consider re-ranking the results (worst title match currently
+        #       before best author match)
         search_results = search_in_catalog_db(search_term, None, user_coords)
         author_results = search_in_catalog_db(None, search_term, user_coords)
         for result in author_results:
