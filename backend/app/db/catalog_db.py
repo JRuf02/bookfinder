@@ -41,6 +41,36 @@ def merge_book_entity_lists(
     return list(best.values())
 
 
+def _parse_fuzzy_matching_isbns(
+    scored_isbns: list[tuple[str, float]],
+) -> list[tuple[Isbn, float]]:
+    """Parse and validate the raw ISBN string from each tuple
+    in scored_isbns and replace it with a valid Isbn object.
+
+    Returns a list of (Isbn, score) tuples.
+    Skips and logs any ISBN strings that could not be parsed into a valid Isbn.
+    """
+    parsed: list[tuple[Isbn, float]] = []
+    for isbn, score in scored_isbns:
+        parsed_isbn = Isbn.parse(isbn)
+        if parsed_isbn is None:
+            logger.warning(f"Invalid ISBN '{isbn}' found in database.")
+            continue
+        parsed.append((parsed_isbn, score))
+    return parsed
+
+
+def _sort_key(item: tuple[BookEntity, float]) -> tuple[float, float]:
+    """Sort key for (BookEntity, score) search results:
+    Sort by highest score and use lowest distance as tie-braker.
+    """
+    book_entity, score = item
+    shelf = book_entity.located_shelf
+    if shelf is not None and shelf.distance_meters is not None:
+        return (score, -shelf.distance_meters)
+    return (score, float("-inf"))
+
+
 def search_in_catalog_db(
     title: str | None = None,
     author: str | None = None,
@@ -55,11 +85,8 @@ def search_in_catalog_db(
     author = author.strip() if author is not None else None
     title = title.strip() if title is not None else None
 
-    if author == "":
-        author = None
-
-    if title == "":
-        title = None
+    author = author or None  # Treat empty strings as None
+    title = title or None
 
     if author is None and title is None:
         msg = "Title or author must be given."
@@ -71,33 +98,23 @@ def search_in_catalog_db(
     if author:
         # Fuzzy search for matching books in the database (contains all books ever seen)
         matching_author_isbns = search_authors(query=author, max_edit_dist=3)
-        # Filter out books that are not on any shelf currently
-        author_matching_books_on_shelves: list[tuple[Isbn, float]] = []
-        for isbn, score in matching_author_isbns:
-            parsed_isbn = Isbn.parse(isbn)
-            if parsed_isbn is None:
-                logger.warning(f"Invalid ISBN '{isbn}' found in database.")
-                continue
-            author_matching_books_on_shelves.append((parsed_isbn, score))
-        # Fetch metadata for the matching books that are currently on shelves
+        matching_author_isbns_parsed = _parse_fuzzy_matching_isbns(
+            matching_author_isbns
+        )
+
+        # Fetch metadata only for the matches that are currently on any shelf
         author_results = _fetch_books_from_catalog(
-            author_matching_books_on_shelves, user_coordinates=user_coordinates
+            matching_author_isbns_parsed, user_coordinates=user_coordinates
         )
 
     if title:
         # Fuzzy search for matching books in the database
         matching_title_isbns = search_titles(query=title, max_edit_dist=3)
-        # Filter out books that are not on any shelf currently
-        title_matching_books_on_shelves: list[tuple[Isbn, float]] = []
-        for isbn, score in matching_title_isbns:
-            parsed_isbn = Isbn.parse(isbn)
-            if parsed_isbn is None:
-                logger.warning(f"Invalid ISBN '{isbn}' found in database.")
-                continue
-            title_matching_books_on_shelves.append((parsed_isbn, score))
-        # Fetch metadata for the matching books that are currently on shelves
+        matching_title_isbns_parsed = _parse_fuzzy_matching_isbns(matching_title_isbns)
+
+        # Fetch metadata only for the matches that are currently on any shelf
         title_results = _fetch_books_from_catalog(
-            title_matching_books_on_shelves, user_coordinates=user_coordinates
+            matching_title_isbns_parsed, user_coordinates=user_coordinates
         )
 
     # Combine results from title and author searches
@@ -112,14 +129,7 @@ def search_in_catalog_db(
     combined_results = merge_book_entity_lists(author_results, title_results)
 
     # Sort by fuzzy scores, highest first (with lowest distance as tie-breaker)
-    def sort_key(item: tuple[BookEntity, float]) -> tuple[float, float]:
-        book_entity, score = item
-        shelf = book_entity.located_shelf
-        if shelf is not None and shelf.distance_meters is not None:
-            return (score, -shelf.distance_meters)
-        return (score, float("-inf"))
-
-    combined_results.sort(key=sort_key, reverse=True)
+    combined_results.sort(key=_sort_key, reverse=True)
 
     return [entity for entity, _ in combined_results]
 

@@ -28,7 +28,7 @@ def _tokenize(text: str) -> list[str]:
     Keeps apostrophes and hyphens that are within a word, removes other punctuation.
 
     >>> _tokenize("Hello, don't stop rock'n'roll! Ask_me-why-. -Summer of '69")
-    ['hello', "don't", 'stop', "rock'n'roll", 'ask', "me-why", 'summer', 'of', '69']
+    ['hello', "don't", 'stop', "rock'n'roll", 'ask', 'me-why', 'summer', 'of', '69']
     """
 
     return re.findall(r"[a-z0-9]+(?:['-][a-z0-9]+)*", text.lower())
