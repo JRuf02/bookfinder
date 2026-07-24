@@ -126,7 +126,7 @@ def search_in_catalog_db(
     # TODO: Dynamically adjust max_edit_dist based on the length of the query string
     #       e.g.: max_edit_dist = max(1, len(query) // 4)
     #       currently: max_edit_dist=3 -> query="Horry" matches "Homo Faber"
-    combined_results = merge_book_entity_lists(author_results, title_results)
+    combined_results = merge_book_entity_lists(title_results, author_results)
 
     # Sort by fuzzy scores, highest first (with lowest distance as tie-breaker)
     combined_results.sort(key=_sort_key, reverse=True)

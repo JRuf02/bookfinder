@@ -76,8 +76,8 @@ def test_search_in_catalog_wrong_parameters(client: FlaskClient) -> None:
         query_string={
             "lat": "48.012345",
             "lon": "8.2",
-            "title": "Spre",
-            "q": "Spre",
+            "title": "Sprengstoff",
+            "q": "Sprengstf",
         },
     )
 
@@ -90,7 +90,7 @@ def test_search_in_catalog_wrong_parameters(client: FlaskClient) -> None:
 def test_search_in_catalog_query_given_coords_not(client: FlaskClient) -> None:
 
     insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_book_into_shelf_in_db(client.application)  # by King, Stephen
 
     response = client.get(
         "/api/catalog/search/single-term",
@@ -292,14 +292,14 @@ def test_search_in_catalog_by_query_with_coordinates(
 ) -> None:
 
     insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_book_into_shelf_in_db(client.application)  # Sprengstoff (King, Stephen)
 
     response = client.get(
         "/api/catalog/search/single-term",
         query_string={
             "lat": 49.1234567891,
             "lon": 8.1234567891,
-            "q": "spre",
+            "q": "dpremgstof ",
         },
     )
 
@@ -323,7 +323,7 @@ def test_search_in_catalog_by_query_without_coordinates(
         query_string={
             "lat": None,
             "lon": None,
-            "q": "spre",
+            "q": "spregnstoff",
         },
     )
 

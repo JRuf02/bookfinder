@@ -104,17 +104,12 @@ def single_term_search_in_catalog(request: Request) -> ResponseReturnValue:
         ), HttpStatus.BAD_REQUEST.value
 
     isbn = Isbn.parse(search_term)
+
     if isbn:
         # Search term is a valid ISBN
         search_results = search_in_catalog_by_isbn(isbn, user_coords)
     else:
-        # TODO: Consider re-ranking the results (worst title match currently
-        #       before best author match)
-        search_results = search_in_catalog_db(search_term, None, user_coords)
-        author_results = search_in_catalog_db(None, search_term, user_coords)
-        for result in author_results:
-            if result not in search_results:
-                search_results.append(result)
+        search_results = search_in_catalog_db(search_term, search_term, user_coords)
 
     return jsonify(
         {

@@ -243,6 +243,9 @@ def _search(
                     1 / (1 + edit_distance)
                 )
 
+    # TODO: "King, Stephen" should have a higher score than "Stephen Edwin King" for
+    #       query "stephen king".
+
     # TODO: Get 3gram overlap from _find_matching_tokens and also return it,
     #       as ED score tie braker
     return isbn_scores

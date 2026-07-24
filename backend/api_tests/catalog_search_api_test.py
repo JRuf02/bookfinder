@@ -90,14 +90,14 @@ def test_search_in_catalog_no_author(client: FlaskClient) -> None:
 def test_search_in_catalog_author_given_title_none(client: FlaskClient) -> None:
 
     insert_test_shelf_into_db(client.application)
-    insert_test_book_into_shelf_in_db(client.application)
+    insert_test_book_into_shelf_in_db(client.application)  # Sprengstoff (King, Stephen)
 
     response = client.get(
         "/api/catalog/search",
         query_string={
             "lat": None,
             "lon": None,
-            "author": "Ste",
+            "author": "Steven",
             "title": None,
         },
     )

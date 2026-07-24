@@ -17,7 +17,6 @@ def assert_correct_test_book_entity_in_response_data(
     assert response is not None
     assert response.json is not None
 
-    print(f"Response JSON: {response.json}")
     assert len(response.json["data"]) == 1
 
     assert response.json["data"][0].keys() == {
