@@ -383,6 +383,9 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
     """Search for 'Stephen King' or 'stephen king' should find books with author
     'King, Stephen' and 'Stephen Edwin King', but not 'Anna'.
     'King, S.E.' and 'Steven Spielberg' should also be found, but ranked lower.
+
+    'Stephen Edwin King' may be ranked equal to 'King, Stephen' for the query
+    'stephen king', so it can appear first or second in the search results.
     """
 
     test_book_1 = Book(
@@ -454,7 +457,6 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
             "entityId",
             "inShelfSince",
         }
-        assert response.json["data"][i]["entityId"] == i + 1
         assert response.json["data"][i]["inShelfSince"] is not None
 
         # Check that the LocatedShelf is correct.
@@ -476,19 +478,41 @@ def test_search_in_catalog_author_name_formats(client: FlaskClient) -> None:
         }
 
     # Ensure that the books are ranked in the expected order.
-    assert response.json["data"][0]["book"]["author"] == "King, Stephen"
-    assert response.json["data"][1]["book"]["author"] == "Stephen Edwin King"
+    # "King, Stephen" and "Stephen Edwin King" may tie for the top author score,
+    # so they can appear in either order in the top two results.
+    assert response.json["data"][0]["entityId"] in {1, 2}
+    assert response.json["data"][1]["entityId"] in {1, 2}
+    assert response.json["data"][2]["entityId"] == 3
+    assert response.json["data"][3]["entityId"] == 4
+
+    top_two_authors = {
+        response.json["data"][0]["book"]["author"],
+        response.json["data"][1]["book"]["author"],
+    }
+    assert top_two_authors == {"King, Stephen", "Stephen Edwin King"}
     assert response.json["data"][2]["book"]["author"] == "King, S.E."
     assert response.json["data"][3]["book"]["author"] == "Steven Spielberg"
 
-    # Check that the book details are correct (we only test the second and fourth book).
-    assert response.json["data"][1]["book"] == {
+    # Check that the book details are correct (only test top two and the fourth book).
+    expected_book_1 = {
+        "author": "King, Stephen",
+        "coverUrl": None,
+        "dnbId": "12345",
+        "isbn": "978-3-486-58723-4",
+        "title": "Test Book 1",
+    }
+    expected_book_2 = {
         "author": "Stephen Edwin King",
         "coverUrl": None,
         "dnbId": "12346",
         "isbn": "978-3-473-58522-9",
         "title": "Test Book 2",
     }
+    assert response.json["data"][0]["book"] in (expected_book_1, expected_book_2)
+    assert response.json["data"][1]["book"] in (expected_book_1, expected_book_2)
+
+    # Ensure that the top two books are both included, not just one of them.
+    assert response.json["data"][0]["book"] != response.json["data"][1]["book"]
 
     assert response.json["data"][3]["book"] == {
         "author": "Steven Spielberg",
