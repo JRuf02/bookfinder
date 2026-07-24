@@ -123,6 +123,9 @@
     - scanningResults / BookDisplay
     - shelfActionView
 
+- Bugs fixed:
+  - Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher
+
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!

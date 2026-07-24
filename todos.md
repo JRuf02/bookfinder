@@ -5,11 +5,13 @@
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
   - Unit tests (Only complex logic should be tested)
-    - Unit tests for python (backend) most complex logic functions
+    - Unit tests / Doctests for python (backend) most complex logic functions
+      - unit or doctests for popularity score calculations
+      - unit or doctests for isbn parsing etc (osm parsing...)
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
   - API calls should be tested (-> done in python), user interface doesn't need to be tested
     - add api tests for new endpoints
-  - sqlite: c.execute("sel"\n"from") vs. c.execute("""sel\nfrom""")? vereinheitlichen, u.a. in book_db.py
+    - Fix api test errors comming from rewritten search endpoint <============================================================= 1
   - Use subcomponents for ScanningResults
 
 - Logic & Documentation:
@@ -25,12 +27,9 @@
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - CatalogScreen
-  - Show books of selected shelf from app state
+  - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
   - Funktionen aufräumen, ggf custom hooks für logik
-
-- PopularityChips
-  - in eigene Component auslagern
-  - Unit tests für backend!
+  - Standort direkt abfragen bei klick auf search ner me button, damit die suche dann schneller geht <======== 3
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
@@ -39,7 +38,7 @@
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
 - ShelfActionView.tsx
-  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 3
+  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 7
 
 - InfoScreen
   - add info page
@@ -51,7 +50,7 @@
 - Resilience & Edge Cases:
   - dnb_api.py
     - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
-    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 2
+    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 6
     - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
     - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
   - if cover in size=l not available, try different sizes!
@@ -61,7 +60,7 @@
     - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
-  - Besseres color scheme entwickeln und anwenden <============================================================= 5
+  - Besseres color scheme entwickeln und anwenden <============================================================= 4
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
@@ -104,10 +103,11 @@
     - Run linter (ESLint and Ruff)
 
 - Blog Post
-  - write preliminary version/structure <============================================================= 4
+  - write preliminary version/structure <============================================================= 5
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain where and what additional documentation can be found in the repo
-  - Include used Hilfsmittel like copilot autocompletion
+  - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
+  - Add info about tests: API tests, unit tests, doctests
 
 ## Testing
 
@@ -127,12 +127,12 @@
 
 ## Bugs
 
-- Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher <============================================================= 1
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
 - Locate Me Tooltip bleibt manchmal hängen
 - Frontend:
-  - single term search input field is slow on each keystroke (re-rendering the map?! - locate me button is blinking on each keystroke)
+  - single term search input field is slow on each keystroke (re-rendering the map?!) <============================================================= 2
+    - locate me button is blinking on each keystroke?! Marker images also fetched on every keystroke?!
 
 ## Improvements
 
