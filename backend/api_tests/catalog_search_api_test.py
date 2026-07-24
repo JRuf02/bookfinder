@@ -75,7 +75,7 @@ def test_search_in_catalog_no_author(client: FlaskClient) -> None:
         query_string={
             "lat": "48.012345",
             "lon": "8.2",
-            "title": "Spre",
+            "title": "Spregnstof",
         },  # will be interpreted as author = None
     )
 

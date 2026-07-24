@@ -1,6 +1,7 @@
 from flask import Flask
 
 from app.db.database import db_cursor
+from app.db.database_fuzzy_utils import add_author_name, add_book_title
 from app.models.book import Book
 from app.models.identifiers import Isbn
 
@@ -45,6 +46,8 @@ def insert_test_book_into_shelf_in_db(
     If no book is given, a default example book will be inserted.
     Adds the book to the books table and creates an entry in the current_catalog
     table showing the book in the given shelf.
+    Also creates entries for the book in the author and title token tables and
+    in the threegram table for fuzzy catalog search.
 
     Does NOT add the shelf to the bookshelves table.
     Call insert_test_shelf_into_db first, if needed.
@@ -79,6 +82,16 @@ def insert_test_book_into_shelf_in_db(
                 book.dnb_id,
                 book.cover_url,
             ),
+        )
+
+    # Generate threegrams and tokens for fast fuzzy search
+    if book.author:
+        add_author_name(
+            name=book.author, isbn=str(book.isbn), db_path=app.config["DB_PATH"]
+        )
+    if book.title:
+        add_book_title(
+            title=book.title, isbn=str(book.isbn), db_path=app.config["DB_PATH"]
         )
 
     # Insert the book into the shelf

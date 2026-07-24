@@ -132,28 +132,36 @@ def _add_token(
 
 # TODO: Use this function in the backend code whenever inserting something
 #       into the table 'books'.
-def add_book_title(title: str, isbn: str) -> None:
+def add_book_title(title: str, isbn: str, db_path: Path | None = None) -> None:
     """Parse a book title into tokens (and threegrams) and link them to the isbn.
 
     Isbn must already exist in the 'books' table (as book_title_tokens.isbn is
     a foreign key from books.isbn).
     Call this after inserting the book, within the same transaction if possible.
+
+    db_path is only needed when running outside of a Flask app context, e.g.
+    in a standalone CLI script. Otherwise, db_cursor() will use the default
+    database path from current_app.config['DB_PATH'].
     """
-    with db_cursor() as c:
+    with db_cursor(db_path) as c:
         for token in _tokenize(title):
             _add_token(c, token, isbn, "book_title_tokens")
 
 
 # TODO: Use this function in the backend code whenever inserting something
 #       into the table 'books'.
-def add_author_name(name: str, isbn: str) -> None:
+def add_author_name(name: str, isbn: str, db_path: Path | None = None) -> None:
     """Parse an author name into tokens (and threegrams) and link them to the isbn.
 
     Isbn must already exist in the 'books' table (author_name_tokens.isbn is
     a foreign key from books.isbn).
     Call this after inserting the book, within the same transaction if possible.
+
+    db_path is only needed when running outside of a Flask app context, e.g.
+    in a standalone CLI script. Otherwise, db_cursor() will use the default
+    database path from current_app.config['DB_PATH'].
     """
-    with db_cursor() as c:
+    with db_cursor(db_path) as c:
         for token in _tokenize(name):
             _add_token(c, token, isbn, "author_name_tokens")
 
