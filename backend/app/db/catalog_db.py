@@ -18,11 +18,11 @@ def merge_book_entity_lists(
     list1: list[tuple[BookEntity, float]],
     list2: list[tuple[BookEntity, float]],
 ) -> list[tuple[BookEntity, float]]:
-    """Merge two lists of (BookEntity, score) tuples, keeping only the best score
-    for each unique BookEntity (identified by entity_id).
+    """Merge two lists of (BookEntity, score) tuples, summing the scores
+    for each BookEntity (identified by entity_id) that appears in both lists.
 
-    Assumes that there are no duplicate entity_ids within each list,
-    but the same entity_id may appear in both lists.
+    Assumes that there are no duplicate BookEntities within each list,
+    but the same entity may appear in both lists.
     """
 
     if len(list1) == 0:
@@ -31,14 +31,16 @@ def merge_book_entity_lists(
     if len(list2) == 0:
         return list1
 
-    best: dict[int, tuple[BookEntity, float]] = {}
+    combined: dict[int, tuple[BookEntity, float]] = {}
 
     for entity, score in itertools.chain(list1, list2):
-        current = best.get(entity.entity_id)
-        if current is None or score > current[1]:
-            best[entity.entity_id] = (entity, score)
+        current = combined.get(entity.entity_id)
+        if current is None:
+            combined[entity.entity_id] = (entity, score)
+        else:
+            combined[entity.entity_id] = (entity, current[1] + score)
 
-    return list(best.values())
+    return list(combined.values())
 
 
 def _parse_fuzzy_matching_isbns(
