@@ -62,7 +62,14 @@ def test_get_books_in_shelf_with_books(client: FlaskClient) -> None:
         dnb_id="12347",
     )
 
-    insert_test_shelf_into_db(client.application)
+    insert_test_shelf_into_db(client.application)  # node/11935877522
+    insert_test_shelf_into_db(
+        client.application,
+        lat=48.12,
+        lon=8.34,
+        osm_id="https://www.openstreetmap.org/node/3093755951",
+    )  # other shelf
+
     insert_test_book_into_shelf_in_db(
         client.application,
         test_book_1,

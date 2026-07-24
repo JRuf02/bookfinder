@@ -45,8 +45,12 @@ def insert_test_book_into_shelf_in_db(
     If no book is given, a default example book will be inserted.
     Adds the book to the books table and creates an entry in the current_catalog
     table showing the book in the given shelf.
-    Does not add the shelf to the bookshelves table.
+
+    Does NOT add the shelf to the bookshelves table.
     Call insert_test_shelf_into_db first, if needed.
+    Shelf must exist in the bookshelves table before calling this function, otherwise
+    the foreign key constraint will fail, the book will not be added to the shelf and
+    an IntegrityError will be raised.
     """
 
     # Create default example book to insert if no book is specified
