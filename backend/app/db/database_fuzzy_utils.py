@@ -5,6 +5,8 @@ database, tokenizing them into single words and generating threegrams for each t
 Also provides functions to fuzzy-search books by title or author name,
 using threegram overlap and edit distance to filter and rank results.
 
+This does not check whether the books are actually on a shelf (current_catalog table).
+
 Modeled after the q-gram approach from:
 https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/lecture-07.pdf
 """
@@ -42,12 +44,7 @@ def _generate_threegrams(token: str) -> list[str]:
     """
 
     # For fuzzy PREFIX search, the lecture suggests padding left side only,
-    # but we pad both sides to improve match quality for short tokens.
-    # TODO: implement fuzzy prefix search for autocomplete suggestions,
-    #       use standard fuzzy search for catalog search. Untangle.
-    #       Differences: query token padding and similarity computation.
-    #       Prefix:  sim = (shared grams / grams in query_token)
-    #       Standard:sim = (shared grams / max(grams in query_token, grams in db_token))
+    # but we pad both sides as we the catalog search uses standard fuzzy search.
     padded = f"{PADDING}{token}{PADDING}"
     return [padded[i : i + 3] for i in range(len(padded) - 2)]
 
@@ -130,8 +127,6 @@ def _add_token(
         )
 
 
-# TODO: Use this function in the backend code whenever inserting something
-#       into the table 'books'.
 def add_book_title(title: str, isbn: str, db_path: Path | None = None) -> None:
     """Parse a book title into tokens (and threegrams) and link them to the isbn.
 
@@ -148,8 +143,6 @@ def add_book_title(title: str, isbn: str, db_path: Path | None = None) -> None:
             _add_token(c, token, isbn, "book_title_tokens")
 
 
-# TODO: Use this function in the backend code whenever inserting something
-#       into the table 'books'.
 def add_author_name(name: str, isbn: str, db_path: Path | None = None) -> None:
     """Parse an author name into tokens (and threegrams) and link them to the isbn.
 
@@ -243,11 +236,6 @@ def _search(
                     1 / (1 + edit_distance)
                 )
 
-    # TODO: "King, Stephen" should have a higher score than "Stephen Edwin King" for
-    #       query "stephen king".
-
-    # TODO: Get 3gram overlap from _find_matching_tokens and also return it,
-    #       as ED score tie braker
     return isbn_scores
 
 
@@ -285,13 +273,3 @@ def search_titles(
         isbn_scores = _search(c, query, "book_title_tokens", max_edit_dist)
 
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
-
-
-# TODO: Fuzzysearch results should be post-processed by filtering by edit distance
-#       and by existance in current_catalog, then compute and add distances.
-#       Efficient PED computations and list merging: pip install ad-freiburg-qgram-utils
-#       Sorting could be done by edit distance, then by 3gram overlap and by popularity.
-
-# TODO: implement search by author AND title together, and search by a single
-#       unspecified term that could be either an author or a title word.
-#       And use the new search in the API endpoints instead of the old catalog search.

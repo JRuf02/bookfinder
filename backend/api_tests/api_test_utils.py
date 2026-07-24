@@ -113,6 +113,7 @@ def insert_test_book_into_books_table_in_db(
 
     If no book is given, a default example book will be inserted.
     Adds the book only to the books table (for metadata), not to the catalog.
+    Also generates and stores fuzzysearch tokens and threegrams for the book.
     """
 
     if book is None:
@@ -139,6 +140,16 @@ def insert_test_book_into_books_table_in_db(
                 book.dnb_id,
                 book.cover_url,
             ),
+        )
+
+    # Generate threegrams and tokens for fast fuzzy search
+    if book.author:
+        add_author_name(
+            name=book.author, isbn=str(book.isbn), db_path=app.config["DB_PATH"]
+        )
+    if book.title:
+        add_book_title(
+            title=book.title, isbn=str(book.isbn), db_path=app.config["DB_PATH"]
         )
 
 

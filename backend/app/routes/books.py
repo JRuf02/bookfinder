@@ -39,7 +39,7 @@ def get_book_api_logic(request: Request) -> ResponseReturnValue:
     return jsonify({"status": "success", "data": as_json_dict(book)}), 200
 
 
-def get_book(isbn: Isbn) -> Book | None:  # TODO: check usages
+def get_book(isbn: Isbn) -> Book | None:
     """Fetch book metadata by normalized ISBN, first from local DB,
     then from DNB if not found in local DB. Store fetched data in local DB.
     """

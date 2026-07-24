@@ -38,6 +38,7 @@ def get_book_from_database(isbn: Isbn, db_path: Path | None = None) -> Book | No
 
 def save_book_to_db(book: Book) -> None:
     """Save book metadata to the local SQLite database, in the table 'books'.
+    Also generates and saves tokens and threegrams for the book, for fuzzy search.
 
     If a book with the same ISBN already exists, old metadata will be kept.
     """

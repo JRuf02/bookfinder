@@ -192,6 +192,13 @@
   - Hide browser address bar ([tipps on stack overflow](https://stackoverflow.com/questions/57023990/how-to-hide-the-address-bar-on-mobile-in-a-react-app))
   - Hide android bottom bar
   - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
+- Fuzzy Search:
+  - Set max_edit_dist based on query length <======================================================================================================================================= 0
+  - implement fuzzy PREFIX search for autocomplete suggestions while typing (keep standard fuzzy search incl. catalog lookup for catalog search on form submit)
+    - does not need to check current_catalog
+    - Efficient PED computations and list merging: pip install ad-freiburg-qgram-utils
+  - "King, Stephen" should have a higher score than "Stephen Edwin King" for query "stephen king" (use token coverage as secondary ranking score)
+  - Ranking could be done by edit distance, then by token coverage, then by distance and by popularity
 - CatalogScreen
   - Hat button "select shelf to show books" und zeigt schon beim ersten öffnen die bücher des nähesten shelf?
   - oder zeigt die most recently inserted books deutschlandweit als start?
