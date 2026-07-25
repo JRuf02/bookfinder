@@ -14,6 +14,7 @@ https://daphne.tf.uni-freiburg.de/ws2324/InformationRetrieval/svn/public/slides/
 import json
 import re
 import sqlite3
+from math import floor
 from pathlib import Path
 from typing import Literal
 
@@ -160,12 +161,15 @@ def add_author_name(name: str, isbn: str, db_path: Path | None = None) -> None:
 
 
 def _find_matching_tokens(
-    c: sqlite3.Cursor, query_token: str, max_edit_dist: int = 2
+    c: sqlite3.Cursor, query_token: str, max_edit_dist: int
 ) -> list[tuple[int, str, int]]:
     """Find tokens with maximum edit distance of max_edit_dist from query_token.
 
     Filter by q-gram overlap first, then compute the actual
     edit distance only for the remaining candidates.
+
+    Returns all database tokens with a maximum edit distance of
+    min(max_edit_dist, floor(len(db_token) // 2)) for each token in query.
 
     Returns (token_id, token, edit_distance) tuples, best matches first.
     """
@@ -198,8 +202,15 @@ def _find_matching_tokens(
             continue
 
         edit_distance = _edit_distance(query_token, token)
-        if edit_distance <= max_edit_dist:
+
+        # Arbitrary tuning to avoid too many false positives for short tokens.
+        # If changing, also change the docstring above and in search_authors(),
+        # search_titles() and _search().
+        token_max_edit_dist = min(max_edit_dist, floor(len(token) // 2))
+
+        if edit_distance <= token_max_edit_dist:
             results.append((token_id, token, edit_distance))
+
     return results
 
 
@@ -216,6 +227,9 @@ def _search(
     Accumulate edit-distance-based scores per isbn, for each query token.
     Sum up the scores of all query tokens, so a book matching more of them ranks higher.
     Higher scores indicate better matches.
+
+    Finds all database tokens with a maximum edit distance of
+    min(max_edit_dist, floor(len(db_token) // 2)) for each token in query.
 
     Returns
     -------
@@ -239,12 +253,14 @@ def _search(
     return isbn_scores
 
 
-# TODO: Set max_edit_dist based on query length
 def search_authors(
-    query: str, max_edit_dist: int = 2, db_path: Path | None = None
+    query: str, max_edit_dist: int, db_path: Path | None = None
 ) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for author names fuzzy-matching query,
     best matches first.
+
+    Finds all database tokens with a maximum edit distance of
+    min(max_edit_dist, floor(len(db_token) // 2)) for each token in query.
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default
@@ -257,12 +273,14 @@ def search_authors(
     return sorted(isbn_scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
-# TODO: Set max_edit_dist based on query length
 def search_titles(
-    query: str, max_edit_dist: int = 2, db_path: Path | None = None
+    query: str, max_edit_dist: int, db_path: Path | None = None
 ) -> list[tuple[str, float]]:
     """Return (isbn, score) pairs for book titles fuzzy-matching query,
     best matches first.
+
+    Finds all database tokens with a maximum edit distance of
+    min(max_edit_dist, floor(len(db_token) // 2)) for each token in query.
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default

@@ -11,7 +11,6 @@
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
   - API calls should be tested (-> done in python), user interface doesn't need to be tested
     - add api tests for new endpoints
-    - Fix api test errors comming from rewritten search endpoint <============================================================= 1
   - Use subcomponents for ScanningResults
 
 - Logic & Documentation:
@@ -193,7 +192,6 @@
   - Hide android bottom bar
   - [Web-App-Manifest hinzufügen](https://web.dev/articles/add-manifest?hl=de)
 - Fuzzy Search:
-  - Set max_edit_dist based on query length <======================================================================================================================================= 0
   - implement fuzzy PREFIX search for autocomplete suggestions while typing (keep standard fuzzy search incl. catalog lookup for catalog search on form submit)
     - does not need to check current_catalog
     - Efficient PED computations and list merging: pip install ad-freiburg-qgram-utils

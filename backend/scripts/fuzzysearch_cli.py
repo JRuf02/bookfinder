@@ -42,8 +42,8 @@ if __name__ == "__main__":
         "-med",
         "--max-edit-dist",
         type=int,
-        default=2,
-        help="Maximum edit distance for fuzzy search matches (default: 2).",
+        default=4,
+        help="Maximum edit distance for fuzzy search matches (default: 4).",
     )
     # db_path is needed because the CLI can't access current_app.config['DB_PATH']
     parser.add_argument(

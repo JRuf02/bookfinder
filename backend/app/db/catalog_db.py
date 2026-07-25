@@ -99,7 +99,7 @@ def search_in_catalog_db(
 
     if author:
         # Fuzzy search for matching books in the database (contains all books ever seen)
-        matching_author_isbns = search_authors(query=author, max_edit_dist=3)
+        matching_author_isbns = search_authors(query=author, max_edit_dist=4)
         matching_author_isbns_parsed = _parse_fuzzy_matching_isbns(
             matching_author_isbns
         )
@@ -111,7 +111,7 @@ def search_in_catalog_db(
 
     if title:
         # Fuzzy search for matching books in the database
-        matching_title_isbns = search_titles(query=title, max_edit_dist=3)
+        matching_title_isbns = search_titles(query=title, max_edit_dist=4)
         matching_title_isbns_parsed = _parse_fuzzy_matching_isbns(matching_title_isbns)
 
         # Fetch metadata only for the matches that are currently on any shelf
@@ -124,10 +124,6 @@ def search_in_catalog_db(
     #       e.g. by multiplying one of them by a factor
     #       If title has more words than author, it can reach way higher scores
     #       than author, even if the author is a perfect match and title is not.
-    # TODO: Consider requiring at least one match for title and author if both are given
-    # TODO: Dynamically adjust max_edit_dist based on the length of the query string
-    #       e.g.: max_edit_dist = max(1, len(query) // 4)
-    #       currently: max_edit_dist=3 -> query="Horry" matches "Homo Faber"
     combined_results = merge_book_entity_lists(title_results, author_results)
 
     # Sort by fuzzy scores, highest first (with lowest distance as tie-breaker)

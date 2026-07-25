@@ -19,6 +19,9 @@
   - Show fuzzy search results within given radius + complete matches even if outside the search radius
   - Search should handle oe = ö -> it does via fuzzy search
   - Umlaut not in db, weird non-ascii (catalog search glücklich does not work) -> does work now thanks to fuzzy
+  - Fuzzy Search:
+    - Rewrite fuzzy search to use 3grams and tokens
+    - Set max_edit_dist based on query length
 
 - CatalogScreen
   - ResultsList hat sort by Title, sort by Distance und sort by Einstellungsdatum
