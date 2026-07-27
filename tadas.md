@@ -34,6 +34,7 @@
     - Books at shelf xy: showing all books from one shelf
   - Kann Bücher von auf Karte gewähltem Regal zeigen
   - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
+  - Standort direkt abfragen bei klick auf search near me button, damit die suche dann schneller geht
 
 - PopularityChips
   - in eigene Component auslagern

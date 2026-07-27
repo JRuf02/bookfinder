@@ -28,7 +28,7 @@
 - CatalogScreen
   - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
   - Funktionen aufräumen, ggf custom hooks für logik
-  - Standort direkt abfragen bei klick auf search neaHr me button, damit die suche dann schneller geht <======== 1
+  - Während Standortabfrage bei search near me den form submit deaktivieren bis ergebnis da, spinner zeigen <======== 1
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
