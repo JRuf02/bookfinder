@@ -1,4 +1,5 @@
 import Alert from "@mui/material/Alert";
+import React from "react";
 
 import { removeOsmIdPrefix } from "../../services/prefix";
 import { Shelf } from "../../types/Shelf";
@@ -9,7 +10,7 @@ type CurrentShelfInfoProps = {
 };
 
 /** Renders information about the currently active shelf */
-export default function CurrentShelfInfo({
+export default React.memo(function CurrentShelfInfo({
   activeShelf,
   onClose,
 }: CurrentShelfInfoProps) {
@@ -45,4 +46,4 @@ export default function CurrentShelfInfo({
         removeOsmIdPrefix(activeShelf.osmId)}
     </Alert>
   );
-}
+});

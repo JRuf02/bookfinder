@@ -1,4 +1,5 @@
 import { Alert, Box, Card, CardContent } from "@mui/material";
+import React from "react";
 
 import { CatalogResult } from "../../types/CatalogResult";
 import ResultCardContent from "./ResultCardContent";
@@ -8,7 +9,7 @@ type ResultsListProps = {
 };
 
 /** Renders a list of catalog results */
-export default function ResultsList({ results }: ResultsListProps) {
+export default React.memo(function ResultsList({ results }: ResultsListProps) {
   return (
     <Box className="results-list">
       {results.map((result) => (
@@ -32,4 +33,4 @@ export default function ResultsList({ results }: ResultsListProps) {
       )}
     </Box>
   );
-}
+});
