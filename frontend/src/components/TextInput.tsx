@@ -8,6 +8,8 @@ type TextInputProps = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
+  submitDisabled?: boolean;
+  submitEndIcon?: React.ReactNode;
 };
 
 // More mui styling options for the input text field: https://mui.com/material-ui/react-text-field/
@@ -17,6 +19,8 @@ export default function TextInput({
   value,
   onChange,
   onSubmit,
+  submitDisabled = false,
+  submitEndIcon,
 }: TextInputProps) {
   return (
     <Box
@@ -49,7 +53,8 @@ export default function TextInput({
         type="submit"
         variant="contained"
         size="medium"
-        endIcon={<SendIcon />}
+        disabled={submitDisabled}
+        endIcon={submitEndIcon ?? <SendIcon />}
       >
         Search
       </Button>

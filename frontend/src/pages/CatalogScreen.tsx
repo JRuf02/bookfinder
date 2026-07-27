@@ -63,6 +63,7 @@ export default function CatalogScreen() {
   const [locationError, setLocationError] = useState<LocationError | null>(
     null,
   );
+  const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [showSearchForm, setShowSearchForm] = useState<boolean>(
     activeShelf === null,
   );
@@ -90,35 +91,38 @@ export default function CatalogScreen() {
     }
   }, []);
 
-  const loadSingleTermSearch = useCallback(async (searchTerm: string) => {
-    setLoading(true);
-    setError(null);
-    setResults([]);
+  const loadSingleTermSearch = useCallback(
+    async (searchTerm: string) => {
+      setLoading(true);
+      setError(null);
+      setResults([]);
 
-    // if userCoordinates is in AppState, pass them to the search function to prioritize nearby results
-    const userCoords = state.userCoordinates ? state.userCoordinates : null;
+      // if userCoordinates is in AppState, pass them to the search function to prioritize nearby results
+      const userCoords = state.userCoordinates ? state.userCoordinates : null;
 
-    try {
-      const result = await singleTermCatalogSearch(searchTerm, userCoords);
+      try {
+        const result = await singleTermCatalogSearch(searchTerm, userCoords);
 
-      if (!result.ok) {
-        throw new Error(result.error);
+        if (!result.ok) {
+          throw new Error(result.error);
+        }
+
+        setResults(result.data);
+        setActiveShelf(null);
+      } catch (err) {
+        setError(
+          getErrorMessage(
+            err,
+            "Could not fetch results. Please try again later.",
+          ),
+        );
+        console.error("Error during single-term search:", err);
+      } finally {
+        setLoading(false);
       }
-
-      setResults(result.data);
-      setActiveShelf(null);
-    } catch (err) {
-      setError(
-        getErrorMessage(
-          err,
-          "Could not fetch results. Please try again later.",
-        ),
-      );
-      console.error("Error during single-term search:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [state.userCoordinates]);
+    },
+    [state.userCoordinates],
+  );
 
   useEffect(() => {
     if (shelfFromState) {
@@ -136,24 +140,36 @@ export default function CatalogScreen() {
 
   /** Fetch and cache the device location immediately when toggled on */
   const handleToggleSearchNearMe = useCallback(() => {
-    let shouldRequestLocation = false;
-
     setSearchFormState((prev) => {
       const nextUseUserLocation = !prev.useUserLocation;
-      shouldRequestLocation = nextUseUserLocation;
 
       return { ...prev, useUserLocation: nextUseUserLocation };
     });
 
-    if (shouldRequestLocation) {
+    if (!searchFormState.useUserLocation && !state.userCoordinates) {
+      setLocationLoading(true);
       setLocationError(null);
       // Cache location in app state, submit handlers will read it from there
-      void getAndCacheUserLocation(dispatch, setLocationError);
+      void getAndCacheUserLocation(dispatch, (error) => {
+        setSearchFormState((prev) => ({ ...prev, useUserLocation: false }));
+        setLocationError(error);
+      }).finally(() => {
+        setLocationLoading(false);
+      });
+    } else if (searchFormState.useUserLocation) {
+      setLocationLoading(false);
     }
-  }, [dispatch]);
+  }, [dispatch, searchFormState.useUserLocation, state.userCoordinates]);
 
   /** Programmatically start a single-term search for the content of the ISBN input field */
   const performSingleTermSearch = useCallback(async () => {
+    if (searchFormState.useUserLocation && !state.userCoordinates) {
+      setError(
+        "Please wait until your location has been loaded, or turn off Search near me.",
+      );
+      return;
+    }
+
     setActiveShelf(null);
     setLoading(true);
     setError(null);
@@ -204,6 +220,13 @@ export default function CatalogScreen() {
 
   /** Programmatically start a standard search */
   const performTitleAuthorSearch = useCallback(async () => {
+    if (searchFormState.useUserLocation && !state.userCoordinates) {
+      setError(
+        "Please wait until your location has been loaded, or turn off Search near me.",
+      );
+      return;
+    }
+
     setActiveShelf(null);
     setLoading(true);
     setError(null);
@@ -276,6 +299,8 @@ export default function CatalogScreen() {
           onToggleSearchNearMe={handleToggleSearchNearMe}
           handleTitleAuthorSubmit={handleTitleAuthorSubmit}
           handleISBNSubmit={handleISBNSubmit}
+          isUserLocationReady={!!state.userCoordinates}
+          locationLoading={locationLoading}
         />
       </Collapse>
 

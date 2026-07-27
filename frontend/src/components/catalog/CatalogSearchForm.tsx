@@ -1,6 +1,7 @@
 import LocationOffIcon from "@mui/icons-material/LocationOff";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -29,6 +30,8 @@ type CatalogSearchFormProps = {
   onToggleSearchNearMe: () => void;
   handleTitleAuthorSubmit: (e: React.FormEvent) => void | Promise<void>;
   handleISBNSubmit: (e: React.FormEvent) => void | Promise<void>;
+  isUserLocationReady: boolean;
+  locationLoading: boolean;
 };
 
 /**
@@ -41,7 +44,12 @@ export default function CatalogSearchForm({
   onToggleSearchNearMe,
   handleTitleAuthorSubmit,
   handleISBNSubmit,
+  isUserLocationReady,
+  locationLoading,
 }: CatalogSearchFormProps) {
+  const searchNearMeActive = searchFormState.useUserLocation;
+  const disableSearchSubmit = searchNearMeActive && !isUserLocationReady;
+
   return (
     // TODO: use mui toggle switch instead of mui checkbox for location?
     // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
@@ -58,6 +66,12 @@ export default function CatalogSearchForm({
         value={searchFormState.title}
         placeholder="Search books by title"
         label="Search books by title"
+        submitDisabled={disableSearchSubmit}
+        submitEndIcon={
+          locationLoading ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : undefined
+        }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSearchFormState((prev) => ({ ...prev, title: e.target.value }))
         }
@@ -67,6 +81,12 @@ export default function CatalogSearchForm({
         value={searchFormState.author}
         placeholder="Search books by author"
         label="Search books by author"
+        submitDisabled={disableSearchSubmit}
+        submitEndIcon={
+          locationLoading ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : undefined
+        }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSearchFormState((prev) => ({ ...prev, author: e.target.value }))
         }
@@ -76,6 +96,12 @@ export default function CatalogSearchForm({
         value={searchFormState.isbn}
         placeholder="Search books by ISBN"
         label="Search books by ISBN"
+        submitDisabled={disableSearchSubmit}
+        submitEndIcon={
+          locationLoading ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : undefined
+        }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSearchFormState((prev) => ({ ...prev, isbn: e.target.value }))
         }
@@ -112,10 +138,23 @@ export default function CatalogSearchForm({
         <FormControlLabel
           control={
             <Checkbox
-              checked={searchFormState.useUserLocation}
+              checked={searchNearMeActive}
               onChange={onToggleSearchNearMe}
-              icon={<LocationOffIcon />}
-              checkedIcon={<LocationOnIcon />}
+              disabled={locationLoading}
+              icon={
+                locationLoading && searchNearMeActive ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <LocationOffIcon />
+                )
+              }
+              checkedIcon={
+                locationLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <LocationOnIcon />
+                )
+              }
             />
           }
           label={
