@@ -125,18 +125,21 @@ export default function CatalogScreen() {
   );
 
   useEffect(() => {
-    if (shelfFromState) {
-      setActiveShelf(shelfFromState);
-      void loadBooksFromShelf(shelfFromState);
-    } else if (searchTermFromState) {
-      void loadSingleTermSearch(searchTermFromState);
+    if (!shelfFromState) {
+      return;
     }
-  }, [
-    loadBooksFromShelf,
-    loadSingleTermSearch,
-    searchTermFromState,
-    shelfFromState,
-  ]);
+
+    setActiveShelf(shelfFromState);
+    void loadBooksFromShelf(shelfFromState);
+  }, [loadBooksFromShelf, shelfFromState]);
+
+  useEffect(() => {
+    if (!searchTermFromState) {
+      return;
+    }
+
+    void loadSingleTermSearch(searchTermFromState);
+  }, [loadSingleTermSearch, searchTermFromState]);
 
   /** Fetch and cache the device location immediately when toggled on */
   const handleToggleSearchNearMe = useCallback(() => {

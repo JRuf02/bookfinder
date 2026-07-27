@@ -28,10 +28,12 @@
 - CatalogScreen
   - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
   - Funktionen aufräumen, ggf custom hooks für logik
-  - Während Standortabfrage bei search near me den form submit deaktivieren bis ergebnis da, spinner zeigen <======== 1
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
+
+- LocateMeButton
+  - Während Standortabfrage deaktivieren und spinner zeigen als alternatives icon, vgl. searchNearMe <======== 1
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist

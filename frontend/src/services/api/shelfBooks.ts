@@ -24,33 +24,39 @@ export async function fetchShelfBooks(
       };
     }
 
-    let data: any;
+    let data: Result<CatalogResult[]>;
 
     try {
-      data = await response.json();
+      const responseJson = (await response.json()) as {
+        status: "success" | "error";
+        data?: CatalogResult[];
+        message?: string;
+      };
+
+      data =
+        response.ok && responseJson.status === "success"
+          ? { ok: true, data: responseJson.data ?? [] }
+          : {
+              ok: false,
+              error: responseJson.message ?? standardErrorMessage,
+            };
     } catch {
       console.error("Failed to parse JSON response:", await response.text());
       return { ok: false, error: standardErrorMessage };
     }
 
-    // Bad user input and other specific issues where the backend may send an error message
-    if (!response.ok) {
-      return {
-        ok: false,
-        error: data?.message || standardErrorMessage,
-      };
+    if (!data.ok) {
+      return data;
     }
 
     // Create a list of CatalogResult objects, add the shelf info if missing
-    const books: CatalogResult[] = (data.data ?? []).map(
-      (result: CatalogResult) => ({
-        ...result,
-        locatedShelf: result.locatedShelf ?? {
-          shelf,
-          distanceMeters: null,
-        },
-      }),
-    );
+    const books: CatalogResult[] = data.data.map((result: CatalogResult) => ({
+      ...result,
+      locatedShelf: result.locatedShelf ?? {
+        shelf,
+        distanceMeters: null,
+      },
+    }));
 
     return { ok: true, data: books };
   } catch {

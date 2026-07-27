@@ -35,6 +35,7 @@
   - Kann Bücher von auf Karte gewähltem Regal zeigen
   - Bücher eines Regals sollen sortierbar nach Einstelldatum sein
   - Standort direkt abfragen bei klick auf search near me button, damit die suche dann schneller geht
+  - Während Standortabfrage bei search near me den form submit deaktivieren bis ergebnis da, spinner zeigen
 
 - PopularityChips
   - in eigene Component auslagern
