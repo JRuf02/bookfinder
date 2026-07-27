@@ -2,6 +2,7 @@ import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import React from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +27,7 @@ type ShelfMapProps = {
   onShowBooks?: (shelf: Shelf) => void;
 };
 
-export default function ShelfMap({
+export default React.memo(function ShelfMap({
   showSelect = true,
   showInsert = false,
   showRemove = false,
@@ -58,4 +59,4 @@ export default function ShelfMap({
       />
     </MapContainer>
   );
-}
+});

@@ -1,23 +1,19 @@
 import { Box, Button, Card } from "@mui/material";
-import { type FormEvent, useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
+import SingleSearchBar from "../components/input/SingleSearchBar";
 import LogoBar from "../components/layout/LogoBar";
 import ShelfMap from "../components/map/ShelfMap";
-import TextInput from "../components/TextInput";
 import { useAppState } from "../state/AppStateProvider";
 import { Shelf } from "../types/Shelf";
 
 export default function HomeScreen() {
-  const [inputSearchTerm, setInputSearchTerm] = useState("");
   const { dispatch } = useAppState();
   const navigate = useNavigate();
 
   const handleInputSubmit = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-
-      const searchTerm = inputSearchTerm.trim();
+    (searchTerm: string) => {
       if (!searchTerm) {
         return;
       }
@@ -25,42 +21,51 @@ export default function HomeScreen() {
       navigate("/catalog", {
         state: {
           initialView: "single-term-search",
-          searchTerm,
+          searchTerm: searchTerm,
         },
       });
     },
-    [inputSearchTerm, navigate],
+    [navigate],
   );
 
-  const navigateToInsert = (): void => {
+  const navigateToInsert = useCallback((): void => {
     dispatch({ type: "SET_PRESELECTED_SHELF_ACTION", payload: "insert" });
     navigate("/scan");
-  };
+  }, [dispatch, navigate]);
 
-  const navigateToRemove = (): void => {
+  const navigateToRemove = useCallback((): void => {
     dispatch({ type: "SET_PRESELECTED_SHELF_ACTION", payload: "remove" });
     navigate("/scan");
-  };
+  }, [dispatch, navigate]);
 
-  const handleInsert = (shelf: Shelf): void => {
-    dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
-    navigateToInsert();
-  };
+  const handleInsert = useCallback(
+    (shelf: Shelf): void => {
+      dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
+      navigateToInsert();
+    },
+    [dispatch, navigateToInsert],
+  );
 
-  const handleRemove = (shelf: Shelf): void => {
-    dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
-    navigateToRemove();
-  };
+  const handleRemove = useCallback(
+    (shelf: Shelf): void => {
+      dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
+      navigateToRemove();
+    },
+    [dispatch, navigateToRemove],
+  );
 
-  const handleShowBooks = (shelf: Shelf): void => {
-    dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
-    navigate("/catalog", {
-      state: {
-        initialView: "shelf-books",
-        shelf,
-      },
-    });
-  };
+  const handleShowBooks = useCallback(
+    (shelf: Shelf): void => {
+      dispatch({ type: "SET_SELECTED_SHELF", payload: shelf });
+      navigate("/catalog", {
+        state: {
+          initialView: "shelf-books",
+          shelf,
+        },
+      });
+    },
+    [dispatch, navigate],
+  );
 
   const CONTENT_MAX_WIDTH = "25rem";
 
@@ -85,13 +90,7 @@ export default function HomeScreen() {
         }}
       >
         {/* Search Input */}
-        <TextInput
-          value={inputSearchTerm}
-          placeholder="Search book by title, author, or ISBN"
-          label="Search book by title, author, or ISBN"
-          onChange={(e) => setInputSearchTerm(e.target.value)}
-          onSubmit={handleInputSubmit}
-        />
+        <SingleSearchBar onSubmit={handleInputSubmit} />
 
         {/* Map View Placeholder (flex-grow) */}
         <Card
