@@ -1,10 +1,6 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import {
-  CircularProgress,
-  Container,
-  IconButton,
-} from "@mui/material";
+import { CircularProgress, Container, IconButton } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -28,6 +24,11 @@ import { useAppState } from "../state/AppStateProvider";
 import { CatalogResult } from "../types/CatalogResult";
 import { unwrapResult } from "../types/Result";
 import { Shelf } from "../types/Shelf";
+
+/** Extract a human-readable message from an unknown thrown value. */
+function getErrorMessage(err: unknown, fallback: string): string {
+  return err instanceof Error ? err.message : fallback;
+}
 
 /**
  * Main catalog screen where users can search for books or view books on a specific shelf.
@@ -70,8 +71,13 @@ export default function CatalogScreen() {
     try {
       const data = unwrapResult(await fetchShelfBooks(shelf));
       setResults(data);
-    } catch (err: any) {
-      setError(err.message || "Could not fetch shelf books.");
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          "Could not fetch books for this shelf. Please try again later.",
+        ),
+      );
       console.error("Error fetching books from shelf:", err);
     } finally {
       setLoading(false);
@@ -95,9 +101,12 @@ export default function CatalogScreen() {
 
       setResults(result.data);
       setActiveShelf(null);
-    } catch (err: any) {
+    } catch (err) {
       setError(
-        err.message || "Could not fetch results. Please try again later.",
+        getErrorMessage(
+          err,
+          "Could not fetch results. Please try again later.",
+        ),
       );
       console.error("Error during single-term search:", err);
     } finally {
@@ -143,9 +152,12 @@ export default function CatalogScreen() {
       );
 
       setResults(data);
-    } catch (err: any) {
+    } catch (err) {
       setError(
-        err.message || "Could not fetch results. Please try again later.",
+        getErrorMessage(
+          err,
+          "Could not fetch results. Please try again later.",
+        ),
       );
       console.error("Error during ISBN single-term search:", err);
     } finally {
@@ -186,9 +198,12 @@ export default function CatalogScreen() {
       );
 
       setResults(results);
-    } catch (err: any) {
+    } catch (err) {
       setError(
-        err.message || "Could not fetch results. Please try again later.",
+        getErrorMessage(
+          err,
+          "Could not fetch results. Please try again later.",
+        ),
       );
       console.error("Error during search:", err);
     } finally {
