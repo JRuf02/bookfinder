@@ -18,7 +18,10 @@ import {
 } from "../services/api/catalogSearch";
 import { fetchShelfBooks } from "../services/api/shelfBooks";
 import { getCatalogNavigationTargets } from "../services/catalogNavigation";
-import { getAndCacheUserLocation } from "../services/location";
+import {
+  getAndCacheUserLocation,
+  type LocationError,
+} from "../services/location";
 import { sortCatalogResults } from "../services/sorting";
 import { useAppState } from "../state/AppStateProvider";
 import { CatalogResult } from "../types/CatalogResult";
@@ -57,6 +60,9 @@ export default function CatalogScreen() {
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<LocationError | null>(
+    null,
+  );
   const [showSearchForm, setShowSearchForm] = useState<boolean>(
     activeShelf === null,
   );
@@ -112,7 +118,7 @@ export default function CatalogScreen() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [state.userCoordinates]);
 
   useEffect(() => {
     if (shelfFromState) {
@@ -127,6 +133,24 @@ export default function CatalogScreen() {
     searchTermFromState,
     shelfFromState,
   ]);
+
+  /** Fetch and cache the device location immediately when toggled on */
+  const handleToggleSearchNearMe = useCallback(() => {
+    let shouldRequestLocation = false;
+
+    setSearchFormState((prev) => {
+      const nextUseUserLocation = !prev.useUserLocation;
+      shouldRequestLocation = nextUseUserLocation;
+
+      return { ...prev, useUserLocation: nextUseUserLocation };
+    });
+
+    if (shouldRequestLocation) {
+      setLocationError(null);
+      // Cache location in app state, submit handlers will read it from there
+      void getAndCacheUserLocation(dispatch, setLocationError);
+    }
+  }, [dispatch]);
 
   /** Programmatically start a single-term search for the content of the ISBN input field */
   const performSingleTermSearch = useCallback(async () => {
@@ -144,7 +168,7 @@ export default function CatalogScreen() {
       }
 
       const currentUserLocation = searchFormState.useUserLocation
-        ? await getAndCacheUserLocation(dispatch)
+        ? (state.userCoordinates ?? null)
         : null;
 
       const data = unwrapResult(
@@ -163,7 +187,11 @@ export default function CatalogScreen() {
     } finally {
       setLoading(false);
     }
-  }, [searchFormState.isbn, searchFormState.useUserLocation]);
+  }, [
+    searchFormState.isbn,
+    searchFormState.useUserLocation,
+    state.userCoordinates,
+  ]);
 
   /** Start a single-term search when the ISBN form is submitted */
   const handleISBNSubmit = useCallback(
@@ -184,9 +212,8 @@ export default function CatalogScreen() {
 
     // TODO: Remove code duplication with performSingleTermSearch
     try {
-      // only request & send location if toggle is enabled
       const currentUserLocation = searchFormState.useUserLocation
-        ? await getAndCacheUserLocation(dispatch)
+        ? (state.userCoordinates ?? null)
         : null;
 
       const results = unwrapResult(
@@ -210,9 +237,10 @@ export default function CatalogScreen() {
       setLoading(false);
     }
   }, [
-    searchFormState.title,
     searchFormState.author,
+    searchFormState.title,
     searchFormState.useUserLocation,
+    state.userCoordinates,
   ]);
 
   /** Start a title and author search when the form is submitted */
@@ -245,6 +273,7 @@ export default function CatalogScreen() {
           hasDistanceData={hasDistanceData}
           searchFormState={searchFormState}
           setSearchFormState={setSearchFormState}
+          onToggleSearchNearMe={handleToggleSearchNearMe}
           handleTitleAuthorSubmit={handleTitleAuthorSubmit}
           handleISBNSubmit={handleISBNSubmit}
         />
@@ -274,6 +303,15 @@ export default function CatalogScreen() {
           text={error}
           open={!!error}
           onClose={() => setError(null)}
+        />
+      )}
+
+      {locationError && (
+        <ErrorDialog
+          title={locationError.title}
+          text={locationError.text}
+          open={!!locationError}
+          onClose={() => setLocationError(null)}
         />
       )}
 

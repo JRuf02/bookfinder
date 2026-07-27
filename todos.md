@@ -28,7 +28,7 @@
 - CatalogScreen
   - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
   - Funktionen aufräumen, ggf custom hooks für logik
-  - Standort direkt abfragen bei klick auf search ner me button, damit die suche dann schneller geht <======== 3
+  - Standort direkt abfragen bei klick auf search neaHr me button, damit die suche dann schneller geht <======== 1
 
 - MapPopup
   - z-index ist höher als die zoom buttons auf der Karte
@@ -37,7 +37,7 @@
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
 - ShelfActionView.tsx
-  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 7
+  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 5
 
 - InfoScreen
   - add info page
@@ -49,7 +49,7 @@
 - Resilience & Edge Cases:
   - dnb_api.py
     - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
-    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 6
+    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 4
     - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
     - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
   - if cover in size=l not available, try different sizes!
@@ -59,7 +59,7 @@
     - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
-  - Besseres color scheme entwickeln und anwenden <============================================================= 4
+  - Besseres color scheme entwickeln und anwenden <============================================================= 2
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
@@ -102,7 +102,7 @@
     - Run linter (ESLint and Ruff)
 
 - Blog Post
-  - write preliminary version/structure <============================================================= 5
+  - write preliminary version/structure <============================================================= 3
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...

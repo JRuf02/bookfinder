@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
@@ -46,6 +46,7 @@ export default function ShelfMapContent({
   );
   const map = useMap();
   const [mapSize, setMapSize] = useState(() => map.getSize()); // Needed for MapPopup
+  const initialSelectedShelfRef = useRef(state.selectedShelf);
 
   useEffect(() => {
     const updateMapSize = () => {
@@ -91,7 +92,6 @@ export default function ShelfMapContent({
     };
   }, []);
 
-  // Handler for LocateMeControl
   const handleLocateMeClick = async () => {
     try {
       const userCoords = await getUserLocation();
@@ -108,11 +108,14 @@ export default function ShelfMapContent({
     }
   };
 
-  // Center on most recently used shelf
+  // Center once using the shelf that was selected when the map mounted
   useEffect(() => {
-    if (state.selectedShelf) {
+    if (initialSelectedShelfRef.current) {
       map.setView(
-        [state.selectedShelf.latitude, state.selectedShelf.longitude],
+        [
+          initialSelectedShelfRef.current.latitude,
+          initialSelectedShelfRef.current.longitude,
+        ],
         15,
       );
     } else {
@@ -222,8 +225,6 @@ export default function ShelfMapContent({
           ) : null,
         )}
       </MarkerClusterGroup>
-
-      {/* TODO: show "selected" on standard popup of selected shelf */}
 
       {/* User location marker */}
       {state.userCoordinates && (

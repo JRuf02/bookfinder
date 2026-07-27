@@ -26,6 +26,7 @@ type CatalogSearchFormProps = {
   hasDistanceData: boolean;
   searchFormState: SearchFormState;
   setSearchFormState: React.Dispatch<React.SetStateAction<SearchFormState>>;
+  onToggleSearchNearMe: () => void;
   handleTitleAuthorSubmit: (e: React.FormEvent) => void | Promise<void>;
   handleISBNSubmit: (e: React.FormEvent) => void | Promise<void>;
 };
@@ -37,6 +38,7 @@ export default function CatalogSearchForm({
   hasDistanceData,
   searchFormState,
   setSearchFormState,
+  onToggleSearchNearMe,
   handleTitleAuthorSubmit,
   handleISBNSubmit,
 }: CatalogSearchFormProps) {
@@ -111,12 +113,7 @@ export default function CatalogSearchForm({
           control={
             <Checkbox
               checked={searchFormState.useUserLocation}
-              onChange={(e) => {
-                setSearchFormState((prev) => ({
-                  ...prev,
-                  useUserLocation: e.target.checked,
-                }));
-              }}
+              onChange={onToggleSearchNearMe}
               icon={<LocationOffIcon />}
               checkedIcon={<LocationOnIcon />}
             />
