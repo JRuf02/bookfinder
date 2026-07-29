@@ -40,6 +40,7 @@ export default function ShelfMapContent({
   const { state, dispatch } = useAppState();
   const [bookshelves, setBookshelves] = useState<Shelf[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [locationLoading, setLocationLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<LocationError | null>(
     null,
@@ -93,12 +94,18 @@ export default function ShelfMapContent({
   }, []);
 
   const handleLocateMeClick = useCallback(async () => {
-    const userCoords = await getAndCacheUserLocation(dispatch, (error) => {
-      setLocationError(error);
-    });
+    setLocationLoading(true);
 
-    if (userCoords) {
-      map.setView([userCoords.latitude, userCoords.longitude], 15);
+    try {
+      const userCoords = await getAndCacheUserLocation(dispatch, (error) => {
+        setLocationError(error);
+      });
+
+      if (userCoords) {
+        map.setView([userCoords.latitude, userCoords.longitude], 15);
+      }
+    } finally {
+      setLocationLoading(false);
     }
   }, [dispatch, map]);
 
@@ -235,7 +242,11 @@ export default function ShelfMapContent({
       )}
 
       {/* Locate Me button */}
-      <LocateMeButton onClick={handleLocateMeClick} />
+      <LocateMeButton
+        onClick={handleLocateMeClick}
+        isLoading={locationLoading}
+        isLocationShown={!!state.userCoordinates}
+      />
 
       {locationError && (
         <ErrorDialog
