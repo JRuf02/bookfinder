@@ -10,7 +10,7 @@
       - unit or doctests for isbn parsing etc (osm parsing...)
     - Unit tests for react?! (frontend) <= start in shelfActions.tsx
   - API calls should be tested (-> done in python), user interface doesn't need to be tested
-    - add api tests for new endpoints
+    - add api tests for new endpoints <============================================================= 1
   - Use subcomponents for ScanningResults
 
 - Logic & Documentation:
@@ -33,7 +33,7 @@
   - z-index ist höher als die zoom buttons auf der Karte
 
 - LocateMeButton
-  - Während Standortabfrage deaktivieren und spinner zeigen als alternatives icon, vgl. searchNearMe <======== 1
+  - Während Standortabfrage deaktivieren und spinner zeigen als alternatives icon, vgl. searchNearMe <======== 0
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist

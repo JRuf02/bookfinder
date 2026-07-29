@@ -1,10 +1,10 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import { fetchAllBookshelves } from "../../services/api/bookshelves";
-import { getUserLocation } from "../../services/location";
+import { getAndCacheUserLocation } from "../../services/location";
 import { useAppState } from "../../state/AppStateProvider";
 import { Shelf } from "../../types/Shelf";
 import ErrorDialog from "../dialogs/ErrorDialog";
@@ -92,21 +92,15 @@ export default function ShelfMapContent({
     };
   }, []);
 
-  const handleLocateMeClick = async () => {
-    try {
-      const userCoords = await getUserLocation();
+  const handleLocateMeClick = useCallback(async () => {
+    const userCoords = await getAndCacheUserLocation(dispatch, (error) => {
+      setLocationError(error);
+    });
+
+    if (userCoords) {
       map.setView([userCoords.latitude, userCoords.longitude], 15);
-      dispatch({
-        type: "SET_USER_COORDINATES",
-        payload: userCoords,
-      });
-    } catch {
-      setLocationError({
-        title: "Could not get your location",
-        text: "Please activate GPS in your device settings and allow location access for this app.",
-      });
     }
-  };
+  }, [dispatch, map]);
 
   // Center once using the shelf that was selected when the map mounted
   useEffect(() => {
