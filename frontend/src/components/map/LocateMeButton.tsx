@@ -32,7 +32,12 @@ const LocateMeButtonContent = ({
         onOpen={() => setTooltipOpen(true)}
         onClose={() => setTooltipOpen(false)}
       >
-        <IconButton size="small" color="primary" onClick={handleClick}>
+        <IconButton
+          size="small"
+          color="primary"
+          onClick={handleClick}
+          sx={{ width: 34, height: 34 }}
+        >
           {isLoading ? (
             <CircularProgress size={20} color="inherit" />
           ) : isLocationShown ? (
@@ -80,7 +85,6 @@ export const LocateMeButton = ({
     control.addTo(map);
     return () => {
       control.remove();
-      root?.unmount();
     };
   }, [map, onClick, isLoading, isLocationShown]);
 
