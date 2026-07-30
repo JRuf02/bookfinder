@@ -1,4 +1,8 @@
+# API endpoints and their expected parameters
+
+- api/health: no params
 - api/book: isbn
+- api/book/popularity: isbn
 - api/cover: isbn, size
 - api/bookshelves: no params
 - api/bookshelves/nearby: lat, lon, radius
@@ -7,5 +11,5 @@
 - api/shelf/insert: osm_id, isbn
 - api/shelf/remove: osm_id, isbn
 - api/catalog/search: title, author, lat, lon
-- /api/catalog/search/single-term: q, lat, lon
-- /api/manual-add: isbn, title, author
+- api/catalog/search/single-term: q, lat, lon
+- api/manual-add: isbn, title, author

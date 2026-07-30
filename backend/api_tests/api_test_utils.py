@@ -1,6 +1,10 @@
 from flask import Flask
 
 from app.db.database import db_cursor
+from app.db.database_fuzzy_utils import (
+    _generate_threegrams as database_generate_threegrams,
+)
+from app.db.database_fuzzy_utils import _tokenize as database_tokenize
 from app.db.database_fuzzy_utils import add_author_name, add_book_title
 from app.models.book import Book
 from app.models.identifiers import Isbn
@@ -198,3 +202,139 @@ def get_time_of_entry_of_book_in_shelf(app: Flask, osm_id: str, isbn: str) -> li
         )
         row = c.fetchall()
         return [r[0] for r in row] if row else []
+
+
+def _tokenize(text: str) -> list[str]:
+
+    return database_tokenize(text)
+
+
+def _generate_threegrams(token: str) -> list[str]:
+
+    return database_generate_threegrams(token)
+
+
+def get_number_of_tokens_in_table_tokens(app: Flask) -> int:
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute("SELECT COUNT(*) FROM tokens")
+        row = c.fetchone()
+        return row[0] if row else 0
+
+
+def get_number_of_threegrams_in_table_threegrams(app: Flask) -> int:
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute("SELECT COUNT(*) FROM threegrams")
+        row = c.fetchone()
+        return row[0] if row else 0
+
+
+def get_number_of_token_links_in_table(app: Flask, table_name: str) -> int:
+    if table_name == "book_title_tokens":
+        query = "SELECT COUNT(*) FROM book_title_tokens"
+    elif table_name == "author_name_tokens":
+        query = "SELECT COUNT(*) FROM author_name_tokens"
+    else:
+        msg = f"Unsupported token table: {table_name}"
+        raise ValueError(msg)
+
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(query)
+        row = c.fetchone()
+        return row[0] if row else 0
+
+
+def get_tokens_in_table_tokens(app: Flask) -> list[str]:
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute("SELECT token FROM tokens ORDER BY token_id ASC")
+        return [row["token"] for row in c.fetchall()]
+
+
+def get_token_links_in_table(app: Flask, table_name: str) -> list[tuple[str, str]]:
+    if table_name == "book_title_tokens":
+        query = """
+            SELECT token.token, link.isbn
+            FROM book_title_tokens AS link
+            JOIN tokens AS token ON token.token_id = link.token_id
+            ORDER BY link.token_id ASC, link.isbn ASC
+        """
+    elif table_name == "author_name_tokens":
+        query = """
+            SELECT token.token, link.isbn
+            FROM author_name_tokens AS link
+            JOIN tokens AS token ON token.token_id = link.token_id
+            ORDER BY link.token_id ASC, link.isbn ASC
+        """
+    else:
+        msg = f"Unsupported token table: {table_name}"
+        raise ValueError(msg)
+
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(query)
+        return [(row["token"], row["isbn"]) for row in c.fetchall()]
+
+
+def get_threegrams_in_table_threegrams(app: Flask) -> list[tuple[str, int]]:
+    with db_cursor(app.config["DB_PATH"]) as c:
+        c.execute(
+            "SELECT threegram, token_id FROM threegrams ORDER BY "
+            "token_id ASC, threegram ASC"
+        )
+        return [(row["threegram"], row["token_id"]) for row in c.fetchall()]
+
+
+# TODO: Use in insert/remove tests as well
+def assert_fuzzy_search_tables_empty(app: Flask) -> None:
+    assert get_number_of_tokens_in_table_tokens(app) == 0
+    assert get_number_of_threegrams_in_table_threegrams(app) == 0
+    assert get_number_of_token_links_in_table(app, "book_title_tokens") == 0
+    assert get_number_of_token_links_in_table(app, "author_name_tokens") == 0
+    assert get_tokens_in_table_tokens(app) == []
+    assert get_token_links_in_table(app, "book_title_tokens") == []
+    assert get_token_links_in_table(app, "author_name_tokens") == []
+    assert get_threegrams_in_table_threegrams(app) == []
+
+
+# TODO: Use in insert/remove tests as well
+def assert_fuzzy_search_tables_contain_only_book(app: Flask, book: Book) -> None:
+    """Assert that the fuzzy search tables contain only the entries for the given book,
+    and that these entries are correct.
+    Checks the tokens, threegrams, and token links for the book title and author name.
+    """
+    title_tokens = _tokenize(book.title or "")
+    author_tokens = _tokenize(book.author or "")
+    all_tokens = list(dict.fromkeys([*title_tokens, *author_tokens]))
+    isbn = str(book.isbn)
+
+    expected_title_links = {(token, isbn) for token in title_tokens}
+    expected_author_links = {(token, isbn) for token in author_tokens}
+    expected_threegrams = {
+        threegram for token in all_tokens for threegram in _generate_threegrams(token)
+    }
+
+    # tokens table: exactly the union of title + author tokens, no more, no less
+    actual_tokens = get_tokens_in_table_tokens(app)
+    assert set(actual_tokens) == set(all_tokens)
+    assert get_number_of_tokens_in_table_tokens(app) == len(all_tokens)
+
+    # book_title_tokens: exactly the (token, isbn) pairs for the title
+    actual_title_links = set(get_token_links_in_table(app, "book_title_tokens"))
+    assert actual_title_links == expected_title_links
+    assert get_number_of_token_links_in_table(app, "book_title_tokens") == len(
+        actual_title_links
+    )
+
+    # author_name_tokens: exactly the (token, isbn) pairs for the author
+    actual_author_links = set(get_token_links_in_table(app, "author_name_tokens"))
+    assert actual_author_links == expected_author_links
+    assert get_number_of_token_links_in_table(app, "author_name_tokens") == len(
+        actual_author_links
+    )
+
+    # threegrams: exactly the threegrams generated from all tokens
+    actual_threegrams = {
+        threegram for threegram, _token_id in get_threegrams_in_table_threegrams(app)
+    }
+    assert actual_threegrams == expected_threegrams
+    assert get_number_of_threegrams_in_table_threegrams(app) == sum(
+        len(_generate_threegrams(token)) for token in all_tokens
+    )
