@@ -2,7 +2,7 @@
 
 ## There are two ways to install and run this app
 
-First, you need to clone this repository onto your machine. Then you can open it either within a VS Code Devcontainer or within a standard Docker Container.
+First, clone this repository onto your machine. Then you can open it either within a VS Code Devcontainer or within a standard Docker Container.
 
 ### A) VS Code Devcontainer
 
@@ -16,9 +16,9 @@ First, you need to clone this repository onto your machine. Then you can open it
 
 Use the provided Devcontainer to make the usage as easy as possible:
 
+- Clone this repository onto your machine (Into the linux file system if using WSL)
 - Install [Docker](https://www.docker.com/) and [VS Code](https://code.visualstudio.com/)
 - Install VS Code Devcontainer extension `ms-vscode-remote.remote-containers`
-- Clone this repository onto your machine (Into the linux file system if using WSL)
 - Open this repository with VS Code
 - Press `F1` (or `CTRL + SHIFT + P`) and select `Dev Containers: Rebuild and Reopen Container`
 
