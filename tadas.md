@@ -95,6 +95,7 @@
 
 - ShelfSelectMap
   - select button switches to "selected" when clicked on shelfActionScreen
+  - Während Standortabfrage LocateMe button deaktivieren und spinner zeigen als alternatives icon, vgl. searchNearMe
 
 - MapPopup
   - ggf. Buttons ähnlich zu catalog results
@@ -131,6 +132,7 @@
 - Bugs fixed:
   - Times sind UST, nicht MESZ -> added 2h ago für gerade geaddete Bücher
   - Frontend:
+    - Locate Me Tooltip bleibt manchmal hängen
     - single term search input field is slow on each keystroke (re-rendering the map?!)
       - locate me button is blinking on each keystroke?! Marker images also fetched on every keystroke?!
 

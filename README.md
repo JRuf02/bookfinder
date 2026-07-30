@@ -92,6 +92,7 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 
 - Check that you used the right ipv4 address from ipconfig (wireless-LAN, not ethernet)
 - Add firewall rule (allow inbound TCP on 5137 and 5000) on host if it does not exist
+- Disable client isolation in your wifi router's settings
 - Use another wifi (public wifis like eduroam may have client isolation)
 
 ### easy open on mobile (experimental, doesn't work on Windows host yet)

@@ -29,12 +29,6 @@
   - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
   - Funktionen aufräumen, ggf custom hooks für logik
 
-- MapPopup
-  - z-index ist höher als die zoom buttons auf der Karte
-
-- LocateMeButton
-  - Während Standortabfrage deaktivieren und spinner zeigen als alternatives icon, vgl. searchNearMe <======== 0
-
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
 
@@ -109,6 +103,7 @@
   - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
   - Add info about tests: API tests, unit tests, doctests
+  - Different format screenshots via chrome inspect
 
 ## Testing
 
@@ -129,8 +124,6 @@
 ## Bugs
 
 - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
-- Suche hängt sich manchmal auf wenn man schnell hintereinander ohne dann mit standort sucht
-- Locate Me Tooltip bleibt manchmal hängen
 
 ## Improvements
 
@@ -212,6 +205,8 @@
       - statisch: kann nicht gescrollt/gezoomt etc werden
       - hat methode onClick, die vom parent definiert wird
         - onClick auf dem CatalogScreen zeigt alle Bücher im gewählten Regal
+- MapPopup
+  - z-index ist höher als die zoom buttons auf der Karte
 - PopularityChips / BookPopularity
   - Add median time on shelf (not just the average)
   - Farbe ändern oder flame icon adden wenn populär

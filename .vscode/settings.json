@@ -18,6 +18,9 @@
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true
   },
+  // Needed for reaching the server via the host's IP address
+  "remote.localPortHost": "allInterfaces",
+
   "eslint.workingDirectories": ["frontend"],
   "python.analysis.extraPaths": ["./backend"],
   "python.defaultInterpreterPath": "/workspaces/bookfinder-venv/.venv/bin/python",
