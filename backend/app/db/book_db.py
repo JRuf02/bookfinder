@@ -16,7 +16,7 @@ def get_book_from_database(isbn: Isbn, db_path: Path | None = None) -> Book | No
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default
-    database path from current_app.config['DB_PATH'].
+    database path from app.config['DB_PATH'].
     """
 
     with db_cursor(db_path) as c:
@@ -36,14 +36,18 @@ def get_book_from_database(isbn: Isbn, db_path: Path | None = None) -> Book | No
     return None
 
 
-def save_book_to_db(book: Book) -> None:
+def save_book_to_db(book: Book, db_path: Path | None = None) -> None:
     """Save book metadata to the local SQLite database, in the table 'books'.
     Also generates and saves tokens and threegrams for the book, for fuzzy search.
 
     If a book with the same ISBN already exists, old metadata will be kept.
+
+    db_path is only needed when running outside of a Flask app context,
+    e.g. in unit tests. Otherwise, db_cursor() will use the default
+    database path from app.config['DB_PATH'].
     """
 
-    with db_cursor() as c:
+    with db_cursor(db_path) as c:
         c.execute(
             """
             INSERT OR IGNORE INTO books (isbn, title, author, dnb_id,
@@ -67,9 +71,9 @@ def save_book_to_db(book: Book) -> None:
             f"Generating tokens and threegrams for book: {book.title} ({book.isbn})"
         )
         if book.title:
-            add_book_title(book.title, str(book.isbn))
+            add_book_title(book.title, str(book.isbn), db_path)
         if book.author:
-            add_author_name(book.author, str(book.isbn))
+            add_author_name(book.author, str(book.isbn), db_path)
 
 
 def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:

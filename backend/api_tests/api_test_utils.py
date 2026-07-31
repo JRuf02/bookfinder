@@ -112,12 +112,16 @@ def insert_test_book_into_shelf_in_db(
 def insert_test_book_into_books_table_in_db(
     app: Flask,
     book: Book | None = None,
+    total_insertions: int = 0,
+    avg_days_until_takeout: float | None = None,
 ) -> None:
     """Insert a test book into the books table in the database.
 
     If no book is given, a default example book will be inserted.
     Adds the book only to the books table (for metadata), not to the catalog.
     Also generates and stores fuzzysearch tokens and threegrams for the book.
+    If not specified, total_insertions will be set to 0 and avg_days_until_takeout will
+    be set to None, like in the production code for scanned but not yet inserted books.
     """
 
     if book is None:
@@ -134,8 +138,8 @@ def insert_test_book_into_books_table_in_db(
         c.execute(
             """
             INSERT OR REPLACE INTO books (isbn, title, author, dnb_id,
-            cover_url)
-            VALUES (?, ?, ?, ?, ?)
+            cover_url, total_insertions, avg_days_until_takeout)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
             (
                 str(book.isbn),
@@ -143,6 +147,8 @@ def insert_test_book_into_books_table_in_db(
                 book.author,
                 book.dnb_id,
                 book.cover_url,
+                total_insertions,
+                avg_days_until_takeout,
             ),
         )
 

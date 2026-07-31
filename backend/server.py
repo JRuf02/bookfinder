@@ -86,7 +86,6 @@ def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
     def search_in_catalog_api() -> ResponseReturnValue:
         return search_in_catalog(request)
 
-    # TODO: Tests for this endpoint!
     @app.route("/api/catalog/search/single-term", methods=["GET"])
     def single_term_search_in_catalog_api() -> ResponseReturnValue:
         return single_term_search_in_catalog(request)

@@ -145,7 +145,7 @@ def add_book_title(title: str, isbn: str, db_path: Path | None = None) -> None:
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default
-    database path from current_app.config['DB_PATH'].
+    database path from app.config['DB_PATH'].
     """
     with db_cursor(db_path) as c:
         for token in _tokenize(title):
@@ -161,7 +161,7 @@ def add_author_name(name: str, isbn: str, db_path: Path | None = None) -> None:
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default
-    database path from current_app.config['DB_PATH'].
+    database path from app.config['DB_PATH'].
     """
     with db_cursor(db_path) as c:
         for token in _tokenize(name):
@@ -272,7 +272,7 @@ def search_authors(
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default
-    database path from current_app.config['DB_PATH'].
+    database path from app.config['DB_PATH'].
     """
 
     with db_cursor(db_path) as c:
@@ -292,7 +292,7 @@ def search_titles(
 
     db_path is only needed when running outside of a Flask app context, e.g.
     in a standalone CLI script. Otherwise, db_cursor() will use the default
-    database path from current_app.config['DB_PATH'].
+    database path from app.config['DB_PATH'].
     """
 
     with db_cursor(db_path) as c:
