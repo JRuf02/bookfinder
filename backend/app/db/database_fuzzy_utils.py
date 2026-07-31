@@ -30,8 +30,11 @@ def _tokenize(text: str) -> list[str]:
 
     Keeps apostrophes and hyphens that are within a word, removes other punctuation.
 
-    >>> _tokenize("Hello, don't stop rock'n'roll! Ask_me-why-. -Summer of '69")
-    ['hello', "don't", 'stop', "rock'n'roll", 'ask', 'me-why', 'summer', 'of', '69']
+    >>> _tokenize("Hello hello, don't stop Rock'n'Roll!")
+    ['hello', 'hello', "don't", 'stop', "rock'n'roll"]
+
+    >>> _tokenize("Ask_me-why-. -Summer of '69")
+    ['ask', 'me-why', 'summer', 'of', '69']
     """
 
     return re.findall(r"[a-z0-9]+(?:['-][a-z0-9]+)*", text.lower())
@@ -42,7 +45,12 @@ def _generate_threegrams(token: str) -> list[str]:
     across it to produce all threegrams (including duplicates).
 
     The padding encodes "starts with" / "ends with", improving match quality.
+
+    Returns an empty list for an empty token.
     """
+
+    if len(token) == 0:
+        return []
 
     # For fuzzy PREFIX search, the lecture suggests padding left side only,
     # but we pad both sides as we the catalog search uses standard fuzzy search.

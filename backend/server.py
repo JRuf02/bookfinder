@@ -49,7 +49,7 @@ def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
     def get_book_api() -> ResponseReturnValue:
         return get_book_api_logic(request)
 
-    # TODO: Tests for this endpoint, show on frontend, add to documentation
+    # TODO: Tests for this endpoint!
     @app.route("/api/book/popularity", methods=["GET"])
     def get_book_popularity_api() -> ResponseReturnValue:
         return get_book_popularity(request)
@@ -86,12 +86,11 @@ def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
     def search_in_catalog_api() -> ResponseReturnValue:
         return search_in_catalog(request)
 
-    # TODO: Tests for this endpoint
+    # TODO: Tests for this endpoint!
     @app.route("/api/catalog/search/single-term", methods=["GET"])
     def single_term_search_in_catalog_api() -> ResponseReturnValue:
         return single_term_search_in_catalog(request)
 
-    # TODO: Tests for this endpoint
     @app.route("/api/manual-add", methods=["POST"])
     def manually_add_book_api() -> ResponseReturnValue:
         return manually_add_book(request)

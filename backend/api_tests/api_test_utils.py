@@ -282,59 +282,59 @@ def get_threegrams_in_table_threegrams(app: Flask) -> list[tuple[str, int]]:
         return [(row["threegram"], row["token_id"]) for row in c.fetchall()]
 
 
-# TODO: Use in insert/remove tests as well
 def assert_fuzzy_search_tables_empty(app: Flask) -> None:
     assert get_number_of_tokens_in_table_tokens(app) == 0
     assert get_number_of_threegrams_in_table_threegrams(app) == 0
     assert get_number_of_token_links_in_table(app, "book_title_tokens") == 0
     assert get_number_of_token_links_in_table(app, "author_name_tokens") == 0
-    assert get_tokens_in_table_tokens(app) == []
-    assert get_token_links_in_table(app, "book_title_tokens") == []
-    assert get_token_links_in_table(app, "author_name_tokens") == []
-    assert get_threegrams_in_table_threegrams(app) == []
 
 
-# TODO: Use in insert/remove tests as well
 def assert_fuzzy_search_tables_contain_only_book(app: Flask, book: Book) -> None:
     """Assert that the fuzzy search tables contain only the entries for the given book,
     and that these entries are correct.
     Checks the tokens, threegrams, and token links for the book title and author name.
     """
+
     title_tokens = _tokenize(book.title or "")
     author_tokens = _tokenize(book.author or "")
-    all_tokens = list(dict.fromkeys([*title_tokens, *author_tokens]))
-    isbn = str(book.isbn)
 
-    expected_title_links = {(token, isbn) for token in title_tokens}
-    expected_author_links = {(token, isbn) for token in author_tokens}
-    expected_threegrams = {
-        threegram for token in all_tokens for threegram in _generate_threegrams(token)
-    }
-
-    # tokens table: exactly the union of title + author tokens, no more, no less
+    # No duplicates in the combined 'tokens' table
+    all_unique_tokens = list(dict.fromkeys([*title_tokens, *author_tokens]))
     actual_tokens = get_tokens_in_table_tokens(app)
-    assert set(actual_tokens) == set(all_tokens)
-    assert get_number_of_tokens_in_table_tokens(app) == len(all_tokens)
+    assert set(actual_tokens) == set(all_unique_tokens)
+    assert len(actual_tokens) == len(all_unique_tokens)
+    assert get_number_of_tokens_in_table_tokens(app) == len(all_unique_tokens)
+
+    isbn = str(book.isbn)
+    # Allow duplicates in the token_id to isbn link tables if a token occurs
+    # multiple times in title or author name
+    expected_title_links = [(token, isbn) for token in title_tokens]
+    expected_author_links = [(token, isbn) for token in author_tokens]
 
     # book_title_tokens: exactly the (token, isbn) pairs for the title
-    actual_title_links = set(get_token_links_in_table(app, "book_title_tokens"))
-    assert actual_title_links == expected_title_links
+    actual_title_links = get_token_links_in_table(app, "book_title_tokens")
+    assert set(actual_title_links) == set(expected_title_links)
+    assert len(actual_title_links) == len(expected_title_links)
     assert get_number_of_token_links_in_table(app, "book_title_tokens") == len(
-        actual_title_links
+        expected_title_links
     )
 
     # author_name_tokens: exactly the (token, isbn) pairs for the author
-    actual_author_links = set(get_token_links_in_table(app, "author_name_tokens"))
-    assert actual_author_links == expected_author_links
+    actual_author_links = get_token_links_in_table(app, "author_name_tokens")
+    assert set(actual_author_links) == set(expected_author_links)
+    assert len(actual_author_links) == len(expected_author_links)
     assert get_number_of_token_links_in_table(app, "author_name_tokens") == len(
-        actual_author_links
+        expected_author_links
     )
 
-    # threegrams: exactly the threegrams generated from all tokens
+    # threegrams: exactly the threegrams generated from all unique tokens
+    expected_threegrams = [
+        threegram
+        for token in all_unique_tokens
+        for threegram in _generate_threegrams(token)
+    ]
     actual_threegrams = {
         threegram for threegram, _token_id in get_threegrams_in_table_threegrams(app)
     }
-    assert actual_threegrams == expected_threegrams
-    assert get_number_of_threegrams_in_table_threegrams(app) == sum(
-        len(_generate_threegrams(token)) for token in all_tokens
-    )
+    assert actual_threegrams == set(expected_threegrams)
+    assert get_number_of_threegrams_in_table_threegrams(app) == len(expected_threegrams)

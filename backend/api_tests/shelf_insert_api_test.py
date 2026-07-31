@@ -6,9 +6,14 @@ from app.models.book import Book
 from app.models.identifiers import Isbn
 
 from .api_test_utils import (
+    assert_fuzzy_search_tables_contain_only_book,
+    assert_fuzzy_search_tables_empty,
     get_number_of_books_in_table_books,
     get_number_of_entries_in_table_current_catalog,
     get_number_of_shelves_in_table_bookshelves,
+    get_number_of_threegrams_in_table_threegrams,
+    get_number_of_token_links_in_table,
+    get_number_of_tokens_in_table_tokens,
     insert_test_book_into_books_table_in_db,
     insert_test_book_into_shelf_in_db,
     insert_test_shelf_into_db,
@@ -38,6 +43,16 @@ def test_insert_book_to_missing_shelf(client: FlaskClient) -> None:
     assert get_number_of_books_in_table_books(client.application) == 1
     # No shelves should be added to the shelf table
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 0
+    # Fuzzy search tables should still contain only the manually added book
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application,
+        Book(
+            isbn=Isbn("978-3-453-43690-9"),
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+        ),
+    )
 
 
 def test_insert_missing_book_to_missing_shelf(client: FlaskClient) -> None:
@@ -62,6 +77,8 @@ def test_insert_missing_book_to_missing_shelf(client: FlaskClient) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 0
+    # Fuzzy search tables should still be empty
+    assert_fuzzy_search_tables_empty(client.application)
 
 
 def test_insert_missing_book_to_shelf(app: Flask) -> None:
@@ -75,12 +92,13 @@ def test_insert_missing_book_to_shelf(app: Flask) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_empty(client.application)
 
     response = client.post(
         "/api/shelf/insert",
         json={
             "osm_id": "https://www.openstreetmap.org/node/11935877522",
-            "isbn": "9783486587234",  # valid isbn, but not in db yet
+            "isbn": "9783453436909",  # valid isbn, but not in db yet
         },
     )
     assert response.status_code == HttpStatus.OK.value
@@ -88,7 +106,7 @@ def test_insert_missing_book_to_shelf(app: Flask) -> None:
     assert response.json["status"] == "success"
     assert (
         response.json["message"]
-        == "Book 978-3-486-58723-4 inserted into shelf https://www.openstreetmap.org/node/11935877522."
+        == "Book 978-3-453-43690-9 inserted into shelf https://www.openstreetmap.org/node/11935877522."
     )
 
     response = client.get(
@@ -98,12 +116,22 @@ def test_insert_missing_book_to_shelf(app: Flask) -> None:
     assert response.json is not None
     assert response.json["status"] == "success"
     assert len(response.json["data"]) == 1
-    assert response.json["data"][0]["book"]["isbn"] == "978-3-486-58723-4"
+    assert response.json["data"][0]["book"]["isbn"] == "978-3-453-43690-9"
 
     # Book should now be added to the current_catalog and to the books table.
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    # Threegrams and tokens should have been created as well
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application,
+        Book(
+            isbn=Isbn("978-3-453-43690-9"),
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="",
+        ),
+    )
 
 
 def test_insert_missing_non_dnb_book_to_shelf(app: Flask) -> None:
@@ -141,6 +169,7 @@ def test_insert_missing_non_dnb_book_to_shelf(app: Flask) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_empty(client.application)
 
 
 def test_insert_book_with_non_ascii_title(client: FlaskClient) -> None:
@@ -193,16 +222,18 @@ def test_insert_book_with_non_ascii_title(client: FlaskClient) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_contain_only_book(client.application, non_ascii_book)
 
 
-def test_insert_book_to_shelf_other_books_already_in_shelf(
+def test_insert_book_to_shelf_other_books_already_on_shelf(
     client: FlaskClient,
 ) -> None:
 
     already_in_shelf_book = Book(
         isbn=Isbn("978-1-5266-2658-5"),
-        title="Harry Potter and the Test Book that is already in the Shelf",
-        author="Rowling, J.K.",
+        title="Harry Potter and the Test Book that is already on the Shelf",
+        # use similar author to the other book to test tokenization (no duplicates)
+        author="Rowling, Stephen",
         dnb_id="1234567890",
     )
 
@@ -214,6 +245,9 @@ def test_insert_book_to_shelf_other_books_already_in_shelf(
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application, already_in_shelf_book
+    )
 
     response = client.post(
         "/api/shelf/insert",
@@ -258,16 +292,30 @@ def test_insert_book_to_shelf_other_books_already_in_shelf(
     }
 
     assert response.json["data"][1]["book"] == {
-        "author": "Rowling, J.K.",
+        "author": "Rowling, Stephen",
         "coverUrl": None,
         "dnbId": "1234567890",
         "isbn": "978-1-5266-2658-5",
-        "title": "Harry Potter and the Test Book that is already in the Shelf",
+        "title": "Harry Potter and the Test Book that is already on the Shelf",
     }
 
     assert get_number_of_entries_in_table_current_catalog(client.application) == 2
     assert get_number_of_books_in_table_books(client.application) == 2
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    # Fuzzy search tables should contain both books now
+    # Tokens table should not contain duplicates ("stephen" / "the")
+    assert get_number_of_tokens_in_table_tokens(client.application) == 15
+    assert get_number_of_threegrams_in_table_threegrams(client.application) == 104
+    # Duplicate "the" is allowed in the token_id to isbn link table, as it occurs twice
+    assert (
+        get_number_of_token_links_in_table(client.application, "book_title_tokens")
+        == 13
+    )
+    # Token link tables count occurences, not unique tokens -> duplicates allowed
+    assert (
+        get_number_of_token_links_in_table(client.application, "author_name_tokens")
+        == 4
+    )
 
 
 def test_insert_book_to_shelf_same_book_already_in_shelf(
@@ -289,6 +337,15 @@ def test_insert_book_to_shelf_same_book_already_in_shelf(
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application,
+        Book(
+            isbn=Isbn("978-3-453-43690-9"),
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+        ),
+    )
 
     # insert same book again
     response = client.post(
@@ -334,6 +391,17 @@ def test_insert_book_to_shelf_same_book_already_in_shelf(
     assert get_number_of_entries_in_table_current_catalog(client.application) == 2
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    # Fuzzy search tables should not contain duplicates,
+    # as they link to an isbn, not to specific book entities with entity id
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application,
+        Book(
+            isbn=Isbn("978-3-453-43690-9"),
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+        ),
+    )
 
 
 def test_insert_book_to_shelf_invalid_isbn(client: FlaskClient) -> None:
@@ -357,6 +425,7 @@ def test_insert_book_to_shelf_invalid_isbn(client: FlaskClient) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_empty(client.application)
 
 
 def test_insert_book_to_shelf_missing_isbn(client: FlaskClient) -> None:
@@ -379,6 +448,7 @@ def test_insert_book_to_shelf_missing_isbn(client: FlaskClient) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_empty(client.application)
 
 
 def test_insert_book_to_shelf_invalid_osm_id(client: FlaskClient) -> None:
@@ -389,7 +459,7 @@ def test_insert_book_to_shelf_invalid_osm_id(client: FlaskClient) -> None:
         "/api/shelf/insert",
         json={
             "osm_id": "https://www.youtube.com/watch?v=3San3uKKHgg",
-            "isbn": "978-3-45-8-3-43690-9",
+            "isbn": "978-3-45-8-3-43690-9",  # valid isbn
         },
     )
 
@@ -401,6 +471,7 @@ def test_insert_book_to_shelf_invalid_osm_id(client: FlaskClient) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_empty(client.application)
 
 
 def test_insert_book_to_shelf_missing_osm_id(client: FlaskClient) -> None:
@@ -420,3 +491,4 @@ def test_insert_book_to_shelf_missing_osm_id(client: FlaskClient) -> None:
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
     assert get_number_of_books_in_table_books(client.application) == 0
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 0
+    assert_fuzzy_search_tables_empty(client.application)

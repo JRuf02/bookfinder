@@ -7,6 +7,7 @@ from app.models.book import Book
 from app.models.identifiers import Isbn
 
 from .api_test_utils import (
+    assert_fuzzy_search_tables_contain_only_book,
     get_number_of_books_in_table_books,
     get_number_of_entries_in_table_current_catalog,
     get_number_of_shelves_in_table_bookshelves,
@@ -43,7 +44,7 @@ def test_remove_book_from_completely_missing_shelf(client: FlaskClient) -> None:
             "isbn": "978-3-453-43690-9",
         },
     )
-    # TODO: Implement this desired behaviour
+
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
@@ -69,7 +70,7 @@ def test_remove_missing_book_from_missing_shelf(client: FlaskClient) -> None:
             "isbn": "978-3-453-43690-9",  # valid isbn, but not in db yet
         },
     )
-    # TODO: Implement this desired behaviour
+
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
@@ -97,7 +98,7 @@ def test_remove_missing_book_from_shelf(client: FlaskClient) -> None:
             "isbn": "978-3-551-35401-3",  # valid isbn, but not in db yet
         },
     )
-    # TODO: Implement this desired behaviour
+
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
@@ -176,6 +177,15 @@ def test_remove_book_from_shelf_containing_only_that_book(
     assert get_number_of_entries_in_table_current_catalog(client.application) == 1
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application,
+        Book(
+            isbn=Isbn("978-3-453-43690-9"),
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+        ),
+    )
 
     response = client.post(
         "/api/shelf/remove",
@@ -193,9 +203,20 @@ def test_remove_book_from_shelf_containing_only_that_book(
         == "Book 978-3-453-43690-9 removed from shelf https://www.openstreetmap.org/node/11935877522."
     )
 
+    # Only remove the book entity from its shelf aka from current_catalog
     assert get_number_of_entries_in_table_current_catalog(client.application) == 0
+    # Keep book metadata
     assert get_number_of_books_in_table_books(client.application) == 1
     assert get_number_of_shelves_in_table_bookshelves(client.application) == 1
+    assert_fuzzy_search_tables_contain_only_book(
+        client.application,
+        Book(
+            isbn=Isbn("978-3-453-43690-9"),
+            title="Sprengstoff",
+            author="King, Stephen",
+            dnb_id="1028147899",
+        ),
+    )
 
 
 def test_remove_book_from_shelf_other_books_in_shelf(
@@ -285,7 +306,7 @@ def test_remove_book_from_shelf_not_containing_book(client: FlaskClient) -> None
             "isbn": "978-3-453-43690-9",
         },
     )
-    # TODO: Implement this desired behaviour
+
     assert response.status_code == HttpStatus.NOT_FOUND.value
     assert response.json is not None
     assert response.json["status"] == "error"
