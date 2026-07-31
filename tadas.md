@@ -117,6 +117,13 @@
   - sqlite connect close execute auslagern in wiederverwendbare Funktion statt code duplicates
   - (Unit) tests
     - Backend test for when DNB is down -> make test / make test-dnb
+    - Unit tests (Only complex logic should be tested)
+      - Unit tests / Doctests for python (backend) most complex logic functions
+        - unit or doctests for popularity score calculations
+        - unit or doctests for isbn parsing etc (osm parsing...)
+      - Unit tests for react?! (frontend) <= start in shelfActions.tsx -> Not necessary
+    - API calls should be tested (-> done in python), user interface doesn't need to be tested
+      - add api tests for new endpoints
 
 - Production Setup:
   - Implement production setup (caddy + gunicorn)

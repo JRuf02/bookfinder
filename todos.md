@@ -4,13 +4,6 @@
 
 - Code Quality:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
-  - Unit tests (Only complex logic should be tested)
-    - Unit tests / Doctests for python (backend) most complex logic functions
-      - unit or doctests for popularity score calculations
-      - unit or doctests for isbn parsing etc (osm parsing...)
-    - Unit tests for react?! (frontend) <= start in shelfActions.tsx
-  - API calls should be tested (-> done in python), user interface doesn't need to be tested
-    - add api tests for new endpoints <============================================================= 1
   - Use subcomponents for ScanningResults
 
 - Logic & Documentation:
@@ -25,37 +18,18 @@
   - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
     - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
-- CatalogScreen
-  - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
-  - Funktionen aufräumen, ggf custom hooks für logik
-
-- Scanning-/ScanningResults-/ShelfAction-Screen
-  - nearest shelf wird pre-selected wenn shelf im appcontext null ist
-
-- ShelfActionView.tsx
-  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher <============================================================= 5
-
 - InfoScreen
   - add info page
     - data sources
     - scanning advice
-    - tutorial? MUI process?
-  - dark mode toggle?
-
-- Resilience & Edge Cases:
-  - dnb_api.py
-    - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
-    - ctb (contributor) und andere data field synonyme für author adden <============================================================= 4
-    - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
-    - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
-  - if cover in size=l not available, try different sizes!
+    - tutorial? as a MUI process?
 
 - Design:
   - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
     - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
-  - Besseres color scheme entwickeln und anwenden <============================================================= 2
+  - Besseres color scheme entwickeln und anwenden <=============================================================
 
 - SSH / HTTPS:
   - handle certs/key.pem safely (maybe not on github?)
@@ -97,8 +71,8 @@
     - Configure and run frontend formatter (e.g. Prettier)
     - Run linter (ESLint and Ruff)
 
-- Blog Post
-  - write preliminary version/structure <============================================================= 3
+- Blog Post <=============================================================
+  - write preliminary version/structure
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
@@ -130,10 +104,8 @@
 - Frontend:
   - Use `/*_ This is a js doctstring _/` for docstrings
   - besserer ersatz für cover image if not available
-- SQL injection should not be possible -> use escape methods
-- ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl)
+- ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl <- hilft nur im dev mode?!)
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
-- smoothen permission handling for the camera (and improve error message design)
 - Manual Add Dialog
   - wenn isbn eingegeben wurde aber no book found, dann übertrage isbn direkt in das ISBN input field im ManualAddDialog
 - CatalogResult
@@ -142,9 +114,20 @@
 - Taschenlampe beim Scannen anschalten
 - Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
 - Search by ISBN should also accept ISBN-10 (and convert to ISBN-13 before searching in the DB)
+- Resilience & Edge Cases:
+  - dnb_api.py
+    - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
+    - ctb (contributor) und andere data field synonyme für author adden
+    - Handling für multiple authors / secondary book titles (e.g. 'Eragon' - 'Teil 2')
+    - error handling falls eins der attribute (z.B. Autor) nicht gefunden wird
+  - if cover in size=l not available, try different sizes!
 
 ## Nice to have
 
+- Scanning-/ScanningResults-/ShelfAction-Screen
+  - nearest shelf wird pre-selected wenn shelf im appcontext null ist
+- ShelfActionView.tsx
+  - Nützlichere Infos zeigen, z.B. alle gescannten Bücher
 - ScanningResults.tsx:
   - Show scanned book covers (with x on top right) instead of '3 books scanned'
     - Clicking the cover removes the book from the queue
@@ -174,6 +157,7 @@
   - Use MUI dialog for shelf select map popup
   - make responsive (mobile first)
     - desktop version uses its additional x axis space
+  - smoothen permission handling for the camera (and improve error message design)
 - Usability
   - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
   - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
@@ -190,6 +174,8 @@
   - "King, Stephen" should have a higher score than "Stephen Edwin King" for query "stephen king" (use token coverage as secondary ranking score)
   - Ranking could be done by edit distance, then by token coverage, then by distance and by popularity
 - CatalogScreen
+  - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
+  - Funktionen aufräumen, ggf custom hooks für logik
   - Hat button "select shelf to show books" und zeigt schon beim ersten öffnen die bücher des nähesten shelf?
   - oder zeigt die most recently inserted books deutschlandweit als start?
   - Real-Time: Shows (fuzzy-)search results as soon as the first letter is typed in (fuzzy search not mandatory, but would be nice)

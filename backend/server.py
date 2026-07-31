@@ -49,7 +49,6 @@ def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
     def get_book_api() -> ResponseReturnValue:
         return get_book_api_logic(request)
 
-    # TODO: Tests for this endpoint!
     @app.route("/api/book/popularity", methods=["GET"])
     def get_book_popularity_api() -> ResponseReturnValue:
         return get_book_popularity(request)
