@@ -2,9 +2,10 @@
 
 ## Main todos
 
-- Code Quality:
+- Makefiles:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
-  - Use subcomponents for ScanningResults
+    - make build o.ä. sollte die DB bauen falls noch nicht existiert
+    - makefile targets make run and make run-dev
 
 - Logic & Documentation:
   - add docstring to AppReducer, AppState and provider files
@@ -24,12 +25,14 @@
     - scanning advice
     - tutorial? as a MUI process?
 
-- Design:
+- Design: <=============================================================
   - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
     - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
-  - Besseres color scheme entwickeln und anwenden <=============================================================
+    - set a max width
+    - increase map width
+  - Besseres color scheme entwickeln und anwenden
 
 - Automation
   - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
@@ -47,10 +50,7 @@
   - Add dummy data & include db in git
   - Use api/bookshelves/nearby in frontend or revove from backend
     - Maybe add 'show books from x nearest shelves' to catalog?
-  - make build o.ä. sollte die DB bauen falls noch nicht existiert
-  - makefile targets make run and make run-dev
-  - .vscode/tasks.json tasks löschen wenn makefile fertig oder in readme / documentation aufnehmen
-  - alles screens/buttons sind miteinander verbunden wie im Diagramm entworfen
+  - .vscode/tasks.json tasks in readme / documentation aufnehmen
   - search code for TODOs
   - search local desktop for todos
   - final readme
@@ -60,7 +60,6 @@
     - Docker setup how to
   - adhere to coding standards
     - split up long files (e.g. tests > 400 lines)
-    - type annotations in python!
     - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
     - add docstrings (incl. examples) and documentation
     - clean up console.log and console.error usage
@@ -69,7 +68,6 @@
     - Run linter (ESLint and Ruff)
 
 - Blog Post <=============================================================
-  - write preliminary version/structure
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain why HTTPS (location&camera access) and why self-signed TLS key (no static ip / domain)
     - include reasoning from certs/refresh_certs.md, then delete that file
@@ -95,10 +93,6 @@
 - Git clone und Server starten von Null
   - frontend certs and dist files and backend bookshelves table should be built/populated automatically by docker
 
-## Bugs
-
-- Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
-
 ## Improvements
 
 - Frontend:
@@ -112,6 +106,7 @@
   - Add button for 'show shelf on shelfMap'
   - Add button for dnb link (d-nb.info/<dnb_id>) z.b. `https://d-nb.info/1027780482` to each result
 - Taschenlampe beim Scannen anschalten
+  - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
 - Search by ISBN should also accept ISBN-10 (and convert to ISBN-13 before searching in the DB)
 - Resilience & Edge Cases:
