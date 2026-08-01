@@ -1,4 +1,4 @@
-.PHONY: help all run build test lint clean
+.PHONY: help all run build certs test lint clean
 
 help:
 	@echo "Available targets:"
@@ -14,9 +14,14 @@ run:
 build:
 	npm run build
 
+certs:
+	@chmod +x /workspaces/bookfinder/frontend/certs/generate-certs.sh
+	/workspaces/bookfinder/frontend/certs/generate-certs.sh
+
+setup: certs build
+
 test:
-	@echo "No tests implemented yet for frontend"
-	@echo "TODO: implement (e.g. npm test) or remove this target if not needed"
+	@echo "Nothing to test for frontend"
 
 lint:
 	@echo "TODO: check why this target is not working"

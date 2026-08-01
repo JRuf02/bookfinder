@@ -3,7 +3,7 @@ FROM node:23-alpine3.20
 LABEL maintainer="Julian Gabriel Ruf <rufju@informatik.uni-freiburg.de>"
 
 RUN apk update
-RUN apk add git openssh python3 py3-pip make sqlite curl caddy
+RUN apk add git openssh python3 py3-pip make sqlite curl caddy openssl
 RUN npm install -g npm@11.1.0
 
 
@@ -46,7 +46,7 @@ RUN cd frontend && npm install
 COPY . /workspaces/bookfinder
 
 # run npm install and other post create commands
-RUN make build
+RUN make setup
 
 # specify entrypoint or command
 # WORKDIR /app
@@ -54,7 +54,7 @@ RUN make build
 
 
 # BUILD INSTRUCTIONS
-# git clone https://github.com/JRuf02/bookfinder.git (If prompted, enter Personal Access Token: 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)
+# git clone https://github.com/JRuf02/bookfinder.git
 # cd bookfinder
 # docker build -t julian-ruf-project .
 # docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project julian-ruf-project sh

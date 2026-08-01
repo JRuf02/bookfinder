@@ -31,19 +31,16 @@
   - desktop version looking acceptable
   - Besseres color scheme entwickeln und anwenden <=============================================================
 
-- SSH / HTTPS:
-  - handle certs/key.pem safely (maybe not on github?)
-
-  - Automation
-    - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
-    - implement and test final makefiles
-      - makefile has 'help' target and documentation
-    - make project docker-compatible as wished
-      - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
-      - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
-      - and [here](https://docs.docker.com/build/building/best-practices/)
-      - and [here](https://docs.docker.com/build/building/multi-stage/)
-    - do not require vs-code & devcontainer, only docker!
+- Automation
+  - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
+  - implement and test final makefiles
+    - makefile has 'help' target and documentation
+  - make project docker-compatible as wished
+    - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+    - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
+    - and [here](https://docs.docker.com/build/building/best-practices/)
+    - and [here](https://docs.docker.com/build/building/multi-stage/)
+  - do not require vs-code & devcontainer, only docker!
 
 - Finalization:
   - Update bookshelves via qlever

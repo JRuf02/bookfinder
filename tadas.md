@@ -12,6 +12,9 @@
         - Add custom error data types instead (e.g. dataclass db_connection_error)
   - Authors like Rowling, J.K. are handeled correctly
 
+- SSL / HTTPS:
+  - handle certs/key.pem safely
+
 - CatalogSearch
   - Logo und Input fields (scrollen weg oder) sind via button ausblendbar
   - Add (advanced search screen for) search by author, title, isbn, ... seperately

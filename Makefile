@@ -12,6 +12,10 @@ build:
 	make -C frontend build
 	make -C backend build
 
+setup:
+	make -C frontend setup
+	make -C backend setup
+
 run:
 	@echo "TODO: start the whole application by running the backend and frontend - in parallel!"
 

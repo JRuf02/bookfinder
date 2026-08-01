@@ -16,7 +16,9 @@ run-prod:
 	deactivate
 
 build: update-bookshelves
-	@echo "Nothing to build for Python."
+	@echo "Nothing else to build for Python."
+
+setup: build
 
 test:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \

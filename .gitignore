@@ -12,3 +12,6 @@ node_modules/
 
 # Ignore database
 *.db
+
+# Ignore SSL/TLS keys and certificates
+*.pem
