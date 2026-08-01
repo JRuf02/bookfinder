@@ -4,6 +4,8 @@
 #   - 127.0.0.1
 #   - an optional host LAN IP (host device wifi IP, not the container's internal IP)
 #
+# These certificates will be used by Vite and Caddy to serve the frontend over HTTPS.
+#
 # Usage:
 #   ./generate-dev-certs.sh             # localhost + 127.0.0.1 only
 #   ./generate-dev-certs.sh <host-ip>   # also include host IP (IPv4)

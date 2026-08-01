@@ -130,8 +130,12 @@ qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
   - This means: the database on your host will also remain in its original state
   - If you want to copy changes made on the host into your container, you need to rebuild the image
     - This will reset any changes made inside the container
-  - If you want to automatically synchronize parts of or the entire repo, you need to define bind mounts (`-v`) for the files or folders you want to sync, when starting the container
+  - If you want to automatically synchronize parts of or the entire repo, you need to define bind mounts (`-v`) for the files or folders you want to sync, when starting the container.
     - Example (bind mounting just the database): `docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project -v ${PWD}\backend\books.db:/workspaces/bookfinder/backend/books.db julian-ruf-project sh`
+    - Warning: If you bind mount the entire repo, then any files created or changed by the Dockerfile (e.g. via `RUN make setup`) will not be visible in the container.
+      - The files inside the container will then mirror the host repo, not the state of the repo in the image
+      - This means: No data in the bookshelves table, no dist folder, no TLS certificates
+      - You then need to run `make setup` inside the container yourself before you can start the servers
 
 ## Sqlite3 DB & Python API
 

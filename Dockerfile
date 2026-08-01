@@ -42,15 +42,23 @@ COPY frontend/package*.json ./frontend/
 RUN cd frontend && npm install
 
 
-# copy files
+# Copy all files
 COPY . /workspaces/bookfinder
 
-# run npm install and other post create commands
+
+WORKDIR /workspaces/bookfinder
+
+# Create TLS certificate, build frontend, update shelf database
+# Creates new files and changes the database file.
+# These files and changes will only be seen in the container,
+# if they are not bind mounted to the host.
+# If a bind mount is used (e.g. by using a devcontainer),
+# you need to run 'make setup' again in the container.
+# For the devcontainer, this is done automatically by the
+# devcontainer.json postCreateCommand.
 RUN make setup
 
-# specify entrypoint or command
-# WORKDIR /app
-# CMD ["npm", "start"]
+CMD ["sh"]
 
 
 # BUILD INSTRUCTIONS
@@ -58,6 +66,7 @@ RUN make setup
 # cd bookfinder
 # docker build -t julian-ruf-project .
 # docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project julian-ruf-project sh
+# make help
 # make run-prod
 
 # EXIT THE CONTAINER

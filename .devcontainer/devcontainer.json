@@ -7,11 +7,16 @@
   "portsAttributes": {
     "5173": { "label": "Vite Dev Server", "onAutoForward": "notify" },
     "5000": { "label": "Flask API Server", "onAutoForward": "notify" },
-    "443": { "label": "HTTPS", "onAutoForward": "notify", "elevateIfNeeded": true }
+    "443": {
+      "label": "HTTPS",
+      "onAutoForward": "notify",
+      "elevateIfNeeded": true
+    }
   },
   "mounts": [
     "source=bookfinder-nodemodules,target=/workspaces/bookfinder/frontend/node_modules,type=volume"
   ], // Mount the node_modules folder as a volume to avoid tsserver loading for ages
+  "postCreateCommand": "make setup", // Will be run once after the container is created
   "customizations": {
     "vscode": {
       "extensions": [

@@ -71,6 +71,8 @@
 - Blog Post <=============================================================
   - write preliminary version/structure
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
+  - Explain why HTTPS (location&camera access) and why self-signed TLS key (no static ip / domain)
+    - include reasoning from certs/refresh_certs.md, then delete that file
   - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
   - Add info about tests: API tests, unit tests, doctests
@@ -91,6 +93,7 @@
     - dev mode
     - prod mode
 - Git clone und Server starten von Null
+  - frontend certs and dist files and backend bookshelves table should be built/populated automatically by docker
 
 ## Bugs
 
