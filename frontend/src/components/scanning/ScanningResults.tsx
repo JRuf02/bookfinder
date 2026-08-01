@@ -77,6 +77,7 @@ export default function ScanningResults({
     return () => {
       controller.abort();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -128,7 +129,6 @@ export default function ScanningResults({
   };
 
   // TODO: Add loading state (spinner) while fetching book data?
-  // TODO: Pin the ScanningResultsButtons to the bottom of the screen
   return (
     <div>
       <Container

@@ -1,8 +1,6 @@
-import "@zxing/library"; // TODO: check if this import does anything
-
 import ErrorIcon from "@mui/icons-material/Error";
 import { Box, Paper, Stack, Typography } from "@mui/material";
-import { BrowserMultiFormatReader } from "@zxing/browser";
+import { BrowserMultiFormatReader, IScannerControls } from "@zxing/browser";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 type ScannerProps = {
@@ -14,12 +12,40 @@ type ScannerProps = {
   }) => void;
 };
 
+// TODO: Move the two custom hooks (useCamera and useBarcodeReader) to a separate file.
+// TODO: Test if scanner still works.
+
 // Custom hook to manage camera access and video element
 function useCamera() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const isMountedRef = useRef(true);
+
+  // Clean up camera resources
+  const stopCamera = useCallback(() => {
+    console.log("Stopping camera...");
+    let tracksStopped = false;
+
+    if (streamRef.current) {
+      const tracks = streamRef.current.getTracks();
+
+      if (tracks.length > 0) {
+        tracks.forEach((track) => {
+          track.stop();
+          console.log("Stopped track:", track);
+        });
+        tracksStopped = true;
+      }
+      streamRef.current = null;
+    }
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+
+    return tracksStopped;
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -28,7 +54,7 @@ function useCamera() {
       isMountedRef.current = false;
       stopCamera();
     };
-  }, []);
+  }, [stopCamera]);
 
   // Initialize camera with proper constraints
   const startCamera = useCallback(async () => {
@@ -73,39 +99,14 @@ function useCamera() {
         stream.getTracks().forEach((track) => track.stop());
         return false;
       }
-    } catch (err: any) {
+    } catch (err) {
       if (isMountedRef.current) {
         console.error("Camera access error:", err);
         setError(`Camera access denied`);
       }
       return false;
     }
-  }, []);
-
-  // Clean up camera resources
-  const stopCamera = useCallback(() => {
-    console.log("Stopping camera...");
-    let tracksStopped = false;
-
-    if (streamRef.current) {
-      const tracks = streamRef.current.getTracks();
-
-      if (tracks.length > 0) {
-        tracks.forEach((track) => {
-          track.stop();
-          console.log("Stopped track:", track);
-        });
-        tracksStopped = true;
-      }
-      streamRef.current = null;
-    }
-
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-
-    return tracksStopped;
-  }, []);
+  }, [stopCamera]);
 
   // Play the video and return a promise
   const playVideo = useCallback(async () => {
@@ -116,9 +117,10 @@ function useCamera() {
     try {
       await videoRef.current.play();
       return true;
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       console.error("Video play error:", err);
-      setError(`Could not play video: ${err.message}`);
+      setError(`Could not play camera video: ${message}`);
       return Promise.reject(err);
     }
   }, []);
@@ -134,15 +136,27 @@ function useCamera() {
 
 // Custom hook to manage barcode reading
 function useBarcodeReader(
-  videoRef: React.RefObject<HTMLVideoElement>,
+  videoRef: React.RefObject<HTMLVideoElement | null>,
   onResult: (isbn: string) => void,
 ) {
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<IScannerControls | null>(null);
   const lastResultRef = useRef<string | null>(null);
   const decodingStartedRef = useRef(false);
   const [isReading, setIsReading] = useState(false);
   const isMountedRef = useRef(true);
+
+  // Stop barcode reading
+  const stopReading = useCallback(() => {
+    if (controlsRef.current) {
+      controlsRef.current.stop();
+      controlsRef.current = null;
+    }
+
+    decodingStartedRef.current = false;
+    lastResultRef.current = null;
+    setIsReading(false);
+  }, []);
 
   // Initialize the reader once and clean up on unmount
   useEffect(() => {
@@ -155,18 +169,8 @@ function useBarcodeReader(
     return () => {
       isMountedRef.current = false;
       stopReading();
-
-      // Try to fully reset the reader
-      // if (readerRef.current) {
-      //  try {
-      //    readerRef.current.reset();  // Property 'reset' does not exist on type 'BrowserMultiFormatReader'.
-      //  } catch (e) {
-      //    console.log("Error resetting reader:", e);
-      //  }
-      // Don't set to null, as other parts might still reference it
-      // }
     };
-  }, []);
+  }, [stopReading]);
 
   // Start barcode reading with improved cleanup
   const startReading = useCallback(async () => {
@@ -186,7 +190,7 @@ function useBarcodeReader(
       const controls = await readerRef.current.decodeFromVideoDevice(
         undefined, // default camera
         videoRef.current, // video element where camera feed is shown
-        (result, _) => {
+        (result) => {
           // we don't need the error, only the result
 
           const now = Date.now();
@@ -240,18 +244,6 @@ function useBarcodeReader(
     }
   }, [videoRef, onResult]);
 
-  // Stop barcode reading
-  const stopReading = useCallback(() => {
-    if (controlsRef.current) {
-      controlsRef.current.stop();
-      controlsRef.current = null;
-    }
-
-    decodingStartedRef.current = false;
-    lastResultRef.current = null;
-    setIsReading(false);
-  }, []);
-
   // Reset the reader state
   const resetReader = useCallback(() => {
     stopReading();
@@ -270,7 +262,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
   const mountCountRef = useRef(0);
   const { videoRef, error, startCamera, stopCamera, playVideo } = useCamera();
   const { startReading, stopReading, resetReader } = useBarcodeReader(
-    videoRef as any,
+    videoRef,
     onResult,
   );
 
@@ -410,6 +402,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
     startReading,
     stopReading,
     resetReader,
+    videoRef,
   ]);
 
   useEffect(() => {
