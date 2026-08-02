@@ -3,19 +3,18 @@
 ## Main todos
 
 - Makefiles:
-  - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
+  - 3 Makefiles
+    - each makefile has 'help' target and documentation
+    - choice of targets is up to you, but the first target in your Makefile should always be help so that just make will print some information on what can done with your Makefile.
+    - For each target, specify:
+      - (1) which files are read,
+      - (2) which files are produced,
+      - (3) how much time will it take approximately (second or minutes or hours or days),
+      - (4) how much RAM and disk space will this need approximately (a few KB, a few MB, many GBs?).
+    - If this information is too complex, it's probably a good idea to let make help just print the high-level info (which targets there are and a short description what they do) and have a make help-<target> which prints more detailed info for each target (and the make help page should mention that).
 
 - Logic & Documentation:
   - add docstring to AppReducer, AppState and provider files
-  - Only readme and blog post are very important
-  - System diagrams for blog post
-    - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
-    - Diagram with file overview and main files (e.g. App.tsx, server.py, update_bookshelves.py)
-  - Database tables diagram and/or section with table structure in readme
-  - Backend/api documentation -> 1-2 diagrams (optional)
-  - Sequenzdiagramm für 'Buch einstellen' Aktion (optional)
-  - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
-    - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - InfoScreen
   - add info page
@@ -24,47 +23,33 @@
     - tutorial? as a MUI process?
 
 - Design: <=============================================================
-  - Buttons alignen wie die Popularity Chips (damit bei umbruch auf mobile vertikales alignment stimmt)
-    - MapPopup
   - mobile version looking good
   - desktop version looking acceptable
     - set a max width
     - increase map width
   - Besseres color scheme entwickeln und anwenden
 
-- Automation
-  - use make instead of .vscode/tasks.json and to bundle npm run all and sub-makefiles
-  - implement and test final makefiles
-    - makefile has 'help' target and documentation
-  - make project docker-compatible as wished
-    - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
-    - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
-    - and [here](https://docs.docker.com/build/building/best-practices/)
-    - and [here](https://docs.docker.com/build/building/multi-stage/)
-  - do not require vs-code & devcontainer, only docker!
-
 - Finalization:
   - Update bookshelves via qlever
   - Add dummy data & include db in git
-  - Use api/bookshelves/nearby in frontend or revove from backend
-    - Maybe add 'show books from x nearest shelves' to catalog?
-  - .vscode/tasks.json tasks in readme / documentation aufnehmen
-  - search code for TODOs
-  - search local desktop for todos
   - final readme
     - Introduction
     - System overview + diagram
     - backend API documentation
     - Docker setup how to
+    - .vscode/tasks.json tasks erklären
     - `README.md, in which you clearly explain how you organized your files and what can be found where. If as part of your project or thesis you generated valuable data (= data, which can only be recreated with large effort or not at all), you should put this data in the folder /nfs/students/<firstname-lastname> (see above) and mention this in the README as well. There should be a README file in your /nfs/students directory as well. `
   - adhere to coding standards
     - split up long files (e.g. tests > 400 lines)
     - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
     - add docstrings (incl. examples) and documentation
+    - Unit tests / Doctests for all non-trivial backend functions
     - clean up console.log and console.error usage
-    - remove unused inputs (tsx and py)
     - Configure and run frontend formatter (e.g. Prettier)
     - Run linter (ESLint and Ruff)
+    - remove unused inputs (tsx and py)
+  - search code for TODOs
+  - search local desktop for todos
 
 - Blog Post <=============================================================
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
@@ -74,6 +59,15 @@
   - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
   - Add info about tests: API tests, unit tests, doctests
   - Different format screenshots via chrome inspect
+  - Diagrams:
+    - System diagrams for blog post
+      - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
+      - Diagram with file overview and main files (e.g. App.tsx, server.py, update_bookshelves.py)
+    - Database tables diagram and/or section with table structure in readme
+    - Backend/api documentation -> 1-2 diagrams (optional)
+    - Sequenzdiagramm für 'Buch einstellen' Aktion (optional)
+    - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
+      - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 ## Testing
 
@@ -91,6 +85,7 @@
     - prod mode
 - Git clone und Server starten von Null
   - frontend certs and dist files and backend bookshelves table should be built/populated automatically by docker
+  - alle make targets funktionieren wie erwartet
 
 ## Improvements
 
@@ -108,6 +103,8 @@
   - Kamera stellt nicht scharf auf mobile (nur in chrome) bei schlechtem Licht; Fokus immer weit in der Ferne
 - Disable buttons after click until api response is fetched (-> no duplicate inserts etc.)
 - Search by ISBN should also accept ISBN-10 (and convert to ISBN-13 before searching in the DB)
+- Use api/bookshelves/nearby in frontend or revove from backend
+  - Maybe add 'show books from x nearest shelves' to catalog?
 - Resilience & Edge Cases:
   - dnb_api.py
     - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern
@@ -200,9 +197,8 @@
     - use None instead of empty str / dummy data / title: "Error"
     - Generate text like 'Error Fetching Data' and 'Unknown Title/Author' in the UI component
 
-## Maybe if I find the time for it (aka ideas I'll never realize)
+## Additional features and ideas for big extensions and conceptual changes
 
-- Make insertions into books table atomic with the corresponding insertions of qgrams, tokens etc.
 - Tech stack changes
   - 1 Docker-Compose (ggf. mit caddy reverse-proxy & auto-restart nach crash) mit 2 Containern:
     - frontend (vite server or pre-built files from frontend/dist/)
@@ -245,4 +241,5 @@
   - fetch and render bookshelf/map data async, to keep site reactive while initializing the map
   - quadtree for tile / shelf loading
 - Code Quality
+  - Make insertions into books table atomic with the corresponding insertions of qgrams, tokens etc.
   - success/error messages from json should instead be generated by frontend from the http status code

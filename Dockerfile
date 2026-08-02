@@ -62,6 +62,9 @@ CMD ["/bin/bash", "--rcfile", "bashrc"]
 
 
 # BUILD INSTRUCTIONS
+# Approximate runtime for docker build: 2-3 minutes
+# (depending on the machine and internet connection)
+
 # git clone https://github.com/JRuf02/bookfinder.git
 # cd bookfinder
 # docker build -t julian-ruf-project .
@@ -69,9 +72,11 @@ CMD ["/bin/bash", "--rcfile", "bashrc"]
 # make help
 # make run-prod
 
+
 # EXIT THE CONTAINER
 # ctrl + c
 # ctrl + ad
+
 
 # ADDITIONAL COMMANDS
 # Start without rebuilding (if docker build and docker run have already been executed):

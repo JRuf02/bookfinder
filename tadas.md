@@ -128,6 +128,17 @@
     - API calls should be tested (-> done in python), user interface doesn't need to be tested
       - add api tests for new endpoints
 
+- Automation:
+  - Makefiles:
+    - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
+  - Docker:
+    - make project docker-compatible as wished
+      - [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility#Reproducibility_via_Docker_and_Make)
+      - and [here](https://ad-wiki.informatik.uni-freiburg.de/teaching/DockerExample)
+      - and [here](https://docs.docker.com/build/building/best-practices/)
+      - and [here](https://docs.docker.com/build/building/multi-stage/)
+    - do not require vs-code & devcontainer, only plain docker!
+
 - Production Setup:
   - Implement production setup (caddy + gunicorn)
 
