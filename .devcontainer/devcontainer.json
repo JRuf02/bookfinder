@@ -18,7 +18,6 @@
   ], // Mount the node_modules folder as a volume to avoid tsserver loading for ages
 
   "postCreateCommand": "make setup", // Will be run once after the container is created
-  "postAttachCommand": "bash", // Will be run every time the container is attached to
 
   "customizations": {
     "vscode": {

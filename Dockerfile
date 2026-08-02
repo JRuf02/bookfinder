@@ -65,7 +65,7 @@ CMD ["/bin/bash", "--rcfile", "bashrc"]
 # git clone https://github.com/JRuf02/bookfinder.git
 # cd bookfinder
 # docker build -t julian-ruf-project .
-# docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project julian-ruf-project sh
+# docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project julian-ruf-project
 # make help
 # make run-prod
 

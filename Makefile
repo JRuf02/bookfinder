@@ -17,13 +17,16 @@ setup:
 
 run-dev:
 	@set -e; \
-	trap 'kill "$$frontend_pid" 2>/dev/null || true' EXIT; \
+	trap 'kill "$$frontend_pid" 2>/dev/null || true' INT TERM EXIT; \
 	$(MAKE) -C frontend run-dev & frontend_pid=$$!; \
 	$(MAKE) -C backend run-dev
 
 run-prod:
-	make -C backend run-prod & \
-	caddy run --config /workspaces/bookfinder/reverse-proxy/Caddyfile
+	@set -e; \
+	trap 'kill "$$backend_pid" "$$caddy_pid" 2>/dev/null || true' INT TERM EXIT; \
+	$(MAKE) -C backend run-prod & backend_pid=$$!; \
+	caddy run --config /workspaces/bookfinder/reverse-proxy/Caddyfile & caddy_pid=$$!; \
+	wait "$$backend_pid" "$$caddy_pid"
 
 test:
 	@for dir in $(SUBDIRS); do \

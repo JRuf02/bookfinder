@@ -134,7 +134,7 @@ def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> tuple[bytes, str] | Non
     """Fetch cover image from DNB using the ISBN."""
 
     cover_url = f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size={size}"
-    logger.info(f"Fetching cover from DNB: {cover_url}")
+    logger.debug(f"Fetching cover from DNB: {cover_url}")
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)
