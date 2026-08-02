@@ -1,5 +1,4 @@
-.PHONY: help all run-dev run-prod build setup test test-dnb checkstyle checkstyle-flake8 checkstyle-strict lint update-bookshelves fuzzysearch clean
-
+.PHONY: help all update-bookshelves build setup run-dev run-prod test test-dnb checkstyle checkstyle-flake8 checkstyle-strict lint fuzzysearch clean
 TEST_CMD = pytest -q --doctest-modules --verbose
 
 help:
@@ -7,6 +6,16 @@ help:
 
 all: test checkstyle-flake8 run-dev
 	@echo "TODO: check what this target should do / if it is needed."
+
+update-bookshelves:
+	source /workspaces/bookfinder-venv/.venv/bin/activate && \
+	python3 -m scripts.update_bookshelves -f && \
+	deactivate
+
+build: update-bookshelves
+	@echo "Nothing else to build for Python."
+
+setup: build
 
 run-dev:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
@@ -17,11 +26,6 @@ run-prod:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
 	gunicorn -w 4 -b 0.0.0.0:5001 'server:create_app()' && \
 	deactivate
-
-build: update-bookshelves
-	@echo "Nothing else to build for Python."
-
-setup: build
 
 test:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
@@ -49,11 +53,6 @@ checkstyle-strict:
 	deactivate
 
 lint: checkstyle
-
-update-bookshelves:
-	source /workspaces/bookfinder-venv/.venv/bin/activate && \
-	python3 -m scripts.update_bookshelves -f && \
-	deactivate
 
 fuzzysearch:
 	@echo "Starting local fuzzy search CLI..."
