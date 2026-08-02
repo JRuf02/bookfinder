@@ -32,7 +32,7 @@ Use the provided Devcontainer to make the usage as easy as possible:
 ##### Run dev servers manually
 
 - Run `npm run dev` in directory `\workspaces\bookfinder\frontend` inside the container to start vite (react dev server)
-- Run `make run` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
+- Run `make run-dev` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask)
 
 #### Run production servers
 
@@ -50,7 +50,7 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 #### Run dev servers
 
 - Run `npm run dev` in directory `\workspaces\bookfinder\frontend` inside the container to start vite (react dev server)
-- Run `make run` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask) (might need 'make install' first!)
+- Run `make run-dev` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask)
 
 #### Run production servers
 

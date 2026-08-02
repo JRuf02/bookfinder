@@ -1,4 +1,4 @@
-.PHONY: help all run build certs test lint clean
+.PHONY: help all run-dev run-prod build certs test lint clean
 
 help:
 	@echo "Available targets:"
@@ -6,10 +6,15 @@ help:
 	@echo "https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility"
 
 all: build test lint
+	@echo "TODO: check what this target should do / if it is needed."
 
-run:
+run-dev:
 	npm run dev
-	@echo "TODO: implement run-prod/run-dev target"
+
+run-prod:
+	@echo "Starting frontend in production mode..."
+	@echo "Don't forget to also start the backend server if needed!"
+	caddy run --config /workspaces/bookfinder/reverse-proxy/Caddyfile
 
 build:
 	npm run build

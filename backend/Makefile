@@ -1,11 +1,14 @@
+.PHONY: help all run-dev run-prod build setup test test-dnb checkstyle checkstyle-flake8 checkstyle-strict lint update-bookshelves fuzzysearch clean
+
 TEST_CMD = pytest -q --doctest-modules --verbose
 
 help:
 	@echo "Not implemented yet"
 
-all: test checkstyle-flake8 run
+all: test checkstyle-flake8 run-dev
+	@echo "TODO: check what this target should do / if it is needed."
 
-run:
+run-dev:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
 	python server.py && \
 	deactivate
@@ -44,6 +47,8 @@ checkstyle-strict:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
 	ruff check --no-fix --select ALL --ignore D211,D213,TD,COM /workspaces/bookfinder/backend && \
 	deactivate
+
+lint: checkstyle
 
 update-bookshelves:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \

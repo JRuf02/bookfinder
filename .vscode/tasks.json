@@ -16,7 +16,7 @@
     {
       "label": "Run Backend",
       "type": "shell",
-      "command": "cd backend && make run",
+      "command": "cd backend && make run-dev",
       "isBackground": true,
       "presentation": {
         "reveal": "always",

@@ -1,4 +1,4 @@
-.PHONY: help run test
+.PHONY: help build setup run-dev run-prod test lint clean
 
 SUBDIRS := backend frontend
 
@@ -6,7 +6,6 @@ help:
 	@echo "Available targets:"
 	@echo "TODO: implement help target as wished here:"
 	@echo "https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility"
-	@echo "Todo: add lint, clean, run targets"
 
 build:
 	make -C frontend build
@@ -16,8 +15,11 @@ setup:
 	make -C frontend setup
 	make -C backend setup
 
-run:
-	@echo "TODO: start the whole application by running the backend and frontend - in parallel!"
+run-dev:
+	@set -e; \
+	trap 'kill "$$frontend_pid" 2>/dev/null || true' EXIT; \
+	$(MAKE) -C frontend run-dev & frontend_pid=$$!; \
+	$(MAKE) -C backend run-dev
 
 run-prod:
 	make -C backend run-prod & \
@@ -27,3 +29,11 @@ test:
 	@for dir in $(SUBDIRS); do \
 		$(MAKE) -C $$dir test || exit $$?; \
 	done
+
+lint:
+	make -C backend lint
+	make -C frontend lint
+
+clean:
+	make -C backend clean
+	make -C frontend clean
