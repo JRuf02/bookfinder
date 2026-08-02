@@ -1,2 +1,4 @@
 # Automatically normalize line endings
 *.sh text eol=lf
+bashrc text eol=lf
+.bashrc text eol=lf
