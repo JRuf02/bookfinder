@@ -4,8 +4,6 @@
 
 - Makefiles:
   - 3 Makefiles, all with detailed help targets, see [Reproducibility via Docker and Make](https://ad-wiki.informatik.uni-freiburg.de/teaching/Reproducibility)
-    - make build o.ä. sollte die DB bauen falls noch nicht existiert
-    - makefile targets make run and make run-dev
 
 - Logic & Documentation:
   - add docstring to AppReducer, AppState and provider files
@@ -58,6 +56,7 @@
     - System overview + diagram
     - backend API documentation
     - Docker setup how to
+    - `README.md, in which you clearly explain how you organized your files and what can be found where. If as part of your project or thesis you generated valuable data (= data, which can only be recreated with large effort or not at all), you should put this data in the folder /nfs/students/<firstname-lastname> (see above) and mention this in the README as well. There should be a README file in your /nfs/students directory as well. `
   - adhere to coding standards
     - split up long files (e.g. tests > 400 lines)
     - check .ruff.toml for ignored rules that should not be ignored in abgabeversion

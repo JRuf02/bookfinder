@@ -3,7 +3,7 @@ FROM node:23-alpine3.20
 LABEL maintainer="Julian Gabriel Ruf <rufju@informatik.uni-freiburg.de>"
 
 RUN apk update
-RUN apk add git openssh python3 py3-pip make sqlite curl caddy openssl
+RUN apk add git openssh python3 py3-pip make sqlite curl caddy openssl bash
 RUN npm install -g npm@11.1.0
 
 
@@ -58,7 +58,7 @@ WORKDIR /workspaces/bookfinder
 # devcontainer.json postCreateCommand.
 RUN make setup
 
-CMD ["sh"]
+CMD ["/bin/bash", "--rcfile", "bashrc"]
 
 
 # BUILD INSTRUCTIONS
