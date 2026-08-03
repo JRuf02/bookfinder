@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0">
   <diagram name="Seite-1" id="1V8wp7dTk6F3Sek12UoL">
-    <mxGraphModel dx="774" dy="419" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1000" math="0" shadow="0" adaptiveColors="none">
+    <mxGraphModel dx="911" dy="493" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1000" math="0" shadow="0" adaptiveColors="none">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -78,13 +78,18 @@
             <mxPoint x="180" y="180" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="MEFFbtwXL6T4ufhxY54E-10" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="&lt;div&gt;https://host-ip-address&lt;/div&gt;">
+        <mxCell id="MEFFbtwXL6T4ufhxY54E-10" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;align=left;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="HPABYToSQElcOi2I7UhA-14" value="&lt;div align=&quot;left&quot;&gt;&amp;nbsp;https://host-ip-address&lt;/div&gt;">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <Array as="points">
-              <mxPoint x="379.5" y="110" />
-            </Array>
+            <Array as="points" />
             <mxPoint x="379.5" y="80" as="sourcePoint" />
             <mxPoint x="380" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lCcl4Cy1uQOJjM4rqS44-2" edge="1" parent="1" source="HPABYToSQElcOi2I7UhA-1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;align=right;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="HPABYToSQElcOi2I7UhA-14" value="&lt;div align=&quot;right&quot;&gt;https://host-ip-address/api&amp;nbsp;&lt;/div&gt;">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="180" y="120" as="sourcePoint" />
+            <mxPoint x="180.5" y="170" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
