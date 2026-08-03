@@ -22,7 +22,7 @@ help:
 	@echo "Additional targets:"
 	@echo "  setup      Build the frontend, generate TLS certificates, import bookshelves into the database."
 	@echo "  build      Build the frontend bundle and refresh or create the backend bookshelf database."
-	@echo "  clean      Remove generated cache and bytecode files."
+	@echo "  clean      Remove generated cache, bytecode and build files."
 	@echo ""
 	@echo "For more information about each target, use 'make help-<target>' for any of the targets above."
 	@echo ""
@@ -135,8 +135,10 @@ clean:
 
 help-clean:
 	@echo "About 'make clean':"
-	@echo "  Reads:    generated Python cache files and bytecode, frontend/Makefile, backend/Makefile"
-	@echo "  Produces: deletion of backend *.pyc files and backend __pycache__ directories"
+	@echo "  Reads:    generated Python cache files and bytecode, frontend/dist/,"
+	@echo "            frontend/Makefile, backend/Makefile"
+	@echo "  Produces: deletion of backend *.pyc files, __pycache__ directories,"
+	@echo "            deletion of frontend/dist/ directory and its contents"
 	@echo "  Time:     < 1 s"
 	@echo "  Resources: negligible"
-	@echo "  Notes:    this target only removes generated cache files, not build artifacts such as frontend/dist."
+	@echo "  Notes:    removes generated cache files and build artifacts."

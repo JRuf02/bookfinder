@@ -1,11 +1,8 @@
-.PHONY: help all update-bookshelves build setup run-dev run-prod test test-dnb checkstyle checkstyle-flake8 checkstyle-strict lint fuzzysearch clean
+.PHONY: help update-bookshelves build setup run-dev run-prod test test-dnb checkstyle checkstyle-flake8 checkstyle-strict lint fuzzysearch clean
 TEST_CMD = pytest -q --doctest-modules --verbose
 
 help:
 	@echo "Not implemented yet"
-
-all: test checkstyle-flake8 run-dev
-	@echo "TODO: check what this target should do / if it is needed."
 
 update-bookshelves:
 	source /workspaces/bookfinder-venv/.venv/bin/activate && \
