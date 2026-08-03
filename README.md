@@ -247,3 +247,11 @@ cd backend
 source /workspaces/bookfinder-venv/.venv/bin/activate
 PYTHONPATH=/workspaces/bookfinder/backend pytest -vv api_tests/cover_api_test.py
 ```
+
+## Troubleshooting
+
+See `documentation/troubleshooting` for common problems and their solutions.
+
+## System diagrams
+
+See `documentation/system-diagrams-and-api-endpoints` for system diagrams.
