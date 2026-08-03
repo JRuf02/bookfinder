@@ -1,6 +1,5 @@
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
 import SearchIcon from "@mui/icons-material/Search";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,10 +9,9 @@ export default function BottomNavBar() {
   const location = useLocation();
 
   const navItems = [
-    { label: "Home", icon: <HomeIcon />, path: "/" },
     { label: "Catalog", icon: <SearchIcon />, path: "/catalog" },
+    { label: "Home", icon: <HomeIcon />, path: "/" },
     { label: "Scan", icon: <CameraAltIcon />, path: "/scan" },
-    { label: "Info", icon: <InfoIcon />, path: "/info" },
   ];
 
   return (

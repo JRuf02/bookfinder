@@ -12,11 +12,6 @@ import NotFoundScreen from "./pages/NotFoundScreen";
 import ScanningScreen from "./pages/ScanningScreen";
 
 function App() {
-  /*
-        TODO: Add info screen with instructions for the app/scanning, data sources, contact info, etc.
-        <Route path="/info" element={<InfoScreen />} />
-  */
-
   return (
     <BrowserRouter>
       <Routes>

@@ -2,19 +2,6 @@
 
 ## Main todos
 
-- InfoScreen
-  - add info page
-    - data sources
-    - scanning advice (Screenshots?)
-    - tutorial? as a MUI process?
-
-- Design:
-  - mobile version looking good
-  - desktop version looking acceptable
-    - set a max width
-    - increase map width
-  - Besseres color scheme entwickeln und anwenden
-
 - Finalization:
   - Update bookshelves via qlever
   - Add dummy data & include db in git
@@ -72,6 +59,18 @@
 
 ## Improvements
 
+- Design:
+  - mobile version looking good
+  - desktop version looking acceptable
+    - set a max width
+    - increase map width
+  - Besseres color scheme entwickeln und anwenden
+- InfoScreen
+  - add info page
+    - contact info, etc.
+    - data sources
+    - scanning advice (Screenshots?)
+    - tutorial? as a MUI process?
 - Frontend:
   - Use `/*_ This is a js doctstring _/` for docstrings
   - besserer ersatz für cover image if not available
