@@ -105,9 +105,20 @@
   - ResultMetadataTable umbenennen und benutzen
   - human-readable times ('last updated 2 years ago') klein und grau in shelf popup anzeigen
 
+- Makefiles:
+  - 3 Makefiles
+    - each makefile has 'help' target and documentation
+    - choice of targets is up to you, but the first target in your Makefile should always be help so that just make will print some information on what can done with your Makefile.
+    - For each target, specify:
+      - (1) which files are read,
+      - (2) which files are produced,
+      - (3) how much time will it take approximately (second or minutes or hours or days),
+      - (4) how much RAM and disk space will this need approximately (a few KB, a few MB, many GBs?).
+    - If this information is too complex, it's probably a good idea to let make help just print the high-level info (which targets there are and a short description what they do) and have a make help-<target> which prints more detailed info for each target (and the make help page should mention that).
 - top level Makefile
   - make test
     - Runs make test from frontend and backend makefiles
+
 - use state/AppContextProvider.tsx
   - move userCoords there
 
