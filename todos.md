@@ -2,16 +2,13 @@
 
 ## Main todos
 
-- Logic & Documentation:
-  - add docstring to AppReducer, AppState and provider files
-
 - InfoScreen
   - add info page
     - data sources
-    - scanning advice
+    - scanning advice (Screenshots?)
     - tutorial? as a MUI process?
 
-- Design: <=============================================================
+- Design:
   - mobile version looking good
   - desktop version looking acceptable
     - set a max width
@@ -29,14 +26,11 @@
     - .vscode/tasks.json tasks erklären
     - `README.md, in which you clearly explain how you organized your files and what can be found where. If as part of your project or thesis you generated valuable data (= data, which can only be recreated with large effort or not at all), you should put this data in the folder /nfs/students/<firstname-lastname> (see above) and mention this in the README as well. There should be a README file in your /nfs/students directory as well. `
   - adhere to coding standards
-    - split up long files (e.g. tests > 400 lines)
-    - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
-    - add docstrings (incl. examples) and documentation
-    - Unit tests / Doctests for all non-trivial backend functions
-    - clean up console.log and console.error usage
     - Configure and run frontend formatter (e.g. Prettier)
-    - Run linter (ESLint and Ruff)
-    - remove unused inputs (tsx and py)
+    - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
+    - Run linter (ESLint and Ruff) <=============================================================
+    - remove unused inputs (tsx and py) <=============================================================
+    - clean up console.log and console.error usage
   - search code for TODOs
   - search local desktop for todos
 
@@ -179,6 +173,9 @@
 - Map responsiveness (not needed, clustering is enough):
   - Save bookshelves in local storage instead of refetching every time the map is shown
 - Code Quality
+  - split up long files (e.g. tests > 400 lines)
+  - add more docstrings (incl. examples) and documentation
+    - add docstring to AppReducer, AppState and provider files
   - Use my standard response format (status, data) for response of cover image as well
   - Use datetime and isoformat() in code and db for times? e.g. row["time_of_entry"].isoformat()
   - SQL execute command strings in eigenes file in app/db auslagern z.B. als Konstante GET_ALL_BOOKS_COMMAND, ...
