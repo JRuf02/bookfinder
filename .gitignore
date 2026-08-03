@@ -10,8 +10,11 @@ node_modules/
 *.pyc
 .mypy_cache/
 
-# Ignore database
+# Ignore database files
 *.db
+
+# Except for the demo books.db file
+!/backend/books.db
 
 # Ignore SSL/TLS keys and certificates
 *.pem
