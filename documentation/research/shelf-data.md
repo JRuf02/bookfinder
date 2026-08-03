@@ -11,7 +11,6 @@ We use the OpenStreetMap public bookcase amenity.
 
 Germany:
 https://qlever.cs.uni-freiburg.de/osm-planet/FG873S
-https://qlever.cs.uni-freiburg.de/osm-planet/ulH4tw
 
 Find all predicates:
 https://qlever.cs.uni-freiburg.de/osm-planet/3CtDN7

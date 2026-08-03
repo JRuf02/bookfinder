@@ -17,11 +17,8 @@ from pathlib import Path
 
 from app.db.database import db_cursor
 
-CSV_PATH = Path(__file__).parent / "osm-bookcases-ger-qlever-2025-07-13.csv"
+CSV_PATH = Path(__file__).parent / "osm-bookcases-ger-qlever-2026-08-03.csv"
 DB_PATH = Path(__file__).parent.parent / "books.db"
-
-
-# TODO: WRITE TESTS FOR THIS!!!
 
 
 def parse_shape(shape: str) -> tuple[float | None, float | None]:
@@ -116,7 +113,7 @@ def _update_bookshelves() -> None:
         if stale_ids:
             c.execute(
                 "SELECT DISTINCT osm_id FROM current_catalog "
-                "WHERE osm_id IN json_each(?)",
+                "WHERE osm_id IN (SELECT value FROM json_each(?))",
                 (json.dumps(list(stale_ids)),),
             )
             referenced_ids = {r["osm_id"] for r in c.fetchall()}
@@ -126,7 +123,8 @@ def _update_bookshelves() -> None:
 
             if deletable_ids:
                 c.execute(
-                    "DELETE FROM bookshelves WHERE osm_id IN json_each(?)",
+                    "DELETE FROM bookshelves WHERE osm_id IN "
+                    "(SELECT value FROM json_each(?))",
                     (json.dumps(list(deletable_ids)),),
                 )
                 deleted = sorted(deletable_ids)
@@ -138,7 +136,6 @@ def _update_bookshelves() -> None:
     if deleted:
         print(f"|--- Removed:          {len(deleted)} shelves")
     if kept_referenced:
-        # TODO: test or try out:
         print(
             f"|--- WARNING: {len(kept_referenced)} shelves missing from the new CSV "
             "were kept because current_catalog still references them:"
