@@ -3,23 +3,15 @@
 ## Main todos
 
 - Finalization:
-  - Update bookshelves via qlever
-  - Add dummy data & include db in git
+  - Add dummy data to db
   - final readme
-    - Introduction
-    - System overview + diagram
-    - backend API documentation
-    - Docker setup how to
-    - .vscode/tasks.json tasks erklären
-    - `README.md, in which you clearly explain how you organized your files and what can be found where. If as part of your project or thesis you generated valuable data (= data, which can only be recreated with large effort or not at all), you should put this data in the folder /nfs/students/<firstname-lastname> (see above) and mention this in the README as well. There should be a README file in your /nfs/students directory as well. `
+    - Introduction - what is it, what can it do, how to use it
+    - clearly explain how you organized your files and what can be found where! <======
   - adhere to coding standards
-    - Configure and run frontend formatter (e.g. Prettier)
     - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
-    - Run linter (ESLint and Ruff) <=============================================================
-    - remove unused inputs (tsx and py) <=============================================================
+    - Run linter (ESLint and Ruff) <============================================================= make lint <====== 1
     - clean up console.log and console.error usage
   - search code for TODOs
-  - search local desktop for todos
 
 - Blog Post <=============================================================
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
@@ -74,6 +66,7 @@
 - Frontend:
   - Use `/*_ This is a js doctstring _/` for docstrings
   - besserer ersatz für cover image if not available
+  - Configure and run frontend formatter (e.g. Prettier) via make
 - ssl certificates so dass sie als sicher erkannt werden (npm vite plugin-basic-ssl <- hilft nur im dev mode?!)
 - frontend error handling when backend offline (error fetching data) -> schönere Message anzeigen
 - Manual Add Dialog
@@ -87,6 +80,7 @@
 - Search by ISBN should also accept ISBN-10 (and convert to ISBN-13 before searching in the DB)
 - Use api/bookshelves/nearby in frontend or revove from backend
   - Maybe add 'show books from x nearest shelves' to catalog?
+- check local desktop todos
 - Resilience & Edge Cases:
   - dnb_api.py
     - MARC21 xml recherche nach autoren/mitarbeitenden/titeln/nebentiteln und anderen interessanten feldern

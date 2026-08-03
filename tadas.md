@@ -169,6 +169,9 @@
     - single term search input field is slow on each keystroke (re-rendering the map?!)
       - locate me button is blinking on each keystroke?! Marker images also fetched on every keystroke?!
 
+- Finalization:
+  - Update bookshelves via qlever
+
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!
