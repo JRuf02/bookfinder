@@ -26,8 +26,8 @@ help:
 	@echo ""
 	@echo "For more information about each target, use 'make help-<target>' for any of the targets above."
 	@echo ""
-	@echo "More targets are available in the frontend and backend Makefiles,"
-	@echo "which can be run with 'make -C frontend <target>' or 'make -C backend <target>'."
+	@echo "Even more targets are available in the frontend and backend Makefiles."
+	@echo "They can be run with 'make -C frontend <target>' or 'make -C backend <target>'."
 	@echo "To find out what targets are available there, run 'make -C frontend help' or 'make -C backend help'."
 	@echo ""
 
@@ -139,6 +139,6 @@ help-clean:
 	@echo "            frontend/Makefile, backend/Makefile"
 	@echo "  Produces: deletion of backend *.pyc files, __pycache__ directories,"
 	@echo "            deletion of frontend/dist/ directory and its contents"
-	@echo "  Time:     < 1 s"
+	@echo "  Time:     < 3 s"
 	@echo "  Resources: negligible"
 	@echo "  Notes:    removes generated cache files and build artifacts."
