@@ -127,6 +127,7 @@
       - Unit tests for react?! (frontend) <= start in shelfActions.tsx -> Not necessary
     - API calls should be tested (-> done in python), user interface doesn't need to be tested
       - add api tests for new endpoints
+  - [reproducibility example](https://github.com/ad-freiburg/reproducibility-example)
 
 - Automation:
   - Makefiles:
