@@ -7,6 +7,7 @@ Can be run from the backend directory via 'make fuzzysearch'.
 """
 
 import argparse
+import readline  # noqa: F401
 import sys
 from pathlib import Path
 
@@ -14,7 +15,6 @@ from app.db.book_db import get_book_from_database
 from app.db.database_fuzzy_utils import search_authors, search_titles
 from app.models.identifiers import Isbn
 
-# TODO: remove code duplication between interactive and argument modes
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Perform fuzzy search on the database locally."
