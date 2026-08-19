@@ -12,7 +12,6 @@ class GeoCoordinateError:
     message: str
 
 
-# TODO: Add unit tests for GeoCoordinates.parse(), e.g. lat=lon=0.0
 @dataclass(frozen=True)
 class GeoCoordinates:
     """Verified geographic coordinates.
