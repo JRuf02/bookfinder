@@ -1,8 +1,8 @@
 .PHONY: help help-update-bookshelves help-build help-setup help-run-dev help-run-prod \
 	help-test help-test-dnb help-checkstyle help-checkstyle-flake8 help-checkstyle-strict \
-	help-lint help-fuzzysearch help-clean \
+	help-lint help-fuzzysearch help-optimize-db help-clean \
 	update-bookshelves build setup run-dev run-prod test test-dnb checkstyle \
-	checkstyle-flake8 checkstyle-strict lint fuzzysearch clean
+	checkstyle-flake8 checkstyle-strict lint fuzzysearch optimize-db clean
 
 TEST_CMD = pytest -q --doctest-modules --verbose
 
@@ -20,6 +20,7 @@ help:
 	@echo ""
 	@echo "Additional targets:"
 	@echo "  update-bookshelves  Import the bookshelf CSV into the database."
+	@echo "  optimize-db         Refresh SQLite query planner statistics."
 	@echo "  test-dnb            Run the test suite against the real DNB API instead of mocks."
 	@echo "  checkstyle          Run Ruff using the project's .ruff.toml config."
 	@echo "  checkstyle-flake8   Run Ruff restricted to a flake8-equivalent rule set."
@@ -45,6 +46,19 @@ help-update-bookshelves:
 	@echo "            then updates its rows from a CSV file containing bookshelf information."
 	@echo "            Bookshelves no longer present in the CSV are only removed from the table if no"
 	@echo "            current_catalog entry references them. Otherwise, they are kept and reported."
+
+optimize-db:
+	source /workspaces/bookfinder-venv/.venv/bin/activate && \
+	python3 -m scripts.optimize_database --db-path=/workspaces/bookfinder/backend/books.db && \
+	deactivate
+
+help-optimize-db:
+	@echo "About 'make optimize-db':"
+	@echo "  Reads:    backend/scripts/optimize_database.py, backend/app/db/database_utils.py, backend/books.db"
+	@echo "  Produces: optimized SQLite database query planner statistics in books.db (via PRAGMA optimize)"
+	@echo "  Time:     typically < 1 s for PRAGMA optimize; more thorough ANALYZE is available via the script"
+	@echo "  Resources: negligible"
+	@echo "  Notes:    runs the standalone database maintenance CLI for the backend database."
 
 build: update-bookshelves
 	@echo "Nothing else to build for Python."

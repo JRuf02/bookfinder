@@ -130,32 +130,3 @@ def init_db(db_path: Path) -> None:
             "CREATE INDEX IF NOT EXISTS idx_threegrams_threegram "
             "ON threegrams(threegram)"
         )
-
-
-# TODO: Move to database_utils.py?
-# TODO: Use this in a standalone cli script
-def optimize_database(db_path: Path) -> None:
-    """Improve query performance by refreshing SQLite query planner statistics.
-
-    The statistics are used by the query planner for deciding whether
-    and how to use an index, so updating them can improve performance.
-    Only updates statistics on tables that have changed a lot since the last run.
-    Lightweight, safe to call periodically or on every connection close.
-    """
-
-    with db_cursor(db_path) as c:
-        c.execute("PRAGMA optimize")
-
-
-# TODO: Move to database_utils.py?
-# TODO: Use this in a standalone cli script
-def analyze_database(db_path: Path) -> None:
-    """Run a full ANALYZE, refreshing query planner statistics for every table.
-
-    Improves query performance.
-    More thorough (and more expensive) than optimize_database().
-    Not intended to be run frequently, but can be useful after a large batch of inserts.
-    """
-
-    with db_cursor(db_path) as c:
-        c.execute("ANALYZE")

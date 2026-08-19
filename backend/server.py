@@ -102,4 +102,4 @@ def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
 if __name__ == "__main__":
     # Start dev server with debug logging
     app = create_app(logging_level=logging.DEBUG)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)  # noqa: S104

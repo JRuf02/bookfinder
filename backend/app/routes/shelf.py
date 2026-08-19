@@ -76,16 +76,6 @@ def insert_book_to_shelf(request: Request) -> ResponseReturnValue:
     osm_id = OsmId.parse(data.get("osm_id"))
     isbn = Isbn.parse(data.get("isbn"))
 
-    # TODO: remove this error!
-    if str(isbn) == "978-1-4454-0479-0":
-        logger.error("Simulating error for testing frontend error handling")
-        return jsonify(
-            {
-                "status": "error",
-                "message": "Simulated error for testing frontend error handling",
-            }
-        ), HttpStatus.BAD_REQUEST.value
-
     if not osm_id:
         return jsonify(
             {"status": "error", "message": "osm_id not provided or invalid"}
