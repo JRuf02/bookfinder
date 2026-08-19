@@ -63,7 +63,7 @@ export default function ManualInsertDialog({
             autoFocus
             required
             margin="dense"
-            id="name"
+            id="isbn"
             name="isbn"
             label="ISBN"
             placeholder="978-1-4447-2072-3"
@@ -75,7 +75,7 @@ export default function ManualInsertDialog({
             autoFocus
             required
             margin="dense"
-            id="name"
+            id="title"
             name="title"
             label="Title"
             placeholder="The Shining"
@@ -87,7 +87,7 @@ export default function ManualInsertDialog({
             autoFocus
             required
             margin="dense"
-            id="name"
+            id="author"
             name="author"
             label="Author"
             placeholder="King, Stephen"
