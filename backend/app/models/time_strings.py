@@ -10,10 +10,12 @@ class TimezonedDatetimeString:
     value: str
 
     def __str__(self) -> str:
+        """Return the normalized ISO 8601 time string."""
         return self.value
 
     @classmethod
     def parse(cls, raw_time: str | None) -> "TimezonedDatetimeString | None":
+        """Parse a raw time string into a normalized ISO 8601 time string."""
         if not raw_time:
             return None
 
