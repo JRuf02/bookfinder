@@ -93,6 +93,7 @@
 
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
+  - Add loading state (spinner) while fetching book data in BookDisplay
 - ShelfActionView.tsx
   - Nützlichere Infos zeigen, z.B. alle gescannten Bücher
 - ScanningResults.tsx:
@@ -105,6 +106,7 @@
   - handle manual add and all other logic (warning: ISBN is primary key!) of books that don't have an ISBN
   - Ensure Author name format is "Last, First Second"
   - inserting books that dont have an isbn possible
+  - give the frontend a way to add title etc manually (especially if partial metadata found via dnb, e.g. author missing)
   - inserting incl. photo of cover possible: api/manual-add/cover
   - Dialog kann über button auf dem scanningscreen aufgerufen werden
 - save cover images as binary blob to books.db
@@ -140,6 +142,8 @@
     - Efficient PED computations and list merging: pip install ad-freiburg-qgram-utils
   - "King, Stephen" should have a higher score than "Stephen Edwin King" for query "stephen king" (use token coverage as secondary ranking score)
   - Ranking could be done by edit distance, then by token coverage, then by distance and by popularity
+  - Consider weighting title and author scores differently, e.g. by multiplying one of them by a factor
+    - If title has more words than author, it can reach way higher scores than author, even if the author is a perfect match and title is not.
 - CatalogScreen
   - Show books of selected shelf from app state (on button click or on navigation to the page via bottomnavbar)
   - Funktionen aufräumen, ggf custom hooks für logik
@@ -175,6 +179,7 @@
   - Clean Frontend error handling
     - use None instead of empty str / dummy data / title: "Error"
     - Generate text like 'Error Fetching Data' and 'Unknown Title/Author' in the UI component
+    - Move standard error messages (e.g. from catalogSearch.ts, shelfBooks.ts) to a shared constants file
 
 ## Additional features and ideas for big extensions and conceptual changes
 
@@ -193,6 +198,10 @@
 - Python Backend
   - Improve search (make more fuzzy / use sqlite MATCH), check out [RapidFuzz](https://pypi.org/project/RapidFuzz/)
   - api for non-dnb books (e.g. via google books api/internet archive OpenLibrary api/wikipedia isbn-Suche)
+- Frontend
+  - AppState.ts:
+    - currentShelfId, currentBook, preSelectedShelfAction, etc. could go here (search for useState and decide per case)
+    - Could also steer which screen should be shown (scanning, results, shelf action) based on state instead of passing props down from App.tsx
 - User/Admin Accounts
   - (Admin mode:) get notified when book in a shelf is untouched for a certain time
   - Benachrichtigungsservice wenn gewünschtes Buch eingestellt wird

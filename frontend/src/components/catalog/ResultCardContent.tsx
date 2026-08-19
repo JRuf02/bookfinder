@@ -58,7 +58,6 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
     }
   };
 
-  // TODO: move shelf information into child component
   return (
     <>
       <Stack direction="row" spacing={2} alignItems="stretch">

@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
     """Fetch book data from DNB using the ISBN."""
     url = f'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query="{isbn!s}"&recordSchema=MARC21-xml&maximumRecords=1'
-    # TODO: fallback query={isbn.canonical} if no book found
 
     response = requests.get(url, timeout=5)
     if response.status_code != HttpStatus.OK.value:
@@ -47,7 +46,6 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
         title=title,
         author=author,
         dnb_id=dnb_id,
-        # TODO? don't hardcode coverUrl?
         cover_url=f"https://portal.dnb.de/opac/mvb/cover?isbn={isbn!s}&size=l",
     )
 
@@ -89,8 +87,6 @@ def extract_author_from_marc_21_xml(record_element: Element) -> str | None:
             and name_text is not None
             and "aut" in role_text.lower()
         ):
-            # TODO: also check ctb (contributor) + error handling when
-            # no author found at all
             authors.append(name_text)
 
     # More authors (sometimes authors are only in field 700)
@@ -110,8 +106,7 @@ def extract_author_from_marc_21_xml(record_element: Element) -> str | None:
         ):
             authors.append(name_text)
 
-    # TODO: handle multiple authors better
-    # author = ', '.join(authors) if authors else "Unknown Author" TODO
+    # Improvement idea: keep multiple authors: e.g. author = '; '.join(authors)
     if authors:
         author = authors[0]
 
@@ -138,7 +133,7 @@ def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> tuple[bytes, str] | Non
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)
-    except Exception as e:  # TODO: catch more specific exceptions
+    except Exception as e:
         logger.error(f"Error fetching cover: {e}")
         return None
 

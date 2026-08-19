@@ -128,7 +128,6 @@ export default function ScanningResults({
     }
   };
 
-  // TODO: Add loading state (spinner) while fetching book data?
   return (
     <div>
       <Container

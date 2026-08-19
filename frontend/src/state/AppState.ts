@@ -3,9 +3,6 @@
 import { GeoCoordinates } from "../types/GeoCoordinates";
 import { Shelf } from "../types/Shelf";
 
-// TODO:(?) currentShelfId, currentBook, preSelectedShelfAction, etc. could go here (search for useState and decide per case)
-//          Could also steer which screen should be shown (scanning, results, shelf action) based on state instead of passing props down from App.tsx
-
 export interface AppState {
   selectedShelf?: Shelf;
   userCoordinates?: GeoCoordinates;

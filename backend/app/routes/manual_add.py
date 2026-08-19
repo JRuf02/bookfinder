@@ -56,9 +56,7 @@ def manually_add_book(request: Request) -> ResponseReturnValue:
 
     if not book:
         # If book not found in DB or DNB, create a new book with the provided metadata
-        book = Book(
-            isbn=isbn, title=title, author=author, dnb_id="", cover_url=None
-        )  # TODO: make dnb_id optional in the model?
+        book = Book(isbn=isbn, title=title, author=author, dnb_id="", cover_url=None)
         save_book_to_db(book)
         return jsonify({"status": "success", "data": as_json_dict(book)}), 200
 

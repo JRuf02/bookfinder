@@ -29,8 +29,8 @@ export default function BookDisplay({
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
+    // Idea for improvement: consider caching cover images in the browser or using book.coverUrl
     // Use relative URL to ensure protocol matching (HTTP or HTTPS)
-    // TODO: Consider caching cover images on backend or using book.coverUrl
     setCoverUrl(`/api/cover?isbn=${book.isbn}&size=l`);
     setImageError(false);
   }, [book.isbn]);

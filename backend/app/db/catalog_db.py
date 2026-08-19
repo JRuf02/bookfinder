@@ -120,10 +120,6 @@ def search_in_catalog_db(
         )
 
     # Combine results from title and author searches
-    # TODO: Consider weighting title and author scores differently,
-    #       e.g. by multiplying one of them by a factor
-    #       If title has more words than author, it can reach way higher scores
-    #       than author, even if the author is a perfect match and title is not.
     combined_results = merge_book_entity_lists(title_results, author_results)
 
     # Sort by fuzzy scores, highest first (with lowest distance as tie-breaker)
@@ -153,8 +149,6 @@ def _fetch_books_from_catalog(
 
     # Map isbn string to fuzzy score, so we can attach the right score
     # to each row after the join.
-    # TODO: Take dict as input instead (fuzzy search already has the
-    #       before returning sorted list)
     score_by_isbn = {str(isbn): score for isbn, score in scored_book_isbns}
 
     # Fetch all books from the catalog that match the given ISBNs
@@ -201,7 +195,7 @@ def _fetch_books_from_catalog(
                 user_coordinates.latitude,
                 shelf_coordinates.longitude,
                 shelf_coordinates.latitude,
-            )  # TODO: Use GeoCoordinates in the haversine function
+            )
         else:
             dist_m = None
 

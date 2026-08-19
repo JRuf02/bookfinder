@@ -32,7 +32,7 @@ export default function ManualInsertDialog({
       isbn: formJson.isbn,
       title: formJson.title,
       author: formJson.author,
-      dnbId: "", // TODO: Make optional or try fetching from backend using ISBN
+      dnbId: "",
       coverUrl: undefined,
     };
     onSubmit(book);

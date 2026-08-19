@@ -1,7 +1,6 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Box, Button, TextField } from "@mui/material";
 
-// TODO: rename component (not just ISBN input, but also title/author search)
 type TextInputProps = {
   placeholder?: string;
   label?: string;

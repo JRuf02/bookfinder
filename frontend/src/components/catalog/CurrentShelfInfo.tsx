@@ -1,8 +1,7 @@
 import Alert from "@mui/material/Alert";
 import React from "react";
 
-import { removeOsmIdPrefix } from "../../services/prefix";
-import { Shelf } from "../../types/Shelf";
+import { getShelfRepresentation, Shelf } from "../../types/Shelf";
 
 type CurrentShelfInfoProps = {
   activeShelf: Shelf;
@@ -40,10 +39,7 @@ export default React.memo(function CurrentShelfInfo({
       }}
     >
       Showing books on shelf:{" "}
-      {activeShelf.name ||
-        activeShelf.operator ||
-        activeShelf.address ||
-        removeOsmIdPrefix(activeShelf.osmId)}
+      {getShelfRepresentation(activeShelf)}
     </Alert>
   );
 });

@@ -290,7 +290,6 @@ export default function CatalogScreen() {
   );
 
   return (
-    // TODO: use uniform styling and layouting for all pages, move styles to global.css / theme.ts!
     <Container className="app-container" maxWidth={false}>
       <LogoBar />
 

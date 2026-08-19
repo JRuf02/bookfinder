@@ -12,6 +12,7 @@ import { useState } from "react";
 import { shelfAction } from "../../services/api/shelfActions";
 import { removeOsmIdPrefix } from "../../services/prefix";
 import { useAppState } from "../../state/AppStateProvider";
+import { getShelfRepresentation } from "../../types/Shelf";
 import { ShelfAction } from "../../types/ShelfAction";
 import ConfirmDialog from "../dialogs/ConfirmDialog";
 import ShelfMap from "../map/ShelfMap";
@@ -112,15 +113,8 @@ export default function ShelfActionView({
   };
 
   // User friendly shelf representation for the UI, based on available shelf metadata
-  // TODO: Move representation creation into types/shelf.ts and use it in CurrentShelfInfo.tsx as well
-  const shelfIdRepr =
-    state.selectedShelf?.name ||
-    state.selectedShelf?.operator ||
-    state.selectedShelf?.address ||
-    removeOsmIdPrefix(state.selectedShelf?.osmId) ||
-    "No shelf selected";
+  const shelfIdRepr = getShelfRepresentation(state.selectedShelf);
 
-  // TODO: Remove this block and show all books in a list instead of the summary when there are multiple books.
   const firstBook = action.books[0];
   const actionVerb = action.action === "insert" ? "inserted" : "removed";
   const bookSummary =
@@ -130,7 +124,6 @@ export default function ShelfActionView({
         : "Book"
       : `${action.books.length} books`;
 
-  // todo: move parts of this to seperate components / ShelfActionDialog.tsx
   return (
     <Container
       className="app-container"

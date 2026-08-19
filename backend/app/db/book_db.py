@@ -61,7 +61,7 @@ def save_book_to_db(book: Book, db_path: Path | None = None) -> None:
                 book.dnb_id,
                 book.cover_url,
             ),
-        )  # TODO test what happens if coverUrl = None
+        )
 
         is_new_book = c.rowcount == 1
 
@@ -81,8 +81,6 @@ def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
 
     Raises a ValueError if no data for the given ISBN is found in the database.
     """
-
-    # TODO: Error handling when isbn not in db
 
     avg_days_until_takeout = None
 

@@ -1,4 +1,3 @@
-# TODO: Move all api logic to app/routes/shelf.py
 import logging
 
 from app.db.book_db import log_book_takeout_in_db

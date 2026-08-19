@@ -9,15 +9,15 @@ class Shelf:
 
     osm_id: OsmId
     name: str | None
-    latitude: float  # TODO: Use GeoCoordinates
+    latitude: float
     longitude: float
     address: str | None
     type: str | None
     operator: str | None
     website: str | None
     opening_hours: str | None
-    osm_check_date: str | None  # TODO: use datetime.date
-    osm_last_updated: str  # TODO: use datetime.date
+    osm_check_date: str | None
+    osm_last_updated: str
 
 
 @dataclass

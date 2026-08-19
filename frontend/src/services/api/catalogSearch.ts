@@ -6,7 +6,6 @@ import { Result } from "../../types/Result";
 async function executeCatalogSearch(
   url: string,
 ): Promise<Result<CatalogResult[]>> {
-  // TODO: Move error messages to a shared constants file
   const standardErrorMessage =
     "An error occurred while fetching search results. Please try again later.";
 

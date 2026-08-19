@@ -26,8 +26,6 @@ def get_all_bookshelves() -> ResponseReturnValue:
     )
 
 
-# TODO: Use or remove/rewrite endpoint
-# TODO? Exchange radius for num nearby shelves?
 def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
     """Get nearby bookshelves based on latitude, longitude and radius.
 
@@ -36,8 +34,6 @@ def get_nearby_bookshelves(request: Request) -> ResponseReturnValue:
     - lon: User longitude (required)
     - radius: Search radius in meters (optional, default: 5000)
     """
-
-    # TODO: Use GeoCoordinates.parse() here and in the db function
 
     lat = request.args.get("lat", type=float)  # None, if conversion to float fails
     lon = request.args.get("lon", type=float)

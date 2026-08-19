@@ -60,8 +60,6 @@ def get_book(isbn: Isbn) -> Book | None:
 
     logger.debug("Fetched book data from dnb: %s", book)
 
-    # TODO: Give the frontend a way to add title etc manually!
-    #       (especially if unknown title, but cover image found!)
     save_book_to_db(book)
 
     return book

@@ -25,7 +25,6 @@ export default function ResultCardButtons({
       ? `https://www.google.com/maps/dir/?api=1&destination=${result.locatedShelf?.shelf.latitude},${result.locatedShelf?.shelf.longitude}`
       : undefined;
 
-  // TODO: Unify button widths, e.g. using full-width
   return (
     <Stack direction="column" spacing={0.5} alignItems="center">
       <Button

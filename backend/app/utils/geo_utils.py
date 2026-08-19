@@ -8,10 +8,17 @@ https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-
 from math import asin, cos, radians, sin, sqrt
 
 
-# TODO: Test this function
 def haversine(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
     """Calculate the great circle distance in meters between two points
     on the earth (specified in decimal degrees).
+
+    >>> import pytest
+    >>> haversine(0.0, 0.0, 0.0, 1.0) == pytest.approx(111194.927, abs=0.001)
+    True
+    >>> haversine(7.835054, 48.012698, 13.698550, 50.910346) == (
+    ...     pytest.approx(532078.990, abs=0.001)
+    ... )
+    True
     """
     # convert decimal degrees to radians
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])

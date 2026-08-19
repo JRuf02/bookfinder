@@ -51,7 +51,7 @@ def get_nearby_bookshelves_from_db(
 ) -> list[LocatedShelf]:
     """Fetch bookshelves in a given radius (in meters) from the database."""
 
-    # TODO: Extend query by bbox for performance
+    # Idea for better performance: we could add a bbox to query here
     with db_cursor() as c:
         c.execute("""
             SELECT osm_id, name, latitude, longitude, address, type, operator, website,
@@ -62,7 +62,6 @@ def get_nearby_bookshelves_from_db(
 
     nearby_shelves = []
     for row in rows:
-        # TODO: Change to named tuple or dict cursor to avoid this error-prone indexing
         shelf_lat = row[2]
         shelf_lon = row[3]
         if shelf_lat is None or shelf_lon is None:

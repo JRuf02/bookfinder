@@ -6,8 +6,7 @@ import { Shelf } from "../../types/Shelf";
 export async function fetchShelfBooks(
   shelf: Shelf,
 ): Promise<Result<CatalogResult[]>> {
-  // TODO: Move standard error messages to a shared constants file
-  // TODO: This function could be merged with those from catalogSearch.ts
+  // This function could be merged with those from catalogSearch.ts
   const standardErrorMessage =
     "An error occurred while fetching books for this shelf. Please try again later.";
 

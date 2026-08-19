@@ -186,7 +186,6 @@ export default function ShelfMapContent({
               position={[shelf.latitude, shelf.longitude]}
             >
               <Popup>
-                {/* TODO: remove extra Popup around MapPopup? */}
                 <MapPopup
                   shelf={shelf}
                   isSelected={state.selectedShelf?.osmId === shelf.osmId}

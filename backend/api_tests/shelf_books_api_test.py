@@ -136,4 +136,4 @@ def test_get_books_in_shelf_valid_osm_id_but_not_in_db(
     assert response.status_code == HttpStatus.OK.value
     assert response.json is not None
     assert response.json["status"] == "success"
-    assert response.json["data"] == []  # TODO: Maybe return 404 instead? -> hard
+    assert response.json["data"] == []

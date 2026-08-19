@@ -61,7 +61,7 @@ def create_app(logging_level: int = logging.INFO) -> Flask:  # noqa: C901
     def get_all_bookshelves_api() -> ResponseReturnValue:
         return get_all_bookshelves()
 
-    @app.route("/api/bookshelves/nearby", methods=["GET"])  # TODO: Use this endpoint!
+    @app.route("/api/bookshelves/nearby", methods=["GET"])
     def get_nearby_bookshelves_api() -> ResponseReturnValue:
         return get_nearby_bookshelves(request)
 
