@@ -27,7 +27,11 @@ export default function ManualInsertDialog({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries((formData as any).entries());
+    const formJson = Object.fromEntries(formData.entries()) as {
+      isbn: string;
+      title: string;
+      author: string;
+    };
     const book: Book = {
       isbn: formJson.isbn,
       title: formJson.title,
