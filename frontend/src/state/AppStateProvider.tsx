@@ -22,6 +22,7 @@ export const AppStateProvider = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAppState = () => {
   const context = useContext(AppStateContext);
   if (!context) {

@@ -1,6 +1,16 @@
 import { Book, BookPopularity } from "../../types/Book";
 import { Result } from "../../types/Result";
 
+type ApiResponse<T> =
+  | {
+      status: "success";
+      data: T;
+    }
+  | {
+      status: "error";
+      message: string;
+    };
+
 type FetchBookDataOptions = {
   signal?: AbortSignal; // Optional signal for aborting the fetch request
 };
@@ -18,17 +28,24 @@ export async function fetchBookData(
     return { ok: false, error: "Internal server error. Try again later." };
   }
 
-  let data: any;
+  if (!response.ok) {
+    return {
+      ok: false,
+      error: `Request failed with code (${response.status}).`,
+    };
+  }
+
+  let data: ApiResponse<Book>;
   try {
     data = await response.json();
   } catch {
     return { ok: false, error: "Invalid JSON response." };
   }
 
-  if (!response.ok) {
+  if (data.status === "error") {
     return {
       ok: false,
-      error: data?.message || `Request failed (${response.status})`,
+      error: data.message || `Request failed with code (${response.status}).`,
     };
   }
 
@@ -44,17 +61,24 @@ export async function fetchBookPopularity(
     return { ok: false, error: "Internal server error. Try again later." };
   }
 
-  let data: any;
+  if (!response.ok) {
+    return {
+      ok: false,
+      error: `Request failed with code (${response.status}).`,
+    };
+  }
+
+  let data: ApiResponse<BookPopularity>;
   try {
     data = await response.json();
   } catch {
     return { ok: false, error: "Invalid JSON response." };
   }
 
-  if (!response.ok) {
+  if (data.status === "error") {
     return {
       ok: false,
-      error: data?.message || `Request failed (${response.status})`,
+      error: data.message || `Request failed with code (${response.status}).`,
     };
   }
 

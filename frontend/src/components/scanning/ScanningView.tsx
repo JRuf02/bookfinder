@@ -19,15 +19,18 @@ export default function ScanningView({ onScanComplete }: ScanningViewProps) {
     stopReading: () => void;
   } | null>(null);
 
-  const handleScanResult = useCallback(async (scannedIsbn: string) => {
-    // Stop camera explicitly
-    if (scannerRef.current) {
-      scannerRef.current.stopReading();
-      scannerRef.current.stopCamera();
-    }
-    onScanComplete(scannedIsbn);
-    setScanning(false);
-  }, []);
+  const handleScanResult = useCallback(
+    async (scannedIsbn: string) => {
+      // Stop camera explicitly
+      if (scannerRef.current) {
+        scannerRef.current.stopReading();
+        scannerRef.current.stopCamera();
+      }
+      onScanComplete(scannedIsbn);
+      setScanning(false);
+    },
+    [onScanComplete],
+  );
 
   const handleInputSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // prevents page reload
