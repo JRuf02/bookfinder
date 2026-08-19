@@ -9,7 +9,7 @@
     - clearly explain how you organized your files and what can be found where! <======
   - adhere to coding standards
     - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
-    - Run linter (ESLint and Ruff) <============================================================= make lint <====== 1
+    - run make lint
     - clean up console.log and console.error usage
   - search code for TODOs
 
@@ -48,6 +48,7 @@
 - Git clone und Server starten von Null
   - frontend certs and dist files and backend bookshelves table should be built/populated automatically by docker
   - alle make targets funktionieren wie erwartet
+  - make lint und make test laufen ohne Fehler
 
 ## Improvements
 

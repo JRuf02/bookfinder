@@ -80,7 +80,6 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
             }}
             onError={(e) => {
               // Fallback image if cover not available
-              // TODO: Create a better image for missing covers
               (e.target as HTMLImageElement).src = logo;
             }}
           />

@@ -177,7 +177,7 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
         autoPlay={false}
         muted
       />
-      {/* Todo: Improve error message styling / Add error component */}
+
       {error && (
         <Paper
           elevation={3}

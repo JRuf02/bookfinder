@@ -23,8 +23,8 @@ def fetch_book_from_dnb(isbn: Isbn) -> Book | None:
     xml_text = response.text
     try:
         root = ElementTree.fromstring(xml_text)
-    except ElementTree.ParseError as e:
-        logger.error(f"Invalid XML from DNB: {e}")
+    except ElementTree.ParseError:
+        logger.exception("Invalid XML from DNB")
         return None
 
     # Find record
@@ -133,8 +133,8 @@ def fetch_cover_from_dnb(isbn: Isbn, size: str = "l") -> tuple[bytes, str] | Non
 
     try:
         response = requests.get(cover_url, stream=True, timeout=3)
-    except Exception as e:
-        logger.error(f"Error fetching cover: {e}")
+    except Exception:
+        logger.exception("Error fetching cover from DNB")
         return None
 
     if response.status_code != HttpStatus.OK.value:

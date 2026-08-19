@@ -236,7 +236,6 @@ export default function CatalogScreen() {
     setResults([]);
     setSearchFormState((prev) => ({ ...prev, isbn: "" }));
 
-    // TODO: Remove code duplication with performSingleTermSearch
     try {
       const currentUserLocation = searchFormState.useUserLocation
         ? (state.userCoordinates ?? null)
