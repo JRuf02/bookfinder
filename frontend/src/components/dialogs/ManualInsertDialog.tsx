@@ -72,7 +72,6 @@ export default function ManualInsertDialog({
             variant="standard"
           />
           <TextField
-            autoFocus
             required
             margin="dense"
             id="title"
@@ -84,7 +83,6 @@ export default function ManualInsertDialog({
             variant="standard"
           />
           <TextField
-            autoFocus
             required
             margin="dense"
             id="author"
