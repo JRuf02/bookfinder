@@ -1,17 +1,24 @@
+:root {
+  --nav-height: 56px;
+  --color-bg-default: #dce4dd;
+}
+
 html,
 body,
 #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  overscroll-behavior: none; /* stop pull-to-refresh */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Parent for each screen */
 .app-container {
-  height: calc(100dvh - 56px);
-  min-height: calc(100dvh - 56px);
-  max-height: calc(100dvh - 56px);
-  width: 100vw;
+  height: calc(100dvh - var(--nav-height));
+  min-height: calc(100dvh - var(--nav-height));
+  max-height: calc(100dvh - var(--nav-height));
+  width: 100%;
   /* maxWidth: "80%", TODO: make responsive, e.g. max 80% on desktop, 95% on mobile */
   overflow: auto; /* Allow scrolling if content overflows */
   display: flex;
@@ -42,8 +49,6 @@ body,
   width: 100%;
   max-width: 30rem;
   overflow: auto;
-  margin-top: 2;
-  padding-bottom: 2;
 }
 
 form {
@@ -87,16 +92,16 @@ input[type="text"] {
   width: 100%;
   max-width: 600px;
   aspect-ratio: 4 / 3;
-  background: #dce4dd;
+  background: var(--color-bg-default);
   object-fit: cover;
   border: none;
 }
 
-/* Mobile full-screen scanner override */
+/* Mobile override, for a full screen scanner etc. */
 @media (max-width: 600px) {
   .app-container {
     padding: 0;
-    height: calc(100dvh - 56px); /* Adjust for nav bar height */
+    height: calc(100dvh - var(--nav-height)); /* Adjust for nav bar height */
     overflow: hidden;
     /* Do not add "justify-content: center"! This would hide some lines of ScanningResults! */
   }
@@ -106,7 +111,7 @@ input[type="text"] {
     top: 0;
     left: 0;
     right: 0;
-    bottom: 56px;
+    bottom: var(--nav-height);
     width: 100vw;
     background: #000;
     z-index: 1;
@@ -132,7 +137,7 @@ input[type="text"] {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 58px;
+    bottom: calc(var(--nav-height) + 2px);
     width: 100%;
     background: rgba(0, 0, 0, 0);
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
@@ -165,11 +170,7 @@ input[type="text"] {
     width: 100%;
     max-width: 100%;
     overflow: auto;
-    margin-top: 2;
-    padding-bottom: 2;
     padding: 0;
     margin: 0;
   }
 }
-
-/* TODO (?): Landscape mode */
