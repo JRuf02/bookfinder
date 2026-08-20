@@ -29,7 +29,7 @@ export default function ErrorDialog({
     >
       <DialogTitle id="error-dialog-title">{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="error-dialog-description">
+        <DialogContentText id="error-dialog-description" component="div">
           <Alert variant="standard" severity="info" color="warning">
             {text}
           </Alert>
