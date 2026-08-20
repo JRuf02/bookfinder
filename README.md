@@ -1,8 +1,46 @@
 # bookFinder
 
-## There are two ways to install and run this app
+BookFinder implements a nation-wide online catalog for public bookshelves in Germany.
+These are publicly accessible bookshelves, where anyone can put books in and take books out for free. The app allows you to find nearby public bookshelves and see which books are available there. Users can also search for available books nation-wide and log which books they put into or took out of a public bookshelf.
 
-First, clone this repository onto your machine. Then you can open it either within a VS Code Devcontainer or within a standard Docker Container.
+The full-stack web app uses [OpenStreetMap](https://www.openstreetmap.org/) data (obtained via [QLever](https://qlever.cs.uni-freiburg.de/osm-planet/FG873S)) to find nearby bookshelves and the [German National Library (DNB)](https://www.dnb.de/) API to get book metadata.
+
+## Functionality
+
+- See all German public bookshelves on a map
+- Select a bookshelf to show its books
+- Search the nation-wide online catalog for a book and show the nearest results
+- Start a Google Maps navigation to the selected bookshelf or show it on OpenStreetMap
+- Add a book to a bookshelf by scanning its barcode - no need to enter anything manually
+- Remove books from the catalog by scanning their barcodes
+
+## Tech stack
+
+- Reverse proxy: Caddy (production), Vite (development)
+- Frontend: React, Vite
+- Backend: Python, Flask, Gunicorn (production), Flask dev server (development)
+- Database: SQLite
+- Barcode scanning: [zxing-js](https://github.com/zxing-js/browser)
+- Automation: Makefile
+
+## Repository structure
+
+Within this repository, the following directories are important:
+
+- `frontend/` - frontend code (React, Vite)
+- `backend/` - backend code and database (Python, Flask, SQLite)
+- `reverse-proxy/` - Caddy (reverse proxy for production) configuration
+- `documentation/` - documentation and troubleshooting
+- `Makefile` - central orchestrator for starting servers and much more
+
+More detailed information can be found within the sub-directories, e.g. within the `__init__.py` files.
+
+## Installation and Server startup
+
+### There are two ways to install and run this app
+
+First, clone this repository onto your machine. Then you can open it either within a VS Code Devcontainer (A) or within a standard Docker Container (B).
+After setup, you can choose between running the development servers (Vite + Flask) or the production servers (Caddy + Gunicorn). Use `make help` to find all available commands.
 
 ### A) VS Code Devcontainer
 
@@ -14,29 +52,28 @@ First, clone this repository onto your machine. Then you can open it either with
 
 #### Setup VS Code Devcontainer
 
-Use the provided Devcontainer to make the usage as easy as possible:
-
-- Clone this repository onto your machine (Into the linux file system if using WSL)
+- Clone this repository onto your machine (Into the linux file system if you are using WSL)
 - Install [Docker](https://www.docker.com/) and [VS Code](https://code.visualstudio.com/)
-- Install VS Code Devcontainer extension `ms-vscode-remote.remote-containers`
+- Install the VS Code Devcontainer extension `ms-vscode-remote.remote-containers`
 - Open this repository with VS Code
-- Press `F1` (or `CTRL + SHIFT + P`) and select `Dev Containers: Rebuild and Reopen Container`
+- Press `F1` (or `CTRL + SHIFT + P`) and select `Dev Containers: Rebuild and Reopen in Container`
 
 #### Run dev servers
 
-##### Shortcut: Run all dev servers with one command in vs code
+##### Shortcut: Run both dev servers side-by-side in a split terminal inside VS Code
 
 - Press `ctrl + P`
 - Type `task Run All Servers`
 
 ##### Run dev servers manually
 
-- Run `npm run dev` in directory `\workspaces\bookfinder\frontend` inside the container to start vite (react dev server)
-- Run `make run-dev` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask)
+- Run `make run-dev` in the main directory `/workspaces/bookfinder` to start all dev servers
+- Run `make -C frontend run-dev` in directory `/workspaces/bookfinder` to only start the frontend dev server (Vite)
+- Run `make -C backend run-dev` in directory `/workspaces/bookfinder` to only start the backend dev server (Flask)
 
 #### Run production servers
 
-- Run `make run-prod` in the main directory `\workspaces\bookfinder`
+- Run `make run-prod` in the main directory `/workspaces/bookfinder`
 
 ### B) Within a standalone Docker container
 
@@ -49,12 +86,13 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 
 #### Run dev servers
 
-- Run `npm run dev` in directory `\workspaces\bookfinder\frontend` inside the container to start vite (react dev server)
-- Run `make run-dev` in directory `\workspaces\bookfinder\backend` inside the container to start the book data api server (flask)
+- Run `make run-dev` in the main directory `/workspaces/bookfinder` to start all dev servers
+- Run `make -C frontend run-dev` in directory `/workspaces/bookfinder` to only start the frontend dev server (Vite)
+- Run `make -C backend run-dev` in directory `/workspaces/bookfinder` to only start the backend dev server (Flask)
 
 #### Run production servers
 
-- Run `make run-prod` in the main directory `\workspaces\bookfinder`
+- Run `make run-prod` in the main directory `/workspaces/bookfinder`
 
 ## Show the website
 
@@ -63,30 +101,24 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 - Start the dev servers: See above
 - Open https://localhost:5173/
 - Accept self-signed certificate
-- Backend: `https://localhost:5173/api/health` (or directly https://localhost:5000/api/health)
+- Backend: `https://localhost:5173/api/health` (or directly http://localhost:5000/api/health)
 
 ### Production Setup (Caddy + Gunicorn)
 
 - Start the prod servers: `make run-prod`
 - Open https://localhost/
-  - https://localhost:5173/ and https://localhost:443/ will work as well
+  - https://localhost:5173/ and https://localhost:443/ work as well, for convenience
 - Accept self-signed certificate
 - Backend: https://localhost/api/health
-  - https://localhost:5173/api/health and https://localhost:443/api/health will work as well
+  - https://localhost:5173/api/health and https://localhost:443/api/health work as well
 
-### Show the website on another device
+### Show the website on another device (e.g. on mobile)
 
 - Start backend and frontend servers in the container
 - Connect host and the device to the same network (no eduroam!)
 - Run ipconfig on the host (outside the docker container) to find its IPv4 address
 - Open `https://[host-ip]:5173/` on your device's browser
 - Accept self-signed certificate
-
-### show on mobile
-
-- connect to same network / router
-- find ipv4 address of host via ipconfig
-- go to `https://hostip:5173`
 
 ### If it fails
 
@@ -95,158 +127,15 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 - Disable client isolation in your wifi router's settings
 - Use another wifi (public wifis like eduroam may have client isolation)
 
-### easy open on mobile (experimental, doesn't work on Windows host yet)
+## More information
 
-```
-# Display the host IP address for QR code generation
-HOST_IP=$(hostname -i | awk '{print $1}')
-echo "Your application is running at: https://${HOST_IP}:5173"
-echo "Scan this QR code on your mobile device to access the app:"
-qrencode -t ANSIUTF8 "https://${HOST_IP}:5173"
+More information can be found in the `documentation` directory.
 
-# Or open in the host browser
-"$BROWSER" "https://${HOST_IP}:5173"
-```
+## Test coverage
 
-## Making changes in the frontend
+Each API endpoint has been thoroughly tested via the `pytest` framework. These tests can be found in `backend/api_tests/` and run via `make test` from the backend directory.
 
-- When running the dev server (Vite)
-  - Vite will hot update the website once a change is saved
-  - no restart needed
-- When running the prod server (Caddy)
-  - stop the server (`ctrl + c`)
-  - rebuild the frontend files via `make build`
-  - restart the server (`make run-prod`)
-
-## Synchronizing files between host and container
-
-- If you are using VS Code devcontainer, any changes made to the repo on the host will automatically be synched into the container and vice versa via a bind mount.
-  - No need to do anything
-  - Changes made inside the container will also be synced back to your host
-
-- If you are using a standalone container via the instructions in the Dockerfile, all files of the repo will be copied into the container once, at creation.
-  - Nothing you do inside the container will affect the original files on your host
-  - Nothing you do to the files on your host will affect the files in your container
-  - This means: the database on your host will also remain in its original state
-  - If you want to copy changes made on the host into your container, you need to rebuild the image
-    - This will reset any changes made inside the container
-  - If you want to automatically synchronize parts of or the entire repo, you need to define bind mounts (`-v`) for the files or folders you want to sync, when starting the container.
-    - Example (bind mounting just the database): `docker run -it -p 5173:5173 -p 5000:5000 -p 443:443 --name julian-ruf-project -v ${PWD}\backend\books.db:/workspaces/bookfinder/backend/books.db julian-ruf-project`
-    - Warning: If you bind mount the entire repo, then any files created or changed by the Dockerfile (e.g. via `RUN make setup`) will not be visible in the container.
-      - The files inside the container will then mirror the host repo, not the state of the repo in the image
-      - This means: No data in the bookshelves table, no dist folder, no TLS certificates
-      - You then need to run `make setup` inside the container yourself before you can start the servers
-
-## Sqlite3 DB & Python API
-
-### SQLite database schema:
-
-**table books:**
-isbn dnb-isbn title author (link-to)-cover-image ...<br>
-**table bookshelves:**
-osm-id name (location)<br>
-**table current-catalog:**
-entry-id osm-id isbn time-of-entry
-
-### Show the tables
-
-Example commands, please alter as needed.
-
-#### In a standalone Docker container
-
-```
-cd backend
-apk update && apk add sqlite
-sqlite3 books.db
-.headers on
-.mode column
-SELECT * FROM current_catalog;
-```
-
-Or quickly (not as nicely formatted):
-
-```
-sqlite3 backend/books.db "SELECT * FROM current_catalog;"
-```
-
-#### In VS Code
-
-Open the db file in vs code with the `qwtel.sqlite-viewer` extension (preinstalled if you run this project via the devcontainer).
-
-### Insert or remove books into/from the db via the api
-
-Change the table:
-
-```
-curl -X POST http://localhost:5000/api/shelf/insert -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
-```
-
-```
-curl -X POST http://localhost:5000/api/shelf/remove -H "Content-Type: application/json" -d '{"osm_id": "123456", "isbn": "9781234567890"}'
-```
-
-### Other sample api requests
-
-```
-http://127.0.0.1:5000/api/shelf/metadata?osm_id=https://www.openstreetmap.org/node/6073946680
-
-http://127.0.0.1:5000/api/bookshelves/nearby?lat=48.0518572&lon=7.9032527
-
-http://127.0.0.1:5000/api/shelf/books?osm_id=https://www.openstreetmap.org/node/6073946680
-
-http://127.0.0.1:5000/api/catalog/search?lat=48.05&lon=7.90&title=Informatik
-```
-
-## TODOS
-
-see `todos.md`
-
-## Notes to me
-
-### Persisting library versions and vs code extensions
-
-- Installed VS Code extension? -> add it to `.devcontainer/devcontainer.json` to persist it
-- Install via npm install?
-  1. cd frontend
-  2. run npm install
-  3. version should now have been automatically added to frontend/package.json
-- Install and persist Python libraries
-  1. Start the venv: `source /workspaces/bookfinder-venv/.venv/bin/activate`
-  2. Install via pip: `pip install [package-name]`
-  3. Find the version number in the success message
-  4. Add the library with its version number to the pip install command in the Dockerfile
-- Want to enforce a VS Code setting for this project? -> add it to `.vscode/settings.json` to persist it
-
-### Ruff not formatting and linting?
-
-#### Try this first
-
-1. `ctrl + shift + p`
-2. Type `Ruff: Restart Server`
-3. Enter
-
-#### If nothing helps
-
-1. Add `"ruff.nativeServer": "off"` to `.vscode/settings.json`
-2. Open `ctrl + shift + p`
-3. `Developer: Reload Window`
-4. Test on a python file
-5. Remove `"ruff.nativeServer": "off"` from `.vscode/settings.json`
-
-### ESLint / Frontend import sorter not working?
-
-1. Open `ctrl + shift + p`
-2. `ESLint: Restart ESLint Server`
-3. If that does not help, ESLint might be stalling because tsserver has a problem
-4. Restart container and check if typescript server is working
-
-## Test a single file, with detailed diffs
-
-```
-cd backend
-source /workspaces/bookfinder-venv/.venv/bin/activate
-PYTHONPATH=/workspaces/bookfinder/backend pytest -vv api_tests/cover_api_test.py
-```
+Even though the API endpoint tests are thorough enough to find most problems in each of the used functions, any functions with complex logic received additional unit- or doctests. The frontend does not contain any complex logic. Unit tests can be found in `backend/unit_tests/` and run via `make test` from the backend directory.
 
 ## Troubleshooting
 
@@ -255,3 +144,15 @@ See `documentation/troubleshooting` for common problems and their solutions.
 ## System diagrams
 
 See `documentation/system-diagrams-and-api-endpoints` for system diagrams.
+
+## Imprint
+
+- Developed by: [Julian Gabriel Ruf](julian.ruf@email.uni-freiburg.de)
+- Supervised by: [Dr. Patrick Brosi](https://ad.informatik.uni-freiburg.de/staff/brosi)
+  - [Professur für Algorithmen und Datenstrukturen](https://ad.informatik.uni-freiburg.de/)
+  - [Albert-Ludwigs-Universität Freiburg](https://www.uni-freiburg.de/)
+
+## Use of generative AI
+
+Generative AI has been used for help with brainstorming, code snippet generation, code completion, formatting and documentation. The Markdown files might contain some wording that was suggested by the Github Copilot autocompletion, but they have been mostly hand-written without accepting the suggestions, so there is no unnecessary or hallucinated information. Any AI-generated code and text has been reviewed, understood and modified to ensure correctness.
+For more information, see the blog post.

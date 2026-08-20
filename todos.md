@@ -2,14 +2,6 @@
 
 ## Main todos
 
-- Finalization:
-  - adhere to coding standards
-    - run make lint
-  - Add dummy data to db
-  - final readme
-    - Introduction - what is it, what can it do, how to use it
-    - clearly explain how you organized your files and what can be found where!
-
 - Blog Post
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain why HTTPS (location&camera access) and why self-signed TLS key (no static ip / domain)
@@ -89,6 +81,7 @@
 
 ## Nice to have
 
+- Add dummy data to db
 - Scanning-/ScanningResults-/ShelfAction-Screen
   - nearest shelf wird pre-selected wenn shelf im appcontext null ist
   - Add loading state (spinner) while fetching book data in BookDisplay
@@ -126,6 +119,7 @@
     - desktop version uses its additional x axis space
   - smoothen permission handling for the camera (and improve error message design)
 - Usability
+  - For easy open on mobile: Shell script on host (windows/linux) that finds the host-ip and generates QR code for `https://host-ip:5173/`
   - Fortschrittsanzeige a la 'step 1 of 3' beim book insert für jede zwischenseite
   - Wenn Buch gescannt wurde bis zum insert/remove/abbruch die bottomnavbar deaktivieren + ausgrauen, um versehentliches nichteinstellen zu verhindern
   - Wenn Buch gescannt wurde bis zum insert/remove/abbruch seite neu laden deaktivieren oder CancelDialog zeigen
