@@ -171,6 +171,7 @@
 
 - Finalization:
   - Update bookshelves via qlever
+  - check .ruff.toml for development excludes
 
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'

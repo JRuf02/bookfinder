@@ -19,7 +19,6 @@ body,
   min-height: calc(100dvh - var(--nav-height));
   max-height: calc(100dvh - var(--nav-height));
   width: 100%;
-  /* maxWidth: "80%", TODO: make responsive, e.g. max 80% on desktop, 95% on mobile */
   overflow: auto; /* Allow scrolling if content overflows */
   display: flex;
   flex-direction: column;

@@ -3,17 +3,16 @@
 ## Main todos
 
 - Finalization:
+  - search code for TODOs
+  - adhere to coding standards
+    - clean up console.log and console.error usage
+    - run make lint
   - Add dummy data to db
   - final readme
     - Introduction - what is it, what can it do, how to use it
-    - clearly explain how you organized your files and what can be found where! <======
-  - adhere to coding standards
-    - check .ruff.toml for ignored rules that should not be ignored in abgabeversion
-    - run make lint
-    - clean up console.log and console.error usage
-  - search code for TODOs
+    - clearly explain how you organized your files and what can be found where!
 
-- Blog Post <=============================================================
+- Blog Post
   - Include system diagrams, important parts of readme, screenshots, documentation, ...
   - Explain why HTTPS (location&camera access) and why self-signed TLS key (no static ip / domain)
     - include reasoning from certs/refresh_certs.md, then delete that file
