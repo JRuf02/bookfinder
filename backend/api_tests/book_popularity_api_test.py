@@ -114,3 +114,75 @@ def test_get_book_popularity(client: FlaskClient) -> None:
     assert response.json["data"]["totalBooksSeen"] == 4
     assert response.json["data"]["avgDaysOnShelfForCurrentBooks"] is not None
     assert response.json["data"]["avgDaysOnShelfForCurrentBooks"] >= 1.9
+
+
+def test_avg_days_until_takeout_updated_on_remove(client: FlaskClient) -> None:
+    """Create 4 instances of the same book on a shelf (three 10, one 20 days old),
+    verify popularity returns avgDaysUntilTakeout=None and totalBooksSeen=4,
+    then remove the oldest instance and
+    verify avg_days_until_takeout is updated to (approx) 20 and currentlyOnShelves=3.
+    """
+
+    isbn = "978-3-453-43690-9"
+    osm_id = "https://www.openstreetmap.org/node/11935877522"
+
+    insert_test_shelf_into_db(client.application, osm_id=osm_id)
+    # Insert four instances (creates the books table metadata entry as well)
+    for _ in range(4):
+        insert_test_book_into_shelf_in_db(client.application, osm_id=osm_id)
+
+    now = datetime.now(timezone.utc)
+    twenty_days_ago = (now - timedelta(days=20)).replace(microsecond=0).isoformat()
+    ten_days_ago = (now - timedelta(days=10)).replace(microsecond=0).isoformat()
+
+    # Change current_catalog entry times
+    with db_cursor(client.application.config["DB_PATH"]) as c:
+        c.execute(
+            "DELETE FROM current_catalog WHERE isbn = ? AND osm_id = ?",
+            (isbn, osm_id),
+        )
+        c.execute(
+            "INSERT INTO current_catalog (osm_id, isbn, time_of_entry) "
+            "VALUES (?, ?, ?)",
+            (osm_id, isbn, twenty_days_ago),
+        )
+        for _ in range(3):
+            c.execute(
+                "INSERT INTO current_catalog (osm_id, isbn, time_of_entry) "
+                "VALUES (?, ?, ?)",
+                (osm_id, isbn, ten_days_ago),
+            )
+
+    # Initial popularity: no historical avg yet
+    response = client.get("/api/book/popularity", query_string={"isbn": isbn})
+    assert response.status_code == 200
+    assert response.json is not None
+    assert response.json["status"] == "success"
+    assert response.json["data"]["avgDaysUntilTakeout"] is None
+    assert response.json["data"]["currentlyOnShelves"] == 4
+    assert response.json["data"]["totalBooksSeen"] == 4
+    assert response.json["data"]["avgDaysOnShelfForCurrentBooks"] is not None
+    assert response.json["data"]["avgDaysOnShelfForCurrentBooks"] == pytest.approx(
+        12.5, abs=0.01
+    )
+
+    # Remove the oldest instance (20-day-old entry)
+    remove_resp = client.post(
+        "/api/shelf/remove", json={"osm_id": osm_id, "isbn": isbn}
+    )
+    assert remove_resp.status_code == 200
+
+    # After removal, avgDaysUntilTakeout should be updated to 20 days
+    response_after = client.get("/api/book/popularity", query_string={"isbn": isbn})
+    assert response_after.status_code == 200
+    assert response_after.json is not None
+    assert response_after.json["status"] == "success"
+    # allow tolerance for test duration
+    assert response_after.json["data"]["avgDaysUntilTakeout"] == pytest.approx(
+        20, rel=0.01
+    )
+    assert response_after.json["data"][
+        "avgDaysOnShelfForCurrentBooks"
+    ] == pytest.approx(10.0, abs=0.01)
+    assert response_after.json["data"]["currentlyOnShelves"] == 3
+    assert response_after.json["data"]["totalBooksSeen"] == 4

@@ -1,5 +1,6 @@
 from flask import Flask
 
+from app.db.book_db import log_book_insertion_in_db
 from app.db.database import db_cursor
 from app.db.database_fuzzy_utils import (
     _generate_threegrams as database_generate_threegrams,
@@ -72,10 +73,11 @@ def insert_test_book_into_shelf_in_db(
         )
 
     # Create an entry for the book in the books table
+    # without overwriting existing popularity counters
     with db_cursor(app.config["DB_PATH"]) as c:
         c.execute(
             """
-            INSERT OR REPLACE INTO books (isbn, title, author, dnb_id,
+            INSERT OR IGNORE INTO books (isbn, title, author, dnb_id,
             cover_url)
             VALUES (?, ?, ?, ?, ?)
         """,
@@ -107,6 +109,9 @@ def insert_test_book_into_shelf_in_db(
             """,
             (str(osm_id), str(book.isbn)),
         )
+    log_book_insertion_in_db(
+        book.isbn, app.config["DB_PATH"]
+    )  # needed for popularity calculations
 
 
 def insert_test_book_into_books_table_in_db(

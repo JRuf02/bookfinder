@@ -131,10 +131,15 @@ def get_book_popularity_from_db(isbn: Isbn) -> BookPopularity:
     )
 
 
-def log_book_insertion_in_db(isbn: Isbn) -> None:
-    """Increment the total_insertions counter for the given ISBN in the local db."""
+def log_book_insertion_in_db(isbn: Isbn, db_path: Path | None = None) -> None:
+    """Increment the total_insertions counter for the given ISBN in the local db.
 
-    with db_cursor() as c:
+    db_path is only needed when running outside of a Flask app context,
+    e.g. in unit tests. Otherwise, db_cursor() will use the default
+    database path from app.config['DB_PATH'].
+    """
+
+    with db_cursor(db_path) as c:
         c.execute(
             """
             UPDATE books
@@ -168,7 +173,7 @@ def log_book_takeout_in_db(isbn: Isbn, days_until_takeout: float) -> None:
     # Fetch current average and total insertions
     with db_cursor() as c:
         c.execute(
-            "SELECT avg_days_until_takeout FROM books WHERE isbn = ?",
+            "SELECT avg_days_until_takeout, total_insertions FROM books WHERE isbn = ?",
             (str(isbn),),
         )
         row = c.fetchone()
@@ -176,17 +181,19 @@ def log_book_takeout_in_db(isbn: Isbn, days_until_takeout: float) -> None:
     current_avg = (
         float(row["avg_days_until_takeout"])
         if row["avg_days_until_takeout"] is not None
-        else 0
+        else None
     )
-    num_elements_in_avg = get_number_of_books_with_isbn(isbn)
+
+    total_insertions = int(row["total_insertions"]) if row["total_insertions"] else 0
+    num_elements_in_avg = total_insertions - get_number_of_books_with_isbn(isbn)
 
     # Calculate new average
-    new_avg = (
-        (current_avg * num_elements_in_avg + days_until_takeout)
-        / (num_elements_in_avg + 1)
-        if num_elements_in_avg > 0
-        else days_until_takeout
-    )
+    if current_avg is None or num_elements_in_avg <= 0:
+        new_avg = days_until_takeout
+    else:
+        new_avg = (current_avg * num_elements_in_avg + days_until_takeout) / (
+            num_elements_in_avg + 1
+        )
 
     # Update the database with the new average
     _update_avg_days_until_takeout_in_db(isbn, new_avg)
