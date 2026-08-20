@@ -53,6 +53,7 @@ export default function CatalogSearchForm({
   return (
     <Stack
       direction="row"
+      className="catalog-search-form"
       sx={{
         flexWrap: "wrap",
         gap: "0rem",
