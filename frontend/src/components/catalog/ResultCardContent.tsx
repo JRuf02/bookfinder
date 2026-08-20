@@ -50,7 +50,6 @@ export default function ResultCardContent({ result }: ResultCardContentProps) {
     if (answer.success) {
       setRemovedFromShelf(true);
     } else {
-      console.error("Error removing book from shelf:", answer.message);
       setRemoveError({
         title: "Error removing book from shelf",
         text: answer.message,

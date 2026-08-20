@@ -75,7 +75,6 @@ export function useBarcodeReader(
 
             // Only process the result if it's different from the last one
             if (lastResultRef.current !== text) {
-              console.log(`Got new result: ${text}`);
               lastResultRef.current = text;
 
               // Stop reading immediately

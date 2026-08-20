@@ -4,7 +4,6 @@
 
 - Finalization:
   - adhere to coding standards
-    - clean up console.log and console.error usage
     - run make lint
   - Add dummy data to db
   - final readme

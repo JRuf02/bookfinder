@@ -82,7 +82,5 @@ export async function fetchBookPopularity(
     };
   }
 
-  console.log("Fetched book popularity data:", data.data);
-
   return { ok: true, data: data.data as BookPopularity };
 }

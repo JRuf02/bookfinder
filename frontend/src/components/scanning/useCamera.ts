@@ -9,7 +9,6 @@ export function useCamera() {
 
   // Clean up camera resources
   const stopCamera = useCallback(() => {
-    console.log("Stopping camera...");
     let tracksStopped = false;
 
     if (streamRef.current) {
@@ -18,7 +17,6 @@ export function useCamera() {
       if (tracks.length > 0) {
         tracks.forEach((track) => {
           track.stop();
-          console.log("Stopped track:", track);
         });
         tracksStopped = true;
       }

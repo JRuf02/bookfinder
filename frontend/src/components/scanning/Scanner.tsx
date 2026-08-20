@@ -40,7 +40,6 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
     // Track mount/remount count for debugging
     mountCountRef.current++;
     const currentMount = mountCountRef.current;
-    console.log(`Scanner mount #${currentMount}, active=${active}`);
 
     if (!active) {
       // Clean up if component is not active
@@ -55,28 +54,21 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
       resetReader();
 
       try {
-        console.log(`Accessing camera (mount #${currentMount})`);
         const cameraStarted = await startCamera();
 
         // Check if we're still in the same effect instance
         if (mountCountRef.current !== currentMount) {
-          console.log(
-            `Camera started but mount changed, aborting (mount #${currentMount})`,
-          );
+          // Camera started but mount changed, abort
           stopCamera();
           return;
         }
 
         if (cameraStarted) {
-          console.log(`Got media stream (mount #${currentMount})`);
-
           // Use one-time event listener for metadata loaded
           const handleMetadata = async () => {
             // Check again if we're still relevant
             if (mountCountRef.current !== currentMount) {
-              console.log(
-                `Metadata loaded but mount changed, aborting (mount #${currentMount})`,
-              );
+              // Metadata loaded but mount changed, abort
               return;
             }
 
@@ -86,12 +78,8 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
               // One more check before starting the decoder
               if (mountCountRef.current !== currentMount) return;
 
-              console.log(`Video playing (mount #${currentMount})`);
-              const decoderStarted = await startReading();
-
-              if (decoderStarted) {
-                console.log(`Decoder running (mount #${currentMount})`);
-              }
+              // Video playing, now start the barcode reader
+              await startReading();
             } catch (err) {
               console.error(
                 `Failed to start scanning (mount #${currentMount}):`,
@@ -137,8 +125,6 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
 
     // Clean up when component unmounts or active changes
     return () => {
-      console.log(`Cleaning up scanner (mount #${currentMount})`);
-
       // Clear any pending timers
       if (timerRef.current !== null) {
         clearTimeout(timerRef.current);
@@ -160,13 +146,6 @@ function Scanner({ onResult, active, onReady }: ScannerProps) {
     resetReader,
     videoRef,
   ]);
-
-  useEffect(() => {
-    console.log("Scanner mounted");
-    return () => {
-      console.log("Scanner unmounted");
-    };
-  }, []);
 
   return (
     <Box className="scanner-container">
