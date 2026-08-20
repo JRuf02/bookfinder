@@ -20,6 +20,8 @@
     - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
       - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
+- Remove todos and tadas from repo
+
 ## Testing
 
 - Client
