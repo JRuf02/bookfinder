@@ -1,6 +1,6 @@
 :root {
   --nav-height: 56px;
-  --color-bg-default: #dce4dd;
+  --color-scanner-bg: #dce4dd;
 }
 
 html,
@@ -40,7 +40,6 @@ body,
 .lookup-button {
   margin-left: 0.5rem;
   cursor: pointer;
-  color: red;
 }
 
 .results-list {
@@ -102,7 +101,7 @@ input[type="text"] {
   width: 100%;
   max-width: 600px;
   aspect-ratio: 4 / 3;
-  background: var(--color-bg-default);
+  background: var(--color-scanner-bg);
   object-fit: cover;
   border: none;
 }

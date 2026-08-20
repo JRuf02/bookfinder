@@ -3,7 +3,6 @@
 ## Main todos
 
 - Finalization:
-  - search code for TODOs
   - adhere to coding standards
     - clean up console.log and console.error usage
     - run make lint

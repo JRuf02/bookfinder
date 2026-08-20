@@ -28,13 +28,6 @@ export async function fetchBookData(
     return { ok: false, error: "Internal server error. Try again later." };
   }
 
-  if (!response.ok) {
-    return {
-      ok: false,
-      error: `Request failed with code (${response.status}).`,
-    };
-  }
-
   let data: ApiResponse<Book>;
   try {
     data = await response.json();
@@ -45,7 +38,14 @@ export async function fetchBookData(
   if (data.status === "error") {
     return {
       ok: false,
-      error: data.message || `Request failed with code (${response.status}).`,
+      error: data.message || `Request failed with code ${response.status}.`,
+    };
+  }
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      error: `Request failed with code ${response.status}.`,
     };
   }
 
@@ -61,13 +61,6 @@ export async function fetchBookPopularity(
     return { ok: false, error: "Internal server error. Try again later." };
   }
 
-  if (!response.ok) {
-    return {
-      ok: false,
-      error: `Request failed with code (${response.status}).`,
-    };
-  }
-
   let data: ApiResponse<BookPopularity>;
   try {
     data = await response.json();
@@ -78,7 +71,14 @@ export async function fetchBookPopularity(
   if (data.status === "error") {
     return {
       ok: false,
-      error: data.message || `Request failed with code (${response.status}).`,
+      error: data.message || `Request failed with code ${response.status}.`,
+    };
+  }
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      error: `Request failed with code ${response.status}.`,
     };
   }
 
