@@ -205,6 +205,9 @@
   - Mail/Push Notification when bookmarked book becomes available within set radius
 - Gamification - Punktesammeln für shelf checks a la "book still there?" & buch scan
   - Je nach book popularity gibt es mehr Punkte für einstellen / entnehmen
+  - traffic light or user score system where it shows if a book is a good contribution to the shelf or if it likely will sit in it forever / will be taken out by staff
+  - Award more credits/XP to users who give better books
+  - Award credits to users taking out books that are going to sit on shelf forever (trash removal after 1 year)
 - Create unique barcodes for each shelf -> scan shelf code to select it
 - Usability
   - Wortwahl klarer machen, z.B. Take/Leave book statt remove/insert
