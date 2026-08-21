@@ -147,12 +147,14 @@ See `documentation/system-diagrams-and-api-endpoints` for system diagrams.
 
 ## Imprint
 
-- Developed by: [Julian Gabriel Ruf](julian.ruf@email.uni-freiburg.de)
+- Project:       Comprehensive Online Catalog and Web App for Public Bookshelves
+- Developed by:  [Julian Gabriel Ruf](mailto:julian.ruf@email.uni-freiburg.de)
 - Supervised by: [Dr. Patrick Brosi](https://ad.informatik.uni-freiburg.de/staff/brosi)
-  - [Professur für Algorithmen und Datenstrukturen](https://ad.informatik.uni-freiburg.de/)
-  - [Albert-Ludwigs-Universität Freiburg](https://www.uni-freiburg.de/)
+- Chair:         [Professur für Algorithmen und Datenstrukturen](https://ad.informatik.uni-freiburg.de/)
+- University:    [Albert-Ludwigs-Universität Freiburg](https://www.uni-freiburg.de/)
+- Semester:      Winter 2026/2027
 
 ## Use of generative AI
 
 Generative AI has been used for help with brainstorming, code snippet generation, code completion, formatting and documentation. The Markdown files might contain some wording that was suggested by the Github Copilot autocompletion, but they have been mostly hand-written without accepting the suggestions, so there is no unnecessary or hallucinated information. Any AI-generated code and text has been reviewed, understood and modified to ensure correctness.
-For more information, see the blog post.
+For more information, see the [blog](https://ad-blog.cs.uni-freiburg.de/) post.
