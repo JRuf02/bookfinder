@@ -3,22 +3,7 @@
 ## Main todos
 
 - Blog Post
-  - Include system diagrams, important parts of readme, screenshots, documentation, ...
-  - Explain why HTTPS (location&camera access) and why self-signed TLS key (no static ip / domain)
-    - include reasoning from certs/refresh_certs.md, then delete that file
-  - Explain where and what additional documentation can be found in the repo
   - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
-  - Add info about tests: API tests, unit tests, doctests
-  - Different format screenshots via chrome inspect
-  - Diagrams:
-    - System diagrams for blog post
-      - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
-      - Diagram with file overview and main files (e.g. App.tsx, server.py, update_bookshelves.py)
-    - Database tables diagram and/or section with table structure in readme
-    - Backend/api documentation -> 1-2 diagrams (optional)
-    - Sequenzdiagramm für 'Buch einstellen' Aktion (optional)
-    - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
-      - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 - Remove todos and tadas from repo
 
@@ -174,6 +159,15 @@
     - use None instead of empty str / dummy data / title: "Error"
     - Generate text like 'Error Fetching Data' and 'Unknown Title/Author' in the UI component
     - Move standard error messages (e.g. from catalogSearch.ts, shelfBooks.ts) to a shared constants file
+- Blog Post
+  - Diagrams:
+    - System diagrams for blog post
+      - Diagram Frontend-Backend-ExternalServers(e.g. leaflet, dnb)
+      - Diagram with file overview and main files (e.g. App.tsx, server.py, update_bookshelves.py)
+    - Backend/api documentation -> 1-2 diagrams (optional)
+    - Sequenzdiagramm für 'Buch einstellen' Aktion (optional)
+    - Sequenzdiagramm für 'Buch finden' Aktion <= schon gekritzelt, jetzt bitte noch digitalisieren!
+      - flowchart: draw.io -> UML -> Callback / app.diagrams.net
 
 ## Additional features and ideas for big extensions and conceptual changes
 
