@@ -178,6 +178,8 @@
     - Introduction - what is it, what can it do, how to use it
     - clearly explain how you organized your files and what can be found where!
 
+- Blog Post
+
 - Set up quicker tsserver and eslint import sorting
 - Statt 'Could not get your location' auf mobile noch auffordern: 'Please activate GPS in your device settings'
 - Map muss schneller werden!

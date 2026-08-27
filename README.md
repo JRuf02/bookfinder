@@ -21,6 +21,8 @@ The full-stack web app uses [OpenStreetMap](https://www.openstreetmap.org/) data
 - Backend: Python, Flask, Gunicorn (production), Flask dev server (development)
 - Database: SQLite
 - Barcode scanning: [zxing-js](https://github.com/zxing-js/browser)
+- System diagrams: [draw.io](https://app.diagrams.net/)
+- Logo design: [Canva](https://www.canva.com)
 - Automation: Makefile
 
 ## Repository structure

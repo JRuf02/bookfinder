@@ -2,9 +2,6 @@
 
 ## Main todos
 
-- Blog Post
-  - Include used Hilfsmittel like copilot autocompletion and draw.io, canva, ...
-
 - Remove todos and tadas from repo
 
 ## Testing
