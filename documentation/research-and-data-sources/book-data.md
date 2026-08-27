@@ -5,7 +5,7 @@
 
 ## ISBN to book data via DNB (Deutsche Nationalbibliothek)
 
-- DNB contains every book that has ever been produced for the German market
+- DNB contains every book that has been published on the German market since 1913 ([source](https://de.wikipedia.org/wiki/Deutsche_Nationalbibliothek#Aufgaben))
   - that means it contains mostly the german versions of books, mostly ISBN 978-3-XXXXXXXXX
   - books produced for other countries might not be found (e.g. many ISBN 978-1-XXXXXXXXX books)
   - most books you'll find in German households will be found on DNB
