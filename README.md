@@ -1,9 +1,9 @@
 # bookFinder
 
-BookFinder implements a nation-wide online catalog for public bookshelves in Germany.
-These are publicly accessible bookshelves, where anyone can put books in and take books out for free. The app allows you to find nearby public bookshelves and see which books are available there. Users can also search for available books nation-wide and log which books they put into or took out of a public bookshelf.
+BookFinder is a nation-wide online catalog and management tool for public bookshelves in Germany.
+Public bookshelves are publicly accessible shelves, where anyone can drop books off and take other books out for free. The app allows users to find nearby public bookshelves and see which books are available there. Users can also search for available books nation-wide and log which books they put onto or took out of a public bookshelf.
 
-The full-stack web app uses [OpenStreetMap](https://www.openstreetmap.org/) data (obtained via [QLever](https://qlever.cs.uni-freiburg.de/osm-planet/FG873S)) to find nearby bookshelves and the [German National Library (DNB)](https://www.dnb.de/) API to get book metadata.
+The full-stack web app uses [OpenStreetMap](https://www.openstreetmap.org/) data (obtained via [QLever](https://qlever.cs.uni-freiburg.de/osm-planet/FG873S)) to find nearby bookshelves and the [German National Library (DNB)](https://www.dnb.de/) API for book metadata.
 
 ## Functionality
 
@@ -145,6 +145,11 @@ See `documentation/troubleshooting` for common problems and their solutions.
 
 See `documentation/system-diagrams-and-api-endpoints` for system diagrams.
 
+## Use of generative AI
+
+Generative AI has been used for help with brainstorming, code snippet generation, code completion, formatting and documentation. The Markdown files might contain some wording that was suggested by the Github Copilot autocompletion, but they have been mostly hand-written without accepting the suggestions, so there is no unnecessary or hallucinated information. Any AI-generated code and text has been reviewed, understood and modified to ensure correctness.
+For more information, see the [blog](https://ad-blog.cs.uni-freiburg.de/) post.
+
 ## Imprint
 
 - Project:       Comprehensive Online Catalog and Web App for Public Bookshelves
@@ -153,8 +158,3 @@ See `documentation/system-diagrams-and-api-endpoints` for system diagrams.
 - Chair:         [Professur für Algorithmen und Datenstrukturen](https://ad.informatik.uni-freiburg.de/)
 - University:    [Albert-Ludwigs-Universität Freiburg](https://www.uni-freiburg.de/)
 - Semester:      Winter 2026/2027
-
-## Use of generative AI
-
-Generative AI has been used for help with brainstorming, code snippet generation, code completion, formatting and documentation. The Markdown files might contain some wording that was suggested by the Github Copilot autocompletion, but they have been mostly hand-written without accepting the suggestions, so there is no unnecessary or hallucinated information. Any AI-generated code and text has been reviewed, understood and modified to ensure correctness.
-For more information, see the [blog](https://ad-blog.cs.uni-freiburg.de/) post.
