@@ -162,4 +162,4 @@ For more information, see the [blog post](https://ad-blog.cs.uni-freiburg.de/pos
 - Supervised by: [Dr. Patrick Brosi](https://ad.informatik.uni-freiburg.de/staff/brosi)
 - Chair: [Professur für Algorithmen und Datenstrukturen](https://ad.informatik.uni-freiburg.de/)
 - University: [Albert-Ludwigs-Universität Freiburg](https://www.uni-freiburg.de/)
-- Semester: Winter 2026/2027
+- Semester of grading: Winter 2026/2027
