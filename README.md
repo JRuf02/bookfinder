@@ -17,7 +17,7 @@ The full-stack web app uses [OpenStreetMap](https://www.openstreetmap.org/) data
 ## Tech stack
 
 - Reverse proxy: Caddy (production), Vite (development)
-- Frontend: React, Vite
+- Frontend: React, Vite, Leaflet & OpenStreetMap tile server
 - Backend: Python, Flask, Gunicorn (production), Flask dev server (development)
 - Database: SQLite
 - Barcode scanning: [zxing-js](https://github.com/zxing-js/browser)
