@@ -137,6 +137,8 @@ Each API endpoint has been thoroughly tested via the `pytest` framework. These t
 
 Even though the API endpoint tests are thorough enough to find most problems in each of the used functions, any functions with complex logic received additional unit- or doctests. The frontend does not contain any complex logic. Unit tests can be found in `backend/unit_tests/` and run via `make test` from the backend directory.
 
+For the backend tests, the Makefile provides two targets: The standard `make test` uses Mocker to mock the DNB API's responses, which is necessary as running the tests often should not strain the external DNB servers. To ensure the entire system - including the DNB API - is working as expected, `make test-dnb` uses the real DNB API for the backend's API endpoint tests.
+
 ## Troubleshooting
 
 See `documentation/troubleshooting` for common problems and their solutions.
