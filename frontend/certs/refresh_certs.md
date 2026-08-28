@@ -1,5 +1,11 @@
 # Create a new key / cert pair
 
+## Automatically
+
+Run `make -C frontend certs`.
+
+## Manually
+
 Run in console:
 `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 3650 -nodes -subj "/CN=localhost"`
 

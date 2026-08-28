@@ -14,6 +14,10 @@ The full-stack web app uses [OpenStreetMap](https://www.openstreetmap.org/) data
 - Add a book to a bookshelf by scanning its barcode - no need to enter anything manually
 - Remove books from the catalog by scanning their barcodes
 
+## Screenshots
+
+Can be found in the `documentation/screenshots` directory.
+
 ## Tech stack
 
 - Reverse proxy: Caddy (production), Vite (development)
@@ -129,10 +133,6 @@ Please follow the instructions given in the comments at the end of the `Dockerfi
 - Disable client isolation in your wifi router's settings
 - Use another wifi (public wifis like eduroam may have client isolation)
 
-## More information
-
-More information can be found in the `documentation` directory and in the [blog post](https://ad-blog.cs.uni-freiburg.de/post/comprehensive-online-catalog-and-web-app-for-public-bookshelves/).
-
 ## Test coverage
 
 Each API endpoint has been thoroughly tested via the `pytest` framework. These tests can be found in `backend/api_tests/` and run via `make test` from the backend directory.
@@ -148,6 +148,10 @@ See `documentation/troubleshooting` for common problems and their solutions.
 ## System diagrams
 
 See `documentation/system-diagrams-and-api-endpoints` for system diagrams.
+
+## More information
+
+More information can be found in the `documentation` directory and in the [blog post](https://ad-blog.cs.uni-freiburg.de/post/comprehensive-online-catalog-and-web-app-for-public-bookshelves/).
 
 ## Use of generative AI
 
