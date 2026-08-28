@@ -39,7 +39,7 @@ Within this repository, the following directories are important:
 - `documentation/` - documentation and troubleshooting
 - `Makefile` - central orchestrator for starting servers and much more
 
-More detailed information can be found within the sub-directories, e.g. within the `__init__.py` files.
+More information can be found within the sub-directories, e.g. within the `__init__.py` files.
 
 ## Installation and Server startup
 
