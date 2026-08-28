@@ -46,6 +46,7 @@ More information can be found within the sub-directories, e.g. within the `__ini
 ### There are two ways to install and run this app
 
 First, clone this repository onto your machine. Then you can open it either within a VS Code Devcontainer (A) or within a standard Docker Container (B).
+
 After setup, you can choose between running the development servers (Vite + Flask) or the production servers (Caddy + Gunicorn). Use `make help` to find all available commands.
 
 ### A) VS Code Devcontainer
