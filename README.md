@@ -83,7 +83,7 @@ After setup, you can choose between running the development servers (Vite + Flas
 
 ### B) Within a standalone Docker container
 
-If you simply want to run this app without looking much at the code or if you want to use it in an production setting (e.g. in a multi-container setting), you can run it within a standard Docker container.
+If you simply want to run this app without looking much at the code or if you want to use it in a production setting, you can run it within a standard Docker container.
 This is optimized for the production setup, but you can also run the development servers in here.
 
 #### Setup the container
