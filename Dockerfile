@@ -72,6 +72,7 @@ CMD ["/bin/bash", "--rcfile", "bashrc"]
 # make help
 # make run-prod
 
+# Then open https://localhost/ in a browser of your choice.
 
 # EXIT THE CONTAINER
 # ctrl + c
